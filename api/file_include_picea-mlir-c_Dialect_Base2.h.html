@@ -1,0 +1,184 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>File Base2.h &mdash; picea 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/collapsible-lists/css/tree_view.css?v=a885cde7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js?v=73120307"></script>
+      <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js?v=660e4f45"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            picea
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Installation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../README.html">About the project</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#guides">Guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#related-projects">Related projects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#development-environment-nix">Development Environment (Nix)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#build-on-ubuntu-24-04-no-nix">Build on Ubuntu 24.04 (no Nix)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#gurobi-license">Gurobi license</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#installing">Installing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#run-the-tests">Run the tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#build-the-documentation">Build the documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#compiling-a-design">Compiling a design</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#running-a-design-on-the-board">Running a design on the board</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#exporting-a-profiled-application-to-mocasin">Exporting a profiled application to Mocasin</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Guides</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../guides/laksa.html">The FPGA Variant using LAKSA backend</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/cgra.html">The CGRA Variant</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">MLIR Dialects</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/Base2Ops.html">‘base2’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/CGRAOps.html">‘cgra’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/DFGOps.html">‘dfg’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/EmitHLSOps.html">‘emithls’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/FilterOps.html">‘filter’ Dialect</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Passes</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/PICEAConversionPasses.html">PICEA Conversion Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/CGRAPasses.html">CGRA Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/DFGPasses.html">DFG Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/EmitHLSPasses.html">Emit HLS Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/FuncExtPasses.html">Func Ext Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/LinalgExtPasses.html">Linalg Ext Passes</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">C++ API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="library_root.html">C++ API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">picea</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">File Base2.h</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/file_include_picea-mlir-c_Dialect_Base2.h.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="file-base2-h">
+<span id="file-include-picea-mlir-c-dialect-base2-h"></span><h1>File Base2.h<a class="headerlink" href="#file-base2-h" title="Link to this heading"></a></h1>
+<p>↰ <a class="reference internal" href="dir_include_picea-mlir-c_Dialect.html#dir-include-picea-mlir-c-dialect"><span class="std std-ref">Parent directory</span></a> (<code class="docutils literal notranslate"><span class="pre">include/picea-mlir-c/Dialect</span></code>)</p>
+<nav class="contents local" id="contents">
+<p class="topic-title">Contents</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#definition-include-picea-mlir-c-dialect-base2-h" id="id1">Definition (<code class="docutils literal notranslate"><span class="pre">include/picea-mlir-c/Dialect/Base2.h</span></code>)</a></p></li>
+<li><p><a class="reference internal" href="#includes" id="id2">Includes</a></p></li>
+<li><p><a class="reference internal" href="#functions" id="id3">Functions</a></p></li>
+</ul>
+</nav>
+<section id="definition-include-picea-mlir-c-dialect-base2-h">
+<h2>Definition (<code class="docutils literal notranslate"><span class="pre">include/picea-mlir-c/Dialect/Base2.h</span></code>)<a class="headerlink" href="#definition-include-picea-mlir-c-dialect-base2-h" title="Link to this heading"></a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="program_listing_file_include_picea-mlir-c_Dialect_Base2.h.html">Program Listing for File Base2.h</a></li>
+</ul>
+</div>
+</section>
+<section id="includes">
+<h2>Includes<a class="headerlink" href="#includes" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">mlir-c/IR.h</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">mlir-c/Support.h</span></code></p></li>
+</ul>
+</section>
+<section id="functions">
+<h2>Functions<a class="headerlink" href="#functions" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="function_picea-mlir-c_2Dialect_2Base2_8h_1a1000159d4eb5d8745ac84140598f0b7e.html#exhale-function-picea-mlir-c-2dialect-2base2-8h-1a1000159d4eb5d8745ac84140598f0b7e"><span class="std std-ref">Function mlirAttributeIsABitsAttr</span></a></p></li>
+<li><p><a class="reference internal" href="function_picea-mlir-c_2Dialect_2Base2_8h_1a9323628dfb5e1f6ec3c732ce5ccbe467.html#exhale-function-picea-mlir-c-2dialect-2base2-8h-1a9323628dfb5e1f6ec3c732ce5ccbe467"><span class="std std-ref">Function mlirAttributeIsADenseBitsAttr</span></a></p></li>
+<li><p><a class="reference internal" href="function_picea-mlir-c_2Dialect_2Base2_8h_1a8fcfb9ab92fb8968adcaab64f5cbf358.html#exhale-function-picea-mlir-c-2dialect-2base2-8h-1a8fcfb9ab92fb8968adcaab64f5cbf358"><span class="std std-ref">Function mlirBase2RegisterBufferizableOpInterfaceExternalModels</span></a></p></li>
+<li><p><a class="reference internal" href="function_picea-mlir-c_2Dialect_2Base2_8h_1abaf1d50c3db42aff3d149f56226c9575.html#exhale-function-picea-mlir-c-2dialect-2base2-8h-1abaf1d50c3db42aff3d149f56226c9575"><span class="std std-ref">Function mlirBitsAttrGet</span></a></p></li>
+<li><p><a class="reference internal" href="function_picea-mlir-c_2Dialect_2Base2_8h_1aebd937a486e49a4b49c402c1a0cb4515.html#exhale-function-picea-mlir-c-2dialect-2base2-8h-1aebd937a486e49a4b49c402c1a0cb4515"><span class="std std-ref">Function mlirBitsAttrGetValue</span></a></p></li>
+<li><p><a class="reference internal" href="function_picea-mlir-c_2Dialect_2Base2_8h_1a2d00545b956fabfad73cb2c92e0ec021.html#exhale-function-picea-mlir-c-2dialect-2base2-8h-1a2d00545b956fabfad73cb2c92e0ec021"><span class="std std-ref">Function mlirDenseBitsAttrGet</span></a></p></li>
+<li><p><a class="reference internal" href="function_picea-mlir-c_2Dialect_2Base2_8h_1a5be0fc31c1cd68e7b3b9be19a4c7d304.html#exhale-function-picea-mlir-c-2dialect-2base2-8h-1a5be0fc31c1cd68e7b3b9be19a4c7d304"><span class="std std-ref">Function mlirDenseBitsAttrGetData</span></a></p></li>
+<li><p><a class="reference internal" href="function_picea-mlir-c_2Dialect_2Base2_8h_1a1f3a7171dab4cbfd3b762d977c6b4932.html#exhale-function-picea-mlir-c-2dialect-2base2-8h-1a1f3a7171dab4cbfd3b762d977c6b4932"><span class="std std-ref">Function mlirFixedTypeGet</span></a></p></li>
+<li><p><a class="reference internal" href="function_picea-mlir-c_2Dialect_2Base2_8h_1a4ef68e29490e60aa759de8d74506dff6.html#exhale-function-picea-mlir-c-2dialect-2base2-8h-1a4ef68e29490e60aa759de8d74506dff6"><span class="std std-ref">Function mlirFixedTypeGetFractionalBits</span></a></p></li>
+<li><p><a class="reference internal" href="function_picea-mlir-c_2Dialect_2Base2_8h_1ad67488935dd529bbc93ba1871ac79df1.html#exhale-function-picea-mlir-c-2dialect-2base2-8h-1ad67488935dd529bbc93ba1871ac79df1"><span class="std std-ref">Function mlirFixedTypeGetIntegerBits</span></a></p></li>
+<li><p><a class="reference internal" href="function_picea-mlir-c_2Dialect_2Base2_8h_1ac27be3972ee4e04aad85a1c07c20cbf6.html#exhale-function-picea-mlir-c-2dialect-2base2-8h-1ac27be3972ee4e04aad85a1c07c20cbf6"><span class="std std-ref">Function mlirTypeIsAFixedType</span></a></p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

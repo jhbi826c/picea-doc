@@ -1,0 +1,500 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Program Listing for File EmitCToCPUProfile.cpp &mdash; picea 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/collapsible-lists/css/tree_view.css?v=a885cde7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js?v=73120307"></script>
+      <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js?v=660e4f45"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            picea
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Installation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../README.html">About the project</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#guides">Guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#related-projects">Related projects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#development-environment-nix">Development Environment (Nix)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#build-on-ubuntu-24-04-no-nix">Build on Ubuntu 24.04 (no Nix)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#gurobi-license">Gurobi license</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#installing">Installing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#run-the-tests">Run the tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#build-the-documentation">Build the documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#compiling-a-design">Compiling a design</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#running-a-design-on-the-board">Running a design on the board</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#exporting-a-profiled-application-to-mocasin">Exporting a profiled application to Mocasin</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Guides</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../guides/laksa.html">The FPGA Variant using LAKSA backend</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/cgra.html">The CGRA Variant</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">MLIR Dialects</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/Base2Ops.html">‘base2’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/CGRAOps.html">‘cgra’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/DFGOps.html">‘dfg’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/EmitHLSOps.html">‘emithls’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/FilterOps.html">‘filter’ Dialect</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Passes</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/PICEAConversionPasses.html">PICEA Conversion Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/CGRAPasses.html">CGRA Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/DFGPasses.html">DFG Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/EmitHLSPasses.html">Emit HLS Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/FuncExtPasses.html">Func Ext Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/LinalgExtPasses.html">Linalg Ext Passes</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">C++ API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="library_root.html">C++ API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">picea</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Program Listing for File EmitCToCPUProfile.cpp</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/program_listing_file_lib_Target_EmitCToCPUProfile_EmitCToCPUProfile.cpp.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="program-listing-for-file-emitctocpuprofile-cpp">
+<span id="program-listing-file-lib-target-emitctocpuprofile-emitctocpuprofile-cpp"></span><h1>Program Listing for File EmitCToCPUProfile.cpp<a class="headerlink" href="#program-listing-for-file-emitctocpuprofile-cpp" title="Link to this heading"></a></h1>
+<p>↰ <a class="reference internal" href="file_lib_Target_EmitCToCPUProfile_EmitCToCPUProfile.cpp.html#file-lib-target-emitctocpuprofile-emitctocpuprofile-cpp"><span class="std std-ref">Return to documentation for file</span></a> (<code class="docutils literal notranslate"><span class="pre">lib/Target/EmitCToCPUProfile/EmitCToCPUProfile.cpp</span></code>)</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="c1">// Implementation of the EmitC-to-CPU-profile benchmark translation.</span>
+<span class="c1">//</span>
+<span class="c1">// @file</span>
+<span class="c1">// @author     Robert Khasanov (robert.khasanov@tu-dresden.de)</span>
+
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"mlir/Dialect/EmitC/IR/EmitC.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"mlir/Target/Cpp/CppEmitter.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"picea-mlir/Target/EmitCToCPUProfile/CPUProfileEmitter.h"</span>
+
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"llvm/ADT/STLExtras.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"llvm/Support/raw_ostream.h"</span>
+
+<span class="k">using</span><span class="w"> </span><span class="k">namespace</span><span class="w"> </span><span class="nn">mlir</span><span class="p">;</span>
+<span class="k">using</span><span class="w"> </span><span class="k">namespace</span><span class="w"> </span><span class="nn">mlir</span><span class="o">::</span><span class="nn">picea</span><span class="p">;</span>
+
+<span class="k">namespace</span><span class="w"> </span><span class="p">{</span>
+
+<span class="k">struct</span><span class="w"> </span><span class="nc">NodeArg</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">emitc</span><span class="o">::</span><span class="n">ArrayType</span><span class="w"> </span><span class="n">type</span><span class="p">;</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">elementType</span><span class="p">;</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">name</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="k">struct</span><span class="w"> </span><span class="nc">Node</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">name</span><span class="p">;</span>
+<span class="w">    </span><span class="n">SmallVector</span><span class="o">&lt;</span><span class="n">NodeArg</span><span class="o">&gt;</span><span class="w"> </span><span class="n">args</span><span class="p">;</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">runnerName</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="kt">bool</span><span class="w"> </span><span class="nf">isOutlinedNodeName</span><span class="p">(</span><span class="n">StringRef</span><span class="w"> </span><span class="n">name</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="kt">size_t</span><span class="w"> </span><span class="n">marker</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">name</span><span class="p">.</span><span class="n">rfind</span><span class="p">(</span><span class="s">"_node_"</span><span class="p">);</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">marker</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">StringRef</span><span class="o">::</span><span class="n">npos</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="w">    </span><span class="n">StringRef</span><span class="w"> </span><span class="n">number</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">name</span><span class="p">.</span><span class="n">drop_front</span><span class="p">(</span><span class="n">marker</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">StringRef</span><span class="p">(</span><span class="s">"_node_"</span><span class="p">).</span><span class="n">size</span><span class="p">());</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="o">!</span><span class="n">number</span><span class="p">.</span><span class="n">empty</span><span class="p">()</span>
+<span class="w">           </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">number</span><span class="p">.</span><span class="n">find_first_not_of</span><span class="p">(</span><span class="s">"0123456789"</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">StringRef</span><span class="o">::</span><span class="n">npos</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="n">FailureOr</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span><span class="w"> </span><span class="n">getCElementType</span><span class="p">(</span><span class="n">Type</span><span class="w"> </span><span class="n">type</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="n">intTy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dyn_cast</span><span class="o">&lt;</span><span class="n">IntegerType</span><span class="o">&gt;</span><span class="p">(</span><span class="n">type</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kt">unsigned</span><span class="w"> </span><span class="n">width</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">intTy</span><span class="p">.</span><span class="n">getWidth</span><span class="p">();</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">width</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">"bool"</span><span class="p">);</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">width</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">8</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">width</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">16</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">width</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">32</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">width</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">64</span><span class="p">)</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="p">(</span><span class="n">intTy</span><span class="p">.</span><span class="n">isUnsigned</span><span class="p">()</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">"uint"</span><span class="p">)</span>
+<span class="w">                                       </span><span class="o">:</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">"int"</span><span class="p">))</span>
+<span class="w">                   </span><span class="o">+</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">to_string</span><span class="p">(</span><span class="n">width</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">"_t"</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">isa</span><span class="o">&lt;</span><span class="n">Float32Type</span><span class="o">&gt;</span><span class="p">(</span><span class="n">type</span><span class="p">))</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">"float"</span><span class="p">);</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">isa</span><span class="o">&lt;</span><span class="n">Float64Type</span><span class="o">&gt;</span><span class="p">(</span><span class="n">type</span><span class="p">))</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">"double"</span><span class="p">);</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">failure</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="kt">void</span><span class="w"> </span><span class="n">emitArraySuffix</span><span class="p">(</span><span class="n">raw_ostream</span><span class="w"> </span><span class="o">&amp;</span><span class="n">os</span><span class="p">,</span><span class="w"> </span><span class="n">emitc</span><span class="o">::</span><span class="n">ArrayType</span><span class="w"> </span><span class="n">type</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int64_t</span><span class="w"> </span><span class="n">extent</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">type</span><span class="p">.</span><span class="n">getShape</span><span class="p">())</span><span class="w"> </span><span class="n">os</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="sc">'['</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">extent</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="sc">']'</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">void</span><span class="w"> </span><span class="n">emitCall</span><span class="p">(</span><span class="n">raw_ostream</span><span class="w"> </span><span class="o">&amp;</span><span class="n">os</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">Node</span><span class="w"> </span><span class="o">&amp;</span><span class="n">node</span><span class="p">,</span><span class="w"> </span><span class="n">StringRef</span><span class="w"> </span><span class="n">indent</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">os</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">indent</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">node</span><span class="p">.</span><span class="n">name</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="sc">'('</span><span class="p">;</span>
+<span class="w">    </span><span class="n">llvm</span><span class="o">::</span><span class="n">interleaveComma</span><span class="p">(</span><span class="n">node</span><span class="p">.</span><span class="n">args</span><span class="p">,</span><span class="w"> </span><span class="n">os</span><span class="p">,</span><span class="w"> </span><span class="p">[</span><span class="o">&amp;</span><span class="p">](</span><span class="k">const</span><span class="w"> </span><span class="n">NodeArg</span><span class="w"> </span><span class="o">&amp;</span><span class="n">arg</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">os</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">arg</span><span class="p">.</span><span class="n">name</span><span class="p">;</span>
+<span class="w">    </span><span class="p">});</span>
+<span class="w">    </span><span class="n">os</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">");</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="p">}</span><span class="w"> </span><span class="c1">// namespace</span>
+
+<span class="n">LogicalResult</span>
+<span class="n">picea</span><span class="o">::</span><span class="n">translateEmitCToCPUProfile</span><span class="p">(</span><span class="n">ModuleOp</span><span class="w"> </span><span class="k">module</span><span class="p">,</span><span class="w"> </span><span class="n">raw_ostream</span><span class="w"> </span><span class="o">&amp;</span><span class="n">os</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">SmallVector</span><span class="o">&lt;</span><span class="n">Node</span><span class="o">&gt;</span><span class="w"> </span><span class="n">nodes</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">unsigned</span><span class="w"> </span><span class="n">nodeIndex</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">emitc</span><span class="o">::</span><span class="n">FuncOp</span><span class="w"> </span><span class="n">func</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">module</span><span class="p">.</span><span class="n">getOps</span><span class="o">&lt;</span><span class="n">emitc</span><span class="o">::</span><span class="n">FuncOp</span><span class="o">&gt;</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">func</span><span class="p">.</span><span class="n">isExternal</span><span class="p">()</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="o">!</span><span class="n">isOutlinedNodeName</span><span class="p">(</span><span class="n">func</span><span class="p">.</span><span class="n">getSymName</span><span class="p">()))</span>
+<span class="w">            </span><span class="k">continue</span><span class="p">;</span>
+
+<span class="w">        </span><span class="n">Node</span><span class="w"> </span><span class="n">node</span><span class="p">{</span>
+<span class="w">            </span><span class="n">func</span><span class="p">.</span><span class="n">getSymName</span><span class="p">().</span><span class="n">str</span><span class="p">(),</span>
+<span class="w">            </span><span class="p">{},</span>
+<span class="w">            </span><span class="s">"measureNode"</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">to_string</span><span class="p">(</span><span class="n">nodeIndex</span><span class="p">)};</span>
+<span class="w">        </span><span class="n">Block</span><span class="w"> </span><span class="o">&amp;</span><span class="n">body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">func</span><span class="p">.</span><span class="n">getFunctionBody</span><span class="p">().</span><span class="n">front</span><span class="p">();</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="p">[</span><span class="n">argIndex</span><span class="p">,</span><span class="w"> </span><span class="n">blockArg</span><span class="p">]</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">llvm</span><span class="o">::</span><span class="n">enumerate</span><span class="p">(</span><span class="n">body</span><span class="p">.</span><span class="n">getArguments</span><span class="p">()))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">auto</span><span class="w"> </span><span class="n">arrayType</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dyn_cast</span><span class="o">&lt;</span><span class="n">emitc</span><span class="o">::</span><span class="n">ArrayType</span><span class="o">&gt;</span><span class="p">(</span><span class="n">blockArg</span><span class="p">.</span><span class="n">getType</span><span class="p">());</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">arrayType</span><span class="p">)</span>
+<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="n">func</span><span class="p">.</span><span class="n">emitError</span><span class="p">(</span>
+<span class="w">                           </span><span class="s">"CPU profiling only supports array "</span>
+<span class="w">                           </span><span class="s">"arguments; argument "</span><span class="p">)</span>
+<span class="w">                       </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">argIndex</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">" has type "</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">blockArg</span><span class="p">.</span><span class="n">getType</span><span class="p">();</span>
+<span class="w">            </span><span class="n">FailureOr</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span><span class="w"> </span><span class="n">elementType</span><span class="w"> </span><span class="o">=</span>
+<span class="w">                </span><span class="n">getCElementType</span><span class="p">(</span><span class="n">arrayType</span><span class="p">.</span><span class="n">getElementType</span><span class="p">());</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">failed</span><span class="p">(</span><span class="n">elementType</span><span class="p">))</span>
+<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="n">func</span><span class="p">.</span><span class="n">emitError</span><span class="p">(</span><span class="s">"argument "</span><span class="p">)</span>
+<span class="w">                       </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">argIndex</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">" has an unsupported element type "</span>
+<span class="w">                       </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">arrayType</span><span class="p">.</span><span class="n">getElementType</span><span class="p">();</span>
+<span class="w">            </span><span class="n">node</span><span class="p">.</span><span class="n">args</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span>
+<span class="w">                </span><span class="n">NodeArg</span><span class="p">{</span>
+<span class="w">                    </span><span class="n">arrayType</span><span class="p">,</span>
+<span class="w">                    </span><span class="o">*</span><span class="n">elementType</span><span class="p">,</span>
+<span class="w">                    </span><span class="s">"node"</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">to_string</span><span class="p">(</span><span class="n">nodeIndex</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">"Arg"</span>
+<span class="w">                        </span><span class="o">+</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">to_string</span><span class="p">(</span><span class="n">argIndex</span><span class="p">)});</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="n">nodes</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">node</span><span class="p">));</span>
+<span class="w">        </span><span class="o">++</span><span class="n">nodeIndex</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">nodes</span><span class="p">.</span><span class="n">empty</span><span class="p">())</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="k">module</span><span class="p">.</span><span class="n">emitError</span><span class="p">(</span>
+<span class="w">            </span><span class="s">"expected at least one non-external emitc.func to benchmark"</span><span class="p">);</span>
+
+<span class="w">    </span><span class="n">os</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"// Generated by resin --cpu-profile.</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"// Compile together with nodes.cpp on the target CPU.</span><span class="se">\n\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"#include &lt;algorithm&gt;</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"#include &lt;cerrno&gt;</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"#include &lt;cstddef&gt;</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"#include &lt;cstdint&gt;</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"#include &lt;cstdio&gt;</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"#include &lt;cstdlib&gt;</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"#include &lt;cstring&gt;</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"#include &lt;iostream&gt;</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"#include &lt;linux/perf_event.h&gt;</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"#include &lt;string&gt;</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"#include &lt;sys/ioctl.h&gt;</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"#include &lt;sys/syscall.h&gt;</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"#include &lt;unistd.h&gt;</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"#include &lt;utility&gt;</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"#include &lt;vector&gt;</span><span class="se">\n\n</span><span class="s">"</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">Node</span><span class="w"> </span><span class="o">&amp;</span><span class="n">node</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">nodes</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">os</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"void "</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">node</span><span class="p">.</span><span class="n">name</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="sc">'('</span><span class="p">;</span>
+<span class="w">        </span><span class="n">llvm</span><span class="o">::</span><span class="n">interleaveComma</span><span class="p">(</span><span class="n">node</span><span class="p">.</span><span class="n">args</span><span class="p">,</span><span class="w"> </span><span class="n">os</span><span class="p">,</span><span class="w"> </span><span class="p">[</span><span class="o">&amp;</span><span class="p">](</span><span class="k">const</span><span class="w"> </span><span class="n">NodeArg</span><span class="w"> </span><span class="o">&amp;</span><span class="n">arg</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">os</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">arg</span><span class="p">.</span><span class="n">elementType</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="sc">' '</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">arg</span><span class="p">.</span><span class="n">name</span><span class="p">;</span>
+<span class="w">            </span><span class="n">emitArraySuffix</span><span class="p">(</span><span class="n">os</span><span class="p">,</span><span class="w"> </span><span class="n">arg</span><span class="p">.</span><span class="n">type</span><span class="p">);</span>
+<span class="w">        </span><span class="p">});</span>
+<span class="w">        </span><span class="n">os</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">");</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="n">os</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"</span><span class="se">\n</span><span class="s">namespace {</span><span class="se">\n\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"volatile std::uint64_t checksumSink = 0;</span><span class="se">\n\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"[[noreturn]] void fail(const char *message)</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"{</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"    std::perror(message);</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"    std::exit(EXIT_FAILURE);</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"}</span><span class="se">\n\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"int openCycleCounter()</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"{</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"    perf_event_attr attr{};</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"    attr.type = PERF_TYPE_HARDWARE;</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"    attr.size = sizeof(attr);</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"    attr.config = PERF_COUNT_HW_CPU_CYCLES;</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"    attr.disabled = 1;</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"    attr.exclude_kernel = 1;</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"    attr.exclude_hv = 1;</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"    int fd = static_cast&lt;int&gt;(syscall(</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"        SYS_perf_event_open, &amp;attr, 0, -1, -1, 0));</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"    if (fd == -1) {</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"        std::fprintf(</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"            stderr,</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"            </span><span class="se">\"</span><span class="s">cannot open the CPU cycle counter: %s</span><span class="se">\\</span><span class="s">n</span><span class="se">\"\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"            </span><span class="se">\"</span><span class="s">Try running ./run.sh with sufficient perf-event </span><span class="se">\"\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"            </span><span class="se">\"</span><span class="s">permissions.</span><span class="se">\\</span><span class="s">n</span><span class="se">\"</span><span class="s">,</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"            std::strerror(errno));</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"        std::exit(EXIT_FAILURE);</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"    }</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"    return fd;</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"}</span><span class="se">\n\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"template &lt;typename Function&gt;</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"std::uint64_t countCycles(Function &amp;&amp;function, unsigned "</span>
+<span class="w">          </span><span class="s">"repetitions)</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"{</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"    int fd = openCycleCounter();</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"    if (ioctl(fd, PERF_EVENT_IOC_RESET, 0) == -1) fail(</span><span class="se">\"</span><span class="s">counter "</span>
+<span class="w">          </span><span class="s">"reset</span><span class="se">\"</span><span class="s">);</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"    if (ioctl(fd, PERF_EVENT_IOC_ENABLE, 0) == -1) fail(</span><span class="se">\"</span><span class="s">counter "</span>
+<span class="w">          </span><span class="s">"enable</span><span class="se">\"</span><span class="s">);</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"    for (unsigned i = 0; i &lt; repetitions; ++i) function();</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"    if (ioctl(fd, PERF_EVENT_IOC_DISABLE, 0) == -1) fail(</span><span class="se">\"</span><span class="s">counter "</span>
+<span class="w">          </span><span class="s">"disable</span><span class="se">\"</span><span class="s">);</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"    std::uint64_t cycles = 0;</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"    if (read(fd, &amp;cycles, sizeof(cycles)) != sizeof(cycles)) "</span>
+<span class="w">          </span><span class="s">"fail(</span><span class="se">\"</span><span class="s">counter read</span><span class="se">\"</span><span class="s">);</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"    close(fd);</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"    return (cycles + repetitions / 2) / repetitions;</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"}</span><span class="se">\n\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"void fillBuffer(void *data, std::size_t size, std::uint64_t seed)</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"{</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"    auto *bytes = static_cast&lt;unsigned char *&gt;(data);</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"    std::uint64_t state = seed ? seed : 1;</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"    for (std::size_t i = 0; i &lt; size; ++i) {</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"        state ^= state &lt;&lt; 13;</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"        state ^= state &gt;&gt; 7;</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"        state ^= state &lt;&lt; 17;</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"        bytes[i] = static_cast&lt;unsigned char&gt;(state);</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"    }</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"}</span><span class="se">\n\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"std::uint64_t checksum(const void *data, std::size_t size)</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"{</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"    const auto *bytes = static_cast&lt;const unsigned char *&gt;(data);</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"    std::uint64_t value = 1469598103934665603ULL;</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"    for (std::size_t i = 0; i &lt; size; ++i)</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"        value = (value ^ bytes[i]) * 1099511628211ULL;</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"    return value;</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"}</span><span class="se">\n\n</span><span class="s">"</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">Node</span><span class="w"> </span><span class="o">&amp;</span><span class="n">node</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">nodes</span><span class="p">)</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">NodeArg</span><span class="w"> </span><span class="o">&amp;</span><span class="n">arg</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">node</span><span class="p">.</span><span class="n">args</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">os</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"alignas(64) static "</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">arg</span><span class="p">.</span><span class="n">elementType</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="sc">' '</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">arg</span><span class="p">.</span><span class="n">name</span><span class="p">;</span>
+<span class="w">            </span><span class="n">emitArraySuffix</span><span class="p">(</span><span class="n">os</span><span class="p">,</span><span class="w"> </span><span class="n">arg</span><span class="p">.</span><span class="n">type</span><span class="p">);</span>
+<span class="w">            </span><span class="n">os</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"{};</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">    </span><span class="n">os</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="sc">'\n'</span><span class="p">;</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="p">[</span><span class="n">index</span><span class="p">,</span><span class="w"> </span><span class="n">node</span><span class="p">]</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">llvm</span><span class="o">::</span><span class="n">enumerate</span><span class="p">(</span><span class="n">nodes</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">os</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"std::uint64_t "</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">node</span><span class="p">.</span><span class="n">runnerName</span>
+<span class="w">           </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"(unsigned warmup, unsigned repetitions, unsigned samples)</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">              </span><span class="s">"{</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">              </span><span class="s">"    static bool initialized = false;</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">              </span><span class="s">"    if (!initialized) {</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="p">[</span><span class="n">argIndex</span><span class="p">,</span><span class="w"> </span><span class="n">arg</span><span class="p">]</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">llvm</span><span class="o">::</span><span class="n">enumerate</span><span class="p">(</span><span class="n">node</span><span class="p">.</span><span class="n">args</span><span class="p">))</span>
+<span class="w">            </span><span class="n">os</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"        fillBuffer("</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">arg</span><span class="p">.</span><span class="n">name</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">", sizeof("</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">arg</span><span class="p">.</span><span class="n">name</span>
+<span class="w">               </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"), "</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="p">(</span><span class="n">index</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">1009</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">argIndex</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">");</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+<span class="w">        </span><span class="n">os</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"        initialized = true;</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">              </span><span class="s">"    }</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">              </span><span class="s">"    for (unsigned i = 0; i &lt; warmup; ++i)</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+<span class="w">        </span><span class="n">emitCall</span><span class="p">(</span><span class="n">os</span><span class="p">,</span><span class="w"> </span><span class="n">node</span><span class="p">,</span><span class="w"> </span><span class="s">"        "</span><span class="p">);</span>
+<span class="w">        </span><span class="n">os</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"    std::vector&lt;std::uint64_t&gt; measurements;</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">              </span><span class="s">"    measurements.reserve(samples);</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">              </span><span class="s">"    for (unsigned sample = 0; sample &lt; samples; ++sample) {</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">              </span><span class="s">"        measurements.push_back(countCycles([&amp;] {</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+<span class="w">        </span><span class="n">emitCall</span><span class="p">(</span><span class="n">os</span><span class="p">,</span><span class="w"> </span><span class="n">node</span><span class="p">,</span><span class="w"> </span><span class="s">"            "</span><span class="p">);</span>
+<span class="w">        </span><span class="n">os</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"        }, repetitions));</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">              </span><span class="s">"    }</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">              </span><span class="s">"    std::sort(measurements.begin(), measurements.end());</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">NodeArg</span><span class="w"> </span><span class="o">&amp;</span><span class="n">arg</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">node</span><span class="p">.</span><span class="n">args</span><span class="p">)</span>
+<span class="w">            </span><span class="n">os</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"    checksumSink ^= checksum("</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">arg</span><span class="p">.</span><span class="n">name</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">", sizeof("</span>
+<span class="w">               </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">arg</span><span class="p">.</span><span class="n">name</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"));</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+<span class="w">        </span><span class="n">os</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"    return measurements[measurements.size() / 2];</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">              </span><span class="s">"}</span><span class="se">\n\n</span><span class="s">"</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="n">os</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"struct Options {</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"    unsigned warmup = 1;</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"    unsigned repetitions = 3;</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"    unsigned samples = 5;</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"    std::string node;</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"    std::string processorType = </span><span class="se">\"</span><span class="s">CortexA53</span><span class="se">\"</span><span class="s">;</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"};</span><span class="se">\n\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"unsigned parseCount(const char *flag, const char *value, bool "</span>
+<span class="w">          </span><span class="s">"allowZero)</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"{</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"    char *end = nullptr;</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"    errno = 0;</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"    unsigned long parsed = std::strtoul(value, &amp;end, 10);</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"    if (errno || !end || *end || (!allowZero &amp;&amp; parsed == 0)) {</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"        std::fprintf(stderr, </span><span class="se">\"</span><span class="s">%s expects %s integer, got "</span>
+<span class="w">          </span><span class="s">"'%s'</span><span class="se">\\</span><span class="s">n</span><span class="se">\"</span><span class="s">,</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"                     flag, allowZero ? </span><span class="se">\"</span><span class="s">a non-negative</span><span class="se">\"</span><span class="s"> : </span><span class="se">\"</span><span class="s">a "</span>
+<span class="w">          </span><span class="s">"positive</span><span class="se">\"</span><span class="s">, value);</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"        std::exit(EXIT_FAILURE);</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"    }</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"    return static_cast&lt;unsigned&gt;(parsed);</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"}</span><span class="se">\n\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"Options parseOptions(int argc, char **argv)</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"{</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"    Options options;</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"    for (int i = 1; i &lt; argc; ++i) {</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"        std::string flag = argv[i];</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"        if (flag == </span><span class="se">\"</span><span class="s">--help</span><span class="se">\"</span><span class="s">) {</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"            std::cout &lt;&lt; </span><span class="se">\"</span><span class="s">Usage: benchmark [--node NAME] [--warmup "</span>
+<span class="w">          </span><span class="s">"N] </span><span class="se">\"\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"                         </span><span class="se">\"</span><span class="s">[--repetitions N] [--samples N] </span><span class="se">\"\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"                         </span><span class="se">\"</span><span class="s">[--processor-type NAME]</span><span class="se">\\</span><span class="s">n</span><span class="se">\"</span><span class="s">;</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"            std::exit(EXIT_SUCCESS);</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"        }</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"        if (i + 1 &gt;= argc) {</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"            std::fprintf(stderr, </span><span class="se">\"</span><span class="s">%s requires a value</span><span class="se">\\</span><span class="s">n</span><span class="se">\"</span><span class="s">, "</span>
+<span class="w">          </span><span class="s">"flag.c_str());</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"            std::exit(EXIT_FAILURE);</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"        }</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"        const char *value = argv[++i];</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"        if (flag == </span><span class="se">\"</span><span class="s">--node</span><span class="se">\"</span><span class="s">) options.node = value;</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"        else if (flag == </span><span class="se">\"</span><span class="s">--warmup</span><span class="se">\"</span><span class="s">)</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"            options.warmup = parseCount(flag.c_str(), value, "</span>
+<span class="w">          </span><span class="s">"true);</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"        else if (flag == </span><span class="se">\"</span><span class="s">--repetitions</span><span class="se">\"</span><span class="s">)</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"            options.repetitions = parseCount(flag.c_str(), value, "</span>
+<span class="w">          </span><span class="s">"false);</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"        else if (flag == </span><span class="se">\"</span><span class="s">--samples</span><span class="se">\"</span><span class="s">)</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"            options.samples = parseCount(flag.c_str(), value, "</span>
+<span class="w">          </span><span class="s">"false);</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"        else if (flag == </span><span class="se">\"</span><span class="s">--processor-type</span><span class="se">\"</span><span class="s">) "</span>
+<span class="w">          </span><span class="s">"options.processorType = value;</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"        else {</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"            std::fprintf(stderr, </span><span class="se">\"</span><span class="s">unknown option: %s</span><span class="se">\\</span><span class="s">n</span><span class="se">\"</span><span class="s">, "</span>
+<span class="w">          </span><span class="s">"flag.c_str());</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"            std::exit(EXIT_FAILURE);</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"        }</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"    }</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"    return options;</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"}</span><span class="se">\n\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"void printQuoted(const std::string &amp;value)</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"{</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"    std::cout &lt;&lt; '</span><span class="se">\"</span><span class="s">';</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"    for (char c : value) {</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"        if (c == '</span><span class="se">\\\\</span><span class="s">' || c == '</span><span class="se">\"</span><span class="s">') std::cout &lt;&lt; '</span><span class="se">\\\\</span><span class="s">';</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"        std::cout &lt;&lt; c;</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"    }</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"    std::cout &lt;&lt; '</span><span class="se">\"</span><span class="s">';</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"}</span><span class="se">\n\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"} // namespace</span><span class="se">\n\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"int main(int argc, char **argv)</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"{</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"    Options options = parseOptions(argc, argv);</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"    std::vector&lt;std::pair&lt;std::string, std::uint64_t&gt;&gt; results;</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">Node</span><span class="w"> </span><span class="o">&amp;</span><span class="n">node</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">nodes</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">os</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"    if (options.node.empty() || options.node == </span><span class="se">\"</span><span class="s">"</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">node</span><span class="p">.</span><span class="n">name</span>
+<span class="w">           </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"</span><span class="se">\"</span><span class="s">)</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">           </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"        results.emplace_back(</span><span class="se">\"</span><span class="s">"</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">node</span><span class="p">.</span><span class="n">name</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"</span><span class="se">\"</span><span class="s">, "</span>
+<span class="w">           </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">node</span><span class="p">.</span><span class="n">runnerName</span>
+<span class="w">           </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"(options.warmup, options.repetitions, options.samples));</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="n">os</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"    if (results.empty()) {</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"        std::fprintf(stderr, </span><span class="se">\"</span><span class="s">unknown node: %s</span><span class="se">\\</span><span class="s">n</span><span class="se">\"</span><span class="s">, "</span>
+<span class="w">          </span><span class="s">"options.node.c_str());</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"        return EXIT_FAILURE;</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"    }</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"    std::cout &lt;&lt; </span><span class="se">\"</span><span class="s">metadata: {source: benchmark}</span><span class="se">\\</span><span class="s">n</span><span class="se">\"\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"                 </span><span class="se">\"</span><span class="s">execution:</span><span class="se">\\</span><span class="s">n  processes:</span><span class="se">\\</span><span class="s">n    profiles:</span><span class="se">\\</span><span class="s">n</span><span class="se">\"</span><span class="s">;</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"    for (const auto &amp;[name, cycles] : results) {</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"        std::cout &lt;&lt; </span><span class="se">\"</span><span class="s">      </span><span class="se">\"</span><span class="s">;</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"        printQuoted(name);</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"        std::cout &lt;&lt; </span><span class="se">\"</span><span class="s">:</span><span class="se">\\</span><span class="s">n        </span><span class="se">\"</span><span class="s">;</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"        printQuoted(options.processorType);</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"        std::cout &lt;&lt; </span><span class="se">\"</span><span class="s">: {cycles: </span><span class="se">\"</span><span class="s"> &lt;&lt; cycles &lt;&lt; </span><span class="se">\"</span><span class="s">}</span><span class="se">\\</span><span class="s">n</span><span class="se">\"</span><span class="s">;</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"    }</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"    return EXIT_SUCCESS;</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"}</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">success</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="n">LogicalResult</span>
+<span class="n">picea</span><span class="o">::</span><span class="n">translateEmitCToCPUProfileNodes</span><span class="p">(</span><span class="n">ModuleOp</span><span class="w"> </span><span class="k">module</span><span class="p">,</span><span class="w"> </span><span class="n">raw_ostream</span><span class="w"> </span><span class="o">&amp;</span><span class="n">os</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">os</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"// Generated by resin --cpu-profile.</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"#include &lt;algorithm&gt;</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"#include &lt;cstddef&gt;</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"#include &lt;cstdint&gt;</span><span class="se">\n\n</span><span class="s">"</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">emitc</span><span class="o">::</span><span class="n">translateToCpp</span><span class="p">(</span><span class="k">module</span><span class="p">,</span><span class="w"> </span><span class="n">os</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

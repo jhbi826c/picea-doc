@@ -1,0 +1,719 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Program Listing for File OutlineCGRADeploy.cpp &mdash; picea 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/collapsible-lists/css/tree_view.css?v=a885cde7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js?v=73120307"></script>
+      <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js?v=660e4f45"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            picea
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Installation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../README.html">About the project</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#guides">Guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#related-projects">Related projects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#development-environment-nix">Development Environment (Nix)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#build-on-ubuntu-24-04-no-nix">Build on Ubuntu 24.04 (no Nix)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#gurobi-license">Gurobi license</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#installing">Installing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#run-the-tests">Run the tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#build-the-documentation">Build the documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#compiling-a-design">Compiling a design</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#running-a-design-on-the-board">Running a design on the board</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#exporting-a-profiled-application-to-mocasin">Exporting a profiled application to Mocasin</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Guides</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../guides/laksa.html">The FPGA Variant using LAKSA backend</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/cgra.html">The CGRA Variant</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">MLIR Dialects</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/Base2Ops.html">‘base2’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/CGRAOps.html">‘cgra’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/DFGOps.html">‘dfg’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/EmitHLSOps.html">‘emithls’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/FilterOps.html">‘filter’ Dialect</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Passes</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/PICEAConversionPasses.html">PICEA Conversion Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/CGRAPasses.html">CGRA Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/DFGPasses.html">DFG Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/EmitHLSPasses.html">Emit HLS Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/FuncExtPasses.html">Func Ext Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/LinalgExtPasses.html">Linalg Ext Passes</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">C++ API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="library_root.html">C++ API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">picea</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Program Listing for File OutlineCGRADeploy.cpp</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/program_listing_file_lib_Dialect_CGRA_Transforms_OutlineCGRADeploy.cpp.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="program-listing-for-file-outlinecgradeploy-cpp">
+<span id="program-listing-file-lib-dialect-cgra-transforms-outlinecgradeploy-cpp"></span><h1>Program Listing for File OutlineCGRADeploy.cpp<a class="headerlink" href="#program-listing-for-file-outlinecgradeploy-cpp" title="Link to this heading"></a></h1>
+<p>↰ <a class="reference internal" href="file_lib_Dialect_CGRA_Transforms_OutlineCGRADeploy.cpp.html#file-lib-dialect-cgra-transforms-outlinecgradeploy-cpp"><span class="std std-ref">Return to documentation for file</span></a> (<code class="docutils literal notranslate"><span class="pre">lib/Dialect/CGRA/Transforms/OutlineCGRADeploy.cpp</span></code>)</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="c1">// Splits a host function around its cgra.deploy into three functions sharing</span>
+<span class="c1">// the stream memrefs by argument:</span>
+<span class="c1">//</span>
+<span class="c1">//   func @H(&lt;memrefs&gt;) { &lt;init&gt;; cgra.deploy {&lt;loop&gt;}; &lt;post&gt;; return }</span>
+<span class="c1">//     =&gt;  @H_init / @H_kernel / @H_post, and @H calling the three</span>
+<span class="c1">//</span>
+<span class="c1">// @H_kernel is then a stand-alone CGRA kernel (streams are arguments) and</span>
+<span class="c1">// @H_init/@H_post are the host hooks the driver calls. Runs after</span>
+<span class="c1">// --annotate-to-cgra, before --annotate-dispatch-io.</span>
+<span class="c1">//</span>
+<span class="c1">// Only a deploy whose streams survive as real memrefs can be outlined.</span>
+<span class="c1">// With `drop-host` @H is erased instead, and a dynamic memref&lt;?xT&gt; stream is</span>
+<span class="c1">// retyped to the static stream size so the outlined functions are C-callable.</span>
+
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"mlir/Dialect/Affine/IR/AffineOps.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"mlir/Dialect/Func/IR/FuncOps.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"mlir/Dialect/MemRef/IR/MemRef.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"mlir/IR/Builders.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"mlir/IR/BuiltinOps.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"mlir/IR/BuiltinTypes.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"mlir/IR/IRMapping.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"mlir/Interfaces/SideEffectInterfaces.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"mlir/Pass/Pass.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"picea-mlir/Dialect/CGRA/IR/CGRA.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"picea-mlir/Dialect/CGRA/Transforms/CGRAAnalysisUtils.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"picea-mlir/Dialect/CGRA/Transforms/Passes.h"</span>
+
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"llvm/ADT/SetVector.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"llvm/ADT/SmallPtrSet.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"llvm/ADT/SmallVector.h"</span>
+
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;functional&gt;</span>
+
+<span class="k">using</span><span class="w"> </span><span class="k">namespace</span><span class="w"> </span><span class="nn">mlir</span><span class="p">;</span>
+
+<span class="k">namespace</span><span class="w"> </span><span class="p">{</span>
+
+<span class="c1">// Ops that own or name data and therefore stay in the host function H (their</span>
+<span class="c1">// memref results are shared into the outlined functions as arguments);</span>
+<span class="c1">// constants stay too and are re-cloned into each outlined function on demand.</span>
+<span class="k">static</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="nf">staysInHost</span><span class="p">(</span><span class="n">Operation</span><span class="o">*</span><span class="w"> </span><span class="n">op</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">isa</span><span class="o">&lt;</span><span class="n">memref</span><span class="o">::</span><span class="n">AllocaOp</span><span class="p">,</span><span class="w"> </span><span class="n">memref</span><span class="o">::</span><span class="n">AllocOp</span><span class="p">,</span><span class="w"> </span><span class="n">memref</span><span class="o">::</span><span class="n">GetGlobalOp</span><span class="o">&gt;</span><span class="p">(</span><span class="n">op</span><span class="p">)</span>
+<span class="w">           </span><span class="o">||</span><span class="w"> </span><span class="n">op</span><span class="o">-&gt;</span><span class="n">hasTrait</span><span class="o">&lt;</span><span class="n">OpTrait</span><span class="o">::</span><span class="n">ConstantLike</span><span class="o">&gt;</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="c1">// A pointer argument reaches MLIR as a dynamic memref (memref&lt;?xT&gt;, or</span>
+<span class="c1">// memref&lt;?x?xT&gt; for a 2-D array), which the bare-pointer ABI cannot lower (no</span>
+<span class="c1">// static size). Give each dynamic dimension a static size from the deploy loop</span>
+<span class="c1">// nest — @p loopCounts holds the per-level trip counts, outer to inner. A 1-D</span>
+<span class="c1">// stream takes the full stream length (product of all trip counts, since a</span>
+<span class="c1">// flattened array is indexed a[i*M+j]); a rank-N stream takes trip count k for</span>
+<span class="c1">// dimension k. Over-sizing a scalar accumulator is harmless: the CGRA stream</span>
+<span class="c1">// length comes from the access pattern, not this backing size, and the</span>
+<span class="c1">// generated driver allocates the same size.</span>
+<span class="k">static</span><span class="w"> </span><span class="n">Type</span><span class="w"> </span><span class="nf">staticizeStream</span><span class="p">(</span><span class="n">Type</span><span class="w"> </span><span class="n">ty</span><span class="p">,</span><span class="w"> </span><span class="n">ArrayRef</span><span class="o">&lt;</span><span class="kt">int64_t</span><span class="o">&gt;</span><span class="w"> </span><span class="n">loopCounts</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">auto</span><span class="w"> </span><span class="n">mr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dyn_cast</span><span class="o">&lt;</span><span class="n">MemRefType</span><span class="o">&gt;</span><span class="p">(</span><span class="n">ty</span><span class="p">);</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">mr</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">loopCounts</span><span class="p">.</span><span class="n">empty</span><span class="p">())</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">ty</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">int64_t</span><span class="w"> </span><span class="n">rank</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mr</span><span class="p">.</span><span class="n">getRank</span><span class="p">();</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">rank</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">mr</span><span class="p">.</span><span class="n">isDynamicDim</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">ty</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">int64_t</span><span class="w"> </span><span class="n">prod</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int64_t</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">loopCounts</span><span class="p">)</span><span class="w"> </span><span class="n">prod</span><span class="w"> </span><span class="o">*=</span><span class="w"> </span><span class="n">c</span><span class="p">;</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">prod</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">MemRefType</span><span class="o">::</span><span class="n">get</span><span class="p">({</span><span class="n">prod</span><span class="p">},</span><span class="w"> </span><span class="n">mr</span><span class="p">.</span><span class="n">getElementType</span><span class="p">())</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">ty</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">rank</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="p">(</span><span class="kt">int64_t</span><span class="p">)</span><span class="n">loopCounts</span><span class="p">.</span><span class="n">size</span><span class="p">()</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="n">rank</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">SmallVector</span><span class="o">&lt;</span><span class="kt">int64_t</span><span class="o">&gt;</span><span class="w"> </span><span class="n">shape</span><span class="p">(</span><span class="n">mr</span><span class="p">.</span><span class="n">getShape</span><span class="p">().</span><span class="n">begin</span><span class="p">(),</span><span class="w"> </span><span class="n">mr</span><span class="p">.</span><span class="n">getShape</span><span class="p">().</span><span class="n">end</span><span class="p">());</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int64_t</span><span class="w"> </span><span class="n">d</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">d</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">rank</span><span class="p">;</span><span class="w"> </span><span class="o">++</span><span class="n">d</span><span class="p">)</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">mr</span><span class="p">.</span><span class="n">isDynamicDim</span><span class="p">(</span><span class="n">d</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">loopCounts</span><span class="p">[</span><span class="n">d</span><span class="p">]</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
+<span class="w">                    </span><span class="k">return</span><span class="w"> </span><span class="n">ty</span><span class="p">;</span><span class="w"> </span><span class="c1">// cannot size this dim: leave the memref</span>
+<span class="w">                               </span><span class="c1">// untouched</span>
+<span class="w">                </span><span class="n">shape</span><span class="p">[</span><span class="n">d</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">loopCounts</span><span class="p">[</span><span class="n">d</span><span class="p">];</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">MemRefType</span><span class="o">::</span><span class="n">get</span><span class="p">(</span><span class="n">shape</span><span class="p">,</span><span class="w"> </span><span class="n">mr</span><span class="p">.</span><span class="n">getElementType</span><span class="p">());</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">ty</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">struct</span><span class="w"> </span><span class="nc">CGRAOutlineDeployPass</span>
+<span class="w">        </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">PassWrapper</span><span class="o">&lt;</span><span class="n">CGRAOutlineDeployPass</span><span class="p">,</span><span class="w"> </span><span class="n">OperationPass</span><span class="o">&lt;</span><span class="n">ModuleOp</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">    </span><span class="n">MLIR_DEFINE_EXPLICIT_INTERNAL_INLINE_TYPE_ID</span><span class="p">(</span><span class="n">CGRAOutlineDeployPass</span><span class="p">)</span>
+
+<span class="w">    </span><span class="n">CGRAOutlineDeployPass</span><span class="p">()</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">default</span><span class="p">;</span>
+<span class="w">    </span><span class="n">CGRAOutlineDeployPass</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">CGRAOutlineDeployPass</span><span class="w"> </span><span class="o">&amp;</span><span class="n">o</span><span class="p">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">PassWrapper</span><span class="p">(</span><span class="n">o</span><span class="p">)</span><span class="w"> </span><span class="p">{}</span>
+
+<span class="w">    </span><span class="c1">// When set, erase the host function instead of rewriting it to call the</span>
+<span class="w">    </span><span class="c1">// outlined parts: the module keeps only &lt;H&gt;_init/&lt;H&gt;_kernel/&lt;H&gt;_post (each</span>
+<span class="w">    </span><span class="c1">// taking the streams by argument), and a C driver supplies main() and calls</span>
+<span class="w">    </span><span class="c1">// them. When unset, the host function is kept and calls the three in place.</span>
+<span class="w">    </span><span class="n">Pass</span><span class="o">::</span><span class="n">Option</span><span class="o">&lt;</span><span class="kt">bool</span><span class="o">&gt;</span><span class="w"> </span><span class="n">dropHost</span><span class="p">{</span>
+<span class="w">        </span><span class="o">*</span><span class="k">this</span><span class="p">,</span>
+<span class="w">        </span><span class="s">"drop-host"</span><span class="p">,</span>
+<span class="w">        </span><span class="n">llvm</span><span class="o">::</span><span class="n">cl</span><span class="o">::</span><span class="n">desc</span><span class="p">(</span><span class="s">"Erase the host function; keep only init/kernel/post"</span><span class="p">),</span>
+<span class="w">        </span><span class="n">llvm</span><span class="o">::</span><span class="n">cl</span><span class="o">::</span><span class="n">init</span><span class="p">(</span><span class="nb">false</span><span class="p">)};</span>
+
+<span class="w">    </span><span class="n">StringRef</span><span class="w"> </span><span class="nf">getArgument</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">final</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="s">"outline-cgra-deploy"</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="n">StringRef</span><span class="w"> </span><span class="nf">getDescription</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">final</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="s">"Outline a cgra.deploy and its surrounding host code into "</span>
+<span class="w">               </span><span class="s">"&lt;H&gt;_init / &lt;H&gt;_kernel / &lt;H&gt;_post functions sharing the streams"</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="nf">getDependentDialects</span><span class="p">(</span><span class="n">DialectRegistry</span><span class="w"> </span><span class="o">&amp;</span><span class="n">reg</span><span class="p">)</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">override</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="n">reg</span><span class="p">.</span><span class="n">insert</span><span class="o">&lt;</span>
+<span class="w">            </span><span class="n">cgra</span><span class="o">::</span><span class="n">CGRADialect</span><span class="p">,</span>
+<span class="w">            </span><span class="n">func</span><span class="o">::</span><span class="n">FuncDialect</span><span class="p">,</span>
+<span class="w">            </span><span class="n">memref</span><span class="o">::</span><span class="n">MemRefDialect</span><span class="o">&gt;</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="c1">// Build `func @name(shared...)` containing clones of `ops` (in order), with</span>
+<span class="w">    </span><span class="c1">// the shared values remapped to the arguments and constant live-ins cloned</span>
+<span class="w">    </span><span class="c1">// in.</span>
+<span class="w">    </span><span class="n">func</span><span class="o">::</span><span class="n">FuncOp</span><span class="w"> </span><span class="nf">makeFunc</span><span class="p">(</span>
+<span class="w">        </span><span class="n">StringRef</span><span class="w"> </span><span class="n">name</span><span class="p">,</span>
+<span class="w">        </span><span class="n">ArrayRef</span><span class="o">&lt;</span><span class="n">Operation</span><span class="o">*&gt;</span><span class="w"> </span><span class="n">ops</span><span class="p">,</span>
+<span class="w">        </span><span class="n">ArrayRef</span><span class="o">&lt;</span><span class="n">Value</span><span class="o">&gt;</span><span class="w"> </span><span class="n">shared</span><span class="p">,</span>
+<span class="w">        </span><span class="n">ArrayRef</span><span class="o">&lt;</span><span class="kt">int64_t</span><span class="o">&gt;</span><span class="w"> </span><span class="n">loopCounts</span><span class="p">,</span>
+<span class="w">        </span><span class="n">ModuleOp</span><span class="w"> </span><span class="k">module</span><span class="p">,</span>
+<span class="w">        </span><span class="n">Location</span><span class="w"> </span><span class="n">loc</span><span class="p">)</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="n">OpBuilder</span><span class="w"> </span><span class="n">mb</span><span class="p">(</span><span class="k">module</span><span class="p">.</span><span class="n">getBodyRegion</span><span class="p">());</span>
+<span class="w">        </span><span class="n">mb</span><span class="p">.</span><span class="n">setInsertionPointToEnd</span><span class="p">(</span><span class="k">module</span><span class="p">.</span><span class="n">getBody</span><span class="p">());</span>
+<span class="w">        </span><span class="n">SmallVector</span><span class="o">&lt;</span><span class="n">Type</span><span class="o">&gt;</span><span class="w"> </span><span class="n">argTys</span><span class="p">;</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">Value</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">shared</span><span class="p">)</span>
+<span class="w">            </span><span class="n">argTys</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">staticizeStream</span><span class="p">(</span><span class="n">v</span><span class="p">.</span><span class="n">getType</span><span class="p">(),</span><span class="w"> </span><span class="n">loopCounts</span><span class="p">));</span>
+<span class="w">        </span><span class="k">auto</span><span class="w"> </span><span class="n">fn</span><span class="w"> </span><span class="o">=</span>
+<span class="w">            </span><span class="n">func</span><span class="o">::</span><span class="n">FuncOp</span><span class="o">::</span><span class="n">create</span><span class="p">(</span><span class="n">mb</span><span class="p">,</span><span class="w"> </span><span class="n">loc</span><span class="p">,</span><span class="w"> </span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="n">mb</span><span class="p">.</span><span class="n">getFunctionType</span><span class="p">(</span><span class="n">argTys</span><span class="p">,</span><span class="w"> </span><span class="p">{}));</span>
+<span class="w">        </span><span class="n">Block</span><span class="o">*</span><span class="w"> </span><span class="n">entry</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">fn</span><span class="p">.</span><span class="n">addEntryBlock</span><span class="p">();</span>
+<span class="w">        </span><span class="n">OpBuilder</span><span class="w"> </span><span class="n">b</span><span class="p">(</span><span class="n">entry</span><span class="p">,</span><span class="w"> </span><span class="n">entry</span><span class="o">-&gt;</span><span class="n">begin</span><span class="p">());</span>
+
+<span class="w">        </span><span class="c1">// Map each shared value to its argument. When a dynamic memref was</span>
+<span class="w">        </span><span class="c1">// staticized the argument type differs, but affine load/store verify on</span>
+<span class="w">        </span><span class="c1">// any ranked memref, so the cloned ops operate directly on the</span>
+<span class="w">        </span><span class="c1">// static-sized argument.</span>
+<span class="w">        </span><span class="n">IRMapping</span><span class="w"> </span><span class="n">map</span><span class="p">;</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="n">v</span><span class="p">]</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">llvm</span><span class="o">::</span><span class="n">enumerate</span><span class="p">(</span><span class="n">shared</span><span class="p">))</span>
+<span class="w">            </span><span class="n">map</span><span class="p">.</span><span class="n">map</span><span class="p">(</span><span class="n">v</span><span class="p">,</span><span class="w"> </span><span class="n">entry</span><span class="o">-&gt;</span><span class="n">getArgument</span><span class="p">(</span><span class="n">i</span><span class="p">));</span>
+
+<span class="w">        </span><span class="c1">// A buffer backed by a memref.global is RE-MATERIALISED here rather</span>
+<span class="w">        </span><span class="c1">// than read from the argument. The argument stays (so call sites are</span>
+<span class="w">        </span><span class="c1">// unchanged), but the body refers to the symbol — which is the only</span>
+<span class="w">        </span><span class="c1">// buffer identity that survives outlining. The multi-config driver</span>
+<span class="w">        </span><span class="c1">// emitter uses it to recognise that a stream in config 7 and a stream</span>
+<span class="w">        </span><span class="c1">// in config 23 are the same array; without it every (config, stream)</span>
+<span class="w">        </span><span class="c1">// pair looks like a fresh buffer, and a partitioned network declared</span>
+<span class="w">        </span><span class="c1">// 292 arrays (9.6 MB) instead of 34, with the configurations reading</span>
+<span class="w">        </span><span class="c1">// and writing different copies.</span>
+<span class="w">        </span><span class="c1">// Record, per argument, the global symbol it stands for (empty when it</span>
+<span class="w">        </span><span class="c1">// is not global-backed). Re-materialising the global below leaves the</span>
+<span class="w">        </span><span class="c1">// argument DEAD, so this attribute is the only remaining way for</span>
+<span class="w">        </span><span class="c1">// --generate-cgra-driver to know what to pass when it synthesises a</span>
+<span class="w">        </span><span class="c1">// call to this segment — which it must do for main_init / main_stageK /</span>
+<span class="w">        </span><span class="c1">// main_post once drop-host has removed the call site. Record which</span>
+<span class="w">        </span><span class="c1">// global each argument stands for, but do NOT re-materialise the</span>
+<span class="w">        </span><span class="c1">// get_global inside the callee. Cloning it made the body reference the</span>
+<span class="w">        </span><span class="c1">// global directly, and `picea-translate` then emits `@sym = private</span>
+<span class="w">        </span><span class="c1">// global …` in &lt;K&gt;.ll — a SECOND copy of the array, unrelated to the</span>
+<span class="w">        </span><span class="c1">// one dataset.h defines and the fabric streams. The host segment filled</span>
+<span class="w">        </span><span class="c1">// the private duplicate, so the convolutions read a buffer of zeros.</span>
+<span class="w">        </span><span class="c1">// The callee must use its ARGUMENTS, which are the driver's real</span>
+<span class="w">        </span><span class="c1">// arrays. (The identity problem the cloning was meant to solve no</span>
+<span class="w">        </span><span class="c1">// longer exists: with the host preserved, --generate-cgra-driver takes</span>
+<span class="w">        </span><span class="c1">// buffer identity from the actual call-site operands and the inline</span>
+<span class="w">        </span><span class="c1">// deploys.)</span>
+<span class="w">        </span><span class="n">SmallVector</span><span class="o">&lt;</span><span class="n">Attribute</span><span class="o">&gt;</span><span class="w"> </span><span class="n">argGlobals</span><span class="p">;</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">Value</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">shared</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">auto</span><span class="w"> </span><span class="n">g</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">v</span><span class="p">.</span><span class="n">getDefiningOp</span><span class="o">&lt;</span><span class="n">memref</span><span class="o">::</span><span class="n">GetGlobalOp</span><span class="o">&gt;</span><span class="p">();</span>
+<span class="w">            </span><span class="n">argGlobals</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span>
+<span class="w">                </span><span class="n">mb</span><span class="p">.</span><span class="n">getStringAttr</span><span class="p">(</span><span class="n">g</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">g</span><span class="p">.</span><span class="n">getName</span><span class="p">()</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">StringRef</span><span class="p">(</span><span class="s">""</span><span class="p">)));</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="n">fn</span><span class="o">-&gt;</span><span class="n">setAttr</span><span class="p">(</span><span class="s">"cgra.arg_globals"</span><span class="p">,</span><span class="w"> </span><span class="n">mb</span><span class="p">.</span><span class="n">getArrayAttr</span><span class="p">(</span><span class="n">argGlobals</span><span class="p">));</span>
+
+<span class="w">        </span><span class="c1">// Clone constant live-ins (used anywhere, including nested regions)</span>
+<span class="w">        </span><span class="c1">// that are defined outside the outlined ops, so operands resolve inside</span>
+<span class="w">        </span><span class="c1">// the new func.</span>
+<span class="w">        </span><span class="n">llvm</span><span class="o">::</span><span class="n">SmallPtrSet</span><span class="o">&lt;</span><span class="n">Operation</span><span class="o">*</span><span class="p">,</span><span class="w"> </span><span class="mi">8</span><span class="o">&gt;</span><span class="w"> </span><span class="n">inSet</span><span class="p">(</span><span class="n">ops</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span><span class="w"> </span><span class="n">ops</span><span class="p">.</span><span class="n">end</span><span class="p">());</span>
+<span class="w">        </span><span class="c1">// Re-clone pure live-ins used by the outlined ops but defined outside</span>
+<span class="w">        </span><span class="c1">// them: constants AND pure global-address math (llvm.mlir.addressof /</span>
+<span class="w">        </span><span class="c1">// getelementptr for printf format strings, etc.). Without this the</span>
+<span class="w">        </span><span class="c1">// clones keep referencing ops left in the host function, which</span>
+<span class="w">        </span><span class="c1">// `drop-host` then erases -&gt; "operation destroyed but still has uses".</span>
+<span class="w">        </span><span class="c1">// Operands are cloned first (recursion) so the whole chain resolves in</span>
+<span class="w">        </span><span class="c1">// dependency order.</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">function</span><span class="o">&lt;</span><span class="kt">bool</span><span class="p">(</span><span class="n">Value</span><span class="p">)</span><span class="o">&gt;</span><span class="w"> </span><span class="n">reclone</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="o">&amp;</span><span class="p">](</span><span class="n">Value</span><span class="w"> </span><span class="n">v</span><span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">map</span><span class="p">.</span><span class="n">contains</span><span class="p">(</span><span class="n">v</span><span class="p">))</span>
+<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span><span class="w"> </span><span class="c1">// already available (arg, constant, or an earlier</span>
+<span class="w">                             </span><span class="c1">// clone)</span>
+<span class="w">            </span><span class="n">Operation</span><span class="o">*</span><span class="w"> </span><span class="n">d</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">v</span><span class="p">.</span><span class="n">getDefiningOp</span><span class="p">();</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">d</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">inSet</span><span class="p">.</span><span class="n">count</span><span class="p">(</span><span class="n">d</span><span class="p">))</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="w">            </span><span class="kt">bool</span><span class="w"> </span><span class="n">ok</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">d</span><span class="o">-&gt;</span><span class="n">hasTrait</span><span class="o">&lt;</span><span class="n">OpTrait</span><span class="o">::</span><span class="n">ConstantLike</span><span class="o">&gt;</span><span class="p">()</span>
+<span class="w">                      </span><span class="o">||</span><span class="w"> </span><span class="p">(</span><span class="n">isMemoryEffectFree</span><span class="p">(</span><span class="n">d</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">d</span><span class="o">-&gt;</span><span class="n">getDialect</span><span class="p">()</span>
+<span class="w">                          </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">d</span><span class="o">-&gt;</span><span class="n">getDialect</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">getNamespace</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s">"llvm"</span><span class="p">);</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">ok</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="w">            </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">Value</span><span class="w"> </span><span class="n">o</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">d</span><span class="o">-&gt;</span><span class="n">getOperands</span><span class="p">())</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">reclone</span><span class="p">(</span><span class="n">o</span><span class="p">))</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="w">            </span><span class="n">b</span><span class="p">.</span><span class="n">clone</span><span class="p">(</span><span class="o">*</span><span class="n">d</span><span class="p">,</span><span class="w"> </span><span class="n">map</span><span class="p">);</span><span class="w"> </span><span class="c1">// clone(op, map) also maps d's results into `map`</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="w">        </span><span class="p">};</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">Operation</span><span class="o">*</span><span class="w"> </span><span class="n">op</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">ops</span><span class="p">)</span>
+<span class="w">            </span><span class="n">op</span><span class="o">-&gt;</span><span class="n">walk</span><span class="p">([</span><span class="o">&amp;</span><span class="p">](</span><span class="n">Operation</span><span class="o">*</span><span class="w"> </span><span class="n">inner</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">Value</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">inner</span><span class="o">-&gt;</span><span class="n">getOperands</span><span class="p">())</span><span class="w"> </span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">reclone</span><span class="p">(</span><span class="n">v</span><span class="p">);</span>
+<span class="w">            </span><span class="p">});</span>
+
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">Operation</span><span class="o">*</span><span class="w"> </span><span class="n">op</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">ops</span><span class="p">)</span><span class="w"> </span><span class="n">b</span><span class="p">.</span><span class="n">clone</span><span class="p">(</span><span class="o">*</span><span class="n">op</span><span class="p">,</span><span class="w"> </span><span class="n">map</span><span class="p">);</span>
+
+<span class="w">        </span><span class="c1">// The callee must use its ARGUMENTS, not the global symbol.</span>
+<span class="w">        </span><span class="c1">//</span>
+<span class="w">        </span><span class="c1">// The `map` above already redirects the get_globals that sit OUTSIDE</span>
+<span class="w">        </span><span class="c1">// the outlined region (they are live-ins, so they became arguments).</span>
+<span class="w">        </span><span class="c1">// But a get_global INSIDE the region is one of `ops` and was just</span>
+<span class="w">        </span><span class="c1">// cloned in verbatim — and the buffer-placement passes do leave those</span>
+<span class="w">        </span><span class="c1">// behind. Such a clone lowers to `@sym = private global …` in &lt;K&gt;.ll: a</span>
+<span class="w">        </span><span class="c1">// SECOND, unrelated copy of the array. The segment then reads and</span>
+<span class="w">        </span><span class="c1">// writes the duplicate while the driver and the fabric use the real one</span>
+<span class="w">        </span><span class="c1">// from dataset.h, so every store the segment performs is lost and every</span>
+<span class="w">        </span><span class="c1">// load it does reads zeros.</span>
+<span class="w">        </span><span class="c1">//</span>
+<span class="w">        </span><span class="c1">// That silently cost `tfm_relu` the last `N mod 4` outputs (its lane</span>
+<span class="w">        </span><span class="c1">// remainder is real compute in main_post) and made EVERY kernel's</span>
+<span class="w">        </span><span class="c1">// result print as zeros. It is invisible to the driver's SUCCESS check</span>
+<span class="w">        </span><span class="c1">// whenever the reference path calls the same segment — both sides then</span>
+<span class="w">        </span><span class="c1">// read the same duplicate and agree — so `-cpucheck` is what catches</span>
+<span class="w">        </span><span class="c1">// it.</span>
+<span class="w">        </span><span class="n">SmallVector</span><span class="o">&lt;</span><span class="n">memref</span><span class="o">::</span><span class="n">GetGlobalOp</span><span class="o">&gt;</span><span class="w"> </span><span class="n">dead</span><span class="p">;</span>
+<span class="w">        </span><span class="n">fn</span><span class="p">.</span><span class="n">walk</span><span class="p">([</span><span class="o">&amp;</span><span class="p">](</span><span class="n">memref</span><span class="o">::</span><span class="n">GetGlobalOp</span><span class="w"> </span><span class="n">gg</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="n">sym</span><span class="p">]</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">llvm</span><span class="o">::</span><span class="n">enumerate</span><span class="p">(</span><span class="n">argGlobals</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">cast</span><span class="o">&lt;</span><span class="n">StringAttr</span><span class="o">&gt;</span><span class="p">(</span><span class="n">sym</span><span class="p">).</span><span class="n">getValue</span><span class="p">()</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">gg</span><span class="p">.</span><span class="n">getName</span><span class="p">())</span><span class="w"> </span><span class="k">continue</span><span class="p">;</span>
+<span class="w">                </span><span class="n">BlockArgument</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">entry</span><span class="o">-&gt;</span><span class="n">getArgument</span><span class="p">(</span><span class="n">i</span><span class="p">);</span>
+<span class="w">                </span><span class="c1">// A staticized argument can have a different (more precise)</span>
+<span class="w">                </span><span class="c1">// type than the global; only fold when they agree, so nothing</span>
+<span class="w">                </span><span class="c1">// is silently retyped.</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">a</span><span class="p">.</span><span class="n">getType</span><span class="p">()</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">gg</span><span class="p">.</span><span class="n">getType</span><span class="p">())</span><span class="w"> </span><span class="k">continue</span><span class="p">;</span>
+<span class="w">                </span><span class="n">gg</span><span class="p">.</span><span class="n">getResult</span><span class="p">().</span><span class="n">replaceAllUsesWith</span><span class="p">(</span><span class="n">a</span><span class="p">);</span>
+<span class="w">                </span><span class="n">dead</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">gg</span><span class="p">);</span>
+<span class="w">                </span><span class="k">return</span><span class="p">;</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">});</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">memref</span><span class="o">::</span><span class="n">GetGlobalOp</span><span class="w"> </span><span class="n">gg</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">dead</span><span class="p">)</span><span class="w"> </span><span class="n">gg</span><span class="p">.</span><span class="n">erase</span><span class="p">();</span>
+
+<span class="w">        </span><span class="c1">// A cloned cgra.deploy had its stream operands remapped to the</span>
+<span class="w">        </span><span class="c1">// (possibly staticized) function arguments; make its region block</span>
+<span class="w">        </span><span class="c1">// arguments match their operands again so the op verifies and the body</span>
+<span class="w">        </span><span class="c1">// runs on the static memrefs.</span>
+<span class="w">        </span><span class="n">fn</span><span class="p">.</span><span class="n">walk</span><span class="p">([</span><span class="o">&amp;</span><span class="p">](</span><span class="n">cgra</span><span class="o">::</span><span class="n">DeployOp</span><span class="w"> </span><span class="n">dep</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">Block</span><span class="w"> </span><span class="o">&amp;</span><span class="n">db</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dep</span><span class="p">.</span><span class="n">getBody</span><span class="p">().</span><span class="n">front</span><span class="p">();</span>
+<span class="w">            </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="p">[</span><span class="n">arg</span><span class="p">,</span><span class="w"> </span><span class="n">operand</span><span class="p">]</span><span class="w"> </span><span class="o">:</span>
+<span class="w">                 </span><span class="n">llvm</span><span class="o">::</span><span class="n">zip</span><span class="p">(</span><span class="n">db</span><span class="p">.</span><span class="n">getArguments</span><span class="p">(),</span><span class="w"> </span><span class="n">dep</span><span class="p">.</span><span class="n">getStreams</span><span class="p">()))</span>
+<span class="w">                </span><span class="n">arg</span><span class="p">.</span><span class="n">setType</span><span class="p">(</span><span class="n">operand</span><span class="p">.</span><span class="n">getType</span><span class="p">());</span>
+<span class="w">        </span><span class="p">});</span>
+
+<span class="w">        </span><span class="n">func</span><span class="o">::</span><span class="n">ReturnOp</span><span class="o">::</span><span class="n">create</span><span class="p">(</span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="n">loc</span><span class="p">);</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">fn</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="nf">runOnOperation</span><span class="p">()</span><span class="w"> </span><span class="k">override</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="n">ModuleOp</span><span class="w"> </span><span class="k">module</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">getOperation</span><span class="p">();</span>
+
+<span class="w">        </span><span class="n">SmallVector</span><span class="o">&lt;</span><span class="n">func</span><span class="o">::</span><span class="n">FuncOp</span><span class="o">&gt;</span><span class="w"> </span><span class="n">hosts</span><span class="p">;</span>
+<span class="w">        </span><span class="k">module</span><span class="p">.</span><span class="n">walk</span><span class="p">([</span><span class="o">&amp;</span><span class="p">](</span><span class="n">func</span><span class="o">::</span><span class="n">FuncOp</span><span class="w"> </span><span class="n">fn</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">fn</span><span class="p">.</span><span class="n">isDeclaration</span><span class="p">())</span><span class="w"> </span><span class="k">return</span><span class="p">;</span>
+<span class="w">            </span><span class="c1">// A host is any function with at least one cgra.deploy in its entry</span>
+<span class="w">            </span><span class="c1">// block.</span>
+<span class="w">            </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">Operation</span><span class="w"> </span><span class="o">&amp;</span><span class="n">op</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">fn</span><span class="p">.</span><span class="n">getBody</span><span class="p">().</span><span class="n">front</span><span class="p">())</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">isa</span><span class="o">&lt;</span><span class="n">cgra</span><span class="o">::</span><span class="n">DeployOp</span><span class="o">&gt;</span><span class="p">(</span><span class="o">&amp;</span><span class="n">op</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                    </span><span class="n">hosts</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">fn</span><span class="p">);</span>
+<span class="w">                    </span><span class="k">break</span><span class="p">;</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">        </span><span class="p">});</span>
+
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">func</span><span class="o">::</span><span class="n">FuncOp</span><span class="w"> </span><span class="n">H</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">hosts</span><span class="p">)</span><span class="w"> </span><span class="n">outline</span><span class="p">(</span><span class="n">H</span><span class="p">,</span><span class="w"> </span><span class="k">module</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="c1">// One outlined piece: a name and the ops it contains (a host segment's ops,</span>
+<span class="w">    </span><span class="c1">// or a single cgra.deploy). Segments and kernels alternate in program</span>
+<span class="w">    </span><span class="c1">// order.</span>
+<span class="w">    </span><span class="k">struct</span><span class="w"> </span><span class="nc">Piece</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">name</span><span class="p">;</span>
+<span class="w">        </span><span class="n">SmallVector</span><span class="o">&lt;</span><span class="n">Operation</span><span class="o">*&gt;</span><span class="w"> </span><span class="n">ops</span><span class="p">;</span>
+<span class="w">    </span><span class="p">};</span>
+
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="nf">outline</span><span class="p">(</span><span class="n">func</span><span class="o">::</span><span class="n">FuncOp</span><span class="w"> </span><span class="n">H</span><span class="p">,</span><span class="w"> </span><span class="n">ModuleOp</span><span class="w"> </span><span class="k">module</span><span class="p">)</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="n">Block</span><span class="w"> </span><span class="o">&amp;</span><span class="n">entry</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">H</span><span class="p">.</span><span class="n">getBody</span><span class="p">().</span><span class="n">front</span><span class="p">();</span>
+
+<span class="w">        </span><span class="c1">// Partition the entry block into host segments separated by the</span>
+<span class="w">        </span><span class="c1">// deploys, in program order: seg0, deploy0, seg1, deploy1, ..., segN. A</span>
+<span class="w">        </span><span class="c1">// function with a single kernel yields the familiar init / kernel /</span>
+<span class="w">        </span><span class="c1">// post; several kernels add numbered kernels and inter-kernel host</span>
+<span class="w">        </span><span class="c1">// stages. Whatever feeds the function's TERMINATOR has to stay in the</span>
+<span class="w">        </span><span class="c1">// host. The terminator is never outlined, so moving one of its</span>
+<span class="w">        </span><span class="c1">// producers into a segment function and erasing the original destroys</span>
+<span class="w">        </span><span class="c1">// an operation the `return` still uses — lenet hands its result back</span>
+<span class="w">        </span><span class="c1">// through a `memref.collapse_shape` of the output buffer and aborted</span>
+<span class="w">        </span><span class="c1">// the whole pass with "operation destroyed but still has uses". These</span>
+<span class="w">        </span><span class="c1">// are address computations (views, casts), not work: leaving them</span>
+<span class="w">        </span><span class="c1">// behind costs nothing, and the C driver ignores the return value</span>
+<span class="w">        </span><span class="c1">// anyway.</span>
+<span class="w">        </span><span class="n">llvm</span><span class="o">::</span><span class="n">SmallPtrSet</span><span class="o">&lt;</span><span class="n">Operation</span><span class="o">*</span><span class="p">,</span><span class="w"> </span><span class="mi">8</span><span class="o">&gt;</span><span class="w"> </span><span class="n">feedsTerminator</span><span class="p">;</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">Operation</span><span class="o">*</span><span class="w"> </span><span class="n">term</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">entry</span><span class="p">.</span><span class="n">getTerminator</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">SmallVector</span><span class="o">&lt;</span><span class="n">Value</span><span class="o">&gt;</span><span class="w"> </span><span class="n">work</span><span class="p">(</span>
+<span class="w">                </span><span class="n">term</span><span class="o">-&gt;</span><span class="n">getOperands</span><span class="p">().</span><span class="n">begin</span><span class="p">(),</span>
+<span class="w">                </span><span class="n">term</span><span class="o">-&gt;</span><span class="n">getOperands</span><span class="p">().</span><span class="n">end</span><span class="p">());</span>
+<span class="w">            </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">work</span><span class="p">.</span><span class="n">empty</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">Operation</span><span class="o">*</span><span class="w"> </span><span class="n">d</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">work</span><span class="p">.</span><span class="n">pop_back_val</span><span class="p">().</span><span class="n">getDefiningOp</span><span class="p">();</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">d</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">d</span><span class="o">-&gt;</span><span class="n">getBlock</span><span class="p">()</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="o">&amp;</span><span class="n">entry</span>
+<span class="w">                    </span><span class="o">||</span><span class="w"> </span><span class="o">!</span><span class="n">feedsTerminator</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">d</span><span class="p">).</span><span class="n">second</span><span class="p">)</span>
+<span class="w">                    </span><span class="k">continue</span><span class="p">;</span>
+<span class="w">                </span><span class="n">work</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">d</span><span class="o">-&gt;</span><span class="n">getOperands</span><span class="p">().</span><span class="n">begin</span><span class="p">(),</span><span class="w"> </span><span class="n">d</span><span class="o">-&gt;</span><span class="n">getOperands</span><span class="p">().</span><span class="n">end</span><span class="p">());</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="n">SmallVector</span><span class="o">&lt;</span><span class="n">SmallVector</span><span class="o">&lt;</span><span class="n">Operation</span><span class="o">*&gt;&gt;</span><span class="w"> </span><span class="n">segments</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+<span class="w">        </span><span class="n">SmallVector</span><span class="o">&lt;</span><span class="n">cgra</span><span class="o">::</span><span class="n">DeployOp</span><span class="o">&gt;</span><span class="w"> </span><span class="n">deploys</span><span class="p">;</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">Operation</span><span class="w"> </span><span class="o">&amp;</span><span class="n">op</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">entry</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="n">d</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dyn_cast</span><span class="o">&lt;</span><span class="n">cgra</span><span class="o">::</span><span class="n">DeployOp</span><span class="o">&gt;</span><span class="p">(</span><span class="o">&amp;</span><span class="n">op</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">deploys</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">d</span><span class="p">);</span>
+<span class="w">                </span><span class="n">segments</span><span class="p">.</span><span class="n">emplace_back</span><span class="p">();</span>
+<span class="w">                </span><span class="k">continue</span><span class="p">;</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">op</span><span class="p">.</span><span class="n">hasTrait</span><span class="o">&lt;</span><span class="n">OpTrait</span><span class="o">::</span><span class="n">IsTerminator</span><span class="o">&gt;</span><span class="p">()</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">staysInHost</span><span class="p">(</span><span class="o">&amp;</span><span class="n">op</span><span class="p">)</span>
+<span class="w">                </span><span class="o">||</span><span class="w"> </span><span class="n">feedsTerminator</span><span class="p">.</span><span class="n">contains</span><span class="p">(</span><span class="o">&amp;</span><span class="n">op</span><span class="p">))</span>
+<span class="w">                </span><span class="k">continue</span><span class="p">;</span>
+<span class="w">            </span><span class="n">segments</span><span class="p">.</span><span class="n">back</span><span class="p">().</span><span class="n">push_back</span><span class="p">(</span><span class="o">&amp;</span><span class="n">op</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">deploys</span><span class="p">.</span><span class="n">empty</span><span class="p">())</span><span class="w"> </span><span class="k">return</span><span class="p">;</span>
+
+<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">anyHost</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="o">&amp;</span><span class="n">seg</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">segments</span><span class="p">)</span><span class="w"> </span><span class="n">anyHost</span><span class="w"> </span><span class="o">|=</span><span class="w"> </span><span class="o">!</span><span class="n">seg</span><span class="p">.</span><span class="n">empty</span><span class="p">();</span>
+<span class="w">        </span><span class="c1">// A single kernel with no surrounding host code is a bare kernel (the</span>
+<span class="w">        </span><span class="c1">// whole function body IS the deploy). In the default host-preserving</span>
+<span class="w">        </span><span class="c1">// mode leave it untouched. Under drop-host (driver generation) still</span>
+<span class="w">        </span><span class="c1">// outline it, so it becomes @&lt;H&gt;_kernel (with empty</span>
+<span class="w">        </span><span class="c1">// @&lt;H&gt;_init/@&lt;H&gt;_post): generate-cgra-driver looks up @&lt;base&gt;_kernel</span>
+<span class="w">        </span><span class="c1">// and treats absent/empty init/post as no-ops, so a bare kernel is</span>
+<span class="w">        </span><span class="c1">// drivable without any hand-written host init/post.</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">deploys</span><span class="p">.</span><span class="n">size</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="o">!</span><span class="n">anyHost</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="o">!</span><span class="n">dropHost</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="p">;</span>
+
+<span class="w">        </span><span class="c1">// Name each piece by role, in execution order.</span>
+<span class="w">        </span><span class="kt">unsigned</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">deploys</span><span class="p">.</span><span class="n">size</span><span class="p">();</span>
+<span class="w">        </span><span class="k">auto</span><span class="w"> </span><span class="n">segName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="o">&amp;</span><span class="p">](</span><span class="kt">unsigned</span><span class="w"> </span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">i</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="s">"_init"</span><span class="p">;</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">i</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">n</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="s">"_post"</span><span class="p">;</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="s">"_stage"</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">to_string</span><span class="p">(</span><span class="n">i</span><span class="p">);</span>
+<span class="w">        </span><span class="p">};</span>
+<span class="w">        </span><span class="k">auto</span><span class="w"> </span><span class="n">kernName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="o">&amp;</span><span class="p">](</span><span class="kt">unsigned</span><span class="w"> </span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="s">"_kernel"</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="s">"_kernel"</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">to_string</span><span class="p">(</span><span class="n">i</span><span class="p">);</span>
+<span class="w">        </span><span class="p">};</span>
+
+<span class="w">        </span><span class="n">SmallVector</span><span class="o">&lt;</span><span class="n">Piece</span><span class="o">&gt;</span><span class="w"> </span><span class="n">pieces</span><span class="p">;</span>
+<span class="w">        </span><span class="n">SmallVector</span><span class="o">&lt;</span><span class="n">Operation</span><span class="o">*&gt;</span>
+<span class="w">            </span><span class="n">outlinedOps</span><span class="p">;</span><span class="w"> </span><span class="c1">// every op we will erase, program order</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">unsigned</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">n</span><span class="p">;</span><span class="w"> </span><span class="o">++</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">segments</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">empty</span><span class="p">()</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">n</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">pieces</span><span class="p">.</span><span class="n">push_back</span><span class="p">({</span><span class="n">segName</span><span class="p">(</span><span class="n">i</span><span class="p">),</span><span class="w"> </span><span class="n">segments</span><span class="p">[</span><span class="n">i</span><span class="p">]});</span>
+<span class="w">                </span><span class="n">outlinedOps</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">segments</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">begin</span><span class="p">(),</span><span class="w"> </span><span class="n">segments</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">end</span><span class="p">());</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">n</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">pieces</span><span class="p">.</span><span class="n">push_back</span><span class="p">({</span><span class="n">kernName</span><span class="p">(</span><span class="n">i</span><span class="p">),</span><span class="w"> </span><span class="p">{</span><span class="n">deploys</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">getOperation</span><span class="p">()}});</span>
+<span class="w">                </span><span class="n">outlinedOps</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">deploys</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">getOperation</span><span class="p">());</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="c1">// Shared streams: memref values used by any piece but defined in H</span>
+<span class="w">        </span><span class="c1">// (block arguments, allocas, globals) — these become the shared</span>
+<span class="w">        </span><span class="c1">// arguments. A cgra.deploy names its streams explicitly, so take them</span>
+<span class="w">        </span><span class="c1">// from its operands rather than walking its body (whose memrefs are the</span>
+<span class="w">        </span><span class="c1">// deploy's own block arguments); fall back to walking for a legacy</span>
+<span class="w">        </span><span class="c1">// stream-less deploy.</span>
+<span class="w">        </span><span class="n">llvm</span><span class="o">::</span><span class="n">SetVector</span><span class="o">&lt;</span><span class="n">Value</span><span class="o">&gt;</span><span class="w"> </span><span class="n">shared</span><span class="p">;</span>
+<span class="w">        </span><span class="k">auto</span><span class="w"> </span><span class="n">consider</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="o">&amp;</span><span class="p">](</span><span class="n">Value</span><span class="w"> </span><span class="n">v</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">isa</span><span class="o">&lt;</span><span class="n">MemRefType</span><span class="o">&gt;</span><span class="p">(</span><span class="n">v</span><span class="p">.</span><span class="n">getType</span><span class="p">()))</span><span class="w"> </span><span class="k">return</span><span class="p">;</span>
+<span class="w">            </span><span class="n">Operation</span><span class="o">*</span><span class="w"> </span><span class="n">d</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">v</span><span class="p">.</span><span class="n">getDefiningOp</span><span class="p">();</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">d</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">staysInHost</span><span class="p">(</span><span class="n">d</span><span class="p">))</span><span class="w"> </span><span class="c1">// block arg, or alloca/global in H</span>
+<span class="w">                </span><span class="n">shared</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">v</span><span class="p">);</span>
+<span class="w">        </span><span class="p">};</span>
+<span class="w">        </span><span class="k">auto</span><span class="w"> </span><span class="n">collect</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="o">&amp;</span><span class="p">](</span><span class="n">Operation</span><span class="o">*</span><span class="w"> </span><span class="n">op</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="n">dep</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dyn_cast</span><span class="o">&lt;</span><span class="n">cgra</span><span class="o">::</span><span class="n">DeployOp</span><span class="o">&gt;</span><span class="p">(</span><span class="n">op</span><span class="p">);</span>
+<span class="w">                </span><span class="n">dep</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="o">!</span><span class="n">dep</span><span class="p">.</span><span class="n">getStreams</span><span class="p">().</span><span class="n">empty</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">Value</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">dep</span><span class="p">.</span><span class="n">getStreams</span><span class="p">())</span><span class="w"> </span><span class="n">consider</span><span class="p">(</span><span class="n">v</span><span class="p">);</span>
+<span class="w">                </span><span class="k">return</span><span class="p">;</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="n">op</span><span class="o">-&gt;</span><span class="n">walk</span><span class="p">([</span><span class="o">&amp;</span><span class="p">](</span><span class="n">Operation</span><span class="o">*</span><span class="w"> </span><span class="n">inner</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">Value</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">inner</span><span class="o">-&gt;</span><span class="n">getOperands</span><span class="p">())</span><span class="w"> </span><span class="n">consider</span><span class="p">(</span><span class="n">v</span><span class="p">);</span>
+<span class="w">            </span><span class="p">});</span>
+<span class="w">        </span><span class="p">};</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">Operation</span><span class="o">*</span><span class="w"> </span><span class="n">op</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">outlinedOps</span><span class="p">)</span><span class="w"> </span><span class="n">collect</span><span class="p">(</span><span class="n">op</span><span class="p">);</span>
+<span class="w">        </span><span class="n">SmallVector</span><span class="o">&lt;</span><span class="n">Value</span><span class="o">&gt;</span><span class="w"> </span><span class="n">sharedVec</span><span class="p">(</span><span class="n">shared</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span><span class="w"> </span><span class="n">shared</span><span class="p">.</span><span class="n">end</span><span class="p">());</span>
+
+<span class="w">        </span><span class="c1">// Whether a shared stream is a function argument or a local alloca —</span>
+<span class="w">        </span><span class="c1">// the case where turning it into a shared argument enables the full</span>
+<span class="w">        </span><span class="c1">// kernel pipeline.</span>
+<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">hasArgOrAlloca</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">Value</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">sharedVec</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">isa</span><span class="o">&lt;</span><span class="n">BlockArgument</span><span class="o">&gt;</span><span class="p">(</span><span class="n">v</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">hasArgOrAlloca</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="w">                </span><span class="k">break</span><span class="p">;</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="n">Operation</span><span class="o">*</span><span class="w"> </span><span class="n">d</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">v</span><span class="p">.</span><span class="n">getDefiningOp</span><span class="p">();</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">d</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">isa</span><span class="o">&lt;</span><span class="n">memref</span><span class="o">::</span><span class="n">AllocaOp</span><span class="p">,</span><span class="w"> </span><span class="n">memref</span><span class="o">::</span><span class="n">AllocOp</span><span class="o">&gt;</span><span class="p">(</span><span class="n">d</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">hasArgOrAlloca</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="w">                </span><span class="k">break</span><span class="p">;</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="c1">// Outlining a deploy is only NECESSARY when a shared stream has no</span>
+<span class="w">        </span><span class="c1">// static shape (a pointer-derived function argument), because the</span>
+<span class="w">        </span><span class="c1">// outlined function's bare-pointer signature then has to be staticized.</span>
+<span class="w">        </span><span class="c1">// When every stream is static — module globals and local allocs alike —</span>
+<span class="w">        </span><span class="c1">// the deploys can stay INLINE, and for a multi-config kernel they</span>
+<span class="w">        </span><span class="c1">// SHOULD: that is the shape --generate-cgra-driver reads natively. It</span>
+<span class="w">        </span><span class="c1">// walks the host body in program order for the configuration sequence,</span>
+<span class="w">        </span><span class="c1">// takes buffer identity from the actual alloc/get_global values, and</span>
+<span class="w">        </span><span class="c1">// calls the host segments through their real call sites. Erasing the</span>
+<span class="w">        </span><span class="c1">// host instead forces all three to be RECONSTRUCTED, which is where the</span>
+<span class="w">        </span><span class="c1">// missing init/stage calls, the one-nest reference and the null-pointer</span>
+<span class="w">        </span><span class="c1">// arguments all came from. Restricted to &gt;1 deploy because the</span>
+<span class="w">        </span><span class="c1">// single-config emitter requires an outlined &lt;base&gt;_kernel to exist.</span>
+<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">allStatic</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">Value</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">sharedVec</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">auto</span><span class="w"> </span><span class="n">mrt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dyn_cast</span><span class="o">&lt;</span><span class="n">MemRefType</span><span class="o">&gt;</span><span class="p">(</span><span class="n">v</span><span class="p">.</span><span class="n">getType</span><span class="p">());</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">mrt</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="o">!</span><span class="n">mrt</span><span class="p">.</span><span class="n">hasStaticShape</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">allStatic</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="w">                </span><span class="k">break</span><span class="p">;</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="c1">// Keep the deploys inline whenever every stream is static — for ANY</span>
+<span class="w">        </span><span class="c1">// number of them. There is only one driver emitter now, and it reads</span>
+<span class="w">        </span><span class="c1">// inline deploys, so the</span>
+<span class="w">        </span><span class="c1">// "&gt;1 deploy" restriction that used to protect the single-config</span>
+<span class="w">        </span><span class="c1">// emitter is gone.</span>
+<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">keepDeploysInline</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">!</span><span class="n">hasArgOrAlloca</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">allStatic</span><span class="p">;</span>
+
+<span class="w">        </span><span class="c1">// A kernel over module-level GLOBALS (the multi-config route) is driven</span>
+<span class="w">        </span><span class="c1">// by generate-cgra-driver reading the inline deploys, so the deploys</span>
+<span class="w">        </span><span class="c1">// are NOT outlined. But under drop-host the C driver still wants</span>
+<span class="w">        </span><span class="c1">// LLVM-lowered init/ post to CALL: outline ONLY the host segments into</span>
+<span class="w">        </span><span class="c1">// &lt;H&gt;_init/&lt;H&gt;_stageK/ &lt;H&gt;_post(sharedVec) and replace each with a call</span>
+<span class="w">        </span><span class="c1">// in place, leaving the deploys inline. The globals are static-shaped,</span>
+<span class="w">        </span><span class="c1">// so the outlined functions are C-callable under the bare-pointer ABI</span>
+<span class="w">        </span><span class="c1">// with no staticizing. Without drop-host (host preserved) a globals</span>
+<span class="w">        </span><span class="c1">// kernel is left entirely untouched.</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">keepDeploysInline</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">dropHost</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">Location</span><span class="w"> </span><span class="n">loc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">H</span><span class="p">.</span><span class="n">getLoc</span><span class="p">();</span>
+<span class="w">                </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">base</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">H</span><span class="p">.</span><span class="n">getName</span><span class="p">().</span><span class="n">str</span><span class="p">();</span>
+<span class="w">                </span><span class="c1">// Hoist a fresh get_global for each shared stream to the</span>
+<span class="w">                </span><span class="c1">// FUNCTION ENTRY, so every inserted call is dominated by its</span>
+<span class="w">                </span><span class="c1">// argument. The original get_globals may sit mid-function</span>
+<span class="w">                </span><span class="c1">// (Polygeist emits one right before each use), which would not</span>
+<span class="w">                </span><span class="c1">// dominate a call inserted at an earlier deploy. (CSE later</span>
+<span class="w">                </span><span class="c1">// folds the duplicates; kernels whose globals are already at</span>
+<span class="w">                </span><span class="c1">// the top are unaffected.) A static memref.alloc/alloca is</span>
+<span class="w">                </span><span class="c1">// hoisted (MOVED, not cloned — the storage has to stay unique)</span>
+<span class="w">                </span><span class="c1">// for the same reason: an alloc emitted mid-body does not</span>
+<span class="w">                </span><span class="c1">// dominate a call inserted at an earlier deploy, which is</span>
+<span class="w">                </span><span class="c1">// exactly the "operand #N does not dominate this use" a local</span>
+<span class="w">                </span><span class="c1">// pad buffer produces. It is pure storage with no operands, so</span>
+<span class="w">                </span><span class="c1">// moving it to the entry is safe.</span>
+<span class="w">                </span><span class="n">OpBuilder</span><span class="w"> </span><span class="n">hb</span><span class="p">(</span><span class="o">&amp;</span><span class="n">H</span><span class="p">.</span><span class="n">getBody</span><span class="p">().</span><span class="n">front</span><span class="p">(),</span><span class="w"> </span><span class="n">H</span><span class="p">.</span><span class="n">getBody</span><span class="p">().</span><span class="n">front</span><span class="p">().</span><span class="n">begin</span><span class="p">());</span>
+<span class="w">                </span><span class="n">Operation</span><span class="o">*</span><span class="w"> </span><span class="n">hoistPoint</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">nullptr</span><span class="p">;</span>
+<span class="w">                </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">Value</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">sharedVec</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                    </span><span class="n">Operation</span><span class="o">*</span><span class="w"> </span><span class="n">d</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">v</span><span class="p">.</span><span class="n">getDefiningOp</span><span class="p">();</span>
+<span class="w">                    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">d</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">isa</span><span class="o">&lt;</span><span class="n">memref</span><span class="o">::</span><span class="n">AllocOp</span><span class="p">,</span><span class="w"> </span><span class="n">memref</span><span class="o">::</span><span class="n">AllocaOp</span><span class="o">&gt;</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+<span class="w">                        </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">d</span><span class="o">-&gt;</span><span class="n">getNumOperands</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">                        </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">d</span><span class="o">-&gt;</span><span class="n">getBlock</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="o">&amp;</span><span class="n">H</span><span class="p">.</span><span class="n">getBody</span><span class="p">().</span><span class="n">front</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">hoistPoint</span><span class="p">)</span>
+<span class="w">                            </span><span class="n">d</span><span class="o">-&gt;</span><span class="n">moveAfter</span><span class="p">(</span><span class="n">hoistPoint</span><span class="p">);</span>
+<span class="w">                        </span><span class="k">else</span>
+<span class="w">                            </span><span class="n">d</span><span class="o">-&gt;</span><span class="n">moveBefore</span><span class="p">(</span><span class="o">&amp;</span><span class="n">H</span><span class="p">.</span><span class="n">getBody</span><span class="p">().</span><span class="n">front</span><span class="p">().</span><span class="n">front</span><span class="p">());</span>
+<span class="w">                        </span><span class="n">hoistPoint</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">d</span><span class="p">;</span>
+<span class="w">                    </span><span class="p">}</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">                </span><span class="n">SmallVector</span><span class="o">&lt;</span><span class="n">Value</span><span class="o">&gt;</span><span class="w"> </span><span class="n">callArgs</span><span class="p">;</span>
+<span class="w">                </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">Value</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">sharedVec</span><span class="p">)</span>
+<span class="w">                    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="n">gg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">v</span><span class="p">.</span><span class="n">getDefiningOp</span><span class="o">&lt;</span><span class="n">memref</span><span class="o">::</span><span class="n">GetGlobalOp</span><span class="o">&gt;</span><span class="p">())</span>
+<span class="w">                        </span><span class="n">callArgs</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span>
+<span class="w">                            </span><span class="n">hb</span><span class="p">.</span><span class="n">clone</span><span class="p">(</span><span class="o">*</span><span class="n">gg</span><span class="p">.</span><span class="n">getOperation</span><span class="p">())</span><span class="o">-&gt;</span><span class="n">getResult</span><span class="p">(</span><span class="mi">0</span><span class="p">));</span>
+<span class="w">                    </span><span class="k">else</span>
+<span class="w">                        </span><span class="n">callArgs</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">v</span><span class="p">);</span>
+<span class="w">                </span><span class="kt">bool</span><span class="w"> </span><span class="n">changed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="w">                </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">unsigned</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">n</span><span class="p">;</span><span class="w"> </span><span class="o">++</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">segments</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">empty</span><span class="p">())</span><span class="w"> </span><span class="k">continue</span><span class="p">;</span>
+<span class="w">                    </span><span class="n">func</span><span class="o">::</span><span class="n">FuncOp</span><span class="w"> </span><span class="n">fn</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">makeFunc</span><span class="p">(</span>
+<span class="w">                        </span><span class="n">base</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">segName</span><span class="p">(</span><span class="n">i</span><span class="p">),</span>
+<span class="w">                        </span><span class="n">segments</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
+<span class="w">                        </span><span class="n">sharedVec</span><span class="p">,</span>
+<span class="w">                        </span><span class="cm">/*loopCounts=*/</span><span class="p">{},</span>
+<span class="w">                        </span><span class="k">module</span><span class="p">,</span>
+<span class="w">                        </span><span class="n">loc</span><span class="p">);</span>
+<span class="w">                    </span><span class="n">OpBuilder</span><span class="w"> </span><span class="n">b</span><span class="p">(</span><span class="k">module</span><span class="p">.</span><span class="n">getContext</span><span class="p">());</span>
+<span class="w">                    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">n</span><span class="p">)</span>
+<span class="w">                        </span><span class="n">b</span><span class="p">.</span><span class="n">setInsertionPoint</span><span class="p">(</span><span class="n">deploys</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+<span class="w">                    </span><span class="k">else</span>
+<span class="w">                        </span><span class="n">b</span><span class="p">.</span><span class="n">setInsertionPointAfter</span><span class="p">(</span><span class="n">deploys</span><span class="p">[</span><span class="n">n</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">]);</span>
+<span class="w">                    </span><span class="n">func</span><span class="o">::</span><span class="n">CallOp</span><span class="o">::</span><span class="n">create</span><span class="p">(</span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="n">loc</span><span class="p">,</span><span class="w"> </span><span class="n">fn</span><span class="p">,</span><span class="w"> </span><span class="n">callArgs</span><span class="p">);</span>
+<span class="w">                    </span><span class="n">changed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">                </span><span class="c1">// Erase every outlined segment op in reverse PROGRAM order</span>
+<span class="w">                </span><span class="c1">// (across all segments), so a value defined in an earlier</span>
+<span class="w">                </span><span class="c1">// segment (e.g. a printf format-string getelementptr shared by</span>
+<span class="w">                </span><span class="c1">// prints in several segments) is removed only after every later</span>
+<span class="w">                </span><span class="c1">// use of it.</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">changed</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                    </span><span class="n">SmallVector</span><span class="o">&lt;</span><span class="n">Operation</span><span class="o">*&gt;</span><span class="w"> </span><span class="n">all</span><span class="p">;</span>
+<span class="w">                    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="o">&amp;</span><span class="n">seg</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">segments</span><span class="p">)</span>
+<span class="w">                        </span><span class="n">all</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">seg</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span><span class="w"> </span><span class="n">seg</span><span class="p">.</span><span class="n">end</span><span class="p">());</span>
+<span class="w">                    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">Operation</span><span class="o">*</span><span class="w"> </span><span class="n">op</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">llvm</span><span class="o">::</span><span class="n">reverse</span><span class="p">(</span><span class="n">all</span><span class="p">))</span><span class="w"> </span><span class="n">op</span><span class="o">-&gt;</span><span class="n">erase</span><span class="p">();</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">return</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="n">Location</span><span class="w"> </span><span class="n">loc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">H</span><span class="p">.</span><span class="n">getLoc</span><span class="p">();</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">base</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">H</span><span class="p">.</span><span class="n">getName</span><span class="p">().</span><span class="n">str</span><span class="p">();</span>
+
+<span class="w">        </span><span class="c1">// Give dynamic (pointer-derived) streams a static size so the outlined</span>
+<span class="w">        </span><span class="c1">// functions are C-callable under the bare-pointer ABI. Only in</span>
+<span class="w">        </span><span class="c1">// drop-host mode: when H is kept it calls them with its own (dynamic)</span>
+<span class="w">        </span><span class="c1">// memrefs, so the signatures must match those unchanged. With several</span>
+<span class="w">        </span><span class="c1">// kernels the shared arguments carry one signature, so size to the</span>
+<span class="w">        </span><span class="c1">// largest kernel (a safe over-allocation for the smaller ones).</span>
+<span class="w">        </span><span class="n">SmallVector</span><span class="o">&lt;</span><span class="kt">int64_t</span><span class="o">&gt;</span><span class="w"> </span><span class="n">loopCounts</span><span class="p">;</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">dropHost</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="kt">int64_t</span><span class="w"> </span><span class="n">best</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">            </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">cgra</span><span class="o">::</span><span class="n">DeployOp</span><span class="w"> </span><span class="n">d</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">deploys</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="k">auto</span><span class="w"> </span><span class="n">counts</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cgra</span><span class="o">::</span><span class="n">perfectNestTripCounts</span><span class="p">(</span><span class="n">d</span><span class="p">.</span><span class="n">getBody</span><span class="p">());</span>
+<span class="w">                </span><span class="kt">int64_t</span><span class="w"> </span><span class="n">prod</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="w">                </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int64_t</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">counts</span><span class="p">)</span><span class="w"> </span><span class="n">prod</span><span class="w"> </span><span class="o">*=</span><span class="w"> </span><span class="n">c</span><span class="p">;</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">prod</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">best</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                    </span><span class="n">best</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">prod</span><span class="p">;</span>
+<span class="w">                    </span><span class="n">loopCounts</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">counts</span><span class="p">;</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="c1">// Create the outlined functions, in execution order, and (unless</span>
+<span class="w">        </span><span class="c1">// drop-host) remember them so H can call them in the same order.</span>
+<span class="w">        </span><span class="n">SmallVector</span><span class="o">&lt;</span><span class="n">func</span><span class="o">::</span><span class="n">FuncOp</span><span class="o">&gt;</span><span class="w"> </span><span class="n">outlinedFns</span><span class="p">;</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">Piece</span><span class="w"> </span><span class="o">&amp;</span><span class="n">p</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">pieces</span><span class="p">)</span>
+<span class="w">            </span><span class="n">outlinedFns</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">makeFunc</span><span class="p">(</span>
+<span class="w">                </span><span class="n">base</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">p</span><span class="p">.</span><span class="n">name</span><span class="p">,</span>
+<span class="w">                </span><span class="n">p</span><span class="p">.</span><span class="n">ops</span><span class="p">,</span>
+<span class="w">                </span><span class="n">sharedVec</span><span class="p">,</span>
+<span class="w">                </span><span class="n">loopCounts</span><span class="p">,</span>
+<span class="w">                </span><span class="k">module</span><span class="p">,</span>
+<span class="w">                </span><span class="n">loc</span><span class="p">));</span>
+
+<span class="w">        </span><span class="c1">// drop-host: the C driver provides main() and calls the pieces, so keep</span>
+<span class="w">        </span><span class="c1">// only the outlined functions and erase the host wrapper entirely.</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">dropHost</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">H</span><span class="p">.</span><span class="n">erase</span><span class="p">();</span>
+<span class="w">            </span><span class="k">return</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="c1">// Otherwise rewrite H: call the pieces in order (passing the shared</span>
+<span class="w">        </span><span class="c1">// streams) where the first kernel was, then remove the outlined ops.</span>
+<span class="w">        </span><span class="n">OpBuilder</span><span class="w"> </span><span class="n">b</span><span class="p">(</span><span class="n">deploys</span><span class="p">.</span><span class="n">front</span><span class="p">());</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">func</span><span class="o">::</span><span class="n">FuncOp</span><span class="w"> </span><span class="n">fn</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">outlinedFns</span><span class="p">)</span>
+<span class="w">            </span><span class="n">func</span><span class="o">::</span><span class="n">CallOp</span><span class="o">::</span><span class="n">create</span><span class="p">(</span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="n">loc</span><span class="p">,</span><span class="w"> </span><span class="n">fn</span><span class="p">,</span><span class="w"> </span><span class="n">sharedVec</span><span class="p">);</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">Operation</span><span class="o">*</span><span class="w"> </span><span class="n">op</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">llvm</span><span class="o">::</span><span class="n">reverse</span><span class="p">(</span><span class="n">outlinedOps</span><span class="p">))</span><span class="w"> </span><span class="n">op</span><span class="o">-&gt;</span><span class="n">erase</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">};</span>
+
+<span class="p">}</span><span class="w"> </span><span class="c1">// namespace</span>
+
+<span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">mlir</span><span class="o">::</span><span class="n">Pass</span><span class="o">&gt;</span><span class="w"> </span><span class="n">cgra</span><span class="o">::</span><span class="n">createCGRAOutlineDeployPass</span><span class="p">()</span>
+<span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">make_unique</span><span class="o">&lt;</span><span class="n">CGRAOutlineDeployPass</span><span class="o">&gt;</span><span class="p">();</span><span class="w"> </span><span class="p">}</span>
+</pre></div>
+</div>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

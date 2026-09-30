@@ -1,0 +1,41 @@
+
+.. _program_listing_file_lib_Target_EmitHLSToKriaDtsi_TranslationRegistration.cpp:
+
+Program Listing for File TranslationRegistration.cpp
+====================================================
+
+|exhale_lsh| :ref:`Return to documentation for file <file_lib_Target_EmitHLSToKriaDtsi_TranslationRegistration.cpp>` (``lib/Target/EmitHLSToKriaDtsi/TranslationRegistration.cpp``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. code-block:: cpp
+
+   
+   
+   #include "mlir/Tools/mlir-translate/Translation.h"
+   #include "picea-mlir/Dialect/EmitHLS/IR/EmitHLSBase.h"
+   #include "picea-mlir/Target/EmitHLSToKriaDtsi/KriaDtsiEmitter.h"
+   
+   using namespace mlir;
+   
+   namespace mlir {
+   
+   //===----------------------------------------------------------------------===//
+   // Translation registration
+   //===----------------------------------------------------------------------===//
+   
+   void registerEmitHLSToKriaDtsiTranslation()
+   {
+       TranslateFromMLIRRegistration reg(
+           "emithls-to-kria-dtsi",
+           "translate EmitHLS IR to a Kria device tree overlay source (.dts) "
+           "for the laksa-hls-kria-driver",
+           [](ModuleOp op, raw_ostream &output) {
+               return emithls::translateEmitHLSToKriaDtsi(op, output);
+           },
+           [](DialectRegistry &registry) {
+               registry.insert<emithls::EmitHLSDialect>();
+           });
+   }
+   
+   } // namespace mlir

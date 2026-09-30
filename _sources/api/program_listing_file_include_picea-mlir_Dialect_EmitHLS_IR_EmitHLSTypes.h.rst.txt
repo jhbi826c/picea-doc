@@ -1,0 +1,52 @@
+
+.. _program_listing_file_include_picea-mlir_Dialect_EmitHLS_IR_EmitHLSTypes.h:
+
+Program Listing for File EmitHLSTypes.h
+=======================================
+
+|exhale_lsh| :ref:`Return to documentation for file <file_include_picea-mlir_Dialect_EmitHLS_IR_EmitHLSTypes.h>` (``include/picea-mlir/Dialect/EmitHLS/IR/EmitHLSTypes.h``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. code-block:: cpp
+
+   
+   
+   #pragma once
+   
+   #include "mlir/IR/BuiltinAttributeInterfaces.h"
+   #include "mlir/IR/Types.h"
+   #include "picea-mlir/Dialect/EmitHLS/IR/EmitHLSAttributes.h"
+   
+   //===- Generated Includes -------------------------------------------------===//
+   
+   #define GET_TYPEDEF_CLASSES
+   #include "picea-mlir/Dialect/EmitHLS/IR/EmitHLSTypes.h.inc"
+   
+   //===----------------------------------------------------------------------===//
+   
+   namespace mlir::emithls {
+   
+   //===------------------------------------------------------------------===//
+   // FixedType
+   //===------------------------------------------------------------------===//
+   
+   inline int64_t FixedType::getFracBits() const
+   { return getTotalBits() - getIntBits(); }
+   
+   //===------------------------------------------------------------------===//
+   // ArrayType
+   //===------------------------------------------------------------------===//
+   
+   //===------------------------------------------------------------------===//
+   // ShapedTypeInterface Methods
+   //===------------------------------------------------------------------===//
+   
+   inline bool ArrayType::hasRank() const { return true; }
+   
+   inline ArrayType ArrayType::cloneWith(
+       std::optional<ArrayRef<int64_t>> shape,
+       Type elementType) const
+   { return ArrayType::get(shape.value_or(getShape()), elementType); }
+   
+   } // namespace mlir::emithls

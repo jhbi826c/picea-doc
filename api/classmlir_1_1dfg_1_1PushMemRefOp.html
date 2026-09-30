@@ -1,0 +1,370 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Class PushMemRefOp &mdash; picea 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/collapsible-lists/css/tree_view.css?v=a885cde7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js?v=73120307"></script>
+      <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js?v=660e4f45"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Class PushMemRefOpAdaptor" href="classmlir_1_1dfg_1_1PushMemRefOpAdaptor.html" />
+    <link rel="prev" title="Template Class PullOpGenericAdaptor" href="classmlir_1_1dfg_1_1PullOpGenericAdaptor.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            picea
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Installation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../README.html">About the project</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#guides">Guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#related-projects">Related projects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#development-environment-nix">Development Environment (Nix)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#build-on-ubuntu-24-04-no-nix">Build on Ubuntu 24.04 (no Nix)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#gurobi-license">Gurobi license</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#installing">Installing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#run-the-tests">Run the tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#build-the-documentation">Build the documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#compiling-a-design">Compiling a design</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#running-a-design-on-the-board">Running a design on the board</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#exporting-a-profiled-application-to-mocasin">Exporting a profiled application to Mocasin</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Guides</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../guides/laksa.html">The FPGA Variant using LAKSA backend</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/cgra.html">The CGRA Variant</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">MLIR Dialects</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/Base2Ops.html">‘base2’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/CGRAOps.html">‘cgra’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/DFGOps.html">‘dfg’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/EmitHLSOps.html">‘emithls’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/FilterOps.html">‘filter’ Dialect</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Passes</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/PICEAConversionPasses.html">PICEA Conversion Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/CGRAPasses.html">CGRA Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/DFGPasses.html">DFG Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/EmitHLSPasses.html">Emit HLS Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/FuncExtPasses.html">Func Ext Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/LinalgExtPasses.html">Linalg Ext Passes</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">C++ API</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="library_root.html">C++ API Reference</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="library_root.html#picea">picea</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="library_root.html#page-hierarchy">Page Hierarchy</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="library_root.html#full-api">Full API</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="library_root.html#namespaces">Namespaces</a></li>
+<li class="toctree-l4 current"><a class="reference internal" href="library_root.html#classes-and-structs">Classes and Structs</a></li>
+<li class="toctree-l4"><a class="reference internal" href="library_root.html#enums">Enums</a></li>
+<li class="toctree-l4"><a class="reference internal" href="library_root.html#functions">Functions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="library_root.html#variables">Variables</a></li>
+<li class="toctree-l4"><a class="reference internal" href="library_root.html#defines">Defines</a></li>
+<li class="toctree-l4"><a class="reference internal" href="library_root.html#typedefs">Typedefs</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">picea</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="library_root.html">C++ API Reference</a></li>
+      <li class="breadcrumb-item active">Class PushMemRefOp</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/classmlir_1_1dfg_1_1PushMemRefOp.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="class-pushmemrefop">
+<span id="exhale-class-classmlir-1-1dfg-1-1pushmemrefop"></span><h1>Class PushMemRefOp<a class="headerlink" href="#class-pushmemrefop" title="Link to this heading"></a></h1>
+<ul class="simple">
+<li><p>Defined in <a class="reference internal" href="file_build_include_picea-mlir_Dialect_DFG_IR_DFGOps.h.inc.html#file-build-include-picea-mlir-dialect-dfg-ir-dfgops-h-inc"><span class="std std-ref">File DFGOps.h.inc</span></a></p></li>
+</ul>
+<section id="inheritance-relationships">
+<h2>Inheritance Relationships<a class="headerlink" href="#inheritance-relationships" title="Link to this heading"></a></h2>
+<section id="base-type">
+<h3>Base Type<a class="headerlink" href="#base-type" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">public</span> <span class="pre">mlir::Op&lt;</span> <span class="pre">PushMemRefOp,</span> <span class="pre">::mlir::OpTrait::ZeroRegions,</span> <span class="pre">::mlir::OpTrait::ZeroResults,</span> <span class="pre">::mlir::OpTrait::ZeroSuccessors,</span> <span class="pre">::mlir::OpTrait::NOperands&lt;</span> <span class="pre">2</span> <span class="pre">&gt;::Impl,</span> <span class="pre">::mlir::OpTrait::OpInvariants</span> <span class="pre">&gt;</span></code></p></li>
+</ul>
+</section>
+</section>
+<section id="class-documentation">
+<h2>Class Documentation<a class="headerlink" href="#class-documentation" title="Link to this heading"></a></h2>
+<dl class="cpp class">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir3dfg12PushMemRefOpE">
+<span id="_CPPv3N4mlir3dfg12PushMemRefOpE"></span><span id="_CPPv2N4mlir3dfg12PushMemRefOpE"></span><span id="mlir::dfg::PushMemRefOp"></span><span class="target" id="classmlir_1_1dfg_1_1PushMemRefOp"></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">PushMemRefOp</span></span></span><span class="w"> </span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="k"><span class="pre">public</span></span><span class="w"> </span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">Op</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4N4mlir3dfg12PushMemRefOpE" title="mlir::dfg::PushMemRefOp"><span class="n"><span class="pre">PushMemRefOp</span></span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">OpTrait</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">ZeroRegions</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">OpTrait</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">ZeroResults</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">OpTrait</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">ZeroSuccessors</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">OpTrait</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">NOperands</span></span><span class="p"><span class="pre">&lt;</span></span><span class="m"><span class="pre">2</span></span><span class="p"><span class="pre">&gt;</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">Impl</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">OpTrait</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">OpInvariants</span></span><span class="p"><span class="pre">&gt;</span></span><a class="headerlink" href="#_CPPv4N4mlir3dfg12PushMemRefOpE" title="Link to this definition"></a><br /></dt>
+<dd><div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-types">Public Types</p>
+<dl class="cpp type">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir3dfg12PushMemRefOp7AdaptorE">
+<span id="_CPPv3N4mlir3dfg12PushMemRefOp7AdaptorE"></span><span id="_CPPv2N4mlir3dfg12PushMemRefOp7AdaptorE"></span><span class="target" id="classmlir_1_1dfg_1_1PushMemRefOp_1a9127a902c37bfd5323aadb3686fca5f3"></span><span class="k"><span class="pre">using</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Adaptor</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><a class="reference internal" href="classmlir_1_1dfg_1_1PushMemRefOpAdaptor.html#_CPPv4N4mlir3dfg19PushMemRefOpAdaptorE" title="mlir::dfg::PushMemRefOpAdaptor"><span class="n"><span class="pre">PushMemRefOpAdaptor</span></span></a><a class="headerlink" href="#_CPPv4N4mlir3dfg12PushMemRefOp7AdaptorE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp type">
+<dt class="sig sig-object cpp" id="_CPPv4I0EN4mlir3dfg12PushMemRefOp14GenericAdaptorE">
+<span id="_CPPv3I0EN4mlir3dfg12PushMemRefOp14GenericAdaptorE"></span><span id="_CPPv2I0EN4mlir3dfg12PushMemRefOp14GenericAdaptorE"></span><span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="k"><span class="pre">typename</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">RangeT</span></span></span><span class="p"><span class="pre">&gt;</span></span><br /><span class="target" id="classmlir_1_1dfg_1_1PushMemRefOp_1a76e52c3b8fbe7ceb8371337839d66498"></span><span class="k"><span class="pre">using</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">GenericAdaptor</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><a class="reference internal" href="classmlir_1_1dfg_1_1PushMemRefOpGenericAdaptor.html#_CPPv4I0EN4mlir3dfg26PushMemRefOpGenericAdaptorE" title="mlir::dfg::PushMemRefOpGenericAdaptor"><span class="n"><span class="pre">PushMemRefOpGenericAdaptor</span></span></a><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4I0EN4mlir3dfg12PushMemRefOp14GenericAdaptorE" title="mlir::dfg::PushMemRefOp::GenericAdaptor::RangeT"><span class="n"><span class="pre">RangeT</span></span></a><span class="p"><span class="pre">&gt;</span></span><a class="headerlink" href="#_CPPv4I0EN4mlir3dfg12PushMemRefOp14GenericAdaptorE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp type">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir3dfg12PushMemRefOp11FoldAdaptorE">
+<span id="_CPPv3N4mlir3dfg12PushMemRefOp11FoldAdaptorE"></span><span id="_CPPv2N4mlir3dfg12PushMemRefOp11FoldAdaptorE"></span><span class="target" id="classmlir_1_1dfg_1_1PushMemRefOp_1ab82f96dc96db2416101278a05e3f727d"></span><span class="k"><span class="pre">using</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">FoldAdaptor</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4I0EN4mlir3dfg12PushMemRefOp14GenericAdaptorE" title="mlir::dfg::PushMemRefOp::GenericAdaptor"><span class="n"><span class="pre">GenericAdaptor</span></span></a><span class="p"><span class="pre">&lt;</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">llvm</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">ArrayRef</span></span><span class="p"><span class="pre">&lt;</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">Attribute</span></span><span class="p"><span class="pre">&gt;</span></span><span class="p"><span class="pre">&gt;</span></span><a class="headerlink" href="#_CPPv4N4mlir3dfg12PushMemRefOp11FoldAdaptorE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp type">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir3dfg12PushMemRefOp10PropertiesE">
+<span id="_CPPv3N4mlir3dfg12PushMemRefOp10PropertiesE"></span><span id="_CPPv2N4mlir3dfg12PushMemRefOp10PropertiesE"></span><span class="target" id="classmlir_1_1dfg_1_1PushMemRefOp_1a23bb05e216e15aed46f8844df4003aec"></span><span class="k"><span class="pre">using</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Properties</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N4mlir3dfg12PushMemRefOp11FoldAdaptorE" title="mlir::dfg::PushMemRefOp::FoldAdaptor"><span class="n"><span class="pre">FoldAdaptor</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">Properties</span></span><a class="headerlink" href="#_CPPv4N4mlir3dfg12PushMemRefOp10PropertiesE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir3dfg12PushMemRefOp17getAttributeNamesEv">
+<span id="_CPPv3N4mlir3dfg12PushMemRefOp17getAttributeNamesEv"></span><span id="_CPPv2N4mlir3dfg12PushMemRefOp17getAttributeNamesEv"></span><span id="mlir::dfg::PushMemRefOp::getAttributeNames"></span><span class="target" id="classmlir_1_1dfg_1_1PushMemRefOp_1aece046548f66d04b078fc848b1628941"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">llvm</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">ArrayRef</span></span><span class="p"><span class="pre">&lt;</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">llvm</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">StringRef</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">getAttributeNames</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4mlir3dfg12PushMemRefOp17getAttributeNamesEv" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir3dfg12PushMemRefOp27getODSOperandIndexAndLengthEj">
+<span id="_CPPv3N4mlir3dfg12PushMemRefOp27getODSOperandIndexAndLengthEj"></span><span id="_CPPv2N4mlir3dfg12PushMemRefOp27getODSOperandIndexAndLengthEj"></span><span id="mlir::dfg::PushMemRefOp::getODSOperandIndexAndLength__unsigned"></span><span class="target" id="classmlir_1_1dfg_1_1PushMemRefOp_1a8491e05d9205bda44e976e0baffbe97e"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">pair</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">unsigned</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="kt"><span class="pre">unsigned</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">getODSOperandIndexAndLength</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">unsigned</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">index</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4mlir3dfg12PushMemRefOp27getODSOperandIndexAndLengthEj" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir3dfg12PushMemRefOp14getODSOperandsEj">
+<span id="_CPPv3N4mlir3dfg12PushMemRefOp14getODSOperandsEj"></span><span id="_CPPv2N4mlir3dfg12PushMemRefOp14getODSOperandsEj"></span><span id="mlir::dfg::PushMemRefOp::getODSOperands__unsigned"></span><span class="target" id="classmlir_1_1dfg_1_1PushMemRefOp_1a5e189f5616a20887ee02d24992d30982"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">Operation</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">operand_range</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">getODSOperands</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">unsigned</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">index</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4mlir3dfg12PushMemRefOp14getODSOperandsEj" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir3dfg12PushMemRefOp14getTokenMemrefEv">
+<span id="_CPPv3N4mlir3dfg12PushMemRefOp14getTokenMemrefEv"></span><span id="_CPPv2N4mlir3dfg12PushMemRefOp14getTokenMemrefEv"></span><span id="mlir::dfg::PushMemRefOp::getTokenMemref"></span><span class="target" id="classmlir_1_1dfg_1_1PushMemRefOp_1a08f8cdb8410ac55165c99c710c356bad"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">TypedValue</span></span><span class="p"><span class="pre">&lt;</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">MemRefType</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">getTokenMemref</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4mlir3dfg12PushMemRefOp14getTokenMemrefEv" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir3dfg12PushMemRefOp12getWritePortEv">
+<span id="_CPPv3N4mlir3dfg12PushMemRefOp12getWritePortEv"></span><span id="_CPPv2N4mlir3dfg12PushMemRefOp12getWritePortEv"></span><span id="mlir::dfg::PushMemRefOp::getWritePort"></span><span class="target" id="classmlir_1_1dfg_1_1PushMemRefOp_1a7b33f60dc83068089fcccaccf5067337"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">TypedValue</span></span><span class="p"><span class="pre">&lt;</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">dfg</span></span><span class="p"><span class="pre">::</span></span><a class="reference internal" href="classmlir_1_1dfg_1_1InputType.html#_CPPv4N4mlir3dfg9InputTypeE" title="mlir::dfg::InputType"><span class="n"><span class="pre">InputType</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">getWritePort</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4mlir3dfg12PushMemRefOp12getWritePortEv" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir3dfg12PushMemRefOp21getTokenMemrefMutableEv">
+<span id="_CPPv3N4mlir3dfg12PushMemRefOp21getTokenMemrefMutableEv"></span><span id="_CPPv2N4mlir3dfg12PushMemRefOp21getTokenMemrefMutableEv"></span><span id="mlir::dfg::PushMemRefOp::getTokenMemrefMutable"></span><span class="target" id="classmlir_1_1dfg_1_1PushMemRefOp_1a318985fd291ac96502ddf8ffe8d1f314"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">OpOperand</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="sig-name descname"><span class="n"><span class="pre">getTokenMemrefMutable</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4mlir3dfg12PushMemRefOp21getTokenMemrefMutableEv" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir3dfg12PushMemRefOp19getWritePortMutableEv">
+<span id="_CPPv3N4mlir3dfg12PushMemRefOp19getWritePortMutableEv"></span><span id="_CPPv2N4mlir3dfg12PushMemRefOp19getWritePortMutableEv"></span><span id="mlir::dfg::PushMemRefOp::getWritePortMutable"></span><span class="target" id="classmlir_1_1dfg_1_1PushMemRefOp_1a244cf69b7f297a7ae593b9477d86c944"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">OpOperand</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="sig-name descname"><span class="n"><span class="pre">getWritePortMutable</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4mlir3dfg12PushMemRefOp19getWritePortMutableEv" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir3dfg12PushMemRefOp26getODSResultIndexAndLengthEj">
+<span id="_CPPv3N4mlir3dfg12PushMemRefOp26getODSResultIndexAndLengthEj"></span><span id="_CPPv2N4mlir3dfg12PushMemRefOp26getODSResultIndexAndLengthEj"></span><span id="mlir::dfg::PushMemRefOp::getODSResultIndexAndLength__unsigned"></span><span class="target" id="classmlir_1_1dfg_1_1PushMemRefOp_1a8cf392eb352ca84344ed1b94edb7f261"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">pair</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">unsigned</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="kt"><span class="pre">unsigned</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">getODSResultIndexAndLength</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">unsigned</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">index</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4mlir3dfg12PushMemRefOp26getODSResultIndexAndLengthEj" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir3dfg12PushMemRefOp13getODSResultsEj">
+<span id="_CPPv3N4mlir3dfg12PushMemRefOp13getODSResultsEj"></span><span id="_CPPv2N4mlir3dfg12PushMemRefOp13getODSResultsEj"></span><span id="mlir::dfg::PushMemRefOp::getODSResults__unsigned"></span><span class="target" id="classmlir_1_1dfg_1_1PushMemRefOp_1a5862e5d3ba81640989f06187161ba472"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">Operation</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">result_range</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">getODSResults</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">unsigned</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">index</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4mlir3dfg12PushMemRefOp13getODSResultsEj" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir3dfg12PushMemRefOp5printERN4mlir12OpAsmPrinterE">
+<span id="_CPPv3N4mlir3dfg12PushMemRefOp5printERN4mlir12OpAsmPrinterE"></span><span id="_CPPv2N4mlir3dfg12PushMemRefOp5printERN4mlir12OpAsmPrinterE"></span><span id="mlir::dfg::PushMemRefOp::print__mlir::OpAsmPrinterR"></span><span class="target" id="classmlir_1_1dfg_1_1PushMemRefOp_1afc5bba70b9a61e1a7cf898235f4c878d"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">print</span></span></span><span class="sig-paren">(</span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">OpAsmPrinter</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">p</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4mlir3dfg12PushMemRefOp5printERN4mlir12OpAsmPrinterE" title="Link to this definition"></a><br /></dt>
+<dd><p>Prints a <code class="docutils literal notranslate"><a class="reference internal" href="#classmlir_1_1dfg_1_1PushMemRefOp"><span class="std std-ref"><span class="pre">dfg::PushMemRefOp</span></span></a></code> in the custom assembly syntax consumed by <code class="docutils literal notranslate"><span class="pre">parse</span></code>. </p>
+<p>Emits <code class="docutils literal notranslate"><span class="pre">tokenMemref</span> <span class="pre">to</span> <span class="pre">writePort</span> <span class="pre">:</span> <span class="pre">portType</span></code>. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir3dfg12PushMemRefOp20verifyInvariantsImplEv">
+<span id="_CPPv3N4mlir3dfg12PushMemRefOp20verifyInvariantsImplEv"></span><span id="_CPPv2N4mlir3dfg12PushMemRefOp20verifyInvariantsImplEv"></span><span id="mlir::dfg::PushMemRefOp::verifyInvariantsImpl"></span><span class="target" id="classmlir_1_1dfg_1_1PushMemRefOp_1a457f876e3e75bf573a483548744a9cf7"></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">llvm</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">LogicalResult</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">verifyInvariantsImpl</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4mlir3dfg12PushMemRefOp20verifyInvariantsImplEv" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir3dfg12PushMemRefOp16verifyInvariantsEv">
+<span id="_CPPv3N4mlir3dfg12PushMemRefOp16verifyInvariantsEv"></span><span id="_CPPv2N4mlir3dfg12PushMemRefOp16verifyInvariantsEv"></span><span id="mlir::dfg::PushMemRefOp::verifyInvariants"></span><span class="target" id="classmlir_1_1dfg_1_1PushMemRefOp_1af3c09d2ac8612b26215e6b907e4df48f"></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">llvm</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">LogicalResult</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">verifyInvariants</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4mlir3dfg12PushMemRefOp16verifyInvariantsEv" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-static-functions">Public Static Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir3dfg12PushMemRefOp16getOperationNameEv">
+<span id="_CPPv3N4mlir3dfg12PushMemRefOp16getOperationNameEv"></span><span id="_CPPv2N4mlir3dfg12PushMemRefOp16getOperationNameEv"></span><span id="mlir::dfg::PushMemRefOp::getOperationNameCE"></span><span class="target" id="classmlir_1_1dfg_1_1PushMemRefOp_1a829accf2570d3130dfc7724daae6560b"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="k"><span class="pre">constexpr</span></span><span class="w"> </span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">llvm</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">StringLiteral</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">getOperationName</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4mlir3dfg12PushMemRefOp16getOperationNameEv" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir3dfg12PushMemRefOp21setPropertiesFromAttrER10PropertiesN4mlir9AttributeEN4llvm12function_refIFN4mlir18InFlightDiagnosticEvEEE">
+<span id="_CPPv3N4mlir3dfg12PushMemRefOp21setPropertiesFromAttrER10PropertiesN4mlir9AttributeEN4llvm12function_refIFN4mlir18InFlightDiagnosticEvEEE"></span><span id="_CPPv2N4mlir3dfg12PushMemRefOp21setPropertiesFromAttrER10PropertiesN4mlir9AttributeEN4llvm12function_refIFN4mlir18InFlightDiagnosticEvEEE"></span><span class="target" id="classmlir_1_1dfg_1_1PushMemRefOp_1a526d244d5286b2e7be6449696d6f2048"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">llvm</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">LogicalResult</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">setPropertiesFromAttr</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4N4mlir3dfg12PushMemRefOp10PropertiesE" title="mlir::dfg::PushMemRefOp::Properties"><span class="n"><span class="pre">Properties</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">prop</span></span>, <span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">Attribute</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">attr</span></span>, <span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">llvm</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">function_ref</span></span><span class="p"><span class="pre">&lt;</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">InFlightDiagnostic</span></span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">emitError</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4mlir3dfg12PushMemRefOp21setPropertiesFromAttrER10PropertiesN4mlir9AttributeEN4llvm12function_refIFN4mlir18InFlightDiagnosticEvEEE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir3dfg12PushMemRefOp19getPropertiesAsAttrEPN4mlir11MLIRContextERK10Properties">
+<span id="_CPPv3N4mlir3dfg12PushMemRefOp19getPropertiesAsAttrEPN4mlir11MLIRContextERK10Properties"></span><span id="_CPPv2N4mlir3dfg12PushMemRefOp19getPropertiesAsAttrEPN4mlir11MLIRContextERK10Properties"></span><span id="mlir::dfg::PushMemRefOp::getPropertiesAsAttr__mlir::MLIRContextP.PropertiesCR"></span><span class="target" id="classmlir_1_1dfg_1_1PushMemRefOp_1ab2233a59cb93d4f9c7a2270a7740ac0b"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">Attribute</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">getPropertiesAsAttr</span></span></span><span class="sig-paren">(</span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">MLIRContext</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">ctx</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N4mlir3dfg12PushMemRefOp10PropertiesE" title="mlir::dfg::PushMemRefOp::Properties"><span class="n"><span class="pre">Properties</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">prop</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4mlir3dfg12PushMemRefOp19getPropertiesAsAttrEPN4mlir11MLIRContextERK10Properties" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir3dfg12PushMemRefOp21computePropertiesHashERK10Properties">
+<span id="_CPPv3N4mlir3dfg12PushMemRefOp21computePropertiesHashERK10Properties"></span><span id="_CPPv2N4mlir3dfg12PushMemRefOp21computePropertiesHashERK10Properties"></span><span id="mlir::dfg::PushMemRefOp::computePropertiesHash__PropertiesCR"></span><span class="target" id="classmlir_1_1dfg_1_1PushMemRefOp_1a659d8617b2ff20bcdb011c8762b2c8b5"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="n"><span class="pre">llvm</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">hash_code</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">computePropertiesHash</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N4mlir3dfg12PushMemRefOp10PropertiesE" title="mlir::dfg::PushMemRefOp::Properties"><span class="n"><span class="pre">Properties</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">prop</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4mlir3dfg12PushMemRefOp21computePropertiesHashERK10Properties" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir3dfg12PushMemRefOp15getInherentAttrEPN4mlir11MLIRContextERK10PropertiesN4llvm9StringRefE">
+<span id="_CPPv3N4mlir3dfg12PushMemRefOp15getInherentAttrEPN4mlir11MLIRContextERK10PropertiesN4llvm9StringRefE"></span><span id="_CPPv2N4mlir3dfg12PushMemRefOp15getInherentAttrEPN4mlir11MLIRContextERK10PropertiesN4llvm9StringRefE"></span><span id="mlir::dfg::PushMemRefOp::getInherentAttr__mlir::MLIRContextP.PropertiesCR.llvm::StringRef"></span><span class="target" id="classmlir_1_1dfg_1_1PushMemRefOp_1ad7b16cf67223044352111ff3b89f33a3"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">optional</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">Attribute</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">getInherentAttr</span></span></span><span class="sig-paren">(</span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">MLIRContext</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">ctx</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N4mlir3dfg12PushMemRefOp10PropertiesE" title="mlir::dfg::PushMemRefOp::Properties"><span class="n"><span class="pre">Properties</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">prop</span></span>, <span class="n"><span class="pre">llvm</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">StringRef</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">name</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4mlir3dfg12PushMemRefOp15getInherentAttrEPN4mlir11MLIRContextERK10PropertiesN4llvm9StringRefE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir3dfg12PushMemRefOp15setInherentAttrER10PropertiesN4llvm9StringRefEN4mlir9AttributeE">
+<span id="_CPPv3N4mlir3dfg12PushMemRefOp15setInherentAttrER10PropertiesN4llvm9StringRefEN4mlir9AttributeE"></span><span id="_CPPv2N4mlir3dfg12PushMemRefOp15setInherentAttrER10PropertiesN4llvm9StringRefEN4mlir9AttributeE"></span><span id="mlir::dfg::PushMemRefOp::setInherentAttr__PropertiesR.llvm::StringRef.mlir::Attribute"></span><span class="target" id="classmlir_1_1dfg_1_1PushMemRefOp_1a9cf2af8a533121cad6fdbd767d975612"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">setInherentAttr</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4N4mlir3dfg12PushMemRefOp10PropertiesE" title="mlir::dfg::PushMemRefOp::Properties"><span class="n"><span class="pre">Properties</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">prop</span></span>, <span class="n"><span class="pre">llvm</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">StringRef</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">name</span></span>, <span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">Attribute</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">value</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4mlir3dfg12PushMemRefOp15setInherentAttrER10PropertiesN4llvm9StringRefEN4mlir9AttributeE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir3dfg12PushMemRefOp21populateInherentAttrsEPN4mlir11MLIRContextERK10PropertiesRN4mlir13NamedAttrListE">
+<span id="_CPPv3N4mlir3dfg12PushMemRefOp21populateInherentAttrsEPN4mlir11MLIRContextERK10PropertiesRN4mlir13NamedAttrListE"></span><span id="_CPPv2N4mlir3dfg12PushMemRefOp21populateInherentAttrsEPN4mlir11MLIRContextERK10PropertiesRN4mlir13NamedAttrListE"></span><span id="mlir::dfg::PushMemRefOp::populateInherentAttrs__mlir::MLIRContextP.PropertiesCR.mlir::NamedAttrListR"></span><span class="target" id="classmlir_1_1dfg_1_1PushMemRefOp_1a10488286bc23482fcfd3bd24b022ee7f"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">populateInherentAttrs</span></span></span><span class="sig-paren">(</span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">MLIRContext</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">ctx</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N4mlir3dfg12PushMemRefOp10PropertiesE" title="mlir::dfg::PushMemRefOp::Properties"><span class="n"><span class="pre">Properties</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">prop</span></span>, <span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">NamedAttrList</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">attrs</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4mlir3dfg12PushMemRefOp21populateInherentAttrsEPN4mlir11MLIRContextERK10PropertiesRN4mlir13NamedAttrListE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir3dfg12PushMemRefOp19verifyInherentAttrsEN4mlir13OperationNameERN4mlir13NamedAttrListEN4llvm12function_refIFN4mlir18InFlightDiagnosticEvEEE">
+<span id="_CPPv3N4mlir3dfg12PushMemRefOp19verifyInherentAttrsEN4mlir13OperationNameERN4mlir13NamedAttrListEN4llvm12function_refIFN4mlir18InFlightDiagnosticEvEEE"></span><span id="_CPPv2N4mlir3dfg12PushMemRefOp19verifyInherentAttrsEN4mlir13OperationNameERN4mlir13NamedAttrListEN4llvm12function_refIFN4mlir18InFlightDiagnosticEvEEE"></span><span class="target" id="classmlir_1_1dfg_1_1PushMemRefOp_1a7460a8278e53ec86f9e57be436d083bf"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">llvm</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">LogicalResult</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">verifyInherentAttrs</span></span></span><span class="sig-paren">(</span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">OperationName</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">opName</span></span>, <span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">NamedAttrList</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">attrs</span></span>, <span class="n"><span class="pre">llvm</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">function_ref</span></span><span class="p"><span class="pre">&lt;</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">InFlightDiagnostic</span></span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">emitError</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4mlir3dfg12PushMemRefOp19verifyInherentAttrsEN4mlir13OperationNameERN4mlir13NamedAttrListEN4llvm12function_refIFN4mlir18InFlightDiagnosticEvEEE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir3dfg12PushMemRefOp5buildERN4mlir9OpBuilderERN4mlir14OperationStateE5Value5Value">
+<span id="_CPPv3N4mlir3dfg12PushMemRefOp5buildERN4mlir9OpBuilderERN4mlir14OperationStateE5Value5Value"></span><span id="_CPPv2N4mlir3dfg12PushMemRefOp5buildERN4mlir9OpBuilderERN4mlir14OperationStateE5Value5Value"></span><span id="mlir::dfg::PushMemRefOp::build__mlir::OpBuilderR.mlir::OperationStateR.Value.Value"></span><span class="target" id="classmlir_1_1dfg_1_1PushMemRefOp_1aa671555952e5ee36ffec8d1c8636f0e6"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">build</span></span></span><span class="sig-paren">(</span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">OpBuilder</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">odsBuilder</span></span>, <span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">OperationState</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">odsState</span></span>, <span class="n"><span class="pre">Value</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">tokenMemRef</span></span>, <span class="n"><span class="pre">Value</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">writePort</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4mlir3dfg12PushMemRefOp5buildERN4mlir9OpBuilderERN4mlir14OperationStateE5Value5Value" title="Link to this definition"></a><br /></dt>
+<dd><p>Builds a <code class="docutils literal notranslate"><a class="reference internal" href="#classmlir_1_1dfg_1_1PushMemRefOp"><span class="std std-ref"><span class="pre">dfg::PushMemRefOp</span></span></a></code> that writes a ranked memref to a shaped port. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tokenMemref</strong> – The ranked-memref value to write. </p></li>
+<li><p><strong>writePort</strong> – The shaped <code class="docutils literal notranslate"><a class="reference internal" href="classmlir_1_1dfg_1_1InputType.html#classmlir_1_1dfg_1_1InputType"><span class="std std-ref"><span class="pre">dfg::InputType</span></span></a></code> port to write to. </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir3dfg12PushMemRefOp6createERN4mlir9OpBuilderEN4mlir8LocationE5Value5Value">
+<span id="_CPPv3N4mlir3dfg12PushMemRefOp6createERN4mlir9OpBuilderEN4mlir8LocationE5Value5Value"></span><span id="_CPPv2N4mlir3dfg12PushMemRefOp6createERN4mlir9OpBuilderEN4mlir8LocationE5Value5Value"></span><span id="mlir::dfg::PushMemRefOp::create__mlir::OpBuilderR.mlir::Location.Value.Value"></span><span class="target" id="classmlir_1_1dfg_1_1PushMemRefOp_1a62cf64d9020cc26443711a03fe57dfa2"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N4mlir3dfg12PushMemRefOpE" title="mlir::dfg::PushMemRefOp"><span class="n"><span class="pre">PushMemRefOp</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">create</span></span></span><span class="sig-paren">(</span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">OpBuilder</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">builder</span></span>, <span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">Location</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">location</span></span>, <span class="n"><span class="pre">Value</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">tokenMemRef</span></span>, <span class="n"><span class="pre">Value</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">writePort</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4mlir3dfg12PushMemRefOp6createERN4mlir9OpBuilderEN4mlir8LocationE5Value5Value" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir3dfg12PushMemRefOp6createERN4mlir20ImplicitLocOpBuilderE5Value5Value">
+<span id="_CPPv3N4mlir3dfg12PushMemRefOp6createERN4mlir20ImplicitLocOpBuilderE5Value5Value"></span><span id="_CPPv2N4mlir3dfg12PushMemRefOp6createERN4mlir20ImplicitLocOpBuilderE5Value5Value"></span><span id="mlir::dfg::PushMemRefOp::create__mlir::ImplicitLocOpBuilderR.Value.Value"></span><span class="target" id="classmlir_1_1dfg_1_1PushMemRefOp_1a4893c50972a2a26a5d42bdd9e346960b"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N4mlir3dfg12PushMemRefOpE" title="mlir::dfg::PushMemRefOp"><span class="n"><span class="pre">PushMemRefOp</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">create</span></span></span><span class="sig-paren">(</span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">ImplicitLocOpBuilder</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">builder</span></span>, <span class="n"><span class="pre">Value</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">tokenMemRef</span></span>, <span class="n"><span class="pre">Value</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">writePort</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4mlir3dfg12PushMemRefOp6createERN4mlir20ImplicitLocOpBuilderE5Value5Value" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir3dfg12PushMemRefOp5parseERN4mlir11OpAsmParserERN4mlir14OperationStateE">
+<span id="_CPPv3N4mlir3dfg12PushMemRefOp5parseERN4mlir11OpAsmParserERN4mlir14OperationStateE"></span><span id="_CPPv2N4mlir3dfg12PushMemRefOp5parseERN4mlir11OpAsmParserERN4mlir14OperationStateE"></span><span id="mlir::dfg::PushMemRefOp::parse__mlir::OpAsmParserR.mlir::OperationStateR"></span><span class="target" id="classmlir_1_1dfg_1_1PushMemRefOp_1a56fd35f82a06508f468ffe34a85f0500"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">ParseResult</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">parse</span></span></span><span class="sig-paren">(</span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">OpAsmParser</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">parser</span></span>, <span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">OperationState</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">result</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4mlir3dfg12PushMemRefOp5parseERN4mlir11OpAsmParserERN4mlir14OperationStateE" title="Link to this definition"></a><br /></dt>
+<dd><p>Parses a <code class="docutils literal notranslate"><a class="reference internal" href="#classmlir_1_1dfg_1_1PushMemRefOp"><span class="std std-ref"><span class="pre">dfg::PushMemRefOp</span></span></a></code> from its custom assembly syntax. </p>
+<p>The expected syntax is: <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>`dfg.push_memref` %tokenMemref `to` %writePort `:` port-type
+</pre></div>
+</div>
+</p>
+<p>The memref token type is resolved as a <code class="docutils literal notranslate"><span class="pre">MemRefType</span></code> derived from the port’s shape and element type and is not written explicitly. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir3dfg12PushMemRefOp27setPropertiesFromParsedAttrER10PropertiesN4mlir9AttributeEN4llvm12function_refIFN4mlir18InFlightDiagnosticEvEEE">
+<span id="_CPPv3N4mlir3dfg12PushMemRefOp27setPropertiesFromParsedAttrER10PropertiesN4mlir9AttributeEN4llvm12function_refIFN4mlir18InFlightDiagnosticEvEEE"></span><span id="_CPPv2N4mlir3dfg12PushMemRefOp27setPropertiesFromParsedAttrER10PropertiesN4mlir9AttributeEN4llvm12function_refIFN4mlir18InFlightDiagnosticEvEEE"></span><span class="target" id="classmlir_1_1dfg_1_1PushMemRefOp_1ad83faacd52de5fdadb7233fc9ac88d17"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">llvm</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">LogicalResult</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">setPropertiesFromParsedAttr</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4N4mlir3dfg12PushMemRefOp10PropertiesE" title="mlir::dfg::PushMemRefOp::Properties"><span class="n"><span class="pre">Properties</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">prop</span></span>, <span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">Attribute</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">attr</span></span>, <span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">llvm</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">function_ref</span></span><span class="p"><span class="pre">&lt;</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">InFlightDiagnostic</span></span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">emitError</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4mlir3dfg12PushMemRefOp27setPropertiesFromParsedAttrER10PropertiesN4mlir9AttributeEN4llvm12function_refIFN4mlir18InFlightDiagnosticEvEEE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-static-attributes">Public Static Attributes</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir3dfg12PushMemRefOp21odsIndex_token_memrefE">
+<span id="_CPPv3N4mlir3dfg12PushMemRefOp21odsIndex_token_memrefE"></span><span id="_CPPv2N4mlir3dfg12PushMemRefOp21odsIndex_token_memrefE"></span><span id="mlir::dfg::PushMemRefOp::odsIndex_token_memref__i"></span><span class="target" id="classmlir_1_1dfg_1_1PushMemRefOp_1a77d6ad6677d375d1738347886987748e"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="k"><span class="pre">constexpr</span></span><span class="w"> </span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">odsIndex_token_memref</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">0</span></span><a class="headerlink" href="#_CPPv4N4mlir3dfg12PushMemRefOp21odsIndex_token_memrefE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir3dfg12PushMemRefOp19odsIndex_write_portE">
+<span id="_CPPv3N4mlir3dfg12PushMemRefOp19odsIndex_write_portE"></span><span id="_CPPv2N4mlir3dfg12PushMemRefOp19odsIndex_write_portE"></span><span id="mlir::dfg::PushMemRefOp::odsIndex_write_port__i"></span><span class="target" id="classmlir_1_1dfg_1_1PushMemRefOp_1a46f087b6edd9440e1aa790fa7af5c46c"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="k"><span class="pre">constexpr</span></span><span class="w"> </span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">odsIndex_write_port</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">1</span></span><a class="headerlink" href="#_CPPv4N4mlir3dfg12PushMemRefOp19odsIndex_write_portE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+</div>
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="classmlir_1_1dfg_1_1PullOpGenericAdaptor.html" class="btn btn-neutral float-left" title="Template Class PullOpGenericAdaptor" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="classmlir_1_1dfg_1_1PushMemRefOpAdaptor.html" class="btn btn-neutral float-right" title="Class PushMemRefOpAdaptor" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

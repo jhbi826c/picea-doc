@@ -1,0 +1,206 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CGRAOps &mdash; picea 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/collapsible-lists/css/tree_view.css?v=a885cde7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js?v=73120307"></script>
+      <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js?v=660e4f45"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            picea
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Installation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../README.html">About the project</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#guides">Guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#related-projects">Related projects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#development-environment-nix">Development Environment (Nix)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#build-on-ubuntu-24-04-no-nix">Build on Ubuntu 24.04 (no Nix)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#gurobi-license">Gurobi license</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#installing">Installing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#run-the-tests">Run the tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#build-the-documentation">Build the documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#compiling-a-design">Compiling a design</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#running-a-design-on-the-board">Running a design on the board</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#exporting-a-profiled-application-to-mocasin">Exporting a profiled application to Mocasin</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Guides</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../guides/laksa.html">The FPGA Variant using LAKSA backend</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/cgra.html">The CGRA Variant</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">MLIR Dialects</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/Base2Ops.html">‘base2’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/CGRAOps.html">‘cgra’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/DFGOps.html">‘dfg’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/EmitHLSOps.html">‘emithls’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/FilterOps.html">‘filter’ Dialect</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Passes</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/PICEAConversionPasses.html">PICEA Conversion Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/CGRAPasses.html">CGRA Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/DFGPasses.html">DFG Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/EmitHLSPasses.html">Emit HLS Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/FuncExtPasses.html">Func Ext Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/LinalgExtPasses.html">Linalg Ext Passes</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">C++ API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="library_root.html">C++ API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">picea</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">CGRAOps</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/page_md_build_2include_2picea-mlir_2Dialect_2CGRA_2IR_2CGRAOps.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="cgraops">
+<span id="page-md-build-2include-2picea-mlir-2dialect-2cgra-2ir-2cgraops"></span><h1>CGRAOps<a class="headerlink" href="#cgraops" title="Link to this heading"></a></h1>
+<dl>
+<dt class="sig sig-object cpp">
+<span class="target" id="md_build_2include_2picea-mlir_2Dialect_2CGRA_2IR_2CGRAOps"></span><em><span class="pre">page</span></em> <span class="sig-name descname"><span class="pre">CGRAOps</span></span></dt>
+<dd><section id="md_build_2include_2picea-mlir_2Dialect_2CGRA_2IR_2CGRAOps_1autotoc_md69">
+<h2>‘cgra’ Dialect<a class="headerlink" href="#md_build_2include_2picea-mlir_2Dialect_2CGRA_2IR_2CGRAOps_1autotoc_md69" title="Link to this heading"></a></h2>
+<p id="md_build_2include_2picea-mlir_2Dialect_2CGRA_2IR_2CGRAOps_1autotoc_md69"><em>An MLIR dialect for CGRA deployment</em></p>
+<p>This dialect transforms regular MLIR code to make it suitable for CGRA accelerators. It detects max operations, non-i32 operations, and annotates the target code. It also performs loop-level optimizations such as unrolling, fusion, and tiling.</p>
+<section id="md_build_2include_2picea-mlir_2Dialect_2CGRA_2IR_2CGRAOps_1autotoc_md70">
+<h3>Operations<a class="headerlink" href="#md_build_2include_2picea-mlir_2Dialect_2CGRA_2IR_2CGRAOps_1autotoc_md70" title="Link to this heading"></a></h3>
+<section id="md_build_2include_2picea-mlir_2Dialect_2CGRA_2IR_2CGRAOps_1autotoc_md71">
+<span id="md_build_2include_2picea-mlir_2Dialect_2CGRA_2IR_2CGRAOps_1autotoc_md70"></span><h4>&lt;tt&gt;cgra.deploy&lt;/tt&gt; (cgra::DeployOp)<a class="headerlink" href="#md_build_2include_2picea-mlir_2Dialect_2CGRA_2IR_2CGRAOps_1autotoc_md71" title="Link to this heading"></a></h4>
+<p id="md_build_2include_2picea-mlir_2Dialect_2CGRA_2IR_2CGRAOps_1autotoc_md71"><em>Mark a region for CGRA deployment</em></p>
+<p>Syntax:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>operation ::= `cgra.deploy` (`ins` `(` $streams^ `:` type($streams) `)`)? $body attr-dict
+              (`:` type($results)^)?
+</pre></div>
+</div>
+<p>Wraps a loop nest that is to be offloaded to the CGRA accelerator.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">streams</span></code> operands are the memrefs the kernel reads and writes, passed to the region as block arguments so the data flow is explicit rather than captured. <code class="docutils literal notranslate"><span class="pre">getStreams()</span></code> is the single source of truth for the CGRA passes.</p>
+<p><code class="docutils literal notranslate"><span class="pre">input_args</span></code> / <code class="docutils literal notranslate"><span class="pre">output_args</span></code> / <code class="docutils literal notranslate"><span class="pre">inout_args</span></code> record which streams are read, written, or both; <code class="docutils literal notranslate"><span class="pre">dispatch_size</span></code> is the product of the body’s constant loop bounds. All are set by <code class="docutils literal notranslate"><span class="pre">--annotate-dispatch-io</span></code>.</p>
+<p>Traits: <code class="docutils literal notranslate"><span class="pre">SingleBlockImplicitTerminator&lt;YieldOp&gt;</span></code>, <code class="docutils literal notranslate"><span class="pre">SingleBlock</span></code></p>
+</section>
+<section id="md_build_2include_2picea-mlir_2Dialect_2CGRA_2IR_2CGRAOps_1autotoc_md75">
+<h4>&lt;tt&gt;cgra.strela_read&lt;/tt&gt; (cgra::StrelaReadOp)<a class="headerlink" href="#md_build_2include_2picea-mlir_2Dialect_2CGRA_2IR_2CGRAOps_1autotoc_md75" title="Link to this heading"></a></h4>
+<p id="md_build_2include_2picea-mlir_2Dialect_2CGRA_2IR_2CGRAOps_1autotoc_md75"><em>Volatile 32-bit MMIO read from a named STRELA register</em></p>
+<p>Syntax:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>operation ::= `cgra.strela_read` $reg (`[` $channel^ `]`)? attr-dict `:` type($value)
+</pre></div>
+</div>
+<p>A single 32-bit volatile load from one STRELA control register (e.g. “STRELA_STATUS”), used by the completion spin-wait. Lowers to llvm.load.</p>
+<p><code class="docutils literal notranslate"><span class="pre">MemRead</span></code>, not <code class="docutils literal notranslate"><span class="pre">Pure</span></code>: the value changes between reads, so it must not be CSE’d or hoisted out of the spin-wait.</p>
+<p>Interfaces: <code class="docutils literal notranslate"><span class="pre">MemoryEffectOpInterface</span> <span class="pre">(MemoryEffectOpInterface)</span></code></p>
+<p>Effects: <code class="docutils literal notranslate"><span class="pre">MemoryEffects::Effect{MemoryEffects::Read</span> <span class="pre">on</span> <span class="pre">::mlir::SideEffects::DefaultResource}</span></code></p>
+</section>
+<section id="md_build_2include_2picea-mlir_2Dialect_2CGRA_2IR_2CGRAOps_1autotoc_md78">
+<h4>&lt;tt&gt;cgra.strela_write&lt;/tt&gt; (cgra::StrelaWriteOp)<a class="headerlink" href="#md_build_2include_2picea-mlir_2Dialect_2CGRA_2IR_2CGRAOps_1autotoc_md78" title="Link to this heading"></a></h4>
+<p id="md_build_2include_2picea-mlir_2Dialect_2CGRA_2IR_2CGRAOps_1autotoc_md78"><em>Volatile 32-bit MMIO write to a named STRELA register</em></p>
+<p>Syntax:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>operation ::= `cgra.strela_write` $reg (`[` $channel^ `]`)? `,` $value attr-dict `:` type($value)
+</pre></div>
+</div>
+<p>A single 32-bit volatile store to one STRELA control register, named symbolically by <code class="docutils literal notranslate"><span class="pre">reg</span></code> (e.g. “STRELA_CTRL”) plus an optional <code class="docutils literal notranslate"><span class="pre">channel</span></code> for the per-lane IMN/OMN registers. The MMIO base/offset is resolved when lowering to llvm.store, so the register layout never appears in the IR.</p>
+<p><code class="docutils literal notranslate"><span class="pre">MemWrite</span></code> keeps it from being deleted as dead or reordered against the rest of the programming sequence.</p>
+<p>Interfaces: <code class="docutils literal notranslate"><span class="pre">MemoryEffectOpInterface</span> <span class="pre">(MemoryEffectOpInterface)</span></code></p>
+<p>Effects: <code class="docutils literal notranslate"><span class="pre">MemoryEffects::Effect{MemoryEffects::Write</span> <span class="pre">on</span> <span class="pre">::mlir::SideEffects::DefaultResource}</span></code></p>
+</section>
+<section id="md_build_2include_2picea-mlir_2Dialect_2CGRA_2IR_2CGRAOps_1autotoc_md81">
+<h4>&lt;tt&gt;cgra.yield&lt;/tt&gt; (cgra::YieldOp)<a class="headerlink" href="#md_build_2include_2picea-mlir_2Dialect_2CGRA_2IR_2CGRAOps_1autotoc_md81" title="Link to this heading"></a></h4>
+<p id="md_build_2include_2picea-mlir_2Dialect_2CGRA_2IR_2CGRAOps_1autotoc_md81"><em>Terminator for a cgra.deploy region</em></p>
+<p>Syntax:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>operation ::= `cgra.yield` attr-dict ($operands^ `:` type($operands))?
+</pre></div>
+</div>
+<p>Implicit single-block terminator of a <code class="docutils literal notranslate"><span class="pre">cgra.deploy</span></code> region. It carries the region’s optional results and is elided when it has no operands. Only valid directly inside a <code class="docutils literal notranslate"><span class="pre">cgra.deploy</span></code>.</p>
+<p>Traits: <code class="docutils literal notranslate"><span class="pre">AlwaysSpeculatableImplTrait</span></code>, <code class="docutils literal notranslate"><span class="pre">HasParent&lt;DeployOp&gt;</span></code>, <code class="docutils literal notranslate"><span class="pre">Terminator</span></code></p>
+<p>Interfaces: <code class="docutils literal notranslate"><span class="pre">ConditionallySpeculatable</span></code>, <code class="docutils literal notranslate"><span class="pre">NoMemoryEffect</span> <span class="pre">(MemoryEffectOpInterface)</span></code></p>
+<p>Effects: <code class="docutils literal notranslate"><span class="pre">MemoryEffects::Effect{}</span></code></p>
+</section>
+</section>
+</section>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

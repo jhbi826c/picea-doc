@@ -1,0 +1,522 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Program Listing for File OutlineComputationLeaf.cpp &mdash; picea 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/collapsible-lists/css/tree_view.css?v=a885cde7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js?v=73120307"></script>
+      <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js?v=660e4f45"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            picea
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Installation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../README.html">About the project</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#guides">Guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#related-projects">Related projects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#development-environment-nix">Development Environment (Nix)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#build-on-ubuntu-24-04-no-nix">Build on Ubuntu 24.04 (no Nix)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#gurobi-license">Gurobi license</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#installing">Installing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#run-the-tests">Run the tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#build-the-documentation">Build the documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#compiling-a-design">Compiling a design</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#running-a-design-on-the-board">Running a design on the board</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#exporting-a-profiled-application-to-mocasin">Exporting a profiled application to Mocasin</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Guides</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../guides/laksa.html">The FPGA Variant using LAKSA backend</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/cgra.html">The CGRA Variant</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">MLIR Dialects</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/Base2Ops.html">‘base2’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/CGRAOps.html">‘cgra’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/DFGOps.html">‘dfg’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/EmitHLSOps.html">‘emithls’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/FilterOps.html">‘filter’ Dialect</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Passes</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/PICEAConversionPasses.html">PICEA Conversion Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/CGRAPasses.html">CGRA Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/DFGPasses.html">DFG Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/EmitHLSPasses.html">Emit HLS Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/FuncExtPasses.html">Func Ext Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/LinalgExtPasses.html">Linalg Ext Passes</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">C++ API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="library_root.html">C++ API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">picea</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Program Listing for File OutlineComputationLeaf.cpp</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/program_listing_file_lib_Dialect_Func_Transforms_OutlineComputationLeaf.cpp.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="program-listing-for-file-outlinecomputationleaf-cpp">
+<span id="program-listing-file-lib-dialect-func-transforms-outlinecomputationleaf-cpp"></span><h1>Program Listing for File OutlineComputationLeaf.cpp<a class="headerlink" href="#program-listing-for-file-outlinecomputationleaf-cpp" title="Link to this heading"></a></h1>
+<p>↰ <a class="reference internal" href="file_lib_Dialect_Func_Transforms_OutlineComputationLeaf.cpp.html#file-lib-dialect-func-transforms-outlinecomputationleaf-cpp"><span class="std std-ref">Return to documentation for file</span></a> (<code class="docutils literal notranslate"><span class="pre">lib/Dialect/Func/Transforms/OutlineComputationLeaf.cpp</span></code>)</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">"mlir/Dialect/Func/IR/FuncOps.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"mlir/Dialect/Linalg/IR/Linalg.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"mlir/Dialect/Tensor/IR/Tensor.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"mlir/IR/PatternMatch.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"mlir/Pass/Pass.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"picea-mlir/Dialect/Func/Transforms/Passes.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"picea-mlir/IR/LaksaAttributes.h"</span>
+
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;llvm/Support/Debug.h&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;llvm/Support/LogicalResult.h&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;mlir/Dialect/Arith/IR/Arith.h&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;mlir/Dialect/Linalg/IR/LinalgInterfaces.h&gt;</span>
+
+<span class="cp">#define DEBUG_TYPE "func-outline-computation-leaf"</span>
+<span class="cp">#define PICEA_DEBUG(X)                                                         \</span>
+<span class="cp">    LLVM_DEBUG(                                                                \</span>
+<span class="cp">        llvm::dbgs() &lt;&lt; "[func-outline-computation-leaf] "; X;                 \</span>
+<span class="cp">        llvm::dbgs() &lt;&lt; "\n")</span>
+
+<span class="k">using</span><span class="w"> </span><span class="k">namespace</span><span class="w"> </span><span class="nn">mlir</span><span class="p">;</span>
+<span class="k">using</span><span class="w"> </span><span class="k">namespace</span><span class="w"> </span><span class="nn">mlir</span><span class="o">::</span><span class="nn">func</span><span class="p">;</span>
+
+<span class="k">namespace</span><span class="w"> </span><span class="nn">mlir</span><span class="w"> </span><span class="p">{</span>
+<span class="k">namespace</span><span class="w"> </span><span class="nn">func</span><span class="w"> </span><span class="p">{</span>
+<span class="cp">#define GEN_PASS_DEF_FUNCOUTLINECOMPUTATIONLEAF</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"picea-mlir/Dialect/Func/Transforms/Passes.h.inc"</span>
+<span class="p">}</span><span class="w"> </span><span class="c1">// namespace func</span>
+<span class="p">}</span><span class="w"> </span><span class="c1">// namespace mlir</span>
+
+<span class="k">namespace</span><span class="w"> </span><span class="p">{</span>
+<span class="k">struct</span><span class="w"> </span><span class="nc">FuncOutlineComputationLeafPass</span>
+<span class="w">        </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">func</span><span class="o">::</span><span class="n">impl</span><span class="o">::</span><span class="n">FuncOutlineComputationLeafBase</span><span class="o">&lt;</span>
+<span class="w">              </span><span class="n">FuncOutlineComputationLeafPass</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">    </span><span class="n">SmallVector</span><span class="o">&lt;</span><span class="n">FuncOp</span><span class="o">&gt;</span><span class="w"> </span><span class="n">nodeFunctions</span><span class="p">;</span>
+<span class="w">    </span><span class="n">SmallPtrSet</span><span class="o">&lt;</span><span class="n">Operation</span><span class="o">*</span><span class="p">,</span><span class="w"> </span><span class="mi">8</span><span class="o">&gt;</span><span class="w"> </span><span class="n">storedGenericOps</span><span class="p">;</span>
+<span class="w">    </span><span class="n">SmallPtrSet</span><span class="o">&lt;</span><span class="n">Operation</span><span class="o">*</span><span class="p">,</span><span class="w"> </span><span class="mi">8</span><span class="o">&gt;</span><span class="w"> </span><span class="n">consumedReshapeOps</span><span class="p">;</span>
+<span class="w">    </span><span class="c1">// Ops that have been outlined as their own node in previous outlineNode</span>
+<span class="w">    </span><span class="c1">// calls.  Their results must be treated as inter-function values rather</span>
+<span class="w">    </span><span class="c1">// than dep ops whenever they appear as operands of a later node.</span>
+<span class="w">    </span><span class="n">SmallPtrSet</span><span class="o">&lt;</span><span class="n">Operation</span><span class="o">*</span><span class="p">,</span><span class="w"> </span><span class="mi">8</span><span class="o">&gt;</span><span class="w"> </span><span class="n">outlinedOps</span><span class="p">;</span>
+<span class="w">    </span><span class="c1">// Parallel to nodeFunctions: the original-scope values each node takes</span>
+<span class="w">    </span><span class="c1">// as arguments, and the original-scope values it returns.</span>
+<span class="w">    </span><span class="n">SmallVector</span><span class="o">&lt;</span><span class="n">SmallVector</span><span class="o">&lt;</span><span class="n">Value</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="n">nodeArgValues</span><span class="p">;</span>
+<span class="w">    </span><span class="n">SmallVector</span><span class="o">&lt;</span><span class="n">SmallVector</span><span class="o">&lt;</span><span class="n">Value</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="n">nodeEffectiveResults</span><span class="p">;</span>
+
+<span class="w">    </span><span class="c1">// Traces operands of a node op to collect function argument types/values</span>
+<span class="w">    </span><span class="c1">// and dependency ops, then creates an outlined FuncOp containing clones</span>
+<span class="w">    </span><span class="c1">// of all collected ops with a correct return.</span>
+<span class="w">    </span><span class="n">LogicalResult</span><span class="w"> </span><span class="nf">outlineNode</span><span class="p">(</span>
+<span class="w">        </span><span class="n">IRRewriter</span><span class="w"> </span><span class="o">&amp;</span><span class="n">rewriter</span><span class="p">,</span>
+<span class="w">        </span><span class="n">Operation</span><span class="o">*</span><span class="w"> </span><span class="n">nodeOp</span><span class="p">,</span>
+<span class="w">        </span><span class="n">ValueRange</span><span class="w"> </span><span class="n">operandsToTrace</span><span class="p">)</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="n">SmallVector</span><span class="o">&lt;</span><span class="n">Value</span><span class="o">&gt;</span><span class="w"> </span><span class="n">funcArgValues</span><span class="p">;</span>
+<span class="w">        </span><span class="n">SmallVector</span><span class="o">&lt;</span><span class="n">Value</span><span class="o">&gt;</span><span class="w"> </span><span class="n">effectiveResults</span><span class="p">;</span>
+<span class="w">        </span><span class="n">SmallVector</span><span class="o">&lt;</span><span class="n">Operation</span><span class="o">*&gt;</span><span class="w"> </span><span class="n">nodeFunctionOps</span><span class="p">;</span>
+<span class="w">        </span><span class="n">DenseSet</span><span class="o">&lt;</span><span class="n">Value</span><span class="o">&gt;</span><span class="w"> </span><span class="n">seenArgValues</span><span class="p">;</span>
+<span class="w">        </span><span class="n">DenseSet</span><span class="o">&lt;</span><span class="n">Operation</span><span class="o">*&gt;</span><span class="w"> </span><span class="n">addedToNode</span><span class="p">;</span>
+
+<span class="w">        </span><span class="c1">// Y-combinator avoids the overhead of std::function type-erasure.</span>
+<span class="w">        </span><span class="k">auto</span><span class="w"> </span><span class="n">collectOperandInfo</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="o">&amp;</span><span class="p">](</span><span class="k">auto</span><span class="w"> </span><span class="o">&amp;</span><span class="n">self</span><span class="p">,</span><span class="w"> </span><span class="n">Value</span><span class="w"> </span><span class="n">val</span><span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="n">blkArg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dyn_cast</span><span class="o">&lt;</span><span class="n">BlockArgument</span><span class="o">&gt;</span><span class="p">(</span><span class="n">val</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">seenArgValues</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">val</span><span class="p">).</span><span class="n">second</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="p">;</span>
+<span class="w">                </span><span class="n">PICEA_DEBUG</span><span class="p">(</span>
+<span class="w">                    </span><span class="n">llvm</span><span class="o">::</span><span class="n">dbgs</span><span class="p">()</span>
+<span class="w">                    </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"  Block arg #"</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">blkArg</span><span class="p">.</span><span class="n">getArgNumber</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">" ("</span>
+<span class="w">                    </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">blkArg</span><span class="p">.</span><span class="n">getType</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">") -&gt; function argument"</span><span class="p">);</span>
+<span class="w">                </span><span class="n">funcArgValues</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">val</span><span class="p">);</span>
+<span class="w">            </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="k">auto</span><span class="o">*</span><span class="w"> </span><span class="n">defOp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">val</span><span class="p">.</span><span class="n">getDefiningOp</span><span class="p">();</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="n">defGenericOp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dyn_cast</span><span class="o">&lt;</span><span class="n">linalg</span><span class="o">::</span><span class="n">GenericOp</span><span class="o">&gt;</span><span class="p">(</span><span class="n">defOp</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">storedGenericOps</span><span class="p">.</span><span class="n">contains</span><span class="p">(</span><span class="n">defGenericOp</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">addedToNode</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">defOp</span><span class="p">).</span><span class="n">second</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="p">;</span>
+<span class="w">                        </span><span class="n">PICEA_DEBUG</span><span class="p">(</span>
+<span class="w">                            </span><span class="n">llvm</span><span class="o">::</span><span class="n">dbgs</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"  Consuming stored generic at "</span>
+<span class="w">                                         </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">defGenericOp</span><span class="p">.</span><span class="n">getLoc</span><span class="p">());</span>
+<span class="w">                        </span><span class="c1">// Do NOT erase from storedGenericOps: a fill/broadcast</span>
+<span class="w">                        </span><span class="c1">// may be shared by multiple computation nodes, each of</span>
+<span class="w">                        </span><span class="c1">// which gets its own independent clone.</span>
+<span class="w">                        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="n">input</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">defGenericOp</span><span class="p">.</span><span class="n">getInputs</span><span class="p">())</span>
+<span class="w">                            </span><span class="n">self</span><span class="p">(</span><span class="n">self</span><span class="p">,</span><span class="w"> </span><span class="n">input</span><span class="p">);</span>
+<span class="w">                        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="n">output</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">defGenericOp</span><span class="p">.</span><span class="n">getOutputs</span><span class="p">())</span>
+<span class="w">                            </span><span class="n">self</span><span class="p">(</span><span class="n">self</span><span class="p">,</span><span class="w"> </span><span class="n">output</span><span class="p">);</span>
+<span class="w">                        </span><span class="n">nodeFunctionOps</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">defOp</span><span class="p">);</span>
+<span class="w">                    </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">seenArgValues</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">val</span><span class="p">).</span><span class="n">second</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="p">;</span>
+<span class="w">                        </span><span class="n">PICEA_DEBUG</span><span class="p">(</span>
+<span class="w">                            </span><span class="n">llvm</span><span class="o">::</span><span class="n">dbgs</span><span class="p">()</span>
+<span class="w">                            </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"  Inter-function result ("</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">val</span><span class="p">.</span><span class="n">getType</span><span class="p">()</span>
+<span class="w">                            </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">") from generic at "</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">defGenericOp</span><span class="p">.</span><span class="n">getLoc</span><span class="p">()</span>
+<span class="w">                            </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">" -&gt; function argument"</span><span class="p">);</span>
+<span class="w">                        </span><span class="n">funcArgValues</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">val</span><span class="p">);</span>
+<span class="w">                    </span><span class="p">}</span>
+<span class="w">                </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                    </span><span class="c1">// An op already outlined as its own node (e.g. tensor.pad)</span>
+<span class="w">                    </span><span class="c1">// must not be re-cloned; pass its result as an argument.</span>
+<span class="w">                    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">outlinedOps</span><span class="p">.</span><span class="n">contains</span><span class="p">(</span><span class="n">defOp</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">seenArgValues</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">val</span><span class="p">).</span><span class="n">second</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="p">;</span>
+<span class="w">                        </span><span class="n">PICEA_DEBUG</span><span class="p">(</span>
+<span class="w">                            </span><span class="n">llvm</span><span class="o">::</span><span class="n">dbgs</span><span class="p">()</span>
+<span class="w">                            </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"  Already-outlined op result ("</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">val</span><span class="p">.</span><span class="n">getType</span><span class="p">()</span>
+<span class="w">                            </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">") from "</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">defOp</span><span class="o">-&gt;</span><span class="n">getName</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">" at "</span>
+<span class="w">                            </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">defOp</span><span class="o">-&gt;</span><span class="n">getLoc</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">" -&gt; function argument"</span><span class="p">);</span>
+<span class="w">                        </span><span class="n">funcArgValues</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">val</span><span class="p">);</span>
+<span class="w">                        </span><span class="k">return</span><span class="p">;</span>
+<span class="w">                    </span><span class="p">}</span>
+<span class="w">                    </span><span class="c1">// A reshape op whose result was already returned by a</span>
+<span class="w">                    </span><span class="c1">// previous outlined node must not be re-cloned; treat</span>
+<span class="w">                    </span><span class="c1">// its result as an inter-function argument instead.</span>
+<span class="w">                    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">isa</span><span class="o">&lt;</span><span class="n">tensor</span><span class="o">::</span><span class="n">ExpandShapeOp</span><span class="p">,</span><span class="w"> </span><span class="n">tensor</span><span class="o">::</span><span class="n">CollapseShapeOp</span><span class="o">&gt;</span><span class="p">(</span>
+<span class="w">                            </span><span class="n">defOp</span><span class="p">)</span>
+<span class="w">                        </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">consumedReshapeOps</span><span class="p">.</span><span class="n">contains</span><span class="p">(</span><span class="n">defOp</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">seenArgValues</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">val</span><span class="p">).</span><span class="n">second</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="p">;</span>
+<span class="w">                        </span><span class="n">PICEA_DEBUG</span><span class="p">(</span>
+<span class="w">                            </span><span class="n">llvm</span><span class="o">::</span><span class="n">dbgs</span><span class="p">()</span>
+<span class="w">                            </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"  Consumed reshape result ("</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">val</span><span class="p">.</span><span class="n">getType</span><span class="p">()</span>
+<span class="w">                            </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">") -&gt; function argument"</span><span class="p">);</span>
+<span class="w">                        </span><span class="n">funcArgValues</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">val</span><span class="p">);</span>
+<span class="w">                        </span><span class="k">return</span><span class="p">;</span>
+<span class="w">                    </span><span class="p">}</span>
+<span class="w">                    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">addedToNode</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">defOp</span><span class="p">).</span><span class="n">second</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="p">;</span>
+<span class="w">                    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">Value</span><span class="w"> </span><span class="n">operand</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">defOp</span><span class="o">-&gt;</span><span class="n">getOperands</span><span class="p">())</span>
+<span class="w">                        </span><span class="n">self</span><span class="p">(</span><span class="n">self</span><span class="p">,</span><span class="w"> </span><span class="n">operand</span><span class="p">);</span>
+<span class="w">                    </span><span class="n">PICEA_DEBUG</span><span class="p">(</span>
+<span class="w">                        </span><span class="n">llvm</span><span class="o">::</span><span class="n">dbgs</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"  Adding dep op "</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">defOp</span><span class="o">-&gt;</span><span class="n">getName</span><span class="p">()</span>
+<span class="w">                                     </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">" at "</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">defOp</span><span class="o">-&gt;</span><span class="n">getLoc</span><span class="p">());</span>
+<span class="w">                    </span><span class="n">nodeFunctionOps</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">defOp</span><span class="p">);</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">};</span>
+
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">Value</span><span class="w"> </span><span class="n">operand</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">operandsToTrace</span><span class="p">)</span>
+<span class="w">            </span><span class="n">collectOperandInfo</span><span class="p">(</span><span class="n">collectOperandInfo</span><span class="p">,</span><span class="w"> </span><span class="n">operand</span><span class="p">);</span>
+<span class="w">        </span><span class="c1">// Keep addedToNode in sync: nodeOp is pushed outside the lambda.</span>
+<span class="w">        </span><span class="n">nodeFunctionOps</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">nodeOp</span><span class="p">);</span>
+<span class="w">        </span><span class="n">addedToNode</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">nodeOp</span><span class="p">);</span>
+
+<span class="w">        </span><span class="c1">// Fold a chain of trailing reshapes into the node as long as each is</span>
+<span class="w">        </span><span class="c1">// the sole consumer of the previous value (e.g. a collapse_shape</span>
+<span class="w">        </span><span class="c1">// immediately followed by an expand_shape).</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="n">result</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">nodeOp</span><span class="o">-&gt;</span><span class="n">getResults</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">result</span><span class="p">.</span><span class="n">use_empty</span><span class="p">())</span><span class="w"> </span><span class="k">continue</span><span class="p">;</span>
+<span class="w">            </span><span class="n">Value</span><span class="w"> </span><span class="n">current</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">result</span><span class="p">;</span>
+<span class="w">            </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">current</span><span class="p">.</span><span class="n">hasOneUse</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="k">auto</span><span class="o">*</span><span class="w"> </span><span class="n">user</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">*</span><span class="n">current</span><span class="p">.</span><span class="n">user_begin</span><span class="p">();</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">isa</span><span class="o">&lt;</span><span class="n">tensor</span><span class="o">::</span><span class="n">ExpandShapeOp</span><span class="p">,</span><span class="w"> </span><span class="n">tensor</span><span class="o">::</span><span class="n">CollapseShapeOp</span><span class="o">&gt;</span><span class="p">(</span><span class="n">user</span><span class="p">))</span>
+<span class="w">                    </span><span class="k">break</span><span class="p">;</span>
+<span class="w">                </span><span class="n">PICEA_DEBUG</span><span class="p">(</span>
+<span class="w">                    </span><span class="n">llvm</span><span class="o">::</span><span class="n">dbgs</span><span class="p">()</span>
+<span class="w">                    </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"  Result consumed by "</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">user</span><span class="o">-&gt;</span><span class="n">getName</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">" at "</span>
+<span class="w">                    </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">user</span><span class="o">-&gt;</span><span class="n">getLoc</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">" -&gt; folding reshape into node"</span><span class="p">);</span>
+<span class="w">                </span><span class="n">nodeFunctionOps</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">user</span><span class="p">);</span>
+<span class="w">                </span><span class="n">addedToNode</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">user</span><span class="p">);</span>
+<span class="w">                </span><span class="n">consumedReshapeOps</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">user</span><span class="p">);</span>
+<span class="w">                </span><span class="n">current</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">user</span><span class="o">-&gt;</span><span class="n">getResult</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="n">effectiveResults</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">current</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="c1">// Find values used inside op regions but defined outside the ops</span>
+<span class="w">        </span><span class="c1">// scheduled for cloning (constants captured directly by a body region</span>
+<span class="w">        </span><span class="c1">// rather than passed through the op's operands).</span>
+<span class="w">        </span><span class="c1">// addedToNode already holds every op in nodeFunctionOps; reuse it as</span>
+<span class="w">        </span><span class="c1">// the "in-node" guard instead of rebuilding a separate set.</span>
+<span class="w">        </span><span class="c1">// For each def, walk parent ops up until we either hit an op in</span>
+<span class="w">        </span><span class="c1">// addedToNode (def is nested inside a node op — not a capture) or</span>
+<span class="w">        </span><span class="c1">// exhaust the chain (def is truly external).</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="n">SmallVector</span><span class="o">&lt;</span><span class="n">Operation</span><span class="o">*&gt;</span><span class="w"> </span><span class="n">captured</span><span class="p">;</span>
+<span class="w">            </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="o">*</span><span class="w"> </span><span class="n">opi</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">nodeFunctionOps</span><span class="p">)</span>
+<span class="w">                </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="o">&amp;</span><span class="n">region</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">opi</span><span class="o">-&gt;</span><span class="n">getRegions</span><span class="p">())</span>
+<span class="w">                    </span><span class="n">region</span><span class="p">.</span><span class="n">walk</span><span class="p">([</span><span class="o">&amp;</span><span class="p">](</span><span class="n">Operation</span><span class="o">*</span><span class="w"> </span><span class="n">inner</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">Value</span><span class="w"> </span><span class="n">operand</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">inner</span><span class="o">-&gt;</span><span class="n">getOperands</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                            </span><span class="k">auto</span><span class="o">*</span><span class="w"> </span><span class="n">def</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">operand</span><span class="p">.</span><span class="n">getDefiningOp</span><span class="p">();</span>
+<span class="w">                            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">def</span><span class="p">)</span><span class="w"> </span><span class="k">continue</span><span class="p">;</span>
+<span class="w">                            </span><span class="k">auto</span><span class="o">*</span><span class="w"> </span><span class="n">ancestor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">def</span><span class="o">-&gt;</span><span class="n">getParentOp</span><span class="p">();</span>
+<span class="w">                            </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">ancestor</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="o">!</span><span class="n">addedToNode</span><span class="p">.</span><span class="n">contains</span><span class="p">(</span><span class="n">ancestor</span><span class="p">))</span>
+<span class="w">                                </span><span class="n">ancestor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ancestor</span><span class="o">-&gt;</span><span class="n">getParentOp</span><span class="p">();</span>
+<span class="w">                            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">ancestor</span><span class="p">)</span><span class="w"> </span><span class="k">continue</span><span class="p">;</span><span class="w"> </span><span class="c1">// nested inside a node op</span>
+<span class="w">                            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">addedToNode</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">def</span><span class="p">).</span><span class="n">second</span><span class="p">)</span><span class="w"> </span><span class="k">continue</span><span class="p">;</span>
+<span class="w">                            </span><span class="n">PICEA_DEBUG</span><span class="p">(</span>
+<span class="w">                                </span><span class="n">llvm</span><span class="o">::</span><span class="n">dbgs</span><span class="p">()</span>
+<span class="w">                                </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"  Captured external op "</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">def</span><span class="o">-&gt;</span><span class="n">getName</span><span class="p">()</span>
+<span class="w">                                </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">" at "</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">def</span><span class="o">-&gt;</span><span class="n">getLoc</span><span class="p">());</span>
+<span class="w">                            </span><span class="n">captured</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">def</span><span class="p">);</span>
+<span class="w">                        </span><span class="p">}</span>
+<span class="w">                    </span><span class="p">});</span>
+
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">captured</span><span class="p">.</span><span class="n">empty</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">PICEA_DEBUG</span><span class="p">(</span>
+<span class="w">                    </span><span class="n">llvm</span><span class="o">::</span><span class="n">dbgs</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"Prepending "</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">captured</span><span class="p">.</span><span class="n">size</span><span class="p">()</span>
+<span class="w">                                 </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">" captured op(s) to node op list"</span><span class="p">);</span>
+<span class="w">                </span><span class="n">SmallVector</span><span class="o">&lt;</span><span class="n">Operation</span><span class="o">*&gt;</span><span class="w"> </span><span class="n">reordered</span><span class="p">;</span>
+<span class="w">                </span><span class="n">reordered</span><span class="p">.</span><span class="n">reserve</span><span class="p">(</span><span class="n">captured</span><span class="p">.</span><span class="n">size</span><span class="p">()</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">nodeFunctionOps</span><span class="p">.</span><span class="n">size</span><span class="p">());</span>
+<span class="w">                </span><span class="n">llvm</span><span class="o">::</span><span class="n">append_range</span><span class="p">(</span><span class="n">reordered</span><span class="p">,</span><span class="w"> </span><span class="n">captured</span><span class="p">);</span>
+<span class="w">                </span><span class="n">llvm</span><span class="o">::</span><span class="n">append_range</span><span class="p">(</span><span class="n">reordered</span><span class="p">,</span><span class="w"> </span><span class="n">nodeFunctionOps</span><span class="p">);</span>
+<span class="w">                </span><span class="n">nodeFunctionOps</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">reordered</span><span class="p">);</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="k">auto</span><span class="w"> </span><span class="n">parentFuncOp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cast</span><span class="o">&lt;</span><span class="n">FuncOp</span><span class="o">&gt;</span><span class="p">(</span><span class="n">nodeOp</span><span class="o">-&gt;</span><span class="n">getParentOp</span><span class="p">());</span>
+<span class="w">        </span><span class="k">auto</span><span class="w"> </span><span class="n">funcType</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">rewriter</span><span class="p">.</span><span class="n">getFunctionType</span><span class="p">(</span>
+<span class="w">            </span><span class="n">TypeRange</span><span class="p">(</span><span class="n">ValueRange</span><span class="p">(</span><span class="n">funcArgValues</span><span class="p">)),</span>
+<span class="w">            </span><span class="n">TypeRange</span><span class="p">(</span><span class="n">ValueRange</span><span class="p">(</span><span class="n">effectiveResults</span><span class="p">)));</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">funcName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">parentFuncOp</span><span class="p">.</span><span class="n">getSymName</span><span class="p">().</span><span class="n">str</span><span class="p">()</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">"_node_"</span>
+<span class="w">                               </span><span class="o">+</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">to_string</span><span class="p">(</span><span class="n">nodeFunctions</span><span class="p">.</span><span class="n">size</span><span class="p">());</span>
+<span class="w">        </span><span class="n">PICEA_DEBUG</span><span class="p">(</span>
+<span class="w">            </span><span class="n">llvm</span><span class="o">::</span><span class="n">dbgs</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"Creating node function '"</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">funcName</span>
+<span class="w">                         </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"' with type "</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">funcType</span><span class="p">);</span>
+
+<span class="w">        </span><span class="n">rewriter</span><span class="p">.</span><span class="n">setInsertionPoint</span><span class="p">(</span><span class="n">parentFuncOp</span><span class="p">);</span>
+<span class="w">        </span><span class="k">auto</span><span class="w"> </span><span class="n">newFuncOp</span><span class="w"> </span><span class="o">=</span>
+<span class="w">            </span><span class="n">FuncOp</span><span class="o">::</span><span class="n">create</span><span class="p">(</span><span class="n">rewriter</span><span class="p">,</span><span class="w"> </span><span class="n">nodeOp</span><span class="o">-&gt;</span><span class="n">getLoc</span><span class="p">(),</span><span class="w"> </span><span class="n">funcName</span><span class="p">,</span><span class="w"> </span><span class="n">funcType</span><span class="p">);</span>
+<span class="w">        </span><span class="n">Block</span><span class="o">*</span><span class="w"> </span><span class="n">block</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">newFuncOp</span><span class="p">.</span><span class="n">addEntryBlock</span><span class="p">();</span>
+
+<span class="w">        </span><span class="n">IRMapping</span><span class="w"> </span><span class="n">mapping</span><span class="p">;</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="p">[</span><span class="n">origVal</span><span class="p">,</span><span class="w"> </span><span class="n">newArg</span><span class="p">]</span><span class="w"> </span><span class="o">:</span>
+<span class="w">             </span><span class="n">llvm</span><span class="o">::</span><span class="n">zip</span><span class="p">(</span><span class="n">funcArgValues</span><span class="p">,</span><span class="w"> </span><span class="n">block</span><span class="o">-&gt;</span><span class="n">getArguments</span><span class="p">()))</span>
+<span class="w">            </span><span class="n">mapping</span><span class="p">.</span><span class="n">map</span><span class="p">(</span><span class="n">origVal</span><span class="p">,</span><span class="w"> </span><span class="n">newArg</span><span class="p">);</span>
+
+<span class="w">        </span><span class="n">PICEA_DEBUG</span><span class="p">(</span>
+<span class="w">            </span><span class="n">llvm</span><span class="o">::</span><span class="n">dbgs</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"Cloning "</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">nodeFunctionOps</span><span class="p">.</span><span class="n">size</span><span class="p">()</span>
+<span class="w">                         </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">" ops into '"</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">funcName</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"':"</span><span class="p">);</span>
+<span class="w">        </span><span class="n">rewriter</span><span class="p">.</span><span class="n">setInsertionPointToEnd</span><span class="p">(</span><span class="n">block</span><span class="p">);</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="o">*</span><span class="w"> </span><span class="n">opi</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">nodeFunctionOps</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">PICEA_DEBUG</span><span class="p">(</span>
+<span class="w">                </span><span class="n">llvm</span><span class="o">::</span><span class="n">dbgs</span><span class="p">()</span>
+<span class="w">                </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"  "</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">opi</span><span class="o">-&gt;</span><span class="n">getName</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">" at "</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">opi</span><span class="o">-&gt;</span><span class="n">getLoc</span><span class="p">());</span>
+<span class="w">            </span><span class="n">rewriter</span><span class="p">.</span><span class="n">clone</span><span class="p">(</span><span class="o">*</span><span class="n">opi</span><span class="p">,</span><span class="w"> </span><span class="n">mapping</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="n">SmallVector</span><span class="o">&lt;</span><span class="n">Value</span><span class="o">&gt;</span><span class="w"> </span><span class="n">returnVals</span><span class="p">;</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="n">val</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">effectiveResults</span><span class="p">)</span>
+<span class="w">            </span><span class="n">returnVals</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">mapping</span><span class="p">.</span><span class="n">lookupOrDefault</span><span class="p">(</span><span class="n">val</span><span class="p">));</span>
+<span class="w">        </span><span class="n">ReturnOp</span><span class="o">::</span><span class="n">create</span><span class="p">(</span><span class="n">rewriter</span><span class="p">,</span><span class="w"> </span><span class="n">nodeOp</span><span class="o">-&gt;</span><span class="n">getLoc</span><span class="p">(),</span><span class="w"> </span><span class="n">returnVals</span><span class="p">);</span>
+<span class="w">        </span><span class="n">PICEA_DEBUG</span><span class="p">(</span>
+<span class="w">            </span><span class="n">llvm</span><span class="o">::</span><span class="n">dbgs</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"Return "</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">returnVals</span><span class="p">.</span><span class="n">size</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">" value(s) from '"</span>
+<span class="w">                         </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">funcName</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"'"</span><span class="p">);</span>
+
+<span class="w">        </span><span class="n">nodeFunctions</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">newFuncOp</span><span class="p">);</span>
+<span class="w">        </span><span class="n">nodeArgValues</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">funcArgValues</span><span class="p">));</span>
+<span class="w">        </span><span class="n">nodeEffectiveResults</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">effectiveResults</span><span class="p">));</span>
+<span class="w">        </span><span class="n">outlinedOps</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">nodeOp</span><span class="p">);</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">success</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="n">LogicalResult</span><span class="w"> </span><span class="nf">outlineComputationOp</span><span class="p">(</span><span class="n">IRRewriter</span><span class="w"> </span><span class="o">&amp;</span><span class="n">rewriter</span><span class="p">,</span><span class="w"> </span><span class="n">Operation</span><span class="o">*</span><span class="w"> </span><span class="n">op</span><span class="p">)</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="n">PICEA_DEBUG</span><span class="p">(</span>
+<span class="w">            </span><span class="n">llvm</span><span class="o">::</span><span class="n">dbgs</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"Processing operation "</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">op</span><span class="o">-&gt;</span><span class="n">getName</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">" at "</span>
+<span class="w">                         </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">op</span><span class="o">-&gt;</span><span class="n">getLoc</span><span class="p">());</span>
+
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="n">genericOp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dyn_cast</span><span class="o">&lt;</span><span class="n">linalg</span><span class="o">::</span><span class="n">GenericOp</span><span class="o">&gt;</span><span class="p">(</span><span class="n">op</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">linalg</span><span class="o">::</span><span class="n">isaFillOpInterface</span><span class="p">(</span><span class="n">genericOp</span><span class="p">)</span>
+<span class="w">                </span><span class="o">||</span><span class="w"> </span><span class="n">linalg</span><span class="o">::</span><span class="n">isaBroadcastOpInterface</span><span class="p">(</span><span class="n">genericOp</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">storedGenericOps</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">genericOp</span><span class="p">);</span>
+<span class="w">                </span><span class="n">PICEA_DEBUG</span><span class="p">(</span>
+<span class="w">                    </span><span class="n">llvm</span><span class="o">::</span><span class="n">dbgs</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"Store fill/broadcast for later use."</span><span class="p">);</span>
+<span class="w">            </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">PICEA_DEBUG</span><span class="p">(</span>
+<span class="w">                    </span><span class="n">llvm</span><span class="o">::</span><span class="n">dbgs</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"Outlining computation generic at "</span>
+<span class="w">                                 </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">genericOp</span><span class="p">.</span><span class="n">getLoc</span><span class="p">());</span>
+<span class="w">                </span><span class="n">SmallVector</span><span class="o">&lt;</span><span class="n">Value</span><span class="o">&gt;</span><span class="w"> </span><span class="n">operands</span><span class="p">;</span>
+<span class="w">                </span><span class="n">llvm</span><span class="o">::</span><span class="n">append_range</span><span class="p">(</span><span class="n">operands</span><span class="p">,</span><span class="w"> </span><span class="n">genericOp</span><span class="p">.</span><span class="n">getInputs</span><span class="p">());</span>
+<span class="w">                </span><span class="n">llvm</span><span class="o">::</span><span class="n">append_range</span><span class="p">(</span><span class="n">operands</span><span class="p">,</span><span class="w"> </span><span class="n">genericOp</span><span class="p">.</span><span class="n">getOutputs</span><span class="p">());</span>
+<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="n">outlineNode</span><span class="p">(</span><span class="n">rewriter</span><span class="p">,</span><span class="w"> </span><span class="n">op</span><span class="p">,</span><span class="w"> </span><span class="n">operands</span><span class="p">);</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="n">padOp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dyn_cast</span><span class="o">&lt;</span><span class="n">tensor</span><span class="o">::</span><span class="n">PadOp</span><span class="o">&gt;</span><span class="p">(</span><span class="n">op</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">PICEA_DEBUG</span><span class="p">(</span>
+<span class="w">                </span><span class="n">llvm</span><span class="o">::</span><span class="n">dbgs</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"Outlining pad op at "</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">padOp</span><span class="p">.</span><span class="n">getLoc</span><span class="p">());</span>
+<span class="w">            </span><span class="n">SmallVector</span><span class="o">&lt;</span><span class="n">Value</span><span class="o">&gt;</span><span class="w"> </span><span class="n">operands</span><span class="p">;</span>
+<span class="w">            </span><span class="n">operands</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">padOp</span><span class="p">.</span><span class="n">getSource</span><span class="p">());</span>
+<span class="w">            </span><span class="n">llvm</span><span class="o">::</span><span class="n">append_range</span><span class="p">(</span><span class="n">operands</span><span class="p">,</span><span class="w"> </span><span class="n">padOp</span><span class="p">.</span><span class="n">getLow</span><span class="p">());</span>
+<span class="w">            </span><span class="n">llvm</span><span class="o">::</span><span class="n">append_range</span><span class="p">(</span><span class="n">operands</span><span class="p">,</span><span class="w"> </span><span class="n">padOp</span><span class="p">.</span><span class="n">getHigh</span><span class="p">());</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="n">outlineNode</span><span class="p">(</span><span class="n">rewriter</span><span class="p">,</span><span class="w"> </span><span class="n">op</span><span class="p">,</span><span class="w"> </span><span class="n">operands</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">PICEA_DEBUG</span><span class="p">(</span><span class="n">llvm</span><span class="o">::</span><span class="n">dbgs</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"Skip "</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">op</span><span class="o">-&gt;</span><span class="n">getName</span><span class="p">());</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">success</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="nf">runOnOperation</span><span class="p">()</span><span class="w"> </span><span class="k">override</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="n">nodeFunctions</span><span class="p">.</span><span class="n">clear</span><span class="p">();</span>
+<span class="w">        </span><span class="n">storedGenericOps</span><span class="p">.</span><span class="n">clear</span><span class="p">();</span>
+<span class="w">        </span><span class="n">consumedReshapeOps</span><span class="p">.</span><span class="n">clear</span><span class="p">();</span>
+<span class="w">        </span><span class="n">outlinedOps</span><span class="p">.</span><span class="n">clear</span><span class="p">();</span>
+<span class="w">        </span><span class="n">nodeArgValues</span><span class="p">.</span><span class="n">clear</span><span class="p">();</span>
+<span class="w">        </span><span class="n">nodeEffectiveResults</span><span class="p">.</span><span class="n">clear</span><span class="p">();</span>
+
+<span class="w">        </span><span class="n">func</span><span class="o">::</span><span class="n">FuncOp</span><span class="w"> </span><span class="n">funcOp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">getOperation</span><span class="p">();</span>
+<span class="w">        </span><span class="n">IRRewriter</span><span class="w"> </span><span class="n">rewriter</span><span class="p">(</span><span class="n">funcOp</span><span class="o">-&gt;</span><span class="n">getContext</span><span class="p">());</span>
+
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="o">&amp;</span><span class="n">opFunc</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">funcOp</span><span class="p">.</span><span class="n">getBody</span><span class="p">().</span><span class="n">getOps</span><span class="p">())</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">failed</span><span class="p">(</span><span class="n">outlineComputationOp</span><span class="p">(</span><span class="n">rewriter</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">opFunc</span><span class="p">)))</span>
+<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="n">signalPassFailure</span><span class="p">();</span>
+
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">nodeFunctions</span><span class="p">.</span><span class="n">empty</span><span class="p">())</span><span class="w"> </span><span class="k">return</span><span class="p">;</span>
+
+<span class="w">        </span><span class="c1">// Rebuild funcOp's body as a wrapper that calls the outlined nodes.</span>
+<span class="w">        </span><span class="n">Block</span><span class="w"> </span><span class="o">&amp;</span><span class="n">funcBlock</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">funcOp</span><span class="p">.</span><span class="n">getBody</span><span class="p">().</span><span class="n">front</span><span class="p">();</span>
+
+<span class="w">        </span><span class="c1">// Snapshot the old ops; the terminator is always last.</span>
+<span class="w">        </span><span class="n">SmallVector</span><span class="o">&lt;</span><span class="n">Operation</span><span class="o">*&gt;</span><span class="w"> </span><span class="n">oldOps</span><span class="p">;</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="o">&amp;</span><span class="n">op</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">funcBlock</span><span class="p">.</span><span class="n">getOperations</span><span class="p">())</span><span class="w"> </span><span class="n">oldOps</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="o">&amp;</span><span class="n">op</span><span class="p">);</span>
+
+<span class="w">        </span><span class="c1">// Block arguments map to themselves (they survive the body rewrite).</span>
+<span class="w">        </span><span class="n">DenseMap</span><span class="o">&lt;</span><span class="n">Value</span><span class="p">,</span><span class="w"> </span><span class="n">Value</span><span class="o">&gt;</span><span class="w"> </span><span class="n">valueMap</span><span class="p">;</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">Value</span><span class="w"> </span><span class="n">blkArg</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">funcBlock</span><span class="p">.</span><span class="n">getArguments</span><span class="p">())</span><span class="w"> </span><span class="n">valueMap</span><span class="p">[</span><span class="n">blkArg</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">blkArg</span><span class="p">;</span>
+
+<span class="w">        </span><span class="c1">// Insert calls to each node function, just before the old terminator.</span>
+<span class="w">        </span><span class="n">rewriter</span><span class="p">.</span><span class="n">setInsertionPoint</span><span class="p">(</span><span class="n">oldOps</span><span class="p">.</span><span class="n">back</span><span class="p">());</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="p">[</span><span class="n">nodeFunc</span><span class="p">,</span><span class="w"> </span><span class="n">argVals</span><span class="p">,</span><span class="w"> </span><span class="n">effResults</span><span class="p">]</span><span class="w"> </span><span class="o">:</span>
+<span class="w">             </span><span class="n">llvm</span><span class="o">::</span><span class="n">zip</span><span class="p">(</span><span class="n">nodeFunctions</span><span class="p">,</span><span class="w"> </span><span class="n">nodeArgValues</span><span class="p">,</span><span class="w"> </span><span class="n">nodeEffectiveResults</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">SmallVector</span><span class="o">&lt;</span><span class="n">Value</span><span class="o">&gt;</span><span class="w"> </span><span class="n">callArgs</span><span class="p">;</span>
+<span class="w">            </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">Value</span><span class="w"> </span><span class="n">origVal</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">argVals</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="k">auto</span><span class="w"> </span><span class="n">it</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">valueMap</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="n">origVal</span><span class="p">);</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">it</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">valueMap</span><span class="p">.</span><span class="n">end</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                    </span><span class="n">funcOp</span><span class="p">.</span><span class="n">emitError</span><span class="p">(</span><span class="s">"outlined node '"</span><span class="p">)</span>
+<span class="w">                        </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">nodeFunc</span><span class="p">.</span><span class="n">getSymName</span><span class="p">()</span>
+<span class="w">                        </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"': argument value missing from caller value map"</span><span class="p">;</span>
+<span class="w">                    </span><span class="k">return</span><span class="w"> </span><span class="n">signalPassFailure</span><span class="p">();</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">                </span><span class="n">callArgs</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">it</span><span class="o">-&gt;</span><span class="n">second</span><span class="p">);</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="n">PICEA_DEBUG</span><span class="p">(</span>
+<span class="w">                </span><span class="n">llvm</span><span class="o">::</span><span class="n">dbgs</span><span class="p">()</span>
+<span class="w">                </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"Building call to '"</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">nodeFunc</span><span class="p">.</span><span class="n">getSymName</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"'"</span><span class="p">);</span>
+<span class="w">            </span><span class="k">auto</span><span class="w"> </span><span class="n">callOp</span><span class="w"> </span><span class="o">=</span>
+<span class="w">                </span><span class="n">CallOp</span><span class="o">::</span><span class="n">create</span><span class="p">(</span><span class="n">rewriter</span><span class="p">,</span><span class="w"> </span><span class="n">funcOp</span><span class="p">.</span><span class="n">getLoc</span><span class="p">(),</span><span class="w"> </span><span class="n">nodeFunc</span><span class="p">,</span><span class="w"> </span><span class="n">callArgs</span><span class="p">);</span>
+<span class="w">            </span><span class="c1">// Map each original effective result to the corresponding call</span>
+<span class="w">            </span><span class="c1">// result.</span>
+<span class="w">            </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="p">[</span><span class="n">origResult</span><span class="p">,</span><span class="w"> </span><span class="n">callResult</span><span class="p">]</span><span class="w"> </span><span class="o">:</span>
+<span class="w">                 </span><span class="n">llvm</span><span class="o">::</span><span class="n">zip</span><span class="p">(</span><span class="n">effResults</span><span class="p">,</span><span class="w"> </span><span class="n">callOp</span><span class="p">.</span><span class="n">getResults</span><span class="p">()))</span>
+<span class="w">                </span><span class="n">valueMap</span><span class="p">[</span><span class="n">origResult</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">callResult</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="c1">// Replace old return with remapped values.</span>
+<span class="w">        </span><span class="k">auto</span><span class="o">*</span><span class="w"> </span><span class="n">oldReturn</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">oldOps</span><span class="p">.</span><span class="n">back</span><span class="p">();</span>
+<span class="w">        </span><span class="n">SmallVector</span><span class="o">&lt;</span><span class="n">Value</span><span class="o">&gt;</span><span class="w"> </span><span class="n">newReturnVals</span><span class="p">;</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">Value</span><span class="w"> </span><span class="n">origVal</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">oldReturn</span><span class="o">-&gt;</span><span class="n">getOperands</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">auto</span><span class="w"> </span><span class="n">it</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">valueMap</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="n">origVal</span><span class="p">);</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">it</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">valueMap</span><span class="p">.</span><span class="n">end</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">funcOp</span><span class="p">.</span><span class="n">emitError</span><span class="p">(</span>
+<span class="w">                    </span><span class="s">"wrapper return: value missing from caller value map"</span><span class="p">);</span>
+<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="n">signalPassFailure</span><span class="p">();</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="n">newReturnVals</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">it</span><span class="o">-&gt;</span><span class="n">second</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="n">PICEA_DEBUG</span><span class="p">(</span>
+<span class="w">            </span><span class="n">llvm</span><span class="o">::</span><span class="n">dbgs</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"Building wrapper return with "</span>
+<span class="w">                         </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">newReturnVals</span><span class="p">.</span><span class="n">size</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">" value(s)"</span><span class="p">);</span>
+<span class="w">        </span><span class="n">rewriter</span><span class="p">.</span><span class="n">replaceOpWithNewOp</span><span class="o">&lt;</span><span class="n">ReturnOp</span><span class="o">&gt;</span><span class="p">(</span><span class="n">oldReturn</span><span class="p">,</span><span class="w"> </span><span class="n">newReturnVals</span><span class="p">);</span>
+<span class="w">        </span><span class="n">oldOps</span><span class="p">.</span><span class="n">pop_back</span><span class="p">();</span>
+
+<span class="w">        </span><span class="c1">// Erase the now-dead original ops in reverse topological order so</span>
+<span class="w">        </span><span class="c1">// each op is def-free by the time it is erased.</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="o">*</span><span class="w"> </span><span class="n">op</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">llvm</span><span class="o">::</span><span class="n">reverse</span><span class="p">(</span><span class="n">oldOps</span><span class="p">))</span><span class="w"> </span><span class="n">rewriter</span><span class="p">.</span><span class="n">eraseOp</span><span class="p">(</span><span class="n">op</span><span class="p">);</span>
+
+<span class="w">        </span><span class="n">funcOp</span><span class="p">.</span><span class="n">setSymName</span><span class="p">(</span><span class="n">funcOp</span><span class="p">.</span><span class="n">getSymName</span><span class="p">().</span><span class="n">str</span><span class="p">()</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">"_top"</span><span class="p">);</span>
+<span class="w">        </span><span class="n">funcOp</span><span class="o">-&gt;</span><span class="n">setAttr</span><span class="p">(</span>
+<span class="w">            </span><span class="n">picea</span><span class="o">::</span><span class="n">kRootAttrName</span><span class="p">,</span>
+<span class="w">            </span><span class="n">UnitAttr</span><span class="o">::</span><span class="n">get</span><span class="p">(</span><span class="n">funcOp</span><span class="p">.</span><span class="n">getContext</span><span class="p">()));</span>
+
+<span class="w">        </span><span class="n">PICEA_DEBUG</span><span class="p">(</span>
+<span class="w">            </span><span class="n">llvm</span><span class="o">::</span><span class="n">dbgs</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"Wrapper '"</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">funcOp</span><span class="p">.</span><span class="n">getSymName</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"' complete"</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">};</span>
+
+<span class="p">}</span><span class="w"> </span><span class="c1">// namespace</span>
+
+<span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">Pass</span><span class="o">&gt;</span><span class="w"> </span><span class="n">mlir</span><span class="o">::</span><span class="n">func</span><span class="o">::</span><span class="n">createFuncOutlineComputationLeafPass</span><span class="p">()</span>
+<span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">make_unique</span><span class="o">&lt;</span><span class="n">FuncOutlineComputationLeafPass</span><span class="o">&gt;</span><span class="p">();</span><span class="w"> </span><span class="p">}</span>
+</pre></div>
+</div>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

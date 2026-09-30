@@ -1,0 +1,262 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Namespace mlir &mdash; picea 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/collapsible-lists/css/tree_view.css?v=a885cde7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js?v=73120307"></script>
+      <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js?v=660e4f45"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Namespace mlir::affine" href="namespace_mlir__affine.html" />
+    <link rel="prev" title="Namespace mc" href="namespace_mc.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            picea
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Installation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../README.html">About the project</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#guides">Guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#related-projects">Related projects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#development-environment-nix">Development Environment (Nix)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#build-on-ubuntu-24-04-no-nix">Build on Ubuntu 24.04 (no Nix)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#gurobi-license">Gurobi license</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#installing">Installing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#run-the-tests">Run the tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#build-the-documentation">Build the documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#compiling-a-design">Compiling a design</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#running-a-design-on-the-board">Running a design on the board</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#exporting-a-profiled-application-to-mocasin">Exporting a profiled application to Mocasin</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Guides</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../guides/laksa.html">The FPGA Variant using LAKSA backend</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/cgra.html">The CGRA Variant</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">MLIR Dialects</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/Base2Ops.html">‘base2’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/CGRAOps.html">‘cgra’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/DFGOps.html">‘dfg’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/EmitHLSOps.html">‘emithls’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/FilterOps.html">‘filter’ Dialect</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Passes</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/PICEAConversionPasses.html">PICEA Conversion Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/CGRAPasses.html">CGRA Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/DFGPasses.html">DFG Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/EmitHLSPasses.html">Emit HLS Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/FuncExtPasses.html">Func Ext Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/LinalgExtPasses.html">Linalg Ext Passes</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">C++ API</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="library_root.html">C++ API Reference</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="library_root.html#picea">picea</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="library_root.html#page-hierarchy">Page Hierarchy</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="library_root.html#full-api">Full API</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="library_root.html#namespaces">Namespaces</a></li>
+<li class="toctree-l4"><a class="reference internal" href="library_root.html#classes-and-structs">Classes and Structs</a></li>
+<li class="toctree-l4"><a class="reference internal" href="library_root.html#enums">Enums</a></li>
+<li class="toctree-l4"><a class="reference internal" href="library_root.html#functions">Functions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="library_root.html#variables">Variables</a></li>
+<li class="toctree-l4"><a class="reference internal" href="library_root.html#defines">Defines</a></li>
+<li class="toctree-l4"><a class="reference internal" href="library_root.html#typedefs">Typedefs</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">picea</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="library_root.html">C++ API Reference</a></li>
+      <li class="breadcrumb-item active">Namespace mlir</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/namespace_mlir.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="namespace-mlir">
+<span id="id1"></span><h1>Namespace mlir<a class="headerlink" href="#namespace-mlir" title="Link to this heading"></a></h1>
+<nav class="contents local" id="contents">
+<p class="topic-title">Contents</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#namespaces" id="id2">Namespaces</a></p></li>
+<li><p><a class="reference internal" href="#classes" id="id3">Classes</a></p></li>
+<li><p><a class="reference internal" href="#functions" id="id4">Functions</a></p></li>
+</ul>
+</nav>
+<section id="namespaces">
+<h2>Namespaces<a class="headerlink" href="#namespaces" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="namespace_mlir__affine.html#namespace-mlir-affine"><span class="std std-ref">Namespace mlir::affine</span></a></p></li>
+<li><p><a class="reference internal" href="namespace_mlir__arith.html#namespace-mlir-arith"><span class="std std-ref">Namespace mlir::arith</span></a></p></li>
+<li><p><a class="reference internal" href="namespace_mlir__Attribute.html#namespace-mlir-attribute"><span class="std std-ref">Namespace mlir::Attribute</span></a></p></li>
+<li><p><a class="reference internal" href="namespace_mlir__base2.html#namespace-mlir-base2"><span class="std std-ref">Namespace mlir::base2</span></a></p></li>
+<li><p><a class="reference internal" href="namespace_mlir__bufferization.html#namespace-mlir-bufferization"><span class="std std-ref">Namespace mlir::bufferization</span></a></p></li>
+<li><p><a class="reference internal" href="namespace_mlir__cgra.html#namespace-mlir-cgra"><span class="std std-ref">Namespace mlir::cgra</span></a></p></li>
+<li><p><a class="reference internal" href="namespace_mlir__dfg.html#namespace-mlir-dfg"><span class="std std-ref">Namespace mlir::dfg</span></a></p></li>
+<li><p><a class="reference internal" href="namespace_mlir__emithls.html#namespace-mlir-emithls"><span class="std std-ref">Namespace mlir::emithls</span></a></p></li>
+<li><p><a class="reference internal" href="namespace_mlir__filter.html#namespace-mlir-filter"><span class="std std-ref">Namespace mlir::filter</span></a></p></li>
+<li><p><a class="reference internal" href="namespace_mlir__func.html#namespace-mlir-func"><span class="std std-ref">Namespace mlir::func</span></a></p></li>
+<li><p><a class="reference internal" href="namespace_mlir__linalg.html#namespace-mlir-linalg"><span class="std std-ref">Namespace mlir::linalg</span></a></p></li>
+<li><p><a class="reference internal" href="namespace_mlir__picea.html#namespace-mlir-picea"><span class="std std-ref">Namespace mlir::picea</span></a></p></li>
+<li><p><a class="reference internal" href="namespace_mlir__Type.html#namespace-mlir-type"><span class="std std-ref">Namespace mlir::Type</span></a></p></li>
+</ul>
+</section>
+<section id="classes">
+<h2>Classes<a class="headerlink" href="#classes" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="structmlir_1_1FieldParser.html#exhale-struct-structmlir-1-1fieldparser"><span class="std std-ref">Template Struct FieldParser</span></a></p></li>
+<li><p><a class="reference internal" href="structmlir_1_1FieldParser_3_01base2_1_1BitSequence_01_4.html#exhale-struct-structmlir-1-1fieldparser-3-01base2-1-1bitsequence-01-4"><span class="std std-ref">Template Struct FieldParser&lt; base2::BitSequence &gt;</span></a></p></li>
+<li><p><a class="reference internal" href="structmlir_1_1FieldParser_3_01std_1_1optional_3_1_1mlir_1_1base2_1_1OrderingPredicate_01_4_00_019392b70eb86c8bdef9880683f6768b3f.html#exhale-struct-structmlir-1-1fieldparser-3-01std-1-1optional-3-1-1mlir-1-1base2-1-1orderingpredicate-01-4-00-019392b70eb86c8bdef9880683f6768b3f"><span class="std std-ref">Template Struct FieldParser&lt; std::optional&lt; ::mlir::base2::OrderingPredicate &gt;, std::optional&lt; ::mlir::base2::OrderingPredicate &gt; &gt;</span></a></p></li>
+<li><p><a class="reference internal" href="structmlir_1_1FieldParser_3_01std_1_1optional_3_1_1mlir_1_1dfg_1_1OffloadHardware_01_4_00_01std_18d1e649b2d28bfc06610232d7cdbf4e.html#exhale-struct-structmlir-1-1fieldparser-3-01std-1-1optional-3-1-1mlir-1-1dfg-1-1offloadhardware-01-4-00-01std-18d1e649b2d28bfc06610232d7cdbf4e"><span class="std std-ref">Template Struct FieldParser&lt; std::optional&lt; ::mlir::dfg::OffloadHardware &gt;, std::optional&lt; ::mlir::dfg::OffloadHardware &gt; &gt;</span></a></p></li>
+<li><p><a class="reference internal" href="structmlir_1_1FieldParser_3_01std_1_1optional_3_1_1mlir_1_1emithls_1_1ArrayPartitionType_01_4_001e333af38bb2e7d7b18097ec1566bd08.html#exhale-struct-structmlir-1-1fieldparser-3-01std-1-1optional-3-1-1mlir-1-1emithls-1-1arraypartitiontype-01-4-001e333af38bb2e7d7b18097ec1566bd08"><span class="std std-ref">Template Struct FieldParser&lt; std::optional&lt; ::mlir::emithls::ArrayPartitionType &gt;, std::optional&lt; ::mlir::emithls::ArrayPartitionType &gt; &gt;</span></a></p></li>
+<li><p><a class="reference internal" href="structmlir_1_1FieldParser_3_01std_1_1optional_3_1_1mlir_1_1emithls_1_1BindStorageImpl_01_4_00_0194134000e6415e65ab635236edb1fe43.html#exhale-struct-structmlir-1-1fieldparser-3-01std-1-1optional-3-1-1mlir-1-1emithls-1-1bindstorageimpl-01-4-00-0194134000e6415e65ab635236edb1fe43"><span class="std std-ref">Template Struct FieldParser&lt; std::optional&lt; ::mlir::emithls::BindStorageImpl &gt;, std::optional&lt; ::mlir::emithls::BindStorageImpl &gt; &gt;</span></a></p></li>
+<li><p><a class="reference internal" href="structmlir_1_1FieldParser_3_01std_1_1optional_3_1_1mlir_1_1emithls_1_1BindStorageType_01_4_00_016254f681b443d4ec5eacfb5b8b8a6825.html#exhale-struct-structmlir-1-1fieldparser-3-01std-1-1optional-3-1-1mlir-1-1emithls-1-1bindstoragetype-01-4-00-016254f681b443d4ec5eacfb5b8b8a6825"><span class="std std-ref">Template Struct FieldParser&lt; std::optional&lt; ::mlir::emithls::BindStorageType &gt;, std::optional&lt; ::mlir::emithls::BindStorageType &gt; &gt;</span></a></p></li>
+<li><p><a class="reference internal" href="structmlir_1_1FieldParser_3_01std_1_1optional_3_1_1mlir_1_1emithls_1_1CmpPredicate_01_4_00_01std8c5ed2c290c9641fb2c995181e14fd51.html#exhale-struct-structmlir-1-1fieldparser-3-01std-1-1optional-3-1-1mlir-1-1emithls-1-1cmppredicate-01-4-00-01std8c5ed2c290c9641fb2c995181e14fd51"><span class="std std-ref">Template Struct FieldParser&lt; std::optional&lt; ::mlir::emithls::CmpPredicate &gt;, std::optional&lt; ::mlir::emithls::CmpPredicate &gt; &gt;</span></a></p></li>
+<li><p><a class="reference internal" href="structmlir_1_1FieldParser_3_01std_1_1optional_3_1_1mlir_1_1emithls_1_1FusedOperator_01_4_00_01steaeea88c4352f2ae40115fdaa14ef728.html#exhale-struct-structmlir-1-1fieldparser-3-01std-1-1optional-3-1-1mlir-1-1emithls-1-1fusedoperator-01-4-00-01steaeea88c4352f2ae40115fdaa14ef728"><span class="std std-ref">Template Struct FieldParser&lt; std::optional&lt; ::mlir::emithls::FusedOperator &gt;, std::optional&lt; ::mlir::emithls::FusedOperator &gt; &gt;</span></a></p></li>
+<li><p><a class="reference internal" href="structmlir_1_1FieldParser_3_01std_1_1optional_3_1_1mlir_1_1emithls_1_1PipelineStyle_01_4_00_01steac70d32c5608b08a717d2bf17e5ec4d.html#exhale-struct-structmlir-1-1fieldparser-3-01std-1-1optional-3-1-1mlir-1-1emithls-1-1pipelinestyle-01-4-00-01steac70d32c5608b08a717d2bf17e5ec4d"><span class="std std-ref">Template Struct FieldParser&lt; std::optional&lt; ::mlir::emithls::PipelineStyle &gt;, std::optional&lt; ::mlir::emithls::PipelineStyle &gt; &gt;</span></a></p></li>
+<li><p><a class="reference internal" href="structmlir_1_1FieldParser_3_01std_1_1optional_3_1_1mlir_1_1filter_1_1EnvelopeStyle_01_4_00_01std0933d20d24516503d8b9d07353606c14.html#exhale-struct-structmlir-1-1fieldparser-3-01std-1-1optional-3-1-1mlir-1-1filter-1-1envelopestyle-01-4-00-01std0933d20d24516503d8b9d07353606c14"><span class="std std-ref">Template Struct FieldParser&lt; std::optional&lt; ::mlir::filter::EnvelopeStyle &gt;, std::optional&lt; ::mlir::filter::EnvelopeStyle &gt; &gt;</span></a></p></li>
+<li><p><a class="reference internal" href="structmlir_1_1FieldParser_3_1_1mlir_1_1base2_1_1OrderingPredicate_00_01_1_1mlir_1_1base2_1_1OrderingPredicate_01_4.html#exhale-struct-structmlir-1-1fieldparser-3-1-1mlir-1-1base2-1-1orderingpredicate-00-01-1-1mlir-1-1base2-1-1orderingpredicate-01-4"><span class="std std-ref">Template Struct FieldParser&lt; ::mlir::base2::OrderingPredicate::mlir::base2::OrderingPredicate &gt;</span></a></p></li>
+<li><p><a class="reference internal" href="structmlir_1_1FieldParser_3_1_1mlir_1_1dfg_1_1OffloadHardware_00_01_1_1mlir_1_1dfg_1_1OffloadHardware_01_4.html#exhale-struct-structmlir-1-1fieldparser-3-1-1mlir-1-1dfg-1-1offloadhardware-00-01-1-1mlir-1-1dfg-1-1offloadhardware-01-4"><span class="std std-ref">Template Struct FieldParser&lt; ::mlir::dfg::OffloadHardware::mlir::dfg::OffloadHardware &gt;</span></a></p></li>
+<li><p><a class="reference internal" href="structmlir_1_1FieldParser_3_1_1mlir_1_1emithls_1_1ArrayPartitionType_00_01_1_1mlir_1_1emithls_1_1ArrayPartitionType_01_4.html#exhale-struct-structmlir-1-1fieldparser-3-1-1mlir-1-1emithls-1-1arraypartitiontype-00-01-1-1mlir-1-1emithls-1-1arraypartitiontype-01-4"><span class="std std-ref">Template Struct FieldParser&lt; ::mlir::emithls::ArrayPartitionType::mlir::emithls::ArrayPartitionType &gt;</span></a></p></li>
+<li><p><a class="reference internal" href="structmlir_1_1FieldParser_3_1_1mlir_1_1emithls_1_1BindStorageImpl_00_01_1_1mlir_1_1emithls_1_1BindStorageImpl_01_4.html#exhale-struct-structmlir-1-1fieldparser-3-1-1mlir-1-1emithls-1-1bindstorageimpl-00-01-1-1mlir-1-1emithls-1-1bindstorageimpl-01-4"><span class="std std-ref">Template Struct FieldParser&lt; ::mlir::emithls::BindStorageImpl::mlir::emithls::BindStorageImpl &gt;</span></a></p></li>
+<li><p><a class="reference internal" href="structmlir_1_1FieldParser_3_1_1mlir_1_1emithls_1_1BindStorageType_00_01_1_1mlir_1_1emithls_1_1BindStorageType_01_4.html#exhale-struct-structmlir-1-1fieldparser-3-1-1mlir-1-1emithls-1-1bindstoragetype-00-01-1-1mlir-1-1emithls-1-1bindstoragetype-01-4"><span class="std std-ref">Template Struct FieldParser&lt; ::mlir::emithls::BindStorageType::mlir::emithls::BindStorageType &gt;</span></a></p></li>
+<li><p><a class="reference internal" href="structmlir_1_1FieldParser_3_1_1mlir_1_1emithls_1_1CmpPredicate_00_01_1_1mlir_1_1emithls_1_1CmpPredicate_01_4.html#exhale-struct-structmlir-1-1fieldparser-3-1-1mlir-1-1emithls-1-1cmppredicate-00-01-1-1mlir-1-1emithls-1-1cmppredicate-01-4"><span class="std std-ref">Template Struct FieldParser&lt; ::mlir::emithls::CmpPredicate::mlir::emithls::CmpPredicate &gt;</span></a></p></li>
+<li><p><a class="reference internal" href="structmlir_1_1FieldParser_3_1_1mlir_1_1emithls_1_1FusedOperator_00_01_1_1mlir_1_1emithls_1_1FusedOperator_01_4.html#exhale-struct-structmlir-1-1fieldparser-3-1-1mlir-1-1emithls-1-1fusedoperator-00-01-1-1mlir-1-1emithls-1-1fusedoperator-01-4"><span class="std std-ref">Template Struct FieldParser&lt; ::mlir::emithls::FusedOperator::mlir::emithls::FusedOperator &gt;</span></a></p></li>
+<li><p><a class="reference internal" href="structmlir_1_1FieldParser_3_1_1mlir_1_1emithls_1_1PipelineStyle_00_01_1_1mlir_1_1emithls_1_1PipelineStyle_01_4.html#exhale-struct-structmlir-1-1fieldparser-3-1-1mlir-1-1emithls-1-1pipelinestyle-00-01-1-1mlir-1-1emithls-1-1pipelinestyle-01-4"><span class="std std-ref">Template Struct FieldParser&lt; ::mlir::emithls::PipelineStyle::mlir::emithls::PipelineStyle &gt;</span></a></p></li>
+<li><p><a class="reference internal" href="structmlir_1_1FieldParser_3_1_1mlir_1_1filter_1_1EnvelopeStyle_00_01_1_1mlir_1_1filter_1_1EnvelopeStyle_01_4.html#exhale-struct-structmlir-1-1fieldparser-3-1-1mlir-1-1filter-1-1envelopestyle-00-01-1-1mlir-1-1filter-1-1envelopestyle-01-4"><span class="std std-ref">Template Struct FieldParser&lt; ::mlir::filter::EnvelopeStyle::mlir::filter::EnvelopeStyle &gt;</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1Base2ToEmitHLSTypeConverter.html#exhale-class-classmlir-1-1base2toemithlstypeconverter"><span class="std std-ref">Class Base2ToEmitHLSTypeConverter</span></a></p></li>
+</ul>
+</section>
+<section id="functions">
+<h2>Functions<a class="headerlink" href="#functions" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="function_namespacemlir_1aaeb85bb662196645be4c10df9f301f7f.html#exhale-function-namespacemlir-1aaeb85bb662196645be4c10df9f301f7f"><span class="std std-ref">Function mlir::createConvertAffineToEmitHLSPass</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacemlir_1aea76c2a08275bd78b533ee7027c61054.html#exhale-function-namespacemlir-1aea76c2a08275bd78b533ee7027c61054"><span class="std std-ref">Function mlir::createConvertArithToEmitHLSPass</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacemlir_1a007c479d9426045f57dbd3a415a2c81e.html#exhale-function-namespacemlir-1a007c479d9426045f57dbd3a415a2c81e"><span class="std std-ref">Function mlir::createConvertBase2ToEmitHLSPass</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacemlir_1ac2d829a7fe345628394dfac1b9174ae5.html#exhale-function-namespacemlir-1ac2d829a7fe345628394dfac1b9174ae5"><span class="std std-ref">Function mlir::createConvertDFGToEmitHLSPass</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacemlir_1ad3b66b9b70cae21c70423006d14146be.html#exhale-function-namespacemlir-1ad3b66b9b70cae21c70423006d14146be"><span class="std std-ref">Function mlir::createConvertFilterToLinalgPass</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacemlir_1a57a029711f66e6ec930250bf735b56f1.html#exhale-function-namespacemlir-1a57a029711f66e6ec930250bf735b56f1"><span class="std std-ref">Function mlir::createConvertFuncToDFGPass</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacemlir_1ab1086698c5e8fb2b90bb34fdfa95a32b.html#exhale-function-namespacemlir-1ab1086698c5e8fb2b90bb34fdfa95a32b"><span class="std std-ref">Function mlir::createConvertIndexToEmitHLSPass</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacemlir_1a19096ee0406053cf91a532f17d993028.html#exhale-function-namespacemlir-1a19096ee0406053cf91a532f17d993028"><span class="std std-ref">Function mlir::createConvertLinalgToPICEALoopsPass</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacemlir_1a69381e7dce472e355c2a2937dee95a2f.html#exhale-function-namespacemlir-1a69381e7dce472e355c2a2937dee95a2f"><span class="std std-ref">Function mlir::createConvertMemRefPadToPICEALoopsPass</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacemlir_1ad9e36a16e20b189593a5a52f16638f8b.html#exhale-function-namespacemlir-1ad9e36a16e20b189593a5a52f16638f8b"><span class="std std-ref">Function mlir::createConvertReshapedCopyToLoopsPass</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacemlir_1ae566252a716a98e71b85129544130f1f.html#exhale-function-namespacemlir-1ae566252a716a98e71b85129544130f1f"><span class="std std-ref">Function mlir::populateAffineToEmitHLSConversionPatterns</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacemlir_1a588f5e535d05325254c1b8ce49bc5666.html#exhale-function-namespacemlir-1a588f5e535d05325254c1b8ce49bc5666"><span class="std std-ref">Function mlir::populateArithToEmitHLSConversionPatterns</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacemlir_1ac6548d3986cf883ac5c9705677c51871.html#exhale-function-namespacemlir-1ac6548d3986cf883ac5c9705677c51871"><span class="std std-ref">Function mlir::populateBase2ToEmitHLSConversionPatterns</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacemlir_1a48022059dc1ac606c9a59184158c25d3.html#exhale-function-namespacemlir-1a48022059dc1ac606c9a59184158c25d3"><span class="std std-ref">Function mlir::populateDFGToEmitHLSConversionPatterns</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacemlir_1a73a1ab1716e603d92641faad2d8a4601.html#exhale-function-namespacemlir-1a73a1ab1716e603d92641faad2d8a4601"><span class="std std-ref">Function mlir::populateFilterToLinalgConversionPatterns</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacemlir_1abec5c043354d8c94b85826a320d2fb6a.html#exhale-function-namespacemlir-1abec5c043354d8c94b85826a320d2fb6a"><span class="std std-ref">Function mlir::populateFuncToDFGConversionPatterns</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacemlir_1aa21def42e6f2d0bd37c6b95e3d3108f1.html#exhale-function-namespacemlir-1aa21def42e6f2d0bd37c6b95e3d3108f1"><span class="std std-ref">Function mlir::populateIndexToEmitHLSConversionPatterns</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacemlir_1a67f197c89c1d4081e983e875ab5f15b9.html#exhale-function-namespacemlir-1a67f197c89c1d4081e983e875ab5f15b9"><span class="std std-ref">Function mlir::populateLinalgToPICEALoopsConversionPatterns</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacemlir_1af38840c2e0ccc16e97e88c456562392e.html#exhale-function-namespacemlir-1af38840c2e0ccc16e97e88c456562392e"><span class="std std-ref">Function mlir::populateMemRefPadToPICEALoopsConversionPatterns</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacemlir_1a8cb96d3f7f0e4a60c589743607c65b96.html#exhale-function-namespacemlir-1a8cb96d3f7f0e4a60c589743607c65b96"><span class="std std-ref">Function mlir::populateReshapedCopyToLoopsPatterns</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacemlir_1adcc81317d25acb0022d03d6749b75eec.html#exhale-function-namespacemlir-1adcc81317d25acb0022d03d6749b75eec"><span class="std std-ref">Function mlir::registerAllPICEAMLIRDialects(DialectRegistry&amp;)</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacemlir_1a9cf31405ee815678cad5e8cb4198e090.html#exhale-function-namespacemlir-1a9cf31405ee815678cad5e8cb4198e090"><span class="std std-ref">Function mlir::registerAllPICEAMLIRDialects(MLIRContext&amp;)</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacemlir_1a1b329c15a69b4f7cd10c8c2196d5a0ff.html#exhale-function-namespacemlir-1a1b329c15a69b4f7cd10c8c2196d5a0ff"><span class="std std-ref">Function mlir::registerAllPICEAMLIRPasses</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacemlir_1acf94f1ca75de3d328a8d3543b4b69000.html#exhale-function-namespacemlir-1acf94f1ca75de3d328a8d3543b4b69000"><span class="std std-ref">Function mlir::registerAllPICEAMLIRTranslations</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacemlir_1aeb4d2b01ecbbcbac9d68c00a421d7b63.html#exhale-function-namespacemlir-1aeb4d2b01ecbbcbac9d68c00a421d7b63"><span class="std std-ref">Function mlir::registerDFGToDotTranslation</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacemlir_1a3e080e5e2299c4a9ba6e5e51d7661615.html#exhale-function-namespacemlir-1a3e080e5e2299c4a9ba6e5e51d7661615"><span class="std std-ref">Function mlir::registerDFGToMocasinTranslation</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacemlir_1a14fa49f13a4a1ae685d18c1b6e03292a.html#exhale-function-namespacemlir-1a14fa49f13a4a1ae685d18c1b6e03292a"><span class="std std-ref">Function mlir::registerEmitCToCPUProfileRunScriptTranslation</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacemlir_1a41b99695e9cd43250235773b3f031946.html#exhale-function-namespacemlir-1a41b99695e9cd43250235773b3f031946"><span class="std std-ref">Function mlir::registerEmitCToCPUProfileTranslation</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacemlir_1a29ea5d5fa6b57403f6654d34437d007c.html#exhale-function-namespacemlir-1a29ea5d5fa6b57403f6654d34437d007c"><span class="std std-ref">Function mlir::registerEmitCToLaksaRefTranslation</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacemlir_1a37996aa6c572e0fd1be7b1827b210379.html#exhale-function-namespacemlir-1a37996aa6c572e0fd1be7b1827b210379"><span class="std std-ref">Function mlir::registerEmitHLSToCppTranslation</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacemlir_1acfbb97a99231e53cdffb6bd4e2737889.html#exhale-function-namespacemlir-1acfbb97a99231e53cdffb6bd4e2737889"><span class="std std-ref">Function mlir::registerEmitHLSToFPGAModelProfileTranslation</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacemlir_1ab63e3b5edd4f93eb59c7427fc3a684c3.html#exhale-function-namespacemlir-1ab63e3b5edd4f93eb59c7427fc3a684c3"><span class="std std-ref">Function mlir::registerEmitHLSToHLSBuildScriptTranslation</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacemlir_1ae0e9395185dd523c904d0d51a778f9c7.html#exhale-function-namespacemlir-1ae0e9395185dd523c904d0d51a778f9c7"><span class="std std-ref">Function mlir::registerEmitHLSToHLSProfileScriptTranslation</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacemlir_1adf54dca7cbd82fba169c1ee049aee7c7.html#exhale-function-namespacemlir-1adf54dca7cbd82fba169c1ee049aee7c7"><span class="std std-ref">Function mlir::registerEmitHLSToHLSTclTranslation</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacemlir_1aac871b77779086f38d872c7426541b15.html#exhale-function-namespacemlir-1aac871b77779086f38d872c7426541b15"><span class="std std-ref">Function mlir::registerEmitHLSToKriaDtsiTranslation</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacemlir_1ac17de54caf7bd1ccf2c871c20ac8f00f.html#exhale-function-namespacemlir-1ac17de54caf7bd1ccf2c871c20ac8f00f"><span class="std std-ref">Function mlir::registerEmitHLSToLaksaAppTranslation</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacemlir_1aca77ab3f90882dcc5a0da823a1b201ce.html#exhale-function-namespacemlir-1aca77ab3f90882dcc5a0da823a1b201ce"><span class="std std-ref">Function mlir::registerEmitHLSToLaksaHeaderTranslation</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacemlir_1a29c4560652f14173f69baaf4635ddd0b.html#exhale-function-namespacemlir-1a29c4560652f14173f69baaf4635ddd0b"><span class="std std-ref">Function mlir::registerEmitHLSToLaksaRunScriptTranslation</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacemlir_1a5e6efb3d16f9d32d4b2ac3c93bf4dd3d.html#exhale-function-namespacemlir-1a5e6efb3d16f9d32d4b2ac3c93bf4dd3d"><span class="std std-ref">Function mlir::registerEmitHLSToVivadoTclTranslation</span></a></p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="namespace_mc.html" class="btn btn-neutral float-left" title="Namespace mc" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="namespace_mlir__affine.html" class="btn btn-neutral float-right" title="Namespace mlir::affine" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

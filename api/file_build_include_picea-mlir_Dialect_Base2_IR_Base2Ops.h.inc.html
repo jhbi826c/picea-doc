@@ -1,0 +1,226 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>File Base2Ops.h.inc &mdash; picea 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/collapsible-lists/css/tree_view.css?v=a885cde7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js?v=73120307"></script>
+      <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js?v=660e4f45"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            picea
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Installation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../README.html">About the project</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#guides">Guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#related-projects">Related projects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#development-environment-nix">Development Environment (Nix)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#build-on-ubuntu-24-04-no-nix">Build on Ubuntu 24.04 (no Nix)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#gurobi-license">Gurobi license</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#installing">Installing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#run-the-tests">Run the tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#build-the-documentation">Build the documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#compiling-a-design">Compiling a design</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#running-a-design-on-the-board">Running a design on the board</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#exporting-a-profiled-application-to-mocasin">Exporting a profiled application to Mocasin</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Guides</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../guides/laksa.html">The FPGA Variant using LAKSA backend</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/cgra.html">The CGRA Variant</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">MLIR Dialects</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/Base2Ops.html">‘base2’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/CGRAOps.html">‘cgra’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/DFGOps.html">‘dfg’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/EmitHLSOps.html">‘emithls’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/FilterOps.html">‘filter’ Dialect</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Passes</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/PICEAConversionPasses.html">PICEA Conversion Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/CGRAPasses.html">CGRA Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/DFGPasses.html">DFG Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/EmitHLSPasses.html">Emit HLS Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/FuncExtPasses.html">Func Ext Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/LinalgExtPasses.html">Linalg Ext Passes</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">C++ API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="library_root.html">C++ API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">picea</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">File Base2Ops.h.inc</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/file_build_include_picea-mlir_Dialect_Base2_IR_Base2Ops.h.inc.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="file-base2ops-h-inc">
+<span id="file-build-include-picea-mlir-dialect-base2-ir-base2ops-h-inc"></span><h1>File Base2Ops.h.inc<a class="headerlink" href="#file-base2ops-h-inc" title="Link to this heading"></a></h1>
+<p>↰ <a class="reference internal" href="dir_build_include_picea-mlir_Dialect_Base2_IR.html#dir-build-include-picea-mlir-dialect-base2-ir"><span class="std std-ref">Parent directory</span></a> (<code class="docutils literal notranslate"><span class="pre">build/include/picea-mlir/Dialect/Base2/IR</span></code>)</p>
+<nav class="contents local" id="contents">
+<p class="topic-title">Contents</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#definition-build-include-picea-mlir-dialect-base2-ir-base2ops-h-inc" id="id1">Definition (<code class="docutils literal notranslate"><span class="pre">build/include/picea-mlir/Dialect/Base2/IR/Base2Ops.h.inc</span></code>)</a></p></li>
+<li><p><a class="reference internal" href="#included-by" id="id2">Included By</a></p></li>
+<li><p><a class="reference internal" href="#namespaces" id="id3">Namespaces</a></p></li>
+<li><p><a class="reference internal" href="#classes" id="id4">Classes</a></p></li>
+</ul>
+</nav>
+<section id="definition-build-include-picea-mlir-dialect-base2-ir-base2ops-h-inc">
+<h2>Definition (<code class="docutils literal notranslate"><span class="pre">build/include/picea-mlir/Dialect/Base2/IR/Base2Ops.h.inc</span></code>)<a class="headerlink" href="#definition-build-include-picea-mlir-dialect-base2-ir-base2ops-h-inc" title="Link to this heading"></a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="program_listing_file_build_include_picea-mlir_Dialect_Base2_IR_Base2Ops.h.inc.html">Program Listing for File Base2Ops.h.inc</a></li>
+</ul>
+</div>
+</section>
+<section id="included-by">
+<h2>Included By<a class="headerlink" href="#included-by" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="file_include_picea-mlir_Dialect_Base2_IR_Base2Ops.h.html#file-include-picea-mlir-dialect-base2-ir-base2ops-h"><span class="std std-ref">File Base2Ops.h</span></a></p></li>
+</ul>
+</section>
+<section id="namespaces">
+<h2>Namespaces<a class="headerlink" href="#namespaces" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="namespace_mlir.html#namespace-mlir"><span class="std std-ref">Namespace mlir</span></a></p></li>
+<li><p><a class="reference internal" href="namespace_mlir__base2.html#namespace-mlir-base2"><span class="std std-ref">Namespace mlir::base2</span></a></p></li>
+<li><p><a class="reference internal" href="namespace_mlir__base2__detail.html#namespace-mlir-base2-detail"><span class="std std-ref">Namespace mlir::base2::detail</span></a></p></li>
+</ul>
+</section>
+<section id="classes">
+<h2>Classes<a class="headerlink" href="#classes" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="classmlir_1_1base2_1_1ArithAddOp.html#exhale-class-classmlir-1-1base2-1-1arithaddop"><span class="std std-ref">Class ArithAddOp</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1base2_1_1ArithAddOpAdaptor.html#exhale-class-classmlir-1-1base2-1-1arithaddopadaptor"><span class="std std-ref">Class ArithAddOpAdaptor</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1base2_1_1ArithAddOpGenericAdaptor.html#exhale-class-classmlir-1-1base2-1-1arithaddopgenericadaptor"><span class="std std-ref">Template Class ArithAddOpGenericAdaptor</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1base2_1_1ArithAndOp.html#exhale-class-classmlir-1-1base2-1-1arithandop"><span class="std std-ref">Class ArithAndOp</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1base2_1_1ArithAndOpAdaptor.html#exhale-class-classmlir-1-1base2-1-1arithandopadaptor"><span class="std std-ref">Class ArithAndOpAdaptor</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1base2_1_1ArithAndOpGenericAdaptor.html#exhale-class-classmlir-1-1base2-1-1arithandopgenericadaptor"><span class="std std-ref">Template Class ArithAndOpGenericAdaptor</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1base2_1_1ArithCastOp.html#exhale-class-classmlir-1-1base2-1-1arithcastop"><span class="std std-ref">Class ArithCastOp</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1base2_1_1ArithCastOpAdaptor.html#exhale-class-classmlir-1-1base2-1-1arithcastopadaptor"><span class="std std-ref">Class ArithCastOpAdaptor</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1base2_1_1ArithCastOpGenericAdaptor.html#exhale-class-classmlir-1-1base2-1-1arithcastopgenericadaptor"><span class="std std-ref">Template Class ArithCastOpGenericAdaptor</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1base2_1_1ArithCmpOp.html#exhale-class-classmlir-1-1base2-1-1arithcmpop"><span class="std std-ref">Class ArithCmpOp</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1base2_1_1ArithCmpOpAdaptor.html#exhale-class-classmlir-1-1base2-1-1arithcmpopadaptor"><span class="std std-ref">Class ArithCmpOpAdaptor</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1base2_1_1ArithCmpOpGenericAdaptor.html#exhale-class-classmlir-1-1base2-1-1arithcmpopgenericadaptor"><span class="std std-ref">Template Class ArithCmpOpGenericAdaptor</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1base2_1_1ArithDivOp.html#exhale-class-classmlir-1-1base2-1-1arithdivop"><span class="std std-ref">Class ArithDivOp</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1base2_1_1ArithDivOpAdaptor.html#exhale-class-classmlir-1-1base2-1-1arithdivopadaptor"><span class="std std-ref">Class ArithDivOpAdaptor</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1base2_1_1ArithDivOpGenericAdaptor.html#exhale-class-classmlir-1-1base2-1-1arithdivopgenericadaptor"><span class="std std-ref">Template Class ArithDivOpGenericAdaptor</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1base2_1_1ArithMaxOp.html#exhale-class-classmlir-1-1base2-1-1arithmaxop"><span class="std std-ref">Class ArithMaxOp</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1base2_1_1ArithMaxOpAdaptor.html#exhale-class-classmlir-1-1base2-1-1arithmaxopadaptor"><span class="std std-ref">Class ArithMaxOpAdaptor</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1base2_1_1ArithMaxOpGenericAdaptor.html#exhale-class-classmlir-1-1base2-1-1arithmaxopgenericadaptor"><span class="std std-ref">Template Class ArithMaxOpGenericAdaptor</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1base2_1_1ArithMinOp.html#exhale-class-classmlir-1-1base2-1-1arithminop"><span class="std std-ref">Class ArithMinOp</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1base2_1_1ArithMinOpAdaptor.html#exhale-class-classmlir-1-1base2-1-1arithminopadaptor"><span class="std std-ref">Class ArithMinOpAdaptor</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1base2_1_1ArithMinOpGenericAdaptor.html#exhale-class-classmlir-1-1base2-1-1arithminopgenericadaptor"><span class="std std-ref">Template Class ArithMinOpGenericAdaptor</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1base2_1_1ArithMulOp.html#exhale-class-classmlir-1-1base2-1-1arithmulop"><span class="std std-ref">Class ArithMulOp</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1base2_1_1ArithMulOpAdaptor.html#exhale-class-classmlir-1-1base2-1-1arithmulopadaptor"><span class="std std-ref">Class ArithMulOpAdaptor</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1base2_1_1ArithMulOpGenericAdaptor.html#exhale-class-classmlir-1-1base2-1-1arithmulopgenericadaptor"><span class="std std-ref">Template Class ArithMulOpGenericAdaptor</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1base2_1_1ArithOrOp.html#exhale-class-classmlir-1-1base2-1-1arithorop"><span class="std std-ref">Class ArithOrOp</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1base2_1_1ArithOrOpAdaptor.html#exhale-class-classmlir-1-1base2-1-1arithoropadaptor"><span class="std std-ref">Class ArithOrOpAdaptor</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1base2_1_1ArithOrOpGenericAdaptor.html#exhale-class-classmlir-1-1base2-1-1arithoropgenericadaptor"><span class="std std-ref">Template Class ArithOrOpGenericAdaptor</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1base2_1_1ArithRemOp.html#exhale-class-classmlir-1-1base2-1-1arithremop"><span class="std std-ref">Class ArithRemOp</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1base2_1_1ArithRemOpAdaptor.html#exhale-class-classmlir-1-1base2-1-1arithremopadaptor"><span class="std std-ref">Class ArithRemOpAdaptor</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1base2_1_1ArithRemOpGenericAdaptor.html#exhale-class-classmlir-1-1base2-1-1arithremopgenericadaptor"><span class="std std-ref">Template Class ArithRemOpGenericAdaptor</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1base2_1_1ArithSelectOp.html#exhale-class-classmlir-1-1base2-1-1arithselectop"><span class="std std-ref">Class ArithSelectOp</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1base2_1_1ArithSelectOpAdaptor.html#exhale-class-classmlir-1-1base2-1-1arithselectopadaptor"><span class="std std-ref">Class ArithSelectOpAdaptor</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1base2_1_1ArithSelectOpGenericAdaptor.html#exhale-class-classmlir-1-1base2-1-1arithselectopgenericadaptor"><span class="std std-ref">Template Class ArithSelectOpGenericAdaptor</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1base2_1_1ArithShlOp.html#exhale-class-classmlir-1-1base2-1-1arithshlop"><span class="std std-ref">Class ArithShlOp</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1base2_1_1ArithShlOpAdaptor.html#exhale-class-classmlir-1-1base2-1-1arithshlopadaptor"><span class="std std-ref">Class ArithShlOpAdaptor</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1base2_1_1ArithShlOpGenericAdaptor.html#exhale-class-classmlir-1-1base2-1-1arithshlopgenericadaptor"><span class="std std-ref">Template Class ArithShlOpGenericAdaptor</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1base2_1_1ArithShrOp.html#exhale-class-classmlir-1-1base2-1-1arithshrop"><span class="std std-ref">Class ArithShrOp</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1base2_1_1ArithShrOpAdaptor.html#exhale-class-classmlir-1-1base2-1-1arithshropadaptor"><span class="std std-ref">Class ArithShrOpAdaptor</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1base2_1_1ArithShrOpGenericAdaptor.html#exhale-class-classmlir-1-1base2-1-1arithshropgenericadaptor"><span class="std std-ref">Template Class ArithShrOpGenericAdaptor</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1base2_1_1ArithSubOp.html#exhale-class-classmlir-1-1base2-1-1arithsubop"><span class="std std-ref">Class ArithSubOp</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1base2_1_1ArithSubOpAdaptor.html#exhale-class-classmlir-1-1base2-1-1arithsubopadaptor"><span class="std std-ref">Class ArithSubOpAdaptor</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1base2_1_1ArithSubOpGenericAdaptor.html#exhale-class-classmlir-1-1base2-1-1arithsubopgenericadaptor"><span class="std std-ref">Template Class ArithSubOpGenericAdaptor</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1base2_1_1ConstantOp.html#exhale-class-classmlir-1-1base2-1-1constantop"><span class="std std-ref">Class ConstantOp</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1base2_1_1ConstantOpAdaptor.html#exhale-class-classmlir-1-1base2-1-1constantopadaptor"><span class="std std-ref">Class ConstantOpAdaptor</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1base2_1_1ConstantOpGenericAdaptor.html#exhale-class-classmlir-1-1base2-1-1constantopgenericadaptor"><span class="std std-ref">Template Class ConstantOpGenericAdaptor</span></a></p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

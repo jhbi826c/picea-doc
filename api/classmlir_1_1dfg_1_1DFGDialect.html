@@ -1,0 +1,224 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Class DFGDialect &mdash; picea 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/collapsible-lists/css/tree_view.css?v=a885cde7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js?v=73120307"></script>
+      <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js?v=660e4f45"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Class EdgeInterface" href="classmlir_1_1dfg_1_1EdgeInterface.html" />
+    <link rel="prev" title="Template Class ChannelOpGenericAdaptor" href="classmlir_1_1dfg_1_1ChannelOpGenericAdaptor.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            picea
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Installation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../README.html">About the project</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#guides">Guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#related-projects">Related projects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#development-environment-nix">Development Environment (Nix)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#build-on-ubuntu-24-04-no-nix">Build on Ubuntu 24.04 (no Nix)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#gurobi-license">Gurobi license</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#installing">Installing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#run-the-tests">Run the tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#build-the-documentation">Build the documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#compiling-a-design">Compiling a design</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#running-a-design-on-the-board">Running a design on the board</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#exporting-a-profiled-application-to-mocasin">Exporting a profiled application to Mocasin</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Guides</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../guides/laksa.html">The FPGA Variant using LAKSA backend</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/cgra.html">The CGRA Variant</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">MLIR Dialects</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/Base2Ops.html">‘base2’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/CGRAOps.html">‘cgra’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/DFGOps.html">‘dfg’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/EmitHLSOps.html">‘emithls’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/FilterOps.html">‘filter’ Dialect</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Passes</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/PICEAConversionPasses.html">PICEA Conversion Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/CGRAPasses.html">CGRA Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/DFGPasses.html">DFG Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/EmitHLSPasses.html">Emit HLS Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/FuncExtPasses.html">Func Ext Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/LinalgExtPasses.html">Linalg Ext Passes</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">C++ API</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="library_root.html">C++ API Reference</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="library_root.html#picea">picea</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="library_root.html#page-hierarchy">Page Hierarchy</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="library_root.html#full-api">Full API</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="library_root.html#namespaces">Namespaces</a></li>
+<li class="toctree-l4 current"><a class="reference internal" href="library_root.html#classes-and-structs">Classes and Structs</a></li>
+<li class="toctree-l4"><a class="reference internal" href="library_root.html#enums">Enums</a></li>
+<li class="toctree-l4"><a class="reference internal" href="library_root.html#functions">Functions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="library_root.html#variables">Variables</a></li>
+<li class="toctree-l4"><a class="reference internal" href="library_root.html#defines">Defines</a></li>
+<li class="toctree-l4"><a class="reference internal" href="library_root.html#typedefs">Typedefs</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">picea</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="library_root.html">C++ API Reference</a></li>
+      <li class="breadcrumb-item active">Class DFGDialect</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/classmlir_1_1dfg_1_1DFGDialect.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="class-dfgdialect">
+<span id="exhale-class-classmlir-1-1dfg-1-1dfgdialect"></span><h1>Class DFGDialect<a class="headerlink" href="#class-dfgdialect" title="Link to this heading"></a></h1>
+<ul class="simple">
+<li><p>Defined in <a class="reference internal" href="file_build_include_picea-mlir_Dialect_DFG_IR_DFGBase.h.inc.html#file-build-include-picea-mlir-dialect-dfg-ir-dfgbase-h-inc"><span class="std std-ref">File DFGBase.h.inc</span></a></p></li>
+</ul>
+<section id="inheritance-relationships">
+<h2>Inheritance Relationships<a class="headerlink" href="#inheritance-relationships" title="Link to this heading"></a></h2>
+<section id="base-type">
+<h3>Base Type<a class="headerlink" href="#base-type" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">public</span> <span class="pre">mlir::Dialect</span></code></p></li>
+</ul>
+</section>
+</section>
+<section id="class-documentation">
+<h2>Class Documentation<a class="headerlink" href="#class-documentation" title="Link to this heading"></a></h2>
+<dl class="cpp class">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir3dfg10DFGDialectE">
+<span id="_CPPv3N4mlir3dfg10DFGDialectE"></span><span id="_CPPv2N4mlir3dfg10DFGDialectE"></span><span id="mlir::dfg::DFGDialect"></span><span class="target" id="classmlir_1_1dfg_1_1DFGDialect"></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">DFGDialect</span></span></span><span class="w"> </span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="k"><span class="pre">public</span></span><span class="w"> </span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">Dialect</span></span><a class="headerlink" href="#_CPPv4N4mlir3dfg10DFGDialectE" title="Link to this definition"></a><br /></dt>
+<dd><p>The <code class="docutils literal notranslate"><span class="pre">dfg</span></code> dialect groups together a set of types, operations and transformations that are useful to implement a structured abstraction on dataflow graphs. </p>
+<p>These abstractions are useful for constructing KPN/SDF-like dataflow graphs, which include definitions of nodes, edges and their connections. </p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir3dfg10DFGDialectD0Ev">
+<span id="_CPPv3N4mlir3dfg10DFGDialectD0Ev"></span><span id="_CPPv2N4mlir3dfg10DFGDialectD0Ev"></span><span id="mlir::dfg::DFGDialect::~DFGDialect"></span><span class="target" id="classmlir_1_1dfg_1_1DFGDialect_1a8d6a2f2740ad4f2042709551e4ee765e"></span><span class="sig-name descname"><span class="n"><span class="pre">~DFGDialect</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">override</span></span><a class="headerlink" href="#_CPPv4N4mlir3dfg10DFGDialectD0Ev" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK4mlir3dfg10DFGDialect9parseTypeERN4mlir16DialectAsmParserE">
+<span id="_CPPv3NK4mlir3dfg10DFGDialect9parseTypeERN4mlir16DialectAsmParserE"></span><span id="_CPPv2NK4mlir3dfg10DFGDialect9parseTypeERN4mlir16DialectAsmParserE"></span><span id="mlir::dfg::DFGDialect::parseType__mlir::DialectAsmParserRC"></span><span class="target" id="classmlir_1_1dfg_1_1DFGDialect_1ad2db3b49d34cd66cfa3ce9662b0c143b"></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">Type</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">parseType</span></span></span><span class="sig-paren">(</span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">DialectAsmParser</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">parser</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="k"><span class="pre">override</span></span><a class="headerlink" href="#_CPPv4NK4mlir3dfg10DFGDialect9parseTypeERN4mlir16DialectAsmParserE" title="Link to this definition"></a><br /></dt>
+<dd><p>Parse a type registered to this dialect. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK4mlir3dfg10DFGDialect9printTypeEN4mlir4TypeERN4mlir17DialectAsmPrinterE">
+<span id="_CPPv3NK4mlir3dfg10DFGDialect9printTypeEN4mlir4TypeERN4mlir17DialectAsmPrinterE"></span><span id="_CPPv2NK4mlir3dfg10DFGDialect9printTypeEN4mlir4TypeERN4mlir17DialectAsmPrinterE"></span><span id="mlir::dfg::DFGDialect::printType__mlir::Type.mlir::DialectAsmPrinterRC"></span><span class="target" id="classmlir_1_1dfg_1_1DFGDialect_1ad3ea7cd45a5f44f2cd53815f476e5a0c"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">printType</span></span></span><span class="sig-paren">(</span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">Type</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">type</span></span>, <span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">DialectAsmPrinter</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">os</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="k"><span class="pre">override</span></span><a class="headerlink" href="#_CPPv4NK4mlir3dfg10DFGDialect9printTypeEN4mlir4TypeERN4mlir17DialectAsmPrinterE" title="Link to this definition"></a><br /></dt>
+<dd><p>Print a type registered to this dialect. </p>
+</dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-static-functions">Public Static Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir3dfg10DFGDialect19getDialectNamespaceEv">
+<span id="_CPPv3N4mlir3dfg10DFGDialect19getDialectNamespaceEv"></span><span id="_CPPv2N4mlir3dfg10DFGDialect19getDialectNamespaceEv"></span><span id="mlir::dfg::DFGDialect::getDialectNamespaceCE"></span><span class="target" id="classmlir_1_1dfg_1_1DFGDialect_1afa29e6d44d025c31c0b56b84835f2715"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="k"><span class="pre">constexpr</span></span><span class="w"> </span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">llvm</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">StringLiteral</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">getDialectNamespace</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4mlir3dfg10DFGDialect19getDialectNamespaceEv" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-friends">Friends</p>
+<dl>
+<dt class="sig sig-object cpp">
+<span class="property"><span class="pre">friend</span> <span class="pre">class</span></span> <span class="pre">::mlir::MLIRContext</span></dt>
+</dl>
+
+</div>
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="classmlir_1_1dfg_1_1ChannelOpGenericAdaptor.html" class="btn btn-neutral float-left" title="Template Class ChannelOpGenericAdaptor" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="classmlir_1_1dfg_1_1EdgeInterface.html" class="btn btn-neutral float-right" title="Class EdgeInterface" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

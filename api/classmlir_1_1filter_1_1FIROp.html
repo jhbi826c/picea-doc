@@ -1,0 +1,380 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Class FIROp &mdash; picea 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/collapsible-lists/css/tree_view.css?v=a885cde7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js?v=73120307"></script>
+      <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js?v=660e4f45"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Class FIROpAdaptor" href="classmlir_1_1filter_1_1FIROpAdaptor.html" />
+    <link rel="prev" title="Class FilterDialect" href="classmlir_1_1filter_1_1FilterDialect.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            picea
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Installation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../README.html">About the project</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#guides">Guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#related-projects">Related projects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#development-environment-nix">Development Environment (Nix)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#build-on-ubuntu-24-04-no-nix">Build on Ubuntu 24.04 (no Nix)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#gurobi-license">Gurobi license</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#installing">Installing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#run-the-tests">Run the tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#build-the-documentation">Build the documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#compiling-a-design">Compiling a design</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#running-a-design-on-the-board">Running a design on the board</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#exporting-a-profiled-application-to-mocasin">Exporting a profiled application to Mocasin</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Guides</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../guides/laksa.html">The FPGA Variant using LAKSA backend</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/cgra.html">The CGRA Variant</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">MLIR Dialects</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/Base2Ops.html">‘base2’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/CGRAOps.html">‘cgra’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/DFGOps.html">‘dfg’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/EmitHLSOps.html">‘emithls’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/FilterOps.html">‘filter’ Dialect</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Passes</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/PICEAConversionPasses.html">PICEA Conversion Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/CGRAPasses.html">CGRA Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/DFGPasses.html">DFG Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/EmitHLSPasses.html">Emit HLS Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/FuncExtPasses.html">Func Ext Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/LinalgExtPasses.html">Linalg Ext Passes</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">C++ API</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="library_root.html">C++ API Reference</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="library_root.html#picea">picea</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="library_root.html#page-hierarchy">Page Hierarchy</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="library_root.html#full-api">Full API</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="library_root.html#namespaces">Namespaces</a></li>
+<li class="toctree-l4 current"><a class="reference internal" href="library_root.html#classes-and-structs">Classes and Structs</a></li>
+<li class="toctree-l4"><a class="reference internal" href="library_root.html#enums">Enums</a></li>
+<li class="toctree-l4"><a class="reference internal" href="library_root.html#functions">Functions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="library_root.html#variables">Variables</a></li>
+<li class="toctree-l4"><a class="reference internal" href="library_root.html#defines">Defines</a></li>
+<li class="toctree-l4"><a class="reference internal" href="library_root.html#typedefs">Typedefs</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">picea</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="library_root.html">C++ API Reference</a></li>
+      <li class="breadcrumb-item active">Class FIROp</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/classmlir_1_1filter_1_1FIROp.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="class-firop">
+<span id="exhale-class-classmlir-1-1filter-1-1firop"></span><h1>Class FIROp<a class="headerlink" href="#class-firop" title="Link to this heading"></a></h1>
+<ul class="simple">
+<li><p>Defined in <a class="reference internal" href="file_build_include_picea-mlir_Dialect_Filter_IR_FilterOps.h.inc.html#file-build-include-picea-mlir-dialect-filter-ir-filterops-h-inc"><span class="std std-ref">File FilterOps.h.inc</span></a></p></li>
+</ul>
+<section id="inheritance-relationships">
+<h2>Inheritance Relationships<a class="headerlink" href="#inheritance-relationships" title="Link to this heading"></a></h2>
+<section id="base-type">
+<h3>Base Type<a class="headerlink" href="#base-type" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">public</span> <span class="pre">mlir::Op&lt;</span> <span class="pre">FIROp,</span> <span class="pre">::mlir::OpTrait::ZeroRegions,</span> <span class="pre">::mlir::OpTrait::OneResult,</span> <span class="pre">::mlir::OpTrait::OneTypedResult&lt;::mlir::RankedTensorType</span> <span class="pre">&gt;::Impl,</span> <span class="pre">::mlir::OpTrait::ZeroSuccessors,</span> <span class="pre">::mlir::OpTrait::NOperands&lt;</span> <span class="pre">2</span> <span class="pre">&gt;::Impl,</span> <span class="pre">::mlir::OpTrait::OpInvariants,</span> <span class="pre">::mlir::OpTrait::SameOperandsAndResultElementType,</span> <span class="pre">::mlir::OpAsmOpInterface::Trait</span> <span class="pre">&gt;</span></code></p></li>
+</ul>
+</section>
+</section>
+<section id="class-documentation">
+<h2>Class Documentation<a class="headerlink" href="#class-documentation" title="Link to this heading"></a></h2>
+<dl class="cpp class">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir6filter5FIROpE">
+<span id="_CPPv3N4mlir6filter5FIROpE"></span><span id="_CPPv2N4mlir6filter5FIROpE"></span><span id="mlir::filter::FIROp"></span><span class="target" id="classmlir_1_1filter_1_1FIROp"></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">FIROp</span></span></span><span class="w"> </span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="k"><span class="pre">public</span></span><span class="w"> </span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">Op</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4N4mlir6filter5FIROpE" title="mlir::filter::FIROp"><span class="n"><span class="pre">FIROp</span></span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">OpTrait</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">ZeroRegions</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">OpTrait</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">OneResult</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">OpTrait</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">OneTypedResult</span></span><span class="p"><span class="pre">&lt;</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">RankedTensorType</span></span><span class="p"><span class="pre">&gt;</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">Impl</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">OpTrait</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">ZeroSuccessors</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">OpTrait</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">NOperands</span></span><span class="p"><span class="pre">&lt;</span></span><span class="m"><span class="pre">2</span></span><span class="p"><span class="pre">&gt;</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">Impl</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">OpTrait</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">OpInvariants</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">OpTrait</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">SameOperandsAndResultElementType</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">OpAsmOpInterface</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">Trait</span></span><span class="p"><span class="pre">&gt;</span></span><a class="headerlink" href="#_CPPv4N4mlir6filter5FIROpE" title="Link to this definition"></a><br /></dt>
+<dd><div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-types">Public Types</p>
+<dl class="cpp type">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir6filter5FIROp7AdaptorE">
+<span id="_CPPv3N4mlir6filter5FIROp7AdaptorE"></span><span id="_CPPv2N4mlir6filter5FIROp7AdaptorE"></span><span class="target" id="classmlir_1_1filter_1_1FIROp_1a25625f72d85c857fc1d14b96715a54b5"></span><span class="k"><span class="pre">using</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Adaptor</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><a class="reference internal" href="classmlir_1_1filter_1_1FIROpAdaptor.html#_CPPv4N4mlir6filter12FIROpAdaptorE" title="mlir::filter::FIROpAdaptor"><span class="n"><span class="pre">FIROpAdaptor</span></span></a><a class="headerlink" href="#_CPPv4N4mlir6filter5FIROp7AdaptorE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp type">
+<dt class="sig sig-object cpp" id="_CPPv4I0EN4mlir6filter5FIROp14GenericAdaptorE">
+<span id="_CPPv3I0EN4mlir6filter5FIROp14GenericAdaptorE"></span><span id="_CPPv2I0EN4mlir6filter5FIROp14GenericAdaptorE"></span><span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="k"><span class="pre">typename</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">RangeT</span></span></span><span class="p"><span class="pre">&gt;</span></span><br /><span class="target" id="classmlir_1_1filter_1_1FIROp_1a534283691720602d54bcd6b013777a23"></span><span class="k"><span class="pre">using</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">GenericAdaptor</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><a class="reference internal" href="classmlir_1_1filter_1_1FIROpGenericAdaptor.html#_CPPv4I0EN4mlir6filter19FIROpGenericAdaptorE" title="mlir::filter::FIROpGenericAdaptor"><span class="n"><span class="pre">FIROpGenericAdaptor</span></span></a><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4I0EN4mlir6filter5FIROp14GenericAdaptorE" title="mlir::filter::FIROp::GenericAdaptor::RangeT"><span class="n"><span class="pre">RangeT</span></span></a><span class="p"><span class="pre">&gt;</span></span><a class="headerlink" href="#_CPPv4I0EN4mlir6filter5FIROp14GenericAdaptorE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp type">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir6filter5FIROp11FoldAdaptorE">
+<span id="_CPPv3N4mlir6filter5FIROp11FoldAdaptorE"></span><span id="_CPPv2N4mlir6filter5FIROp11FoldAdaptorE"></span><span class="target" id="classmlir_1_1filter_1_1FIROp_1ae42021bf55be7eb9c866d3dcc69460e6"></span><span class="k"><span class="pre">using</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">FoldAdaptor</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4I0EN4mlir6filter5FIROp14GenericAdaptorE" title="mlir::filter::FIROp::GenericAdaptor"><span class="n"><span class="pre">GenericAdaptor</span></span></a><span class="p"><span class="pre">&lt;</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">llvm</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">ArrayRef</span></span><span class="p"><span class="pre">&lt;</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">Attribute</span></span><span class="p"><span class="pre">&gt;</span></span><span class="p"><span class="pre">&gt;</span></span><a class="headerlink" href="#_CPPv4N4mlir6filter5FIROp11FoldAdaptorE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp type">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir6filter5FIROp10PropertiesE">
+<span id="_CPPv3N4mlir6filter5FIROp10PropertiesE"></span><span id="_CPPv2N4mlir6filter5FIROp10PropertiesE"></span><span class="target" id="classmlir_1_1filter_1_1FIROp_1a7c0b748e062bd4ca45604c20f544285d"></span><span class="k"><span class="pre">using</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Properties</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N4mlir6filter5FIROp11FoldAdaptorE" title="mlir::filter::FIROp::FoldAdaptor"><span class="n"><span class="pre">FoldAdaptor</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">Properties</span></span><a class="headerlink" href="#_CPPv4N4mlir6filter5FIROp10PropertiesE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir6filter5FIROp17getAttributeNamesEv">
+<span id="_CPPv3N4mlir6filter5FIROp17getAttributeNamesEv"></span><span id="_CPPv2N4mlir6filter5FIROp17getAttributeNamesEv"></span><span id="mlir::filter::FIROp::getAttributeNames"></span><span class="target" id="classmlir_1_1filter_1_1FIROp_1a712d27e1bf8aca29302088a15aed6414"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">llvm</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">ArrayRef</span></span><span class="p"><span class="pre">&lt;</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">llvm</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">StringRef</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">getAttributeNames</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4mlir6filter5FIROp17getAttributeNamesEv" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir6filter5FIROp27getODSOperandIndexAndLengthEj">
+<span id="_CPPv3N4mlir6filter5FIROp27getODSOperandIndexAndLengthEj"></span><span id="_CPPv2N4mlir6filter5FIROp27getODSOperandIndexAndLengthEj"></span><span id="mlir::filter::FIROp::getODSOperandIndexAndLength__unsigned"></span><span class="target" id="classmlir_1_1filter_1_1FIROp_1aeded191b7c27b78d38447bfb314a68f8"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">pair</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">unsigned</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="kt"><span class="pre">unsigned</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">getODSOperandIndexAndLength</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">unsigned</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">index</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4mlir6filter5FIROp27getODSOperandIndexAndLengthEj" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir6filter5FIROp14getODSOperandsEj">
+<span id="_CPPv3N4mlir6filter5FIROp14getODSOperandsEj"></span><span id="_CPPv2N4mlir6filter5FIROp14getODSOperandsEj"></span><span id="mlir::filter::FIROp::getODSOperands__unsigned"></span><span class="target" id="classmlir_1_1filter_1_1FIROp_1a7ddda0d08c10a0b751f67169515b5ee6"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">Operation</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">operand_range</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">getODSOperands</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">unsigned</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">index</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4mlir6filter5FIROp14getODSOperandsEj" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir6filter5FIROp8getInputEv">
+<span id="_CPPv3N4mlir6filter5FIROp8getInputEv"></span><span id="_CPPv2N4mlir6filter5FIROp8getInputEv"></span><span id="mlir::filter::FIROp::getInput"></span><span class="target" id="classmlir_1_1filter_1_1FIROp_1a2ea06ad2af9ec114fe71907f8dc3e1a3"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">TypedValue</span></span><span class="p"><span class="pre">&lt;</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">RankedTensorType</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">getInput</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4mlir6filter5FIROp8getInputEv" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir6filter5FIROp14getCoefficientEv">
+<span id="_CPPv3N4mlir6filter5FIROp14getCoefficientEv"></span><span id="_CPPv2N4mlir6filter5FIROp14getCoefficientEv"></span><span id="mlir::filter::FIROp::getCoefficient"></span><span class="target" id="classmlir_1_1filter_1_1FIROp_1af7ab91232846dced31f39d0fd43863a0"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">TypedValue</span></span><span class="p"><span class="pre">&lt;</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">RankedTensorType</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">getCoefficient</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4mlir6filter5FIROp14getCoefficientEv" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir6filter5FIROp15getInputMutableEv">
+<span id="_CPPv3N4mlir6filter5FIROp15getInputMutableEv"></span><span id="_CPPv2N4mlir6filter5FIROp15getInputMutableEv"></span><span id="mlir::filter::FIROp::getInputMutable"></span><span class="target" id="classmlir_1_1filter_1_1FIROp_1ae21a3115f2dc669f476b122a845562c9"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">OpOperand</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="sig-name descname"><span class="n"><span class="pre">getInputMutable</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4mlir6filter5FIROp15getInputMutableEv" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir6filter5FIROp21getCoefficientMutableEv">
+<span id="_CPPv3N4mlir6filter5FIROp21getCoefficientMutableEv"></span><span id="_CPPv2N4mlir6filter5FIROp21getCoefficientMutableEv"></span><span id="mlir::filter::FIROp::getCoefficientMutable"></span><span class="target" id="classmlir_1_1filter_1_1FIROp_1afb313c9512864a8f27e253c905c7a8ea"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">OpOperand</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="sig-name descname"><span class="n"><span class="pre">getCoefficientMutable</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4mlir6filter5FIROp21getCoefficientMutableEv" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir6filter5FIROp26getODSResultIndexAndLengthEj">
+<span id="_CPPv3N4mlir6filter5FIROp26getODSResultIndexAndLengthEj"></span><span id="_CPPv2N4mlir6filter5FIROp26getODSResultIndexAndLengthEj"></span><span id="mlir::filter::FIROp::getODSResultIndexAndLength__unsigned"></span><span class="target" id="classmlir_1_1filter_1_1FIROp_1ade57e4a393a4e159c1855227f570c971"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">pair</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">unsigned</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="kt"><span class="pre">unsigned</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">getODSResultIndexAndLength</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">unsigned</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">index</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4mlir6filter5FIROp26getODSResultIndexAndLengthEj" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir6filter5FIROp13getODSResultsEj">
+<span id="_CPPv3N4mlir6filter5FIROp13getODSResultsEj"></span><span id="_CPPv2N4mlir6filter5FIROp13getODSResultsEj"></span><span id="mlir::filter::FIROp::getODSResults__unsigned"></span><span class="target" id="classmlir_1_1filter_1_1FIROp_1ab1dab2de83f17a7ea831b963024d5f96"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">Operation</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">result_range</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">getODSResults</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">unsigned</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">index</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4mlir6filter5FIROp13getODSResultsEj" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir6filter5FIROp11getFilteredEv">
+<span id="_CPPv3N4mlir6filter5FIROp11getFilteredEv"></span><span id="_CPPv2N4mlir6filter5FIROp11getFilteredEv"></span><span id="mlir::filter::FIROp::getFiltered"></span><span class="target" id="classmlir_1_1filter_1_1FIROp_1a2bea7cca5a170e0a25c1df8a557e9681"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">TypedValue</span></span><span class="p"><span class="pre">&lt;</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">RankedTensorType</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">getFiltered</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4mlir6filter5FIROp11getFilteredEv" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir6filter5FIROp5printERN4mlir12OpAsmPrinterE">
+<span id="_CPPv3N4mlir6filter5FIROp5printERN4mlir12OpAsmPrinterE"></span><span id="_CPPv2N4mlir6filter5FIROp5printERN4mlir12OpAsmPrinterE"></span><span id="mlir::filter::FIROp::print__mlir::OpAsmPrinterR"></span><span class="target" id="classmlir_1_1filter_1_1FIROp_1a90c9783347e7f18d3234233866d6db18"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">print</span></span></span><span class="sig-paren">(</span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">OpAsmPrinter</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">p</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4mlir6filter5FIROp5printERN4mlir12OpAsmPrinterE" title="Link to this definition"></a><br /></dt>
+<dd><p>Prints a <code class="docutils literal notranslate"><a class="reference internal" href="#classmlir_1_1filter_1_1FIROp"><span class="std std-ref"><span class="pre">filter::FIROp</span></span></a></code> in the custom assembly syntax consumed by <code class="docutils literal notranslate"><span class="pre">parse</span></code>. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir6filter5FIROp20verifyInvariantsImplEv">
+<span id="_CPPv3N4mlir6filter5FIROp20verifyInvariantsImplEv"></span><span id="_CPPv2N4mlir6filter5FIROp20verifyInvariantsImplEv"></span><span id="mlir::filter::FIROp::verifyInvariantsImpl"></span><span class="target" id="classmlir_1_1filter_1_1FIROp_1a8efc37082bbe6fe178e390a1b025e3b4"></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">llvm</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">LogicalResult</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">verifyInvariantsImpl</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4mlir6filter5FIROp20verifyInvariantsImplEv" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir6filter5FIROp16verifyInvariantsEv">
+<span id="_CPPv3N4mlir6filter5FIROp16verifyInvariantsEv"></span><span id="_CPPv2N4mlir6filter5FIROp16verifyInvariantsEv"></span><span id="mlir::filter::FIROp::verifyInvariants"></span><span class="target" id="classmlir_1_1filter_1_1FIROp_1a0f634f33bb774da99832d84e7094cddb"></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">llvm</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">LogicalResult</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">verifyInvariants</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4mlir6filter5FIROp16verifyInvariantsEv" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir6filter5FIROp17getAsmResultNamesEN4mlir19OpAsmSetValueNameFnE">
+<span id="_CPPv3N4mlir6filter5FIROp17getAsmResultNamesEN4mlir19OpAsmSetValueNameFnE"></span><span id="_CPPv2N4mlir6filter5FIROp17getAsmResultNamesEN4mlir19OpAsmSetValueNameFnE"></span><span id="mlir::filter::FIROp::getAsmResultNames__mlir::OpAsmSetValueNameFn"></span><span class="target" id="classmlir_1_1filter_1_1FIROp_1a6d9cced403d275655a10275ff4f6a4e2"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">getAsmResultNames</span></span></span><span class="sig-paren">(</span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">OpAsmSetValueNameFn</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">setNameFn</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4mlir6filter5FIROp17getAsmResultNamesEN4mlir19OpAsmSetValueNameFnE" title="Link to this definition"></a><br /></dt>
+<dd><p>Assigns a unique SSA result name <code class="docutils literal notranslate"><span class="pre">fir_N</span></code> to the filtered output, where <code class="docutils literal notranslate"><span class="pre">N</span></code> counts preceding <code class="docutils literal notranslate"><span class="pre">filter.fir</span></code> ops in the same block. </p>
+</dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-static-functions">Public Static Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir6filter5FIROp16getOperationNameEv">
+<span id="_CPPv3N4mlir6filter5FIROp16getOperationNameEv"></span><span id="_CPPv2N4mlir6filter5FIROp16getOperationNameEv"></span><span id="mlir::filter::FIROp::getOperationNameCE"></span><span class="target" id="classmlir_1_1filter_1_1FIROp_1a8f683d9b8d4f0c3be16efc759d0ff8aa"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="k"><span class="pre">constexpr</span></span><span class="w"> </span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">llvm</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">StringLiteral</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">getOperationName</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4mlir6filter5FIROp16getOperationNameEv" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir6filter5FIROp21setPropertiesFromAttrER10PropertiesN4mlir9AttributeEN4llvm12function_refIFN4mlir18InFlightDiagnosticEvEEE">
+<span id="_CPPv3N4mlir6filter5FIROp21setPropertiesFromAttrER10PropertiesN4mlir9AttributeEN4llvm12function_refIFN4mlir18InFlightDiagnosticEvEEE"></span><span id="_CPPv2N4mlir6filter5FIROp21setPropertiesFromAttrER10PropertiesN4mlir9AttributeEN4llvm12function_refIFN4mlir18InFlightDiagnosticEvEEE"></span><span class="target" id="classmlir_1_1filter_1_1FIROp_1aea5d44303745ee800a0801661581a035"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">llvm</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">LogicalResult</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">setPropertiesFromAttr</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4N4mlir6filter5FIROp10PropertiesE" title="mlir::filter::FIROp::Properties"><span class="n"><span class="pre">Properties</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">prop</span></span>, <span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">Attribute</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">attr</span></span>, <span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">llvm</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">function_ref</span></span><span class="p"><span class="pre">&lt;</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">InFlightDiagnostic</span></span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">emitError</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4mlir6filter5FIROp21setPropertiesFromAttrER10PropertiesN4mlir9AttributeEN4llvm12function_refIFN4mlir18InFlightDiagnosticEvEEE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir6filter5FIROp19getPropertiesAsAttrEPN4mlir11MLIRContextERK10Properties">
+<span id="_CPPv3N4mlir6filter5FIROp19getPropertiesAsAttrEPN4mlir11MLIRContextERK10Properties"></span><span id="_CPPv2N4mlir6filter5FIROp19getPropertiesAsAttrEPN4mlir11MLIRContextERK10Properties"></span><span id="mlir::filter::FIROp::getPropertiesAsAttr__mlir::MLIRContextP.PropertiesCR"></span><span class="target" id="classmlir_1_1filter_1_1FIROp_1af94e720d95734c097e2fe9116675732b"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">Attribute</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">getPropertiesAsAttr</span></span></span><span class="sig-paren">(</span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">MLIRContext</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">ctx</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N4mlir6filter5FIROp10PropertiesE" title="mlir::filter::FIROp::Properties"><span class="n"><span class="pre">Properties</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">prop</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4mlir6filter5FIROp19getPropertiesAsAttrEPN4mlir11MLIRContextERK10Properties" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir6filter5FIROp21computePropertiesHashERK10Properties">
+<span id="_CPPv3N4mlir6filter5FIROp21computePropertiesHashERK10Properties"></span><span id="_CPPv2N4mlir6filter5FIROp21computePropertiesHashERK10Properties"></span><span id="mlir::filter::FIROp::computePropertiesHash__PropertiesCR"></span><span class="target" id="classmlir_1_1filter_1_1FIROp_1a38b22f8e8593834a77eba7b2bb0ba4e9"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="n"><span class="pre">llvm</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">hash_code</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">computePropertiesHash</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N4mlir6filter5FIROp10PropertiesE" title="mlir::filter::FIROp::Properties"><span class="n"><span class="pre">Properties</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">prop</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4mlir6filter5FIROp21computePropertiesHashERK10Properties" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir6filter5FIROp15getInherentAttrEPN4mlir11MLIRContextERK10PropertiesN4llvm9StringRefE">
+<span id="_CPPv3N4mlir6filter5FIROp15getInherentAttrEPN4mlir11MLIRContextERK10PropertiesN4llvm9StringRefE"></span><span id="_CPPv2N4mlir6filter5FIROp15getInherentAttrEPN4mlir11MLIRContextERK10PropertiesN4llvm9StringRefE"></span><span id="mlir::filter::FIROp::getInherentAttr__mlir::MLIRContextP.PropertiesCR.llvm::StringRef"></span><span class="target" id="classmlir_1_1filter_1_1FIROp_1ad612afcaa79bafe9abaf18eef1c8c6c3"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">optional</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">Attribute</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">getInherentAttr</span></span></span><span class="sig-paren">(</span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">MLIRContext</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">ctx</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N4mlir6filter5FIROp10PropertiesE" title="mlir::filter::FIROp::Properties"><span class="n"><span class="pre">Properties</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">prop</span></span>, <span class="n"><span class="pre">llvm</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">StringRef</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">name</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4mlir6filter5FIROp15getInherentAttrEPN4mlir11MLIRContextERK10PropertiesN4llvm9StringRefE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir6filter5FIROp15setInherentAttrER10PropertiesN4llvm9StringRefEN4mlir9AttributeE">
+<span id="_CPPv3N4mlir6filter5FIROp15setInherentAttrER10PropertiesN4llvm9StringRefEN4mlir9AttributeE"></span><span id="_CPPv2N4mlir6filter5FIROp15setInherentAttrER10PropertiesN4llvm9StringRefEN4mlir9AttributeE"></span><span id="mlir::filter::FIROp::setInherentAttr__PropertiesR.llvm::StringRef.mlir::Attribute"></span><span class="target" id="classmlir_1_1filter_1_1FIROp_1a41d972bc0b4ee3479162fab33a4e6a43"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">setInherentAttr</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4N4mlir6filter5FIROp10PropertiesE" title="mlir::filter::FIROp::Properties"><span class="n"><span class="pre">Properties</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">prop</span></span>, <span class="n"><span class="pre">llvm</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">StringRef</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">name</span></span>, <span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">Attribute</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">value</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4mlir6filter5FIROp15setInherentAttrER10PropertiesN4llvm9StringRefEN4mlir9AttributeE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir6filter5FIROp21populateInherentAttrsEPN4mlir11MLIRContextERK10PropertiesRN4mlir13NamedAttrListE">
+<span id="_CPPv3N4mlir6filter5FIROp21populateInherentAttrsEPN4mlir11MLIRContextERK10PropertiesRN4mlir13NamedAttrListE"></span><span id="_CPPv2N4mlir6filter5FIROp21populateInherentAttrsEPN4mlir11MLIRContextERK10PropertiesRN4mlir13NamedAttrListE"></span><span id="mlir::filter::FIROp::populateInherentAttrs__mlir::MLIRContextP.PropertiesCR.mlir::NamedAttrListR"></span><span class="target" id="classmlir_1_1filter_1_1FIROp_1aa6abf4ff5802e6203dfca0e09510af09"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">populateInherentAttrs</span></span></span><span class="sig-paren">(</span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">MLIRContext</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">ctx</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N4mlir6filter5FIROp10PropertiesE" title="mlir::filter::FIROp::Properties"><span class="n"><span class="pre">Properties</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">prop</span></span>, <span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">NamedAttrList</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">attrs</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4mlir6filter5FIROp21populateInherentAttrsEPN4mlir11MLIRContextERK10PropertiesRN4mlir13NamedAttrListE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir6filter5FIROp19verifyInherentAttrsEN4mlir13OperationNameERN4mlir13NamedAttrListEN4llvm12function_refIFN4mlir18InFlightDiagnosticEvEEE">
+<span id="_CPPv3N4mlir6filter5FIROp19verifyInherentAttrsEN4mlir13OperationNameERN4mlir13NamedAttrListEN4llvm12function_refIFN4mlir18InFlightDiagnosticEvEEE"></span><span id="_CPPv2N4mlir6filter5FIROp19verifyInherentAttrsEN4mlir13OperationNameERN4mlir13NamedAttrListEN4llvm12function_refIFN4mlir18InFlightDiagnosticEvEEE"></span><span class="target" id="classmlir_1_1filter_1_1FIROp_1a1327b59e9df7b6a01052a656bee50b68"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">llvm</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">LogicalResult</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">verifyInherentAttrs</span></span></span><span class="sig-paren">(</span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">OperationName</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">opName</span></span>, <span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">NamedAttrList</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">attrs</span></span>, <span class="n"><span class="pre">llvm</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">function_ref</span></span><span class="p"><span class="pre">&lt;</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">InFlightDiagnostic</span></span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">emitError</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4mlir6filter5FIROp19verifyInherentAttrsEN4mlir13OperationNameERN4mlir13NamedAttrListEN4llvm12function_refIFN4mlir18InFlightDiagnosticEvEEE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir6filter5FIROp5buildERN4mlir9OpBuilderERN4mlir14OperationStateE5Value5Value">
+<span id="_CPPv3N4mlir6filter5FIROp5buildERN4mlir9OpBuilderERN4mlir14OperationStateE5Value5Value"></span><span id="_CPPv2N4mlir6filter5FIROp5buildERN4mlir9OpBuilderERN4mlir14OperationStateE5Value5Value"></span><span id="mlir::filter::FIROp::build__mlir::OpBuilderR.mlir::OperationStateR.Value.Value"></span><span class="target" id="classmlir_1_1filter_1_1FIROp_1af255e3a0b5ea518fd1731e2701dd25a3"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">build</span></span></span><span class="sig-paren">(</span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">OpBuilder</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">odsBuilder</span></span>, <span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">OperationState</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">odsState</span></span>, <span class="n"><span class="pre">Value</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">input</span></span>, <span class="n"><span class="pre">Value</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">coefficient</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4mlir6filter5FIROp5buildERN4mlir9OpBuilderERN4mlir14OperationStateE5Value5Value" title="Link to this definition"></a><br /></dt>
+<dd><p>Builds a <code class="docutils literal notranslate"><a class="reference internal" href="#classmlir_1_1filter_1_1FIROp"><span class="std std-ref"><span class="pre">filter::FIROp</span></span></a></code> with the given input and coefficient. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>input</strong> – The 1-D input signal tensor. </p></li>
+<li><p><strong>coefficient</strong> – The 1-D FIR coefficient tensor. </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir6filter5FIROp6createERN4mlir9OpBuilderEN4mlir8LocationE5Value5Value">
+<span id="_CPPv3N4mlir6filter5FIROp6createERN4mlir9OpBuilderEN4mlir8LocationE5Value5Value"></span><span id="_CPPv2N4mlir6filter5FIROp6createERN4mlir9OpBuilderEN4mlir8LocationE5Value5Value"></span><span id="mlir::filter::FIROp::create__mlir::OpBuilderR.mlir::Location.Value.Value"></span><span class="target" id="classmlir_1_1filter_1_1FIROp_1acfb11ddaf3802c67f107c9da8dcc386d"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N4mlir6filter5FIROpE" title="mlir::filter::FIROp"><span class="n"><span class="pre">FIROp</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">create</span></span></span><span class="sig-paren">(</span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">OpBuilder</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">builder</span></span>, <span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">Location</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">location</span></span>, <span class="n"><span class="pre">Value</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">input</span></span>, <span class="n"><span class="pre">Value</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">coefficient</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4mlir6filter5FIROp6createERN4mlir9OpBuilderEN4mlir8LocationE5Value5Value" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir6filter5FIROp6createERN4mlir20ImplicitLocOpBuilderE5Value5Value">
+<span id="_CPPv3N4mlir6filter5FIROp6createERN4mlir20ImplicitLocOpBuilderE5Value5Value"></span><span id="_CPPv2N4mlir6filter5FIROp6createERN4mlir20ImplicitLocOpBuilderE5Value5Value"></span><span id="mlir::filter::FIROp::create__mlir::ImplicitLocOpBuilderR.Value.Value"></span><span class="target" id="classmlir_1_1filter_1_1FIROp_1a3acf06e9b77cc6d33e59585811c53fb3"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N4mlir6filter5FIROpE" title="mlir::filter::FIROp"><span class="n"><span class="pre">FIROp</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">create</span></span></span><span class="sig-paren">(</span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">ImplicitLocOpBuilder</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">builder</span></span>, <span class="n"><span class="pre">Value</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">input</span></span>, <span class="n"><span class="pre">Value</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">coefficient</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4mlir6filter5FIROp6createERN4mlir20ImplicitLocOpBuilderE5Value5Value" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir6filter5FIROp5parseERN4mlir11OpAsmParserERN4mlir14OperationStateE">
+<span id="_CPPv3N4mlir6filter5FIROp5parseERN4mlir11OpAsmParserERN4mlir14OperationStateE"></span><span id="_CPPv2N4mlir6filter5FIROp5parseERN4mlir11OpAsmParserERN4mlir14OperationStateE"></span><span id="mlir::filter::FIROp::parse__mlir::OpAsmParserR.mlir::OperationStateR"></span><span class="target" id="classmlir_1_1filter_1_1FIROp_1ad7f54f1f605d93fdaf33ec008546201a"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">ParseResult</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">parse</span></span></span><span class="sig-paren">(</span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">OpAsmParser</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">parser</span></span>, <span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">OperationState</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">result</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4mlir6filter5FIROp5parseERN4mlir11OpAsmParserERN4mlir14OperationStateE" title="Link to this definition"></a><br /></dt>
+<dd><p>Parses <code class="docutils literal notranslate"><a class="reference internal" href="#classmlir_1_1filter_1_1FIROp"><span class="std std-ref"><span class="pre">filter::FIROp</span></span></a></code> from its custom assembly syntax. </p>
+<p>The expected syntax is: <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>`filter.fir` input `coeff=` coefficient `:` inputType `&lt;-&gt;`
+coefficientType
+</pre></div>
+</div>
+</p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir6filter5FIROp27setPropertiesFromParsedAttrER10PropertiesN4mlir9AttributeEN4llvm12function_refIFN4mlir18InFlightDiagnosticEvEEE">
+<span id="_CPPv3N4mlir6filter5FIROp27setPropertiesFromParsedAttrER10PropertiesN4mlir9AttributeEN4llvm12function_refIFN4mlir18InFlightDiagnosticEvEEE"></span><span id="_CPPv2N4mlir6filter5FIROp27setPropertiesFromParsedAttrER10PropertiesN4mlir9AttributeEN4llvm12function_refIFN4mlir18InFlightDiagnosticEvEEE"></span><span class="target" id="classmlir_1_1filter_1_1FIROp_1a8170240a8e56b398a9639545e7ade01a"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">llvm</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">LogicalResult</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">setPropertiesFromParsedAttr</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4N4mlir6filter5FIROp10PropertiesE" title="mlir::filter::FIROp::Properties"><span class="n"><span class="pre">Properties</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">prop</span></span>, <span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">Attribute</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">attr</span></span>, <span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">llvm</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">function_ref</span></span><span class="p"><span class="pre">&lt;</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">InFlightDiagnostic</span></span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">emitError</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4mlir6filter5FIROp27setPropertiesFromParsedAttrER10PropertiesN4mlir9AttributeEN4llvm12function_refIFN4mlir18InFlightDiagnosticEvEEE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-static-attributes">Public Static Attributes</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir6filter5FIROp14odsIndex_inputE">
+<span id="_CPPv3N4mlir6filter5FIROp14odsIndex_inputE"></span><span id="_CPPv2N4mlir6filter5FIROp14odsIndex_inputE"></span><span id="mlir::filter::FIROp::odsIndex_input__i"></span><span class="target" id="classmlir_1_1filter_1_1FIROp_1ae018e02046311f02a00b14f88fd3f5b4"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="k"><span class="pre">constexpr</span></span><span class="w"> </span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">odsIndex_input</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">0</span></span><a class="headerlink" href="#_CPPv4N4mlir6filter5FIROp14odsIndex_inputE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir6filter5FIROp20odsIndex_coefficientE">
+<span id="_CPPv3N4mlir6filter5FIROp20odsIndex_coefficientE"></span><span id="_CPPv2N4mlir6filter5FIROp20odsIndex_coefficientE"></span><span id="mlir::filter::FIROp::odsIndex_coefficient__i"></span><span class="target" id="classmlir_1_1filter_1_1FIROp_1a32153e6fa7e9db2234c3cb2e9e815a0d"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="k"><span class="pre">constexpr</span></span><span class="w"> </span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">odsIndex_coefficient</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">1</span></span><a class="headerlink" href="#_CPPv4N4mlir6filter5FIROp20odsIndex_coefficientE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+</div>
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="classmlir_1_1filter_1_1FilterDialect.html" class="btn btn-neutral float-left" title="Class FilterDialect" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="classmlir_1_1filter_1_1FIROpAdaptor.html" class="btn btn-neutral float-right" title="Class FIROpAdaptor" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

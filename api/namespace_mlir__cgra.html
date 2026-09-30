@@ -1,0 +1,248 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Namespace mlir::cgra &mdash; picea 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/collapsible-lists/css/tree_view.css?v=a885cde7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js?v=73120307"></script>
+      <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js?v=660e4f45"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Namespace mlir::cgra::detail" href="namespace_mlir__cgra__detail.html" />
+    <link rel="prev" title="Namespace mlir::bufferization" href="namespace_mlir__bufferization.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            picea
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Installation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../README.html">About the project</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#guides">Guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#related-projects">Related projects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#development-environment-nix">Development Environment (Nix)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#build-on-ubuntu-24-04-no-nix">Build on Ubuntu 24.04 (no Nix)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#gurobi-license">Gurobi license</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#installing">Installing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#run-the-tests">Run the tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#build-the-documentation">Build the documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#compiling-a-design">Compiling a design</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#running-a-design-on-the-board">Running a design on the board</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#exporting-a-profiled-application-to-mocasin">Exporting a profiled application to Mocasin</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Guides</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../guides/laksa.html">The FPGA Variant using LAKSA backend</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/cgra.html">The CGRA Variant</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">MLIR Dialects</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/Base2Ops.html">‘base2’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/CGRAOps.html">‘cgra’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/DFGOps.html">‘dfg’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/EmitHLSOps.html">‘emithls’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/FilterOps.html">‘filter’ Dialect</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Passes</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/PICEAConversionPasses.html">PICEA Conversion Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/CGRAPasses.html">CGRA Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/DFGPasses.html">DFG Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/EmitHLSPasses.html">Emit HLS Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/FuncExtPasses.html">Func Ext Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/LinalgExtPasses.html">Linalg Ext Passes</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">C++ API</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="library_root.html">C++ API Reference</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="library_root.html#picea">picea</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="library_root.html#page-hierarchy">Page Hierarchy</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="library_root.html#full-api">Full API</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="library_root.html#namespaces">Namespaces</a></li>
+<li class="toctree-l4"><a class="reference internal" href="library_root.html#classes-and-structs">Classes and Structs</a></li>
+<li class="toctree-l4"><a class="reference internal" href="library_root.html#enums">Enums</a></li>
+<li class="toctree-l4"><a class="reference internal" href="library_root.html#functions">Functions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="library_root.html#variables">Variables</a></li>
+<li class="toctree-l4"><a class="reference internal" href="library_root.html#defines">Defines</a></li>
+<li class="toctree-l4"><a class="reference internal" href="library_root.html#typedefs">Typedefs</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">picea</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="library_root.html">C++ API Reference</a></li>
+      <li class="breadcrumb-item active">Namespace mlir::cgra</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/namespace_mlir__cgra.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="namespace-mlir-cgra">
+<span id="id1"></span><h1>Namespace mlir::cgra<a class="headerlink" href="#namespace-mlir-cgra" title="Link to this heading"></a></h1>
+<nav class="contents local" id="contents">
+<p class="topic-title">Contents</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#namespaces" id="id2">Namespaces</a></p></li>
+<li><p><a class="reference internal" href="#classes" id="id3">Classes</a></p></li>
+<li><p><a class="reference internal" href="#enums" id="id4">Enums</a></p></li>
+<li><p><a class="reference internal" href="#functions" id="id5">Functions</a></p></li>
+</ul>
+</nav>
+<section id="namespaces">
+<h2>Namespaces<a class="headerlink" href="#namespaces" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="namespace_mlir__cgra__detail.html#namespace-mlir-cgra-detail"><span class="std std-ref">Namespace mlir::cgra::detail</span></a></p></li>
+</ul>
+</section>
+<section id="classes">
+<h2>Classes<a class="headerlink" href="#classes" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="structmlir_1_1cgra_1_1Pow2Divisor.html#exhale-struct-structmlir-1-1cgra-1-1pow2divisor"><span class="std std-ref">Struct Pow2Divisor</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1cgra_1_1CGRADialect.html#exhale-class-classmlir-1-1cgra-1-1cgradialect"><span class="std std-ref">Class CGRADialect</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1cgra_1_1DeployOp.html#exhale-class-classmlir-1-1cgra-1-1deployop"><span class="std std-ref">Class DeployOp</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1cgra_1_1DeployOpAdaptor.html#exhale-class-classmlir-1-1cgra-1-1deployopadaptor"><span class="std std-ref">Class DeployOpAdaptor</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1cgra_1_1DeployOpGenericAdaptor.html#exhale-class-classmlir-1-1cgra-1-1deployopgenericadaptor"><span class="std std-ref">Template Class DeployOpGenericAdaptor</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1cgra_1_1StrelaReadOp.html#exhale-class-classmlir-1-1cgra-1-1strelareadop"><span class="std std-ref">Class StrelaReadOp</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1cgra_1_1StrelaReadOpAdaptor.html#exhale-class-classmlir-1-1cgra-1-1strelareadopadaptor"><span class="std std-ref">Class StrelaReadOpAdaptor</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1cgra_1_1StrelaReadOpGenericAdaptor.html#exhale-class-classmlir-1-1cgra-1-1strelareadopgenericadaptor"><span class="std std-ref">Template Class StrelaReadOpGenericAdaptor</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1cgra_1_1StrelaWriteOp.html#exhale-class-classmlir-1-1cgra-1-1strelawriteop"><span class="std std-ref">Class StrelaWriteOp</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1cgra_1_1StrelaWriteOpAdaptor.html#exhale-class-classmlir-1-1cgra-1-1strelawriteopadaptor"><span class="std std-ref">Class StrelaWriteOpAdaptor</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1cgra_1_1StrelaWriteOpGenericAdaptor.html#exhale-class-classmlir-1-1cgra-1-1strelawriteopgenericadaptor"><span class="std std-ref">Template Class StrelaWriteOpGenericAdaptor</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1cgra_1_1YieldOp.html#exhale-class-classmlir-1-1cgra-1-1yieldop"><span class="std std-ref">Class YieldOp</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1cgra_1_1YieldOpAdaptor.html#exhale-class-classmlir-1-1cgra-1-1yieldopadaptor"><span class="std std-ref">Class YieldOpAdaptor</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1cgra_1_1YieldOpGenericAdaptor.html#exhale-class-classmlir-1-1cgra-1-1yieldopgenericadaptor"><span class="std std-ref">Template Class YieldOpGenericAdaptor</span></a></p></li>
+</ul>
+</section>
+<section id="enums">
+<h2>Enums<a class="headerlink" href="#enums" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="enum_namespacemlir_1_1cgra_1a32d1b609c32540c77e538c3083219ad7.html#exhale-enum-namespacemlir-1-1cgra-1a32d1b609c32540c77e538c3083219ad7"><span class="std std-ref">Enum FabricOpSupport</span></a></p></li>
+</ul>
+</section>
+<section id="functions">
+<h2>Functions<a class="headerlink" href="#functions" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="function_namespacemlir_1_1cgra_1a58e73abea7fd79fbdf41bc434d8c5b06.html#exhale-function-namespacemlir-1-1cgra-1a58e73abea7fd79fbdf41bc434d8c5b06"><span class="std std-ref">Function mlir::cgra::classifyFabricOp</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacemlir_1_1cgra_1a84c01366c6039a56133b536cb344e371.html#exhale-function-namespacemlir-1-1cgra-1a84c01366c6039a56133b536cb344e371"><span class="std std-ref">Function mlir::cgra::createCGRAAnnotateDispatchIOPass</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacemlir_1_1cgra_1a1e4331cd546a035f5542a8987fd31cd0.html#exhale-function-namespacemlir-1-1cgra-1a1e4331cd546a035f5542a8987fd31cd0"><span class="std std-ref">Function mlir::cgra::createCGRAAnnotateToCGRAPass</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacemlir_1_1cgra_1a7cbdad716ba96929c87c0dff6cb350da.html#exhale-function-namespacemlir-1-1cgra-1a7cbdad716ba96929c87c0dff6cb350da"><span class="std std-ref">Function mlir::cgra::createCGRAConvToIm2colPass</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacemlir_1_1cgra_1ad0a0baa8ab2ad687038c8c8917413466.html#exhale-function-namespacemlir-1-1cgra-1ad0a0baa8ab2ad687038c8c8917413466"><span class="std std-ref">Function mlir::cgra::createCGRADeployToStrelaPass</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacemlir_1_1cgra_1acb28f5b018af19bce7978ea7da5e9617.html#exhale-function-namespacemlir-1-1cgra-1acb28f5b018af19bce7978ea7da5e9617"><span class="std std-ref">Function mlir::cgra::createCGRADFGOperatorToCGRAPass</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacemlir_1_1cgra_1a03ecac585dc90800bc78ccf1d81d9bd4.html#exhale-function-namespacemlir-1-1cgra-1a03ecac585dc90800bc78ccf1d81d9bd4"><span class="std std-ref">Function mlir::cgra::createCGRAExpandFabricOpsPass</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacemlir_1_1cgra_1af9f858a7bd43f1559515981b65867663.html#exhale-function-namespacemlir-1-1cgra-1af9f858a7bd43f1559515981b65867663"><span class="std std-ref">Function mlir::cgra::createCGRAExpandMemRefCopyPass</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacemlir_1_1cgra_1a3d014b199d0e995df02325f6263ba862.html#exhale-function-namespacemlir-1-1cgra-1a3d014b199d0e995df02325f6263ba862"><span class="std std-ref">Function mlir::cgra::createCGRAExportLoopDFGPass</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacemlir_1_1cgra_1abece3bcd477098d280ebe730d9bcd3e9.html#exhale-function-namespacemlir-1-1cgra-1abece3bcd477098d280ebe730d9bcd3e9"><span class="std std-ref">Function mlir::cgra::createCGRAFuseNestsPass</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacemlir_1_1cgra_1a84a502e0797dcf6367d9d7d6bc5a17c3.html#exhale-function-namespacemlir-1-1cgra-1a84a502e0797dcf6367d9d7d6bc5a17c3"><span class="std std-ref">Function mlir::cgra::createCGRAGenerateDriverPass</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacemlir_1_1cgra_1a056f4479f1bb898e4d10d8f7ae51f5cf.html#exhale-function-namespacemlir-1-1cgra-1a056f4479f1bb898e4d10d8f7ae51f5cf"><span class="std std-ref">Function mlir::cgra::createCGRAHoistReductionUnpackPass</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacemlir_1_1cgra_1abd940b540ec249f00f74179ee50eebee.html#exhale-function-namespacemlir-1-1cgra-1abd940b540ec249f00f74179ee50eebee"><span class="std std-ref">Function mlir::cgra::createCGRALegalizeToI32FuncPass</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacemlir_1_1cgra_1a8fe557785d7eb0d52910f413c0e317f4.html#exhale-function-namespacemlir-1-1cgra-1a8fe557785d7eb0d52910f413c0e317f4"><span class="std std-ref">Function mlir::cgra::createCGRALegalizeToI32Pass</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacemlir_1_1cgra_1a60f0044929b44d2e1fcebf7b76e89575.html#exhale-function-namespacemlir-1-1cgra-1a60f0044929b44d2e1fcebf7b76e89575"><span class="std std-ref">Function mlir::cgra::createCGRANormalizeComparePass</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacemlir_1_1cgra_1a255df917f9f43a08c5b0ca8e0f538adf.html#exhale-function-namespacemlir-1-1cgra-1a255df917f9f43a08c5b0ca8e0f538adf"><span class="std std-ref">Function mlir::cgra::createCGRAOutlineDeployPass</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacemlir_1_1cgra_1a826c612bd4406937c6cf65e2e0eaa4e8.html#exhale-function-namespacemlir-1-1cgra-1a826c612bd4406937c6cf65e2e0eaa4e8"><span class="std std-ref">Function mlir::cgra::createCGRAPackBuffersPass</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacemlir_1_1cgra_1af4311498e999a5ec71d3e97fb128d243.html#exhale-function-namespacemlir-1-1cgra-1af4311498e999a5ec71d3e97fb128d243"><span class="std std-ref">Function mlir::cgra::createCGRAPartitionDFGPass</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacemlir_1_1cgra_1a38503851b80a52498549d45f7342dbb9.html#exhale-function-namespacemlir-1-1cgra-1a38503851b80a52498549d45f7342dbb9"><span class="std std-ref">Function mlir::cgra::createCGRAPredicatedStoreToSelectPass</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacemlir_1_1cgra_1a24e212f021cb6317e230001884437e35.html#exhale-function-namespacemlir-1-1cgra-1a24e212f021cb6317e230001884437e35"><span class="std std-ref">Function mlir::cgra::createCGRAPromoteAccumulatorPass</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacemlir_1_1cgra_1aaeed56d8a4e826e9b82330ac17db9c1c.html#exhale-function-namespacemlir-1-1cgra-1aaeed56d8a4e826e9b82330ac17db9c1c"><span class="std std-ref">Function mlir::cgra::createCGRAPromoteAllocaToGlobalPass</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacemlir_1_1cgra_1a4911527b734e363a67318e32b0666507.html#exhale-function-namespacemlir-1-1cgra-1a4911527b734e363a67318e32b0666507"><span class="std std-ref">Function mlir::cgra::createCGRAPromoteScalarReductionPass</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacemlir_1_1cgra_1af00e9c23d09b8ce5cabe65b8afba1ba3.html#exhale-function-namespacemlir-1-1cgra-1af00e9c23d09b8ce5cabe65b8afba1ba3"><span class="std std-ref">Function mlir::cgra::createCGRAPromoteSharedBuffersPass</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacemlir_1_1cgra_1a9efaf5e9e66e38e923b6aa222886d71e.html#exhale-function-namespacemlir-1-1cgra-1a9efaf5e9e66e38e923b6aa222886d71e"><span class="std std-ref">Function mlir::cgra::createCGRASplitReductionBiasPass</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacemlir_1_1cgra_1a0cd8dfb7b4ce648c49146656b83de4bd.html#exhale-function-namespacemlir-1-1cgra-1a0cd8dfb7b4ce648c49146656b83de4bd"><span class="std std-ref">Function mlir::cgra::createCGRAStrelaToLLVMPass</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacemlir_1_1cgra_1a1f853b256292758c9285e1c7941521b7.html#exhale-function-namespacemlir-1-1cgra-1a1f853b256292758c9285e1c7941521b7"><span class="std std-ref">Function mlir::cgra::createCGRAStripStagePrintsPass</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacemlir_1_1cgra_1a93a6e00ec1355a6243b30c4dd2e79b5f.html#exhale-function-namespacemlir-1-1cgra-1a93a6e00ec1355a6243b30c4dd2e79b5f"><span class="std std-ref">Function mlir::cgra::createCGRAUnrollLanesPass</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacemlir_1_1cgra_1ab77a86510623f54dc74a1608d18bd7d3.html#exhale-function-namespacemlir-1-1cgra-1ab77a86510623f54dc74a1608d18bd7d3"><span class="std std-ref">Function mlir::cgra::createCGRAWidenStorageToI32Pass</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacemlir_1_1cgra_1a9a56a50b4d21ffdd53f96ea4e6fd62b7.html#exhale-function-namespacemlir-1-1cgra-1a9a56a50b4d21ffdd53f96ea4e6fd62b7"><span class="std std-ref">Function mlir::cgra::fabricPow2Divisor</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacemlir_1_1cgra_1a65f1c1b00d04f4012c2a9da3d53b6e10.html#exhale-function-namespacemlir-1-1cgra-1a65f1c1b00d04f4012c2a9da3d53b6e10"><span class="std std-ref">Function mlir::cgra::hasBackpressureCycle</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacemlir_1_1cgra_1a9643c5a13072246c32829391339ca9e2.html#exhale-function-namespacemlir-1-1cgra-1a9643c5a13072246c32829391339ca9e2"><span class="std std-ref">Function mlir::cgra::hasFabricArith</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacemlir_1_1cgra_1a45507b26d02b5e3cd3d9b274edfa3fd7.html#exhale-function-namespacemlir-1-1cgra-1a45507b26d02b5e3cd3d9b274edfa3fd7"><span class="std std-ref">Function mlir::cgra::hasHostCall</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacemlir_1_1cgra_1a1ab9600e8b58fbff60f371d076edc3a5.html#exhale-function-namespacemlir-1-1cgra-1a1ab9600e8b58fbff60f371d076edc3a5"><span class="std std-ref">Function mlir::cgra::isFabricExpandableMathOp</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacemlir_1_1cgra_1a338855913666399a6932b4dfc26fe7bf.html#exhale-function-namespacemlir-1-1cgra-1a338855913666399a6932b4dfc26fe7bf"><span class="std std-ref">Function mlir::cgra::isFabricStreamable</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacemlir_1_1cgra_1a5b0ffc0612c4dd11e9438905f90998a8.html#exhale-function-namespacemlir-1-1cgra-1a5b0ffc0612c4dd11e9438905f90998a8"><span class="std std-ref">Function mlir::cgra::opTouchesFloat</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacemlir_1_1cgra_1a710579079f1eb51ceb40ffe43bb92592.html#exhale-function-namespacemlir-1-1cgra-1a710579079f1eb51ceb40ffe43bb92592"><span class="std std-ref">Function mlir::cgra::perfectNestTripCounts</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacemlir_1_1cgra_1a01421e86115262675ff6bee34843014f.html#exhale-function-namespacemlir-1-1cgra-1a01421e86115262675ff6bee34843014f"><span class="std std-ref">Function mlir::cgra::productOfConstantTripCounts</span></a></p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="namespace_mlir__bufferization.html" class="btn btn-neutral float-left" title="Namespace mlir::bufferization" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="namespace_mlir__cgra__detail.html" class="btn btn-neutral float-right" title="Namespace mlir::cgra::detail" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

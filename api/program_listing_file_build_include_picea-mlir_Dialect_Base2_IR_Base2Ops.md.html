@@ -1,0 +1,756 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Program Listing for File Base2Ops.md &mdash; picea 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/collapsible-lists/css/tree_view.css?v=a885cde7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js?v=73120307"></script>
+      <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js?v=660e4f45"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            picea
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Installation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../README.html">About the project</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#guides">Guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#related-projects">Related projects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#development-environment-nix">Development Environment (Nix)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#build-on-ubuntu-24-04-no-nix">Build on Ubuntu 24.04 (no Nix)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#gurobi-license">Gurobi license</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#installing">Installing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#run-the-tests">Run the tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#build-the-documentation">Build the documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#compiling-a-design">Compiling a design</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#running-a-design-on-the-board">Running a design on the board</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#exporting-a-profiled-application-to-mocasin">Exporting a profiled application to Mocasin</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Guides</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../guides/laksa.html">The FPGA Variant using LAKSA backend</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/cgra.html">The CGRA Variant</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">MLIR Dialects</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/Base2Ops.html">‘base2’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/CGRAOps.html">‘cgra’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/DFGOps.html">‘dfg’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/EmitHLSOps.html">‘emithls’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/FilterOps.html">‘filter’ Dialect</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Passes</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/PICEAConversionPasses.html">PICEA Conversion Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/CGRAPasses.html">CGRA Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/DFGPasses.html">DFG Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/EmitHLSPasses.html">Emit HLS Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/FuncExtPasses.html">Func Ext Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/LinalgExtPasses.html">Linalg Ext Passes</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">C++ API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="library_root.html">C++ API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">picea</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Program Listing for File Base2Ops.md</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/program_listing_file_build_include_picea-mlir_Dialect_Base2_IR_Base2Ops.md.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="program-listing-for-file-base2ops-md">
+<span id="program-listing-file-build-include-picea-mlir-dialect-base2-ir-base2ops-md"></span><h1>Program Listing for File Base2Ops.md<a class="headerlink" href="#program-listing-for-file-base2ops-md" title="Link to this heading"></a></h1>
+<p>↰ <a class="reference internal" href="file_build_include_picea-mlir_Dialect_Base2_IR_Base2Ops.md.html#file-build-include-picea-mlir-dialect-base2-ir-base2ops-md"><span class="std std-ref">Return to documentation for file</span></a> (<code class="docutils literal notranslate"><span class="pre">build/include/picea-mlir/Dialect/Base2/IR/Base2Ops.md</span></code>)</p>
+<div class="highlight-markdown notranslate"><div class="highlight"><pre><span></span>&lt;!-- Autogenerated by mlir-tblgen; don't manually edit --&gt;
+
+<span class="gh"># 'base2' Dialect</span>
+
+The <span class="sb">`base2`</span> dialect groups together a set of types, operations and
+interfaces that abstracts binary representations of numbers in both
+fixed-point and floating point formats.
+
+
+<span class="gu">## Operations</span>
+
+<span class="gu">### `base2.add` (base2::ArithAddOp)</span>
+
+Syntax:
+
+<span class="sb">```</span>
+<span class="sb">operation ::= `base2.add` $lhs `,` $rhs attr-dict `:` type($result)</span>
+<span class="sb">```</span>
+
+Traits: <span class="sb">`AlwaysSpeculatableImplTrait`</span>, <span class="sb">`SameOperandsAndResultType`</span>
+
+Interfaces: <span class="sb">`ConditionallySpeculatable`</span>, <span class="sb">`InferTypeOpInterface`</span>, <span class="sb">`NoMemoryEffect (MemoryEffectOpInterface)`</span>
+
+Effects: <span class="sb">`MemoryEffects::Effect{}`</span>
+
+<span class="gu">#### Operands:</span>
+
+| Operand | Description |
+| :-----: | ----------- |
+| <span class="sb">`lhs`</span> | any non-token type |
+| <span class="sb">`rhs`</span> | any non-token type |
+
+<span class="gu">#### Results:</span>
+
+| Result | Description |
+| :----: | ----------- |
+| <span class="sb">`result`</span> | any non-token type |
+
+
+
+<span class="gu">### `base2.and` (base2::ArithAndOp)</span>
+
+Syntax:
+
+<span class="sb">```</span>
+<span class="sb">operation ::= `base2.and` $lhs `,` $rhs attr-dict `:` type($result)</span>
+<span class="sb">```</span>
+
+Traits: <span class="sb">`AlwaysSpeculatableImplTrait`</span>, <span class="sb">`SameOperandsAndResultType`</span>
+
+Interfaces: <span class="sb">`ConditionallySpeculatable`</span>, <span class="sb">`InferTypeOpInterface`</span>, <span class="sb">`NoMemoryEffect (MemoryEffectOpInterface)`</span>
+
+Effects: <span class="sb">`MemoryEffects::Effect{}`</span>
+
+<span class="gu">#### Operands:</span>
+
+| Operand | Description |
+| :-----: | ----------- |
+| <span class="sb">`lhs`</span> | any non-token type |
+| <span class="sb">`rhs`</span> | any non-token type |
+
+<span class="gu">#### Results:</span>
+
+| Result | Description |
+| :----: | ----------- |
+| <span class="sb">`result`</span> | any non-token type |
+
+
+
+<span class="gu">### `base2.cast` (base2::ArithCastOp)</span>
+
+<span class="ge">_Arithmetic type cast operation._</span>
+
+Syntax:
+
+<span class="sb">```</span>
+<span class="sb">operation ::= `base2.cast` $from attr-dict `:` type($from) `to` type($to)</span>
+<span class="sb">```</span>
+
+Traits: <span class="sb">`AlwaysSpeculatableImplTrait`</span>, <span class="sb">`SameOperandsAndResultShape`</span>
+
+Interfaces: <span class="sb">`ConditionallySpeculatable`</span>, <span class="sb">`NoMemoryEffect (MemoryEffectOpInterface)`</span>
+
+Effects: <span class="sb">`MemoryEffects::Effect{}`</span>
+
+<span class="gu">#### Operands:</span>
+
+| Operand | Description |
+| :-----: | ----------- |
+| <span class="sb">`from`</span> | any non-token type |
+
+<span class="gu">#### Results:</span>
+
+| Result | Description |
+| :----: | ----------- |
+| <span class="sb">`to`</span> | any non-token type |
+
+
+
+<span class="gu">### `base2.cmp` (base2::ArithCmpOp)</span>
+
+<span class="ge">_Arithmetic comparison with predicate._</span>
+
+Syntax:
+
+<span class="sb">```</span>
+<span class="sb">operation ::= `base2.cmp` $predicate `,` $lhs `,` $rhs attr-dict `:` type($lhs)</span>
+<span class="sb">```</span>
+
+Traits: <span class="sb">`AlwaysSpeculatableImplTrait`</span>, <span class="sb">`SameTypeOperands`</span>
+
+Interfaces: <span class="sb">`ConditionallySpeculatable`</span>, <span class="sb">`InferTypeOpInterface`</span>, <span class="sb">`NoMemoryEffect (MemoryEffectOpInterface)`</span>
+
+Effects: <span class="sb">`MemoryEffects::Effect{}`</span>
+
+<span class="gu">#### Attributes:</span>
+
+&lt;table&gt;
+&lt;tr&gt;&lt;th&gt;Attribute&lt;/th&gt;&lt;th&gt;MLIR Type&lt;/th&gt;&lt;th&gt;Description&lt;/th&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;&lt;code&gt;predicate&lt;/code&gt;&lt;/td&gt;&lt;td&gt;::mlir::base2::OrderingPredicateAttr&lt;/td&gt;&lt;td&gt;Predicate to apply during comparison operation&lt;/td&gt;&lt;/tr&gt;
+&lt;/table&gt;
+
+<span class="gu">#### Operands:</span>
+
+| Operand | Description |
+| :-----: | ----------- |
+| <span class="sb">`lhs`</span> | any non-token type |
+| <span class="sb">`rhs`</span> | any non-token type |
+
+<span class="gu">#### Results:</span>
+
+| Result | Description |
+| :----: | ----------- |
+| <span class="sb">`result`</span> | 1-bit signless integer |
+
+
+
+<span class="gu">### `base2.constant` (base2::ConstantOp)</span>
+
+<span class="ge">_Declares a constant of any Base2 dialect number._</span>
+
+Syntax:
+
+<span class="sb">```</span>
+<span class="sb">operation ::= `base2.constant` attr-dict $value</span>
+<span class="sb">```</span>
+
+The <span class="sb">`constant`</span> operation produces a value of a Base2 number type from a
+compile-time constant.
+
+Traits: <span class="sb">`AlwaysSpeculatableImplTrait`</span>, <span class="sb">`ConstantLike`</span>
+
+Interfaces: <span class="sb">`ConditionallySpeculatable`</span>, <span class="sb">`InferTypeOpInterface`</span>, <span class="sb">`NoMemoryEffect (MemoryEffectOpInterface)`</span>, <span class="sb">`OpAsmOpInterface`</span>
+
+Effects: <span class="sb">`MemoryEffects::Effect{}`</span>
+
+<span class="gu">#### Attributes:</span>
+
+&lt;table&gt;
+&lt;tr&gt;&lt;th&gt;Attribute&lt;/th&gt;&lt;th&gt;MLIR Type&lt;/th&gt;&lt;th&gt;Description&lt;/th&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;&lt;code&gt;value&lt;/code&gt;&lt;/td&gt;&lt;td&gt;::mlir::TypedAttr&lt;/td&gt;&lt;td&gt;&lt;details&gt;&lt;summary&gt;TypedAttr instance&lt;/summary&gt;{{% markdown %}}
+    This interface is used for attributes that have a type. The type of an
+    attribute is understood to represent the type of the data contained in the
+    attribute and is often used as the type of a value with this data.
+  {{% /markdown %}}&lt;/details&gt;&lt;/td&gt;&lt;/tr&gt;
+&lt;/table&gt;
+
+<span class="gu">#### Results:</span>
+
+| Result | Description |
+| :----: | ----------- |
+| <span class="sb">`result`</span> | any non-token type |
+
+
+
+<span class="gu">### `base2.div` (base2::ArithDivOp)</span>
+
+Syntax:
+
+<span class="sb">```</span>
+<span class="sb">operation ::= `base2.div` $lhs `,` $rhs attr-dict `:` type($result)</span>
+<span class="sb">```</span>
+
+Traits: <span class="sb">`AlwaysSpeculatableImplTrait`</span>, <span class="sb">`SameOperandsAndResultType`</span>
+
+Interfaces: <span class="sb">`ConditionallySpeculatable`</span>, <span class="sb">`InferTypeOpInterface`</span>, <span class="sb">`NoMemoryEffect (MemoryEffectOpInterface)`</span>
+
+Effects: <span class="sb">`MemoryEffects::Effect{}`</span>
+
+<span class="gu">#### Operands:</span>
+
+| Operand | Description |
+| :-----: | ----------- |
+| <span class="sb">`lhs`</span> | any non-token type |
+| <span class="sb">`rhs`</span> | any non-token type |
+
+<span class="gu">#### Results:</span>
+
+| Result | Description |
+| :----: | ----------- |
+| <span class="sb">`result`</span> | any non-token type |
+
+
+
+<span class="gu">### `base2.max` (base2::ArithMaxOp)</span>
+
+Syntax:
+
+<span class="sb">```</span>
+<span class="sb">operation ::= `base2.max` $lhs `,` $rhs attr-dict `:` type($result)</span>
+<span class="sb">```</span>
+
+Traits: <span class="sb">`AlwaysSpeculatableImplTrait`</span>, <span class="sb">`SameOperandsAndResultType`</span>
+
+Interfaces: <span class="sb">`ConditionallySpeculatable`</span>, <span class="sb">`InferTypeOpInterface`</span>, <span class="sb">`NoMemoryEffect (MemoryEffectOpInterface)`</span>
+
+Effects: <span class="sb">`MemoryEffects::Effect{}`</span>
+
+<span class="gu">#### Operands:</span>
+
+| Operand | Description |
+| :-----: | ----------- |
+| <span class="sb">`lhs`</span> | any non-token type |
+| <span class="sb">`rhs`</span> | any non-token type |
+
+<span class="gu">#### Results:</span>
+
+| Result | Description |
+| :----: | ----------- |
+| <span class="sb">`result`</span> | any non-token type |
+
+
+
+<span class="gu">### `base2.min` (base2::ArithMinOp)</span>
+
+Syntax:
+
+<span class="sb">```</span>
+<span class="sb">operation ::= `base2.min` $lhs `,` $rhs attr-dict `:` type($result)</span>
+<span class="sb">```</span>
+
+Traits: <span class="sb">`AlwaysSpeculatableImplTrait`</span>, <span class="sb">`SameOperandsAndResultType`</span>
+
+Interfaces: <span class="sb">`ConditionallySpeculatable`</span>, <span class="sb">`InferTypeOpInterface`</span>, <span class="sb">`NoMemoryEffect (MemoryEffectOpInterface)`</span>
+
+Effects: <span class="sb">`MemoryEffects::Effect{}`</span>
+
+<span class="gu">#### Operands:</span>
+
+| Operand | Description |
+| :-----: | ----------- |
+| <span class="sb">`lhs`</span> | any non-token type |
+| <span class="sb">`rhs`</span> | any non-token type |
+
+<span class="gu">#### Results:</span>
+
+| Result | Description |
+| :----: | ----------- |
+| <span class="sb">`result`</span> | any non-token type |
+
+
+
+<span class="gu">### `base2.mul` (base2::ArithMulOp)</span>
+
+Syntax:
+
+<span class="sb">```</span>
+<span class="sb">operation ::= `base2.mul` $lhs `,` $rhs attr-dict `:` type($result)</span>
+<span class="sb">```</span>
+
+Traits: <span class="sb">`AlwaysSpeculatableImplTrait`</span>, <span class="sb">`SameOperandsAndResultType`</span>
+
+Interfaces: <span class="sb">`ConditionallySpeculatable`</span>, <span class="sb">`InferTypeOpInterface`</span>, <span class="sb">`NoMemoryEffect (MemoryEffectOpInterface)`</span>
+
+Effects: <span class="sb">`MemoryEffects::Effect{}`</span>
+
+<span class="gu">#### Operands:</span>
+
+| Operand | Description |
+| :-----: | ----------- |
+| <span class="sb">`lhs`</span> | any non-token type |
+| <span class="sb">`rhs`</span> | any non-token type |
+
+<span class="gu">#### Results:</span>
+
+| Result | Description |
+| :----: | ----------- |
+| <span class="sb">`result`</span> | any non-token type |
+
+
+
+<span class="gu">### `base2.or` (base2::ArithOrOp)</span>
+
+Syntax:
+
+<span class="sb">```</span>
+<span class="sb">operation ::= `base2.or` $lhs `,` $rhs attr-dict `:` type($result)</span>
+<span class="sb">```</span>
+
+Traits: <span class="sb">`AlwaysSpeculatableImplTrait`</span>, <span class="sb">`SameOperandsAndResultType`</span>
+
+Interfaces: <span class="sb">`ConditionallySpeculatable`</span>, <span class="sb">`InferTypeOpInterface`</span>, <span class="sb">`NoMemoryEffect (MemoryEffectOpInterface)`</span>
+
+Effects: <span class="sb">`MemoryEffects::Effect{}`</span>
+
+<span class="gu">#### Operands:</span>
+
+| Operand | Description |
+| :-----: | ----------- |
+| <span class="sb">`lhs`</span> | any non-token type |
+| <span class="sb">`rhs`</span> | any non-token type |
+
+<span class="gu">#### Results:</span>
+
+| Result | Description |
+| :----: | ----------- |
+| <span class="sb">`result`</span> | any non-token type |
+
+
+
+<span class="gu">### `base2.rem` (base2::ArithRemOp)</span>
+
+Syntax:
+
+<span class="sb">```</span>
+<span class="sb">operation ::= `base2.rem` $lhs `,` $rhs attr-dict `:` type($result)</span>
+<span class="sb">```</span>
+
+Traits: <span class="sb">`AlwaysSpeculatableImplTrait`</span>, <span class="sb">`SameOperandsAndResultType`</span>
+
+Interfaces: <span class="sb">`ConditionallySpeculatable`</span>, <span class="sb">`InferTypeOpInterface`</span>, <span class="sb">`NoMemoryEffect (MemoryEffectOpInterface)`</span>
+
+Effects: <span class="sb">`MemoryEffects::Effect{}`</span>
+
+<span class="gu">#### Operands:</span>
+
+| Operand | Description |
+| :-----: | ----------- |
+| <span class="sb">`lhs`</span> | any non-token type |
+| <span class="sb">`rhs`</span> | any non-token type |
+
+<span class="gu">#### Results:</span>
+
+| Result | Description |
+| :----: | ----------- |
+| <span class="sb">`result`</span> | any non-token type |
+
+
+
+<span class="gu">### `base2.select` (base2::ArithSelectOp)</span>
+
+Syntax:
+
+<span class="sb">```</span>
+<span class="sb">operation ::= `base2.select` $condition `,` $true_value `,` $false_value attr-dict `:` type($result)</span>
+<span class="sb">```</span>
+
+Traits: <span class="sb">`AlwaysSpeculatableImplTrait`</span>
+
+Interfaces: <span class="sb">`ConditionallySpeculatable`</span>, <span class="sb">`InferTypeOpInterface`</span>, <span class="sb">`NoMemoryEffect (MemoryEffectOpInterface)`</span>
+
+Effects: <span class="sb">`MemoryEffects::Effect{}`</span>
+
+<span class="gu">#### Operands:</span>
+
+| Operand | Description |
+| :-----: | ----------- |
+| <span class="sb">`condition`</span> | 1-bit signless integer |
+| <span class="sb">`true_value`</span> | any non-token type |
+| <span class="sb">`false_value`</span> | any non-token type |
+
+<span class="gu">#### Results:</span>
+
+| Result | Description |
+| :----: | ----------- |
+| <span class="sb">`result`</span> | any non-token type |
+
+
+
+<span class="gu">### `base2.shl` (base2::ArithShlOp)</span>
+
+Syntax:
+
+<span class="sb">```</span>
+<span class="sb">operation ::= `base2.shl` $lhs `,` $rhs attr-dict `:` type($result)</span>
+<span class="sb">```</span>
+
+Traits: <span class="sb">`AlwaysSpeculatableImplTrait`</span>, <span class="sb">`SameOperandsAndResultType`</span>
+
+Interfaces: <span class="sb">`ConditionallySpeculatable`</span>, <span class="sb">`InferTypeOpInterface`</span>, <span class="sb">`NoMemoryEffect (MemoryEffectOpInterface)`</span>
+
+Effects: <span class="sb">`MemoryEffects::Effect{}`</span>
+
+<span class="gu">#### Operands:</span>
+
+| Operand | Description |
+| :-----: | ----------- |
+| <span class="sb">`lhs`</span> | any non-token type |
+| <span class="sb">`rhs`</span> | any non-token type |
+
+<span class="gu">#### Results:</span>
+
+| Result | Description |
+| :----: | ----------- |
+| <span class="sb">`result`</span> | any non-token type |
+
+
+
+<span class="gu">### `base2.shr` (base2::ArithShrOp)</span>
+
+Syntax:
+
+<span class="sb">```</span>
+<span class="sb">operation ::= `base2.shr` $lhs `,` $rhs attr-dict `:` type($result)</span>
+<span class="sb">```</span>
+
+Traits: <span class="sb">`AlwaysSpeculatableImplTrait`</span>, <span class="sb">`SameOperandsAndResultType`</span>
+
+Interfaces: <span class="sb">`ConditionallySpeculatable`</span>, <span class="sb">`InferTypeOpInterface`</span>, <span class="sb">`NoMemoryEffect (MemoryEffectOpInterface)`</span>
+
+Effects: <span class="sb">`MemoryEffects::Effect{}`</span>
+
+<span class="gu">#### Operands:</span>
+
+| Operand | Description |
+| :-----: | ----------- |
+| <span class="sb">`lhs`</span> | any non-token type |
+| <span class="sb">`rhs`</span> | any non-token type |
+
+<span class="gu">#### Results:</span>
+
+| Result | Description |
+| :----: | ----------- |
+| <span class="sb">`result`</span> | any non-token type |
+
+
+
+<span class="gu">### `base2.sub` (base2::ArithSubOp)</span>
+
+Syntax:
+
+<span class="sb">```</span>
+<span class="sb">operation ::= `base2.sub` $lhs `,` $rhs attr-dict `:` type($result)</span>
+<span class="sb">```</span>
+
+Traits: <span class="sb">`AlwaysSpeculatableImplTrait`</span>, <span class="sb">`SameOperandsAndResultType`</span>
+
+Interfaces: <span class="sb">`ConditionallySpeculatable`</span>, <span class="sb">`InferTypeOpInterface`</span>, <span class="sb">`NoMemoryEffect (MemoryEffectOpInterface)`</span>
+
+Effects: <span class="sb">`MemoryEffects::Effect{}`</span>
+
+<span class="gu">#### Operands:</span>
+
+| Operand | Description |
+| :-----: | ----------- |
+| <span class="sb">`lhs`</span> | any non-token type |
+| <span class="sb">`rhs`</span> | any non-token type |
+
+<span class="gu">#### Results:</span>
+
+| Result | Description |
+| :----: | ----------- |
+| <span class="sb">`result`</span> | any non-token type |
+
+
+
+<span class="gu">## Attributes</span>
+
+<span class="gu">### BitsAttr</span>
+
+<span class="ge">_Constant bit sequence attribute_</span>
+
+Syntax:
+
+<span class="sb">```</span>
+<span class="sb">#base2.bits&lt;</span>
+<span class="sb">  ::mlir::Type,   # type</span>
+<span class="sb">  BitSequence   # value</span>
+<span class="sb">&gt;</span>
+<span class="sb">```</span>
+
+The <span class="sb">`bits`</span> attribute represents a compile-time constant sequence of bits
+that defines the value of a <span class="sb">`BitSequenceType`</span>.
+
+Syntax:
+
+<span class="sb">```</span>
+<span class="sb">bits-attr    ::= `bits` `&lt;` bit-sequence `&gt;` `:` type</span>
+<span class="sb">bit-sequence ::= `"` bit-literal (trunc-spec)? `"`</span>
+<span class="sb">bit-literal  ::= `0b` [_01]* | `0x` [_0-9a-fA-F]*</span>
+<span class="sb">trunc-spec   ::= `/` [0-9]+</span>
+<span class="sb">```</span>
+
+The number of bits in the bit-sequence must be equal to the bit width
+of the type.
+
+Example:
+
+<span class="sb">```</span>
+<span class="sb">// These all have the same value.</span>
+<span class="sb">#base2.bits&lt;"0b0000001000"&gt; : i10</span>
+<span class="sb">#base2.bits&lt;"0b1000/10"&gt; : i10</span>
+<span class="sb">#base2.bits&lt;"0x8/10"&gt; : i10</span>
+<span class="sb">#base2.bits&lt;"0x0008/10"&gt; : i10</span>
+<span class="sb">#base2.bits&lt;"0x000008/10"&gt; : i10</span>
+
+<span class="sb">// And this is the canonical version of the same value.</span>
+<span class="sb">#base2.bits&lt;"0x08/10"&gt; : i10</span>
+<span class="sb">```</span>
+
+<span class="gu">#### Parameters:</span>
+
+| Parameter | C++ type | Description |
+| :-------: | :-------: | ----------- |
+| type | <span class="sb">`::mlir::Type`</span> |  |
+| value | <span class="sb">`BitSequence`</span> |  |
+
+<span class="gu">### DenseBitsAttr</span>
+
+<span class="ge">_Constant densely-packed bit sequence container attribute_</span>
+
+The <span class="sb">`dense_bits`</span> attribute represents a compile-time constant container
+of sequences of bits that each define the value of a common
+<span class="sb">`BitSequenceType`</span> element type.
+
+Syntax:
+
+<span class="sb">```</span>
+<span class="sb">dense-bits-attr ::= `dense_bits` `&lt;` $type `=` $data `&gt;`</span>
+<span class="sb">```</span>
+
+The result type must be a shaped type of <span class="sb">`BitSequenceType`</span> elements,
+and the dense elements contained must match the shape of type, or be a
+splat.
+
+Example:
+
+<span class="sb">```</span>
+<span class="sb">// These all have the same value.</span>
+<span class="sb">#base2.dense_bits&lt;tensor&lt;3xi10&gt; = dense&lt;1&gt;&gt;</span>
+<span class="sb">#base2.dense_bits&lt;tensor&lt;3xi10&gt; = dense&lt;[1, 2, 3]&gt;&gt;</span>
+<span class="sb">#base2.dense_bits&lt;tensor&lt;3xi10&gt; = dense&lt;"0x010002000300"&gt;&gt;</span>
+<span class="sb">```</span>
+
+<span class="gu">#### Parameters:</span>
+
+| Parameter | C++ type | Description |
+| :-------: | :-------: | ----------- |
+| type | <span class="sb">`::mlir::Type`</span> |  |
+| data | <span class="sb">`DenseIntElementsAttr`</span> |  |
+
+<span class="gu">## Types</span>
+
+<span class="gu">### FixedType</span>
+
+<span class="ge">_Fixed-point number type_</span>
+
+Syntax:
+
+<span class="sb">```</span>
+<span class="sb">!base2.fixed&lt;</span>
+<span class="sb">  unsigned,   # integerBits</span>
+<span class="sb">  unsigned   # fractionalBits</span>
+<span class="sb">&gt;</span>
+<span class="sb">```</span>
+
+The <span class="sb">`base2.fixed`</span> type stores a fixed-point rational number using the
+specified number of <span class="sb">`$integerBits`</span> and <span class="sb">`$fractionalBits`</span>, which sign
+bit is implicit.
+
+Example:
+
+<span class="sb">```</span>
+<span class="sb">fixed-type ::= `fixed` `&lt;` $integerBits `,` $fractionalBits `&gt;`</span>
+<span class="sb">```</span>
+
+<span class="gu">#### Parameters:</span>
+
+| Parameter | C++ type | Description |
+| :-------: | :-------: | ----------- |
+| integerBits | <span class="sb">`unsigned`</span> | Number of integer bits |
+| fractionalBits | <span class="sb">`unsigned`</span> | Number of fractional bits |
+
+<span class="gu">## Enums</span>
+
+<span class="gu">### OrderingPredicate</span>
+
+<span class="ge">_Predicate to apply during comparison operation_</span>
+
+<span class="gu">#### Cases:</span>
+
+| Symbol | Value | String |
+| :----: | :---: | ------ |
+| Falsum | <span class="sb">`0`</span> | false |
+| OrderedAndEqual | <span class="sb">`1`</span> | oeq |
+| OrderedAndGreater | <span class="sb">`2`</span> | ogt |
+| OrderedAndGreaterOrEqual | <span class="sb">`3`</span> | oge |
+| OrderedAndLess | <span class="sb">`4`</span> | olt |
+| OrderedAndLessOrEqual | <span class="sb">`5`</span> | ole |
+| OrderedAndUnequal | <span class="sb">`6`</span> | une |
+| Ordered | <span class="sb">`7`</span> | ord |
+| Unordered | <span class="sb">`8`</span> | uno |
+| UnorderedOrEqual | <span class="sb">`9`</span> | ueq |
+| UnorderedOrGreater | <span class="sb">`10`</span> | ugt |
+| UnorderedOrGreaterOrEqual | <span class="sb">`11`</span> | uge |
+| UnorderedOrLess | <span class="sb">`12`</span> | ult |
+| UnorderedOrLessOrEqual | <span class="sb">`13`</span> | ule |
+| UnorderedOrUnequal | <span class="sb">`14`</span> | une |
+| Verum | <span class="sb">`15`</span> | true |
+</pre></div>
+</div>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

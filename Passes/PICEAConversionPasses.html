@@ -1,0 +1,202 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PICEA Conversion Passes &mdash; picea 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/collapsible-lists/css/tree_view.css?v=a885cde7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js?v=73120307"></script>
+      <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js?v=660e4f45"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="CGRA Passes" href="CGRAPasses.html" />
+    <link rel="prev" title="‘filter’ Dialect" href="../Dialects/FilterOps.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            picea
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Installation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../README.html">About the project</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#guides">Guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#related-projects">Related projects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#development-environment-nix">Development Environment (Nix)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#build-on-ubuntu-24-04-no-nix">Build on Ubuntu 24.04 (no Nix)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#gurobi-license">Gurobi license</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#installing">Installing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#run-the-tests">Run the tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#build-the-documentation">Build the documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#compiling-a-design">Compiling a design</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#running-a-design-on-the-board">Running a design on the board</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#exporting-a-profiled-application-to-mocasin">Exporting a profiled application to Mocasin</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Guides</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../guides/laksa.html">The FPGA Variant using LAKSA backend</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/cgra.html">The CGRA Variant</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">MLIR Dialects</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/Base2Ops.html">‘base2’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/CGRAOps.html">‘cgra’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/DFGOps.html">‘dfg’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/EmitHLSOps.html">‘emithls’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/FilterOps.html">‘filter’ Dialect</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Passes</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">PICEA Conversion Passes</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#convert-affine-to-emithls"><code class="docutils literal notranslate"><span class="pre">-convert-affine-to-emithls</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#convert-arith-to-emithls"><code class="docutils literal notranslate"><span class="pre">-convert-arith-to-emithls</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#convert-base2-to-emithls"><code class="docutils literal notranslate"><span class="pre">-convert-base2-to-emithls</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#convert-dfg-to-emithls"><code class="docutils literal notranslate"><span class="pre">-convert-dfg-to-emithls</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#convert-filter-to-linalg"><code class="docutils literal notranslate"><span class="pre">-convert-filter-to-linalg</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#convert-func-to-dfg"><code class="docutils literal notranslate"><span class="pre">-convert-func-to-dfg</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#convert-index-to-emithls"><code class="docutils literal notranslate"><span class="pre">-convert-index-to-emithls</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#convert-linalg-to-picea-loops"><code class="docutils literal notranslate"><span class="pre">-convert-linalg-to-picea-loops</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#convert-memref-pad-to-picea-loops"><code class="docutils literal notranslate"><span class="pre">-convert-memref-pad-to-picea-loops</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#convert-reshaped-copy-to-loops"><code class="docutils literal notranslate"><span class="pre">-convert-reshaped-copy-to-loops</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="CGRAPasses.html">CGRA Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="DFGPasses.html">DFG Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="EmitHLSPasses.html">Emit HLS Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="FuncExtPasses.html">Func Ext Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="LinalgExtPasses.html">Linalg Ext Passes</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">C++ API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../api/library_root.html">C++ API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">picea</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">PICEA Conversion Passes</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/Passes/PICEAConversionPasses.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="picea-conversion-passes">
+<h1>PICEA Conversion Passes<a class="headerlink" href="#picea-conversion-passes" title="Link to this heading"></a></h1>
+<!-- Autogenerated by mlir-tblgen; don't manually edit -->
+<section id="convert-affine-to-emithls">
+<h2><code class="docutils literal notranslate"><span class="pre">-convert-affine-to-emithls</span></code><a class="headerlink" href="#convert-affine-to-emithls" title="Link to this heading"></a></h2>
+<p><em>Convert Affine to EmitHLS dialect operations.</em></p>
+</section>
+<section id="convert-arith-to-emithls">
+<h2><code class="docutils literal notranslate"><span class="pre">-convert-arith-to-emithls</span></code><a class="headerlink" href="#convert-arith-to-emithls" title="Link to this heading"></a></h2>
+<p><em>Convert Arith to EmitHLS dialect arith operations.</em></p>
+</section>
+<section id="convert-base2-to-emithls">
+<h2><code class="docutils literal notranslate"><span class="pre">-convert-base2-to-emithls</span></code><a class="headerlink" href="#convert-base2-to-emithls" title="Link to this heading"></a></h2>
+<p><em>Convert Base2 to EmitHLS dialect operations.</em></p>
+</section>
+<section id="convert-dfg-to-emithls">
+<h2><code class="docutils literal notranslate"><span class="pre">-convert-dfg-to-emithls</span></code><a class="headerlink" href="#convert-dfg-to-emithls" title="Link to this heading"></a></h2>
+<p><em>Convert DFG to EmitHLS dialect operations.</em></p>
+</section>
+<section id="convert-filter-to-linalg">
+<h2><code class="docutils literal notranslate"><span class="pre">-convert-filter-to-linalg</span></code><a class="headerlink" href="#convert-filter-to-linalg" title="Link to this heading"></a></h2>
+<p><em>Convert Filter to Linalg named and generic operations</em></p>
+</section>
+<section id="convert-func-to-dfg">
+<h2><code class="docutils literal notranslate"><span class="pre">-convert-func-to-dfg</span></code><a class="headerlink" href="#convert-func-to-dfg" title="Link to this heading"></a></h2>
+<p><em>Convert Func to DFG dialect operations.</em></p>
+</section>
+<section id="convert-index-to-emithls">
+<h2><code class="docutils literal notranslate"><span class="pre">-convert-index-to-emithls</span></code><a class="headerlink" href="#convert-index-to-emithls" title="Link to this heading"></a></h2>
+<p><em>Convert Index to EmitHLS dialect index operations.</em></p>
+</section>
+<section id="convert-linalg-to-picea-loops">
+<h2><code class="docutils literal notranslate"><span class="pre">-convert-linalg-to-picea-loops</span></code><a class="headerlink" href="#convert-linalg-to-picea-loops" title="Link to this heading"></a></h2>
+<p><em>Convert linalg generic operations to affine loops with PICEA optimizations.</em></p>
+</section>
+<section id="convert-memref-pad-to-picea-loops">
+<h2><code class="docutils literal notranslate"><span class="pre">-convert-memref-pad-to-picea-loops</span></code><a class="headerlink" href="#convert-memref-pad-to-picea-loops" title="Link to this heading"></a></h2>
+<p><em>Convert MemRef to EmitHLS dialect operations.</em></p>
+</section>
+<section id="convert-reshaped-copy-to-loops">
+<h2><code class="docutils literal notranslate"><span class="pre">-convert-reshaped-copy-to-loops</span></code><a class="headerlink" href="#convert-reshaped-copy-to-loops" title="Link to this heading"></a></h2>
+<p><em>Convert a memref copy through a pure reshape or window into an element loop.</em></p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../Dialects/FilterOps.html" class="btn btn-neutral float-left" title="‘filter’ Dialect" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="CGRAPasses.html" class="btn btn-neutral float-right" title="CGRA Passes" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

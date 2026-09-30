@@ -1,0 +1,669 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Program Listing for File DFGToMocasin.cpp &mdash; picea 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/collapsible-lists/css/tree_view.css?v=a885cde7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js?v=73120307"></script>
+      <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js?v=660e4f45"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            picea
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Installation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../README.html">About the project</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#guides">Guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#related-projects">Related projects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#development-environment-nix">Development Environment (Nix)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#build-on-ubuntu-24-04-no-nix">Build on Ubuntu 24.04 (no Nix)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#gurobi-license">Gurobi license</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#installing">Installing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#run-the-tests">Run the tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#build-the-documentation">Build the documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#compiling-a-design">Compiling a design</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#running-a-design-on-the-board">Running a design on the board</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#exporting-a-profiled-application-to-mocasin">Exporting a profiled application to Mocasin</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Guides</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../guides/laksa.html">The FPGA Variant using LAKSA backend</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/cgra.html">The CGRA Variant</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">MLIR Dialects</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/Base2Ops.html">‘base2’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/CGRAOps.html">‘cgra’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/DFGOps.html">‘dfg’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/EmitHLSOps.html">‘emithls’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/FilterOps.html">‘filter’ Dialect</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Passes</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/PICEAConversionPasses.html">PICEA Conversion Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/CGRAPasses.html">CGRA Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/DFGPasses.html">DFG Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/EmitHLSPasses.html">Emit HLS Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/FuncExtPasses.html">Func Ext Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/LinalgExtPasses.html">Linalg Ext Passes</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">C++ API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="library_root.html">C++ API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">picea</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Program Listing for File DFGToMocasin.cpp</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/program_listing_file_lib_Target_DFGToMocasin_DFGToMocasin.cpp.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="program-listing-for-file-dfgtomocasin-cpp">
+<span id="program-listing-file-lib-target-dfgtomocasin-dfgtomocasin-cpp"></span><h1>Program Listing for File DFGToMocasin.cpp<a class="headerlink" href="#program-listing-for-file-dfgtomocasin-cpp" title="Link to this heading"></a></h1>
+<p>↰ <a class="reference internal" href="file_lib_Target_DFGToMocasin_DFGToMocasin.cpp.html#file-lib-target-dfgtomocasin-dfgtomocasin-cpp"><span class="std std-ref">Return to documentation for file</span></a> (<code class="docutils literal notranslate"><span class="pre">lib/Target/DFGToMocasin/DFGToMocasin.cpp</span></code>)</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">"mlir/IR/BuiltinOps.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"mlir/IR/Operation.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"mlir/IR/Value.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"mlir/Interfaces/DataLayoutInterfaces.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"mlir/Support/LLVM.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"mlir/Support/LogicalResult.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"picea-mlir/Dialect/DFG/IR/DFGOps.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"picea-mlir/IR/LaksaAttributes.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"picea-mlir/Target/DFGToMocasin/MocasinEmitter.h"</span>
+
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"llvm/ADT/DenseMap.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"llvm/Support/YAMLTraits.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"llvm/Support/raw_ostream.h"</span>
+
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;map&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;string&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;vector&gt;</span>
+
+<span class="k">using</span><span class="w"> </span><span class="k">namespace</span><span class="w"> </span><span class="nn">mlir</span><span class="p">;</span>
+<span class="k">using</span><span class="w"> </span><span class="k">namespace</span><span class="w"> </span><span class="nn">mlir</span><span class="o">::</span><span class="nn">dfg</span><span class="p">;</span>
+
+<span class="k">namespace</span><span class="w"> </span><span class="p">{</span>
+
+<span class="k">constexpr</span><span class="w"> </span><span class="n">StringLiteral</span><span class="w"> </span><span class="n">kBoundaryProfileName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"boundary"</span><span class="p">;</span>
+
+
+<span class="k">struct</span><span class="w"> </span><span class="nc">MocasinPortList</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span><span class="w"> </span><span class="n">values</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">auto</span><span class="w"> </span><span class="n">begin</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">values</span><span class="p">.</span><span class="n">begin</span><span class="p">();</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="k">auto</span><span class="w"> </span><span class="n">end</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">values</span><span class="p">.</span><span class="n">end</span><span class="p">();</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="o">&amp;</span><span class="k">operator</span><span class="p">[](</span><span class="kt">size_t</span><span class="w"> </span><span class="n">index</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">values</span><span class="p">[</span><span class="n">index</span><span class="p">];</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="n">push_back</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">value</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">values</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">value</span><span class="p">));</span><span class="w"> </span><span class="p">}</span>
+<span class="p">};</span>
+
+<span class="k">struct</span><span class="w"> </span><span class="nc">MocasinPorts</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">MocasinPortList</span><span class="w"> </span><span class="n">in</span><span class="p">;</span>
+<span class="w">    </span><span class="n">MocasinPortList</span><span class="w"> </span><span class="n">out</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="k">struct</span><span class="w"> </span><span class="nc">MocasinProcessDef</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">MocasinPorts</span><span class="w"> </span><span class="n">ports</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="k">struct</span><span class="w"> </span><span class="nc">MocasinEndpoint</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">process</span><span class="p">;</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">port</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="k">struct</span><span class="w"> </span><span class="nc">MocasinChannelDef</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">MocasinEndpoint</span><span class="w"> </span><span class="n">src</span><span class="p">;</span>
+<span class="w">    </span><span class="n">MocasinEndpoint</span><span class="w"> </span><span class="n">dst</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">uint64_t</span><span class="w"> </span><span class="n">tokenSize</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="k">struct</span><span class="w"> </span><span class="nc">MocasinRates</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">map</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">,</span><span class="w"> </span><span class="kt">int64_t</span><span class="o">&gt;</span><span class="w"> </span><span class="n">values</span><span class="p">;</span>
+
+<span class="w">    </span><span class="kt">int64_t</span><span class="w"> </span><span class="o">&amp;</span><span class="k">operator</span><span class="p">[](</span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="o">&amp;</span><span class="n">port</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">values</span><span class="p">[</span><span class="n">port</span><span class="p">];</span><span class="w"> </span><span class="p">}</span>
+<span class="p">};</span>
+
+<span class="k">struct</span><span class="w"> </span><span class="nc">MocasinGraphSection</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">map</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">,</span><span class="w"> </span><span class="n">MocasinProcessDef</span><span class="o">&gt;</span><span class="w"> </span><span class="n">processes</span><span class="p">;</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">map</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">,</span><span class="w"> </span><span class="n">MocasinChannelDef</span><span class="o">&gt;</span><span class="w"> </span><span class="n">channels</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="k">struct</span><span class="w"> </span><span class="nc">CyclesEntry</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kt">uint64_t</span><span class="w"> </span><span class="n">cycles</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="p">};</span>
+<span class="k">using</span><span class="w"> </span><span class="n">CyclesByProcessor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">map</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">,</span><span class="w"> </span><span class="n">CyclesEntry</span><span class="o">&gt;</span><span class="p">;</span>
+
+<span class="k">struct</span><span class="w"> </span><span class="nc">MocasinInstance</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">model</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"static"</span><span class="p">;</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">profile</span><span class="p">;</span>
+<span class="w">    </span><span class="n">MocasinRates</span><span class="w"> </span><span class="n">rates</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="k">struct</span><span class="w"> </span><span class="nc">ChannelExec</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kt">uint64_t</span><span class="w"> </span><span class="n">initialTokens</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="k">struct</span><span class="w"> </span><span class="nc">MocasinExecutionProcesses</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">map</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">,</span><span class="w"> </span><span class="n">CyclesByProcessor</span><span class="o">&gt;</span><span class="w"> </span><span class="n">profiles</span><span class="p">;</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">map</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">,</span><span class="w"> </span><span class="n">MocasinInstance</span><span class="o">&gt;</span><span class="w"> </span><span class="n">instances</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="k">struct</span><span class="w"> </span><span class="nc">MocasinExecutionSection</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">MocasinExecutionProcesses</span><span class="w"> </span><span class="n">processes</span><span class="p">;</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">map</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">,</span><span class="w"> </span><span class="n">ChannelExec</span><span class="o">&gt;</span><span class="w"> </span><span class="n">channels</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="k">struct</span><span class="w"> </span><span class="nc">MocasinDocument</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">name</span><span class="p">;</span>
+<span class="w">    </span><span class="n">MocasinGraphSection</span><span class="w"> </span><span class="n">graph</span><span class="p">;</span>
+<span class="w">    </span><span class="n">MocasinExecutionSection</span><span class="w"> </span><span class="n">execution</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="k">struct</span><span class="w"> </span><span class="nc">PortRef</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">leafName</span><span class="p">;</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">portName</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="p">}</span><span class="w"> </span><span class="c1">// namespace</span>
+
+<span class="n">LLVM_YAML_IS_STRING_MAP</span><span class="p">(</span><span class="n">MocasinProcessDef</span><span class="p">)</span>
+<span class="n">LLVM_YAML_IS_STRING_MAP</span><span class="p">(</span><span class="n">MocasinChannelDef</span><span class="p">)</span>
+<span class="n">LLVM_YAML_IS_STRING_MAP</span><span class="p">(</span><span class="n">CyclesEntry</span><span class="p">)</span>
+<span class="n">LLVM_YAML_IS_STRING_MAP</span><span class="p">(</span><span class="n">CyclesByProcessor</span><span class="p">)</span>
+<span class="n">LLVM_YAML_IS_STRING_MAP</span><span class="p">(</span><span class="n">MocasinInstance</span><span class="p">)</span>
+<span class="n">LLVM_YAML_IS_STRING_MAP</span><span class="p">(</span><span class="n">ChannelExec</span><span class="p">)</span>
+
+<span class="k">namespace</span><span class="w"> </span><span class="nn">llvm</span><span class="o">::</span><span class="nn">yaml</span><span class="w"> </span><span class="p">{</span>
+
+<span class="k">template</span><span class="o">&lt;&gt;</span>
+<span class="k">struct</span><span class="w"> </span><span class="nc">SequenceTraits</span><span class="o">&lt;</span><span class="n">MocasinPortList</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">static</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">flow</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">static</span><span class="w"> </span><span class="kt">size_t</span><span class="w"> </span><span class="nf">size</span><span class="p">(</span><span class="n">IO</span><span class="w"> </span><span class="o">&amp;</span><span class="p">,</span><span class="w"> </span><span class="n">MocasinPortList</span><span class="w"> </span><span class="o">&amp;</span><span class="n">ports</span><span class="p">)</span>
+<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">ports</span><span class="p">.</span><span class="n">values</span><span class="p">.</span><span class="n">size</span><span class="p">();</span><span class="w"> </span><span class="p">}</span>
+
+<span class="w">    </span><span class="k">static</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="o">&amp;</span><span class="nf">element</span><span class="p">(</span><span class="n">IO</span><span class="w"> </span><span class="o">&amp;</span><span class="p">,</span><span class="w"> </span><span class="n">MocasinPortList</span><span class="w"> </span><span class="o">&amp;</span><span class="n">ports</span><span class="p">,</span><span class="w"> </span><span class="kt">size_t</span><span class="w"> </span><span class="n">index</span><span class="p">)</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">index</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="n">ports</span><span class="p">.</span><span class="n">values</span><span class="p">.</span><span class="n">size</span><span class="p">())</span><span class="w"> </span><span class="n">ports</span><span class="p">.</span><span class="n">values</span><span class="p">.</span><span class="n">resize</span><span class="p">(</span><span class="n">index</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">);</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">ports</span><span class="p">.</span><span class="n">values</span><span class="p">[</span><span class="n">index</span><span class="p">];</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">};</span>
+
+<span class="k">template</span><span class="o">&lt;&gt;</span>
+<span class="k">struct</span><span class="w"> </span><span class="nc">MappingTraits</span><span class="o">&lt;</span><span class="n">MocasinPorts</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">mapping</span><span class="p">(</span><span class="n">IO</span><span class="w"> </span><span class="o">&amp;</span><span class="n">io</span><span class="p">,</span><span class="w"> </span><span class="n">MocasinPorts</span><span class="w"> </span><span class="o">&amp;</span><span class="n">p</span><span class="p">)</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="n">io</span><span class="p">.</span><span class="n">mapOptional</span><span class="p">(</span><span class="s">"in"</span><span class="p">,</span><span class="w"> </span><span class="n">p</span><span class="p">.</span><span class="n">in</span><span class="p">);</span>
+<span class="w">        </span><span class="n">io</span><span class="p">.</span><span class="n">mapOptional</span><span class="p">(</span><span class="s">"out"</span><span class="p">,</span><span class="w"> </span><span class="n">p</span><span class="p">.</span><span class="n">out</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">};</span>
+
+<span class="k">template</span><span class="o">&lt;&gt;</span>
+<span class="k">struct</span><span class="w"> </span><span class="nc">MappingTraits</span><span class="o">&lt;</span><span class="n">MocasinProcessDef</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">mapping</span><span class="p">(</span><span class="n">IO</span><span class="w"> </span><span class="o">&amp;</span><span class="n">io</span><span class="p">,</span><span class="w"> </span><span class="n">MocasinProcessDef</span><span class="w"> </span><span class="o">&amp;</span><span class="n">p</span><span class="p">)</span>
+<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="n">io</span><span class="p">.</span><span class="n">mapRequired</span><span class="p">(</span><span class="s">"ports"</span><span class="p">,</span><span class="w"> </span><span class="n">p</span><span class="p">.</span><span class="n">ports</span><span class="p">);</span><span class="w"> </span><span class="p">}</span>
+<span class="p">};</span>
+
+<span class="k">template</span><span class="o">&lt;&gt;</span>
+<span class="k">struct</span><span class="w"> </span><span class="nc">MappingTraits</span><span class="o">&lt;</span><span class="n">MocasinEndpoint</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">static</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">flow</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="w">    </span><span class="k">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">mapping</span><span class="p">(</span><span class="n">IO</span><span class="w"> </span><span class="o">&amp;</span><span class="n">io</span><span class="p">,</span><span class="w"> </span><span class="n">MocasinEndpoint</span><span class="w"> </span><span class="o">&amp;</span><span class="n">e</span><span class="p">)</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="n">io</span><span class="p">.</span><span class="n">mapRequired</span><span class="p">(</span><span class="s">"process"</span><span class="p">,</span><span class="w"> </span><span class="n">e</span><span class="p">.</span><span class="n">process</span><span class="p">);</span>
+<span class="w">        </span><span class="n">io</span><span class="p">.</span><span class="n">mapRequired</span><span class="p">(</span><span class="s">"port"</span><span class="p">,</span><span class="w"> </span><span class="n">e</span><span class="p">.</span><span class="n">port</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">};</span>
+
+<span class="k">template</span><span class="o">&lt;&gt;</span>
+<span class="k">struct</span><span class="w"> </span><span class="nc">MappingTraits</span><span class="o">&lt;</span><span class="n">MocasinRates</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">static</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">flow</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">mapping</span><span class="p">(</span><span class="n">IO</span><span class="w"> </span><span class="o">&amp;</span><span class="n">io</span><span class="p">,</span><span class="w"> </span><span class="n">MocasinRates</span><span class="w"> </span><span class="o">&amp;</span><span class="n">rates</span><span class="p">)</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">io</span><span class="p">.</span><span class="n">outputting</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="o">&amp;</span><span class="p">[</span><span class="n">port</span><span class="p">,</span><span class="w"> </span><span class="n">rate</span><span class="p">]</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">rates</span><span class="p">.</span><span class="n">values</span><span class="p">)</span><span class="w"> </span><span class="n">io</span><span class="p">.</span><span class="n">mapRequired</span><span class="p">(</span><span class="n">port</span><span class="p">,</span><span class="w"> </span><span class="n">rate</span><span class="p">);</span>
+<span class="w">            </span><span class="k">return</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">StringRef</span><span class="w"> </span><span class="n">port</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">io</span><span class="p">.</span><span class="n">keys</span><span class="p">())</span>
+<span class="w">            </span><span class="n">io</span><span class="p">.</span><span class="n">mapRequired</span><span class="p">(</span><span class="n">port</span><span class="p">,</span><span class="w"> </span><span class="n">rates</span><span class="p">.</span><span class="n">values</span><span class="p">[</span><span class="n">port</span><span class="p">.</span><span class="n">str</span><span class="p">()]);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">};</span>
+
+<span class="k">template</span><span class="o">&lt;&gt;</span>
+<span class="k">struct</span><span class="w"> </span><span class="nc">MappingTraits</span><span class="o">&lt;</span><span class="n">MocasinChannelDef</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">mapping</span><span class="p">(</span><span class="n">IO</span><span class="w"> </span><span class="o">&amp;</span><span class="n">io</span><span class="p">,</span><span class="w"> </span><span class="n">MocasinChannelDef</span><span class="w"> </span><span class="o">&amp;</span><span class="n">c</span><span class="p">)</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="n">io</span><span class="p">.</span><span class="n">mapRequired</span><span class="p">(</span><span class="s">"src"</span><span class="p">,</span><span class="w"> </span><span class="n">c</span><span class="p">.</span><span class="n">src</span><span class="p">);</span>
+<span class="w">        </span><span class="n">io</span><span class="p">.</span><span class="n">mapRequired</span><span class="p">(</span><span class="s">"dst"</span><span class="p">,</span><span class="w"> </span><span class="n">c</span><span class="p">.</span><span class="n">dst</span><span class="p">);</span>
+<span class="w">        </span><span class="n">io</span><span class="p">.</span><span class="n">mapRequired</span><span class="p">(</span><span class="s">"token_size"</span><span class="p">,</span><span class="w"> </span><span class="n">c</span><span class="p">.</span><span class="n">tokenSize</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">};</span>
+
+<span class="k">template</span><span class="o">&lt;&gt;</span>
+<span class="k">struct</span><span class="w"> </span><span class="nc">MappingTraits</span><span class="o">&lt;</span><span class="n">MocasinGraphSection</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">mapping</span><span class="p">(</span><span class="n">IO</span><span class="w"> </span><span class="o">&amp;</span><span class="n">io</span><span class="p">,</span><span class="w"> </span><span class="n">MocasinGraphSection</span><span class="w"> </span><span class="o">&amp;</span><span class="n">g</span><span class="p">)</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="n">io</span><span class="p">.</span><span class="n">mapRequired</span><span class="p">(</span><span class="s">"processes"</span><span class="p">,</span><span class="w"> </span><span class="n">g</span><span class="p">.</span><span class="n">processes</span><span class="p">);</span>
+<span class="w">        </span><span class="n">io</span><span class="p">.</span><span class="n">mapRequired</span><span class="p">(</span><span class="s">"channels"</span><span class="p">,</span><span class="w"> </span><span class="n">g</span><span class="p">.</span><span class="n">channels</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">};</span>
+
+<span class="k">template</span><span class="o">&lt;&gt;</span>
+<span class="k">struct</span><span class="w"> </span><span class="nc">MappingTraits</span><span class="o">&lt;</span><span class="n">CyclesEntry</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">mapping</span><span class="p">(</span><span class="n">IO</span><span class="w"> </span><span class="o">&amp;</span><span class="n">io</span><span class="p">,</span><span class="w"> </span><span class="n">CyclesEntry</span><span class="w"> </span><span class="o">&amp;</span><span class="n">c</span><span class="p">)</span>
+<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="n">io</span><span class="p">.</span><span class="n">mapRequired</span><span class="p">(</span><span class="s">"cycles"</span><span class="p">,</span><span class="w"> </span><span class="n">c</span><span class="p">.</span><span class="n">cycles</span><span class="p">);</span><span class="w"> </span><span class="p">}</span>
+<span class="p">};</span>
+
+<span class="k">template</span><span class="o">&lt;&gt;</span>
+<span class="k">struct</span><span class="w"> </span><span class="nc">MappingTraits</span><span class="o">&lt;</span><span class="n">MocasinInstance</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">mapping</span><span class="p">(</span><span class="n">IO</span><span class="w"> </span><span class="o">&amp;</span><span class="n">io</span><span class="p">,</span><span class="w"> </span><span class="n">MocasinInstance</span><span class="w"> </span><span class="o">&amp;</span><span class="n">i</span><span class="p">)</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="n">io</span><span class="p">.</span><span class="n">mapRequired</span><span class="p">(</span><span class="s">"model"</span><span class="p">,</span><span class="w"> </span><span class="n">i</span><span class="p">.</span><span class="n">model</span><span class="p">);</span>
+<span class="w">        </span><span class="n">io</span><span class="p">.</span><span class="n">mapRequired</span><span class="p">(</span><span class="s">"profile"</span><span class="p">,</span><span class="w"> </span><span class="n">i</span><span class="p">.</span><span class="n">profile</span><span class="p">);</span>
+<span class="w">        </span><span class="n">io</span><span class="p">.</span><span class="n">mapRequired</span><span class="p">(</span><span class="s">"rates"</span><span class="p">,</span><span class="w"> </span><span class="n">i</span><span class="p">.</span><span class="n">rates</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">};</span>
+
+<span class="k">template</span><span class="o">&lt;&gt;</span>
+<span class="k">struct</span><span class="w"> </span><span class="nc">MappingTraits</span><span class="o">&lt;</span><span class="n">ChannelExec</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">mapping</span><span class="p">(</span><span class="n">IO</span><span class="w"> </span><span class="o">&amp;</span><span class="n">io</span><span class="p">,</span><span class="w"> </span><span class="n">ChannelExec</span><span class="w"> </span><span class="o">&amp;</span><span class="n">c</span><span class="p">)</span>
+<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="n">io</span><span class="p">.</span><span class="n">mapRequired</span><span class="p">(</span><span class="s">"initial_tokens"</span><span class="p">,</span><span class="w"> </span><span class="n">c</span><span class="p">.</span><span class="n">initialTokens</span><span class="p">);</span><span class="w"> </span><span class="p">}</span>
+<span class="p">};</span>
+
+<span class="k">template</span><span class="o">&lt;&gt;</span>
+<span class="k">struct</span><span class="w"> </span><span class="nc">MappingTraits</span><span class="o">&lt;</span><span class="n">MocasinExecutionProcesses</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">mapping</span><span class="p">(</span><span class="n">IO</span><span class="w"> </span><span class="o">&amp;</span><span class="n">io</span><span class="p">,</span><span class="w"> </span><span class="n">MocasinExecutionProcesses</span><span class="w"> </span><span class="o">&amp;</span><span class="n">p</span><span class="p">)</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="n">io</span><span class="p">.</span><span class="n">mapRequired</span><span class="p">(</span><span class="s">"profiles"</span><span class="p">,</span><span class="w"> </span><span class="n">p</span><span class="p">.</span><span class="n">profiles</span><span class="p">);</span>
+<span class="w">        </span><span class="n">io</span><span class="p">.</span><span class="n">mapRequired</span><span class="p">(</span><span class="s">"instances"</span><span class="p">,</span><span class="w"> </span><span class="n">p</span><span class="p">.</span><span class="n">instances</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">};</span>
+
+<span class="k">template</span><span class="o">&lt;&gt;</span>
+<span class="k">struct</span><span class="w"> </span><span class="nc">MappingTraits</span><span class="o">&lt;</span><span class="n">MocasinExecutionSection</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">mapping</span><span class="p">(</span><span class="n">IO</span><span class="w"> </span><span class="o">&amp;</span><span class="n">io</span><span class="p">,</span><span class="w"> </span><span class="n">MocasinExecutionSection</span><span class="w"> </span><span class="o">&amp;</span><span class="n">e</span><span class="p">)</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="n">io</span><span class="p">.</span><span class="n">mapRequired</span><span class="p">(</span><span class="s">"processes"</span><span class="p">,</span><span class="w"> </span><span class="n">e</span><span class="p">.</span><span class="n">processes</span><span class="p">);</span>
+<span class="w">        </span><span class="n">io</span><span class="p">.</span><span class="n">mapRequired</span><span class="p">(</span><span class="s">"channels"</span><span class="p">,</span><span class="w"> </span><span class="n">e</span><span class="p">.</span><span class="n">channels</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">};</span>
+
+<span class="k">template</span><span class="o">&lt;&gt;</span>
+<span class="k">struct</span><span class="w"> </span><span class="nc">MappingTraits</span><span class="o">&lt;</span><span class="n">MocasinDocument</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">mapping</span><span class="p">(</span><span class="n">IO</span><span class="w"> </span><span class="o">&amp;</span><span class="n">io</span><span class="p">,</span><span class="w"> </span><span class="n">MocasinDocument</span><span class="w"> </span><span class="o">&amp;</span><span class="n">d</span><span class="p">)</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="n">io</span><span class="p">.</span><span class="n">mapRequired</span><span class="p">(</span><span class="s">"name"</span><span class="p">,</span><span class="w"> </span><span class="n">d</span><span class="p">.</span><span class="n">name</span><span class="p">);</span>
+<span class="w">        </span><span class="n">io</span><span class="p">.</span><span class="n">mapRequired</span><span class="p">(</span><span class="s">"graph"</span><span class="p">,</span><span class="w"> </span><span class="n">d</span><span class="p">.</span><span class="n">graph</span><span class="p">);</span>
+<span class="w">        </span><span class="n">io</span><span class="p">.</span><span class="n">mapRequired</span><span class="p">(</span><span class="s">"execution"</span><span class="p">,</span><span class="w"> </span><span class="n">d</span><span class="p">.</span><span class="n">execution</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">};</span>
+
+<span class="p">}</span><span class="w"> </span><span class="c1">// namespace llvm::yaml</span>
+
+<span class="k">namespace</span><span class="w"> </span><span class="p">{</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">MocasinEmitter</span><span class="w"> </span><span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+<span class="w">    </span><span class="k">explicit</span><span class="w"> </span><span class="n">MocasinEmitter</span><span class="p">(</span><span class="n">DataLayout</span><span class="w"> </span><span class="o">&amp;</span><span class="n">dataLayout</span><span class="p">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">dataLayout</span><span class="p">(</span><span class="n">dataLayout</span><span class="p">)</span><span class="w"> </span><span class="p">{}</span>
+
+<span class="w">    </span><span class="n">LogicalResult</span>
+<span class="w">    </span><span class="n">emitModule</span><span class="p">(</span><span class="n">ModuleOp</span><span class="w"> </span><span class="k">module</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">MocasinDocument</span><span class="o">&gt;</span><span class="w"> </span><span class="o">&amp;</span><span class="n">docs</span><span class="p">);</span>
+
+<span class="k">private</span><span class="o">:</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">uniqueName</span><span class="p">(</span><span class="n">StringRef</span><span class="w"> </span><span class="n">base</span><span class="p">);</span>
+<span class="w">    </span><span class="n">PortRef</span>
+<span class="w">    </span><span class="nf">addBoundaryProcess</span><span class="p">(</span><span class="n">StringRef</span><span class="w"> </span><span class="n">baseName</span><span class="p">,</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">isSource</span><span class="p">,</span><span class="w"> </span><span class="n">MocasinDocument</span><span class="w"> </span><span class="o">&amp;</span><span class="n">doc</span><span class="p">);</span>
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="nf">addChannel</span><span class="p">(</span>
+<span class="w">        </span><span class="n">Type</span><span class="w"> </span><span class="n">tokenType</span><span class="p">,</span>
+<span class="w">        </span><span class="k">const</span><span class="w"> </span><span class="n">PortRef</span><span class="w"> </span><span class="o">&amp;</span><span class="n">producer</span><span class="p">,</span>
+<span class="w">        </span><span class="k">const</span><span class="w"> </span><span class="n">PortRef</span><span class="w"> </span><span class="o">&amp;</span><span class="n">consumer</span><span class="p">,</span>
+<span class="w">        </span><span class="n">MocasinDocument</span><span class="w"> </span><span class="o">&amp;</span><span class="n">doc</span><span class="p">);</span>
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="nf">flattenRegion</span><span class="p">(</span>
+<span class="w">        </span><span class="n">RegionOp</span><span class="w"> </span><span class="n">region</span><span class="p">,</span>
+<span class="w">        </span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="o">&amp;</span><span class="n">prefix</span><span class="p">,</span>
+<span class="w">        </span><span class="n">MocasinDocument</span><span class="w"> </span><span class="o">&amp;</span><span class="n">doc</span><span class="p">,</span>
+<span class="w">        </span><span class="n">llvm</span><span class="o">::</span><span class="n">DenseMap</span><span class="o">&lt;</span><span class="n">Value</span><span class="p">,</span><span class="w"> </span><span class="n">PortRef</span><span class="o">&gt;</span><span class="w"> </span><span class="o">&amp;</span><span class="n">portOwner</span><span class="p">);</span>
+
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">map</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">,</span><span class="w"> </span><span class="kt">unsigned</span><span class="o">&gt;</span><span class="w"> </span><span class="n">nameCounters</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">unsigned</span><span class="w"> </span><span class="n">channelCounter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">    </span><span class="n">DataLayout</span><span class="w"> </span><span class="o">&amp;</span><span class="n">dataLayout</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="p">}</span><span class="w"> </span><span class="c1">// namespace</span>
+
+<span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">MocasinEmitter</span><span class="o">::</span><span class="n">uniqueName</span><span class="p">(</span><span class="n">StringRef</span><span class="w"> </span><span class="n">base</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">base</span><span class="p">.</span><span class="n">str</span><span class="p">();</span>
+<span class="w">    </span><span class="kt">unsigned</span><span class="w"> </span><span class="o">&amp;</span><span class="n">counter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">nameCounters</span><span class="p">[</span><span class="n">name</span><span class="p">];</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">counter</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="o">++</span><span class="n">counter</span><span class="p">;</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">name</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">name</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">"_"</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">to_string</span><span class="p">(</span><span class="n">counter</span><span class="o">++</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="n">PortRef</span><span class="w"> </span><span class="n">MocasinEmitter</span><span class="o">::</span><span class="n">addBoundaryProcess</span><span class="p">(</span>
+<span class="w">    </span><span class="n">StringRef</span><span class="w"> </span><span class="n">baseName</span><span class="p">,</span>
+<span class="w">    </span><span class="kt">bool</span><span class="w"> </span><span class="n">isSource</span><span class="p">,</span>
+<span class="w">    </span><span class="n">MocasinDocument</span><span class="w"> </span><span class="o">&amp;</span><span class="n">doc</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">processName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">uniqueName</span><span class="p">(</span><span class="n">baseName</span><span class="p">);</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">portName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">isSource</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="s">"out0"</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="s">"in0"</span><span class="p">;</span>
+
+<span class="w">    </span><span class="n">MocasinPorts</span><span class="w"> </span><span class="n">ports</span><span class="p">;</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">isSource</span><span class="p">)</span>
+<span class="w">        </span><span class="n">ports</span><span class="p">.</span><span class="n">out</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">portName</span><span class="p">);</span>
+<span class="w">    </span><span class="k">else</span>
+<span class="w">        </span><span class="n">ports</span><span class="p">.</span><span class="n">in</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">portName</span><span class="p">);</span>
+<span class="w">    </span><span class="n">doc</span><span class="p">.</span><span class="n">graph</span><span class="p">.</span><span class="n">processes</span><span class="p">.</span><span class="n">emplace</span><span class="p">(</span>
+<span class="w">        </span><span class="n">processName</span><span class="p">,</span>
+<span class="w">        </span><span class="n">MocasinProcessDef</span><span class="p">{</span><span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">ports</span><span class="p">)});</span>
+
+<span class="w">    </span><span class="n">MocasinInstance</span><span class="w"> </span><span class="n">instance</span><span class="p">;</span>
+<span class="w">    </span><span class="n">instance</span><span class="p">.</span><span class="n">profile</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">kBoundaryProfileName</span><span class="p">.</span><span class="n">str</span><span class="p">();</span>
+<span class="w">    </span><span class="n">instance</span><span class="p">.</span><span class="n">rates</span><span class="p">[</span><span class="n">portName</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="w">    </span><span class="n">doc</span><span class="p">.</span><span class="n">execution</span><span class="p">.</span><span class="n">processes</span><span class="p">.</span><span class="n">instances</span><span class="p">.</span><span class="n">emplace</span><span class="p">(</span><span class="n">processName</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">instance</span><span class="p">));</span>
+<span class="w">    </span><span class="n">doc</span><span class="p">.</span><span class="n">execution</span><span class="p">.</span><span class="n">processes</span><span class="p">.</span><span class="n">profiles</span><span class="p">.</span><span class="n">emplace</span><span class="p">(</span>
+<span class="w">        </span><span class="n">kBoundaryProfileName</span><span class="p">.</span><span class="n">str</span><span class="p">(),</span>
+<span class="w">        </span><span class="n">CyclesByProcessor</span><span class="p">{</span>
+<span class="w">            </span><span class="p">{</span><span class="s">"UNKNOWN"</span><span class="p">,</span><span class="w"> </span><span class="n">CyclesEntry</span><span class="p">{</span><span class="mi">0</span><span class="p">}}</span>
+<span class="w">    </span><span class="p">});</span>
+
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="p">{</span><span class="n">processName</span><span class="p">,</span><span class="w"> </span><span class="n">portName</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="kt">void</span><span class="w"> </span><span class="n">MocasinEmitter</span><span class="o">::</span><span class="n">addChannel</span><span class="p">(</span>
+<span class="w">    </span><span class="n">Type</span><span class="w"> </span><span class="n">tokenType</span><span class="p">,</span>
+<span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="n">PortRef</span><span class="w"> </span><span class="o">&amp;</span><span class="n">producer</span><span class="p">,</span>
+<span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="n">PortRef</span><span class="w"> </span><span class="o">&amp;</span><span class="n">consumer</span><span class="p">,</span>
+<span class="w">    </span><span class="n">MocasinDocument</span><span class="w"> </span><span class="o">&amp;</span><span class="n">doc</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">chanName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"ch"</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">to_string</span><span class="p">(</span><span class="n">channelCounter</span><span class="o">++</span><span class="p">);</span>
+
+<span class="w">    </span><span class="n">MocasinChannelDef</span><span class="w"> </span><span class="n">chanDef</span><span class="p">;</span>
+<span class="w">    </span><span class="n">chanDef</span><span class="p">.</span><span class="n">src</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="n">producer</span><span class="p">.</span><span class="n">leafName</span><span class="p">,</span><span class="w"> </span><span class="n">producer</span><span class="p">.</span><span class="n">portName</span><span class="p">};</span>
+<span class="w">    </span><span class="n">chanDef</span><span class="p">.</span><span class="n">dst</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="n">consumer</span><span class="p">.</span><span class="n">leafName</span><span class="p">,</span><span class="w"> </span><span class="n">consumer</span><span class="p">.</span><span class="n">portName</span><span class="p">};</span>
+<span class="w">    </span><span class="n">chanDef</span><span class="p">.</span><span class="n">tokenSize</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dataLayout</span><span class="p">.</span><span class="n">getTypeSize</span><span class="p">(</span><span class="n">tokenType</span><span class="p">).</span><span class="n">getFixedValue</span><span class="p">();</span>
+<span class="w">    </span><span class="n">doc</span><span class="p">.</span><span class="n">graph</span><span class="p">.</span><span class="n">channels</span><span class="p">.</span><span class="n">emplace</span><span class="p">(</span><span class="n">chanName</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">chanDef</span><span class="p">));</span>
+
+<span class="w">    </span><span class="c1">// DFG channels and synthesized graph-boundary channels both start empty.</span>
+<span class="w">    </span><span class="n">doc</span><span class="p">.</span><span class="n">execution</span><span class="p">.</span><span class="n">channels</span><span class="p">.</span><span class="n">emplace</span><span class="p">(</span><span class="n">chanName</span><span class="p">,</span><span class="w"> </span><span class="n">ChannelExec</span><span class="p">{</span><span class="mi">0</span><span class="p">});</span>
+<span class="p">}</span>
+
+<span class="kt">void</span><span class="w"> </span><span class="n">MocasinEmitter</span><span class="o">::</span><span class="n">flattenRegion</span><span class="p">(</span>
+<span class="w">    </span><span class="n">RegionOp</span><span class="w"> </span><span class="n">region</span><span class="p">,</span>
+<span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="o">&amp;</span><span class="n">prefix</span><span class="p">,</span>
+<span class="w">    </span><span class="n">MocasinDocument</span><span class="w"> </span><span class="o">&amp;</span><span class="n">doc</span><span class="p">,</span>
+<span class="w">    </span><span class="n">llvm</span><span class="o">::</span><span class="n">DenseMap</span><span class="o">&lt;</span><span class="n">Value</span><span class="p">,</span><span class="w"> </span><span class="n">PortRef</span><span class="o">&gt;</span><span class="w"> </span><span class="o">&amp;</span><span class="n">portOwner</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="c1">// Leaf actor instances: each becomes one flat Mocasin process, with</span>
+<span class="w">    </span><span class="c1">// ports named positionally and firing rates read off `multiplicity`.</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="o">*</span><span class="w"> </span><span class="n">nodeOp</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">region</span><span class="p">.</span><span class="n">getGraphNodes</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">auto</span><span class="w"> </span><span class="n">inst</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cast</span><span class="o">&lt;</span><span class="n">InstantiateOp</span><span class="o">&gt;</span><span class="p">(</span><span class="n">nodeOp</span><span class="p">);</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">leafName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">uniqueName</span><span class="p">(</span><span class="n">prefix</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">inst</span><span class="p">.</span><span class="n">getNodeName</span><span class="p">());</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">actorName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">inst</span><span class="p">.</span><span class="n">getNodeName</span><span class="p">();</span>
+<span class="w">        </span><span class="kt">unsigned</span><span class="w"> </span><span class="n">numIn</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">inst</span><span class="p">.</span><span class="n">getNumInputPorts</span><span class="p">();</span>
+<span class="w">        </span><span class="kt">unsigned</span><span class="w"> </span><span class="n">numOut</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">inst</span><span class="p">.</span><span class="n">getNumOutputPorts</span><span class="p">();</span>
+
+<span class="w">        </span><span class="n">MocasinPorts</span><span class="w"> </span><span class="n">ports</span><span class="p">;</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">unsigned</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">numIn</span><span class="p">;</span><span class="w"> </span><span class="o">++</span><span class="n">i</span><span class="p">)</span>
+<span class="w">            </span><span class="n">ports</span><span class="p">.</span><span class="n">in</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="s">"in"</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">to_string</span><span class="p">(</span><span class="n">i</span><span class="p">));</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">unsigned</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">numOut</span><span class="p">;</span><span class="w"> </span><span class="o">++</span><span class="n">i</span><span class="p">)</span>
+<span class="w">            </span><span class="n">ports</span><span class="p">.</span><span class="n">out</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="s">"out"</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">to_string</span><span class="p">(</span><span class="n">i</span><span class="p">));</span>
+
+<span class="w">        </span><span class="c1">// Firing rates: `dfg.process` may declare a `multiplicity` (empty</span>
+<span class="w">        </span><span class="c1">// means all-ones); `dfg.operator` has no such attribute and is</span>
+<span class="w">        </span><span class="c1">// always single-rate (its `output` op writes each result exactly</span>
+<span class="w">        </span><span class="c1">// once per invocation).</span>
+<span class="w">        </span><span class="n">ArrayRef</span><span class="o">&lt;</span><span class="kt">int64_t</span><span class="o">&gt;</span><span class="w"> </span><span class="n">multiplicity</span><span class="p">;</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="n">processOp</span><span class="w"> </span><span class="o">=</span>
+<span class="w">                </span><span class="n">dyn_cast_or_null</span><span class="o">&lt;</span><span class="n">ProcessOp</span><span class="o">&gt;</span><span class="p">(</span><span class="n">inst</span><span class="p">.</span><span class="n">getInstantiatedOperation</span><span class="p">()))</span>
+<span class="w">            </span><span class="n">multiplicity</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">processOp</span><span class="p">.</span><span class="n">getMultiplicity</span><span class="p">();</span>
+
+<span class="w">        </span><span class="n">MocasinInstance</span><span class="w"> </span><span class="n">instance</span><span class="p">;</span>
+<span class="w">        </span><span class="n">instance</span><span class="p">.</span><span class="n">profile</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">actorName</span><span class="p">;</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">unsigned</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">numIn</span><span class="p">;</span><span class="w"> </span><span class="o">++</span><span class="n">i</span><span class="p">)</span>
+<span class="w">            </span><span class="n">instance</span><span class="p">.</span><span class="n">rates</span><span class="p">[</span><span class="n">ports</span><span class="p">.</span><span class="n">in</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span><span class="w"> </span><span class="o">=</span>
+<span class="w">                </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">multiplicity</span><span class="p">.</span><span class="n">size</span><span class="p">()</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">multiplicity</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">unsigned</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">numOut</span><span class="p">;</span><span class="w"> </span><span class="o">++</span><span class="n">i</span><span class="p">)</span>
+<span class="w">            </span><span class="n">instance</span><span class="p">.</span><span class="n">rates</span><span class="p">[</span><span class="n">ports</span><span class="p">.</span><span class="n">out</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span><span class="w"> </span><span class="o">=</span>
+<span class="w">                </span><span class="p">(</span><span class="n">numIn</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">multiplicity</span><span class="p">.</span><span class="n">size</span><span class="p">()</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">multiplicity</span><span class="p">[</span><span class="n">numIn</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">unsigned</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">numIn</span><span class="p">;</span><span class="w"> </span><span class="o">++</span><span class="n">i</span><span class="p">)</span>
+<span class="w">            </span><span class="n">portOwner</span><span class="p">[</span><span class="n">inst</span><span class="p">.</span><span class="n">getInputPort</span><span class="p">(</span><span class="n">i</span><span class="p">)]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="n">leafName</span><span class="p">,</span><span class="w"> </span><span class="n">ports</span><span class="p">.</span><span class="n">in</span><span class="p">[</span><span class="n">i</span><span class="p">]};</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">unsigned</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">numOut</span><span class="p">;</span><span class="w"> </span><span class="o">++</span><span class="n">i</span><span class="p">)</span>
+<span class="w">            </span><span class="n">portOwner</span><span class="p">[</span><span class="n">inst</span><span class="p">.</span><span class="n">getOutputPort</span><span class="p">(</span><span class="n">i</span><span class="p">)]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="n">leafName</span><span class="p">,</span><span class="w"> </span><span class="n">ports</span><span class="p">.</span><span class="n">out</span><span class="p">[</span><span class="n">i</span><span class="p">]};</span>
+
+<span class="w">        </span><span class="n">doc</span><span class="p">.</span><span class="n">graph</span><span class="p">.</span><span class="n">processes</span><span class="p">.</span><span class="n">emplace</span><span class="p">(</span>
+<span class="w">            </span><span class="n">leafName</span><span class="p">,</span>
+<span class="w">            </span><span class="n">MocasinProcessDef</span><span class="p">{</span><span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">ports</span><span class="p">)});</span>
+<span class="w">        </span><span class="n">doc</span><span class="p">.</span><span class="n">execution</span><span class="p">.</span><span class="n">processes</span><span class="p">.</span><span class="n">instances</span><span class="p">.</span><span class="n">emplace</span><span class="p">(</span>
+<span class="w">            </span><span class="n">leafName</span><span class="p">,</span>
+<span class="w">            </span><span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">instance</span><span class="p">));</span>
+<span class="w">        </span><span class="c1">// One placeholder profile per distinct actor definition; multiple</span>
+<span class="w">        </span><span class="c1">// instances of the same actor share it (`emplace` is a no-op if the</span>
+<span class="w">        </span><span class="c1">// key already exists).</span>
+<span class="w">        </span><span class="n">doc</span><span class="p">.</span><span class="n">execution</span><span class="p">.</span><span class="n">processes</span><span class="p">.</span><span class="n">profiles</span><span class="p">.</span><span class="n">emplace</span><span class="p">(</span>
+<span class="w">            </span><span class="n">actorName</span><span class="p">,</span>
+<span class="w">            </span><span class="n">CyclesByProcessor</span><span class="p">{</span>
+<span class="w">                </span><span class="p">{</span><span class="s">"UNKNOWN"</span><span class="p">,</span><span class="w"> </span><span class="n">CyclesEntry</span><span class="p">{</span><span class="mi">0</span><span class="p">}}</span>
+<span class="w">        </span><span class="p">});</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="c1">// Embedded subgraphs: recurse and splice the child's leaves/channels</span>
+<span class="w">    </span><span class="c1">// into the same flat graph, then bridge the embed call site's operands</span>
+<span class="w">    </span><span class="c1">// to the child region's own ports so channels on either side resolve.</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="o">*</span><span class="w"> </span><span class="n">subOp</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">region</span><span class="p">.</span><span class="n">getGraphSubGs</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">auto</span><span class="w"> </span><span class="n">embed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cast</span><span class="o">&lt;</span><span class="n">EmbedOp</span><span class="o">&gt;</span><span class="p">(</span><span class="n">subOp</span><span class="p">);</span>
+<span class="w">        </span><span class="k">auto</span><span class="w"> </span><span class="n">child</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cast</span><span class="o">&lt;</span><span class="n">RegionOp</span><span class="o">&gt;</span><span class="p">(</span><span class="n">embed</span><span class="p">.</span><span class="n">getEmbeddedOperation</span><span class="p">());</span>
+<span class="w">        </span><span class="n">flattenRegion</span><span class="p">(</span>
+<span class="w">            </span><span class="n">child</span><span class="p">,</span>
+<span class="w">            </span><span class="n">prefix</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">embed</span><span class="p">.</span><span class="n">getNodeName</span><span class="p">()</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">"."</span><span class="p">,</span>
+<span class="w">            </span><span class="n">doc</span><span class="p">,</span>
+<span class="w">            </span><span class="n">portOwner</span><span class="p">);</span>
+
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">unsigned</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">embed</span><span class="p">.</span><span class="n">getNumInputPorts</span><span class="p">();</span><span class="w"> </span><span class="o">++</span><span class="n">i</span><span class="p">)</span>
+<span class="w">            </span><span class="n">portOwner</span><span class="p">[</span><span class="n">embed</span><span class="p">.</span><span class="n">getInputPort</span><span class="p">(</span><span class="n">i</span><span class="p">)]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">portOwner</span><span class="p">[</span><span class="n">child</span><span class="p">.</span><span class="n">getInputPort</span><span class="p">(</span><span class="n">i</span><span class="p">)];</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">unsigned</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">embed</span><span class="p">.</span><span class="n">getNumOutputPorts</span><span class="p">();</span><span class="w"> </span><span class="o">++</span><span class="n">i</span><span class="p">)</span>
+<span class="w">            </span><span class="n">portOwner</span><span class="p">[</span><span class="n">embed</span><span class="p">.</span><span class="n">getOutputPort</span><span class="p">(</span><span class="n">i</span><span class="p">)]</span><span class="w"> </span><span class="o">=</span>
+<span class="w">                </span><span class="n">portOwner</span><span class="p">[</span><span class="n">child</span><span class="p">.</span><span class="n">getOutputPort</span><span class="p">(</span><span class="n">i</span><span class="p">)];</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="c1">// Channels: now that every node operand in this region has a resolved</span>
+<span class="w">    </span><span class="c1">// leaf, each channel is just a lookup of its two ends.</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="o">*</span><span class="w"> </span><span class="n">edgeOp</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">region</span><span class="p">.</span><span class="n">getGraphEdges</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">auto</span><span class="w"> </span><span class="n">channel</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cast</span><span class="o">&lt;</span><span class="n">ChannelOp</span><span class="o">&gt;</span><span class="p">(</span><span class="n">edgeOp</span><span class="p">);</span>
+<span class="w">        </span><span class="n">PortRef</span><span class="w"> </span><span class="n">producer</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">portOwner</span><span class="p">.</span><span class="n">lookup</span><span class="p">(</span><span class="n">channel</span><span class="p">.</span><span class="n">getInputPort</span><span class="p">());</span>
+<span class="w">        </span><span class="n">PortRef</span><span class="w"> </span><span class="n">consumer</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">portOwner</span><span class="p">.</span><span class="n">lookup</span><span class="p">(</span><span class="n">channel</span><span class="p">.</span><span class="n">getOutputPort</span><span class="p">());</span>
+
+<span class="w">        </span><span class="n">addChannel</span><span class="p">(</span><span class="n">channel</span><span class="p">.</span><span class="n">getTokenType</span><span class="p">(),</span><span class="w"> </span><span class="n">producer</span><span class="p">,</span><span class="w"> </span><span class="n">consumer</span><span class="p">,</span><span class="w"> </span><span class="n">doc</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="n">LogicalResult</span>
+<span class="n">MocasinEmitter</span><span class="o">::</span><span class="n">emitModule</span><span class="p">(</span><span class="n">ModuleOp</span><span class="w"> </span><span class="k">module</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">MocasinDocument</span><span class="o">&gt;</span><span class="w"> </span><span class="o">&amp;</span><span class="n">docs</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="kt">unsigned</span><span class="w"> </span><span class="n">rootCount</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="o">&amp;</span><span class="n">opi</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">module</span><span class="p">.</span><span class="n">getBodyRegion</span><span class="p">().</span><span class="n">front</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">auto</span><span class="w"> </span><span class="n">regionOp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dyn_cast</span><span class="o">&lt;</span><span class="n">RegionOp</span><span class="o">&gt;</span><span class="p">(</span><span class="n">opi</span><span class="p">);</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">regionOp</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="o">!</span><span class="n">regionOp</span><span class="o">-&gt;</span><span class="n">hasAttr</span><span class="p">(</span><span class="n">picea</span><span class="o">::</span><span class="n">kRootAttrName</span><span class="p">))</span><span class="w"> </span><span class="k">continue</span><span class="p">;</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">++</span><span class="n">rootCount</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="k">module</span><span class="p">.</span><span class="n">emitError</span><span class="p">(</span>
+<span class="w">                </span><span class="s">"cannot export to Mocasin: expected exactly one operation "</span>
+<span class="w">                </span><span class="s">"marked 'laksa.root'"</span><span class="p">);</span>
+
+<span class="w">        </span><span class="n">MocasinDocument</span><span class="w"> </span><span class="n">doc</span><span class="p">;</span>
+<span class="w">        </span><span class="n">doc</span><span class="p">.</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">regionOp</span><span class="p">.</span><span class="n">getGraphName</span><span class="p">();</span>
+<span class="w">        </span><span class="n">llvm</span><span class="o">::</span><span class="n">DenseMap</span><span class="o">&lt;</span><span class="n">Value</span><span class="p">,</span><span class="w"> </span><span class="n">PortRef</span><span class="o">&gt;</span><span class="w"> </span><span class="n">portOwner</span><span class="p">;</span>
+<span class="w">        </span><span class="n">nameCounters</span><span class="p">.</span><span class="n">clear</span><span class="p">();</span>
+<span class="w">        </span><span class="n">channelCounter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">        </span><span class="n">flattenRegion</span><span class="p">(</span><span class="n">regionOp</span><span class="p">,</span><span class="w"> </span><span class="cm">/*prefix=*/</span><span class="s">""</span><span class="p">,</span><span class="w"> </span><span class="n">doc</span><span class="p">,</span><span class="w"> </span><span class="n">portOwner</span><span class="p">);</span>
+
+<span class="w">        </span><span class="c1">// Mocasin has no external graph interfaces. Represent every top-level</span>
+<span class="w">        </span><span class="c1">// input and output port as its own synthetic environment process and</span>
+<span class="w">        </span><span class="c1">// connect it to the leaf actor resolved by flattenRegion. These</span>
+<span class="w">        </span><span class="c1">// processes exist only in the emitted YAML; the source DFG is not</span>
+<span class="w">        </span><span class="c1">// modified.</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">unsigned</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">regionOp</span><span class="p">.</span><span class="n">getNumInputPorts</span><span class="p">();</span><span class="w"> </span><span class="o">++</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">Value</span><span class="w"> </span><span class="n">regionPort</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">regionOp</span><span class="p">.</span><span class="n">getInputPort</span><span class="p">(</span><span class="n">i</span><span class="p">);</span>
+<span class="w">            </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">portName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"in"</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">to_string</span><span class="p">(</span><span class="n">i</span><span class="p">);</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">regionPort</span><span class="p">.</span><span class="n">hasOneUse</span><span class="p">())</span>
+<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="n">regionOp</span><span class="p">.</span><span class="n">emitError</span><span class="p">()</span>
+<span class="w">                       </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"cannot export to Mocasin: top-level region '"</span>
+<span class="w">                       </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">regionOp</span><span class="p">.</span><span class="n">getGraphName</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"' input port '"</span>
+<span class="w">                       </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">portName</span>
+<span class="w">                       </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"' must have exactly one consumer inside the region"</span><span class="p">;</span>
+
+<span class="w">            </span><span class="k">auto</span><span class="w"> </span><span class="n">consumerIt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">portOwner</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="n">regionPort</span><span class="p">);</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">consumerIt</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">portOwner</span><span class="p">.</span><span class="n">end</span><span class="p">())</span>
+<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="n">regionOp</span><span class="p">.</span><span class="n">emitError</span><span class="p">()</span>
+<span class="w">                       </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"cannot resolve Mocasin consumer for top-level input "</span>
+<span class="w">                          </span><span class="s">"port '"</span>
+<span class="w">                       </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">portName</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"'"</span><span class="p">;</span>
+
+<span class="w">            </span><span class="n">PortRef</span><span class="w"> </span><span class="n">source</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">addBoundaryProcess</span><span class="p">(</span>
+<span class="w">                </span><span class="n">regionOp</span><span class="p">.</span><span class="n">getGraphName</span><span class="p">()</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">"-"</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">portName</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">"-source"</span><span class="p">,</span>
+<span class="w">                </span><span class="cm">/*isSource=*/</span><span class="nb">true</span><span class="p">,</span>
+<span class="w">                </span><span class="n">doc</span><span class="p">);</span>
+<span class="w">            </span><span class="n">addChannel</span><span class="p">(</span>
+<span class="w">                </span><span class="n">cast</span><span class="o">&lt;</span><span class="n">OutputType</span><span class="o">&gt;</span><span class="p">(</span><span class="n">regionPort</span><span class="p">.</span><span class="n">getType</span><span class="p">()).</span><span class="n">getElementType</span><span class="p">(),</span>
+<span class="w">                </span><span class="n">source</span><span class="p">,</span>
+<span class="w">                </span><span class="n">consumerIt</span><span class="o">-&gt;</span><span class="n">second</span><span class="p">,</span>
+<span class="w">                </span><span class="n">doc</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">unsigned</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">regionOp</span><span class="p">.</span><span class="n">getNumOutputPorts</span><span class="p">();</span><span class="w"> </span><span class="o">++</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">Value</span><span class="w"> </span><span class="n">regionPort</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">regionOp</span><span class="p">.</span><span class="n">getOutputPort</span><span class="p">(</span><span class="n">i</span><span class="p">);</span>
+<span class="w">            </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">portName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"out"</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">to_string</span><span class="p">(</span><span class="n">i</span><span class="p">);</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">regionPort</span><span class="p">.</span><span class="n">hasOneUse</span><span class="p">())</span>
+<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="n">regionOp</span><span class="p">.</span><span class="n">emitError</span><span class="p">()</span>
+<span class="w">                       </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"cannot export to Mocasin: top-level region '"</span>
+<span class="w">                       </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">regionOp</span><span class="p">.</span><span class="n">getGraphName</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"' output port '"</span>
+<span class="w">                       </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">portName</span>
+<span class="w">                       </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"' must have exactly one producer inside the region"</span><span class="p">;</span>
+
+<span class="w">            </span><span class="k">auto</span><span class="w"> </span><span class="n">producerIt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">portOwner</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="n">regionPort</span><span class="p">);</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">producerIt</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">portOwner</span><span class="p">.</span><span class="n">end</span><span class="p">())</span>
+<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="n">regionOp</span><span class="p">.</span><span class="n">emitError</span><span class="p">()</span>
+<span class="w">                       </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"cannot resolve Mocasin producer for top-level "</span>
+<span class="w">                          </span><span class="s">"output port '"</span>
+<span class="w">                       </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">portName</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"'"</span><span class="p">;</span>
+
+<span class="w">            </span><span class="n">PortRef</span><span class="w"> </span><span class="n">sink</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">addBoundaryProcess</span><span class="p">(</span>
+<span class="w">                </span><span class="n">regionOp</span><span class="p">.</span><span class="n">getGraphName</span><span class="p">()</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">"-"</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">portName</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">"-sink"</span><span class="p">,</span>
+<span class="w">                </span><span class="cm">/*isSource=*/</span><span class="nb">false</span><span class="p">,</span>
+<span class="w">                </span><span class="n">doc</span><span class="p">);</span>
+<span class="w">            </span><span class="n">addChannel</span><span class="p">(</span>
+<span class="w">                </span><span class="n">cast</span><span class="o">&lt;</span><span class="n">InputType</span><span class="o">&gt;</span><span class="p">(</span><span class="n">regionPort</span><span class="p">.</span><span class="n">getType</span><span class="p">()).</span><span class="n">getElementType</span><span class="p">(),</span>
+<span class="w">                </span><span class="n">producerIt</span><span class="o">-&gt;</span><span class="n">second</span><span class="p">,</span>
+<span class="w">                </span><span class="n">sink</span><span class="p">,</span>
+<span class="w">                </span><span class="n">doc</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="n">docs</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">doc</span><span class="p">));</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">rootCount</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="k">module</span><span class="p">.</span><span class="n">emitError</span><span class="p">(</span>
+<span class="w">            </span><span class="s">"cannot export to Mocasin: expected exactly one operation marked "</span>
+<span class="w">            </span><span class="s">"'laksa.root'"</span><span class="p">);</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">success</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="n">LogicalResult</span><span class="w"> </span><span class="n">dfg</span><span class="o">::</span><span class="n">translateDFGToMocasinYAML</span><span class="p">(</span><span class="n">Operation</span><span class="o">*</span><span class="w"> </span><span class="n">op</span><span class="p">,</span><span class="w"> </span><span class="n">raw_ostream</span><span class="w"> </span><span class="o">&amp;</span><span class="n">os</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">auto</span><span class="w"> </span><span class="k">module</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dyn_cast</span><span class="o">&lt;</span><span class="n">ModuleOp</span><span class="o">&gt;</span><span class="p">(</span><span class="n">op</span><span class="p">);</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="k">module</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">op</span><span class="o">-&gt;</span><span class="n">emitError</span><span class="p">(</span><span class="s">"expected builtin.module op"</span><span class="p">);</span>
+
+<span class="w">    </span><span class="n">DataLayout</span><span class="w"> </span><span class="nf">dataLayout</span><span class="p">(</span><span class="k">module</span><span class="p">);</span>
+<span class="w">    </span><span class="n">MocasinEmitter</span><span class="w"> </span><span class="nf">emitter</span><span class="p">(</span><span class="n">dataLayout</span><span class="p">);</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">MocasinDocument</span><span class="o">&gt;</span><span class="w"> </span><span class="n">docs</span><span class="p">;</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">failed</span><span class="p">(</span><span class="n">emitter</span><span class="p">.</span><span class="n">emitModule</span><span class="p">(</span><span class="k">module</span><span class="p">,</span><span class="w"> </span><span class="n">docs</span><span class="p">)))</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">failure</span><span class="p">();</span>
+
+<span class="w">    </span><span class="n">llvm</span><span class="o">::</span><span class="n">yaml</span><span class="o">::</span><span class="n">Output</span><span class="w"> </span><span class="nf">yout</span><span class="p">(</span><span class="n">os</span><span class="p">);</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="o">&amp;</span><span class="n">doc</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">docs</span><span class="p">)</span><span class="w"> </span><span class="n">yout</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">doc</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">success</span><span class="p">();</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

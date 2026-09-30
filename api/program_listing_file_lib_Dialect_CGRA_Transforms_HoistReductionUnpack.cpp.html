@@ -1,0 +1,509 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Program Listing for File HoistReductionUnpack.cpp &mdash; picea 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/collapsible-lists/css/tree_view.css?v=a885cde7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js?v=73120307"></script>
+      <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js?v=660e4f45"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            picea
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Installation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../README.html">About the project</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#guides">Guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#related-projects">Related projects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#development-environment-nix">Development Environment (Nix)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#build-on-ubuntu-24-04-no-nix">Build on Ubuntu 24.04 (no Nix)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#gurobi-license">Gurobi license</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#installing">Installing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#run-the-tests">Run the tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#build-the-documentation">Build the documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#compiling-a-design">Compiling a design</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#running-a-design-on-the-board">Running a design on the board</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#exporting-a-profiled-application-to-mocasin">Exporting a profiled application to Mocasin</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Guides</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../guides/laksa.html">The FPGA Variant using LAKSA backend</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/cgra.html">The CGRA Variant</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">MLIR Dialects</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/Base2Ops.html">‘base2’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/CGRAOps.html">‘cgra’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/DFGOps.html">‘dfg’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/EmitHLSOps.html">‘emithls’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/FilterOps.html">‘filter’ Dialect</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Passes</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/PICEAConversionPasses.html">PICEA Conversion Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/CGRAPasses.html">CGRA Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/DFGPasses.html">DFG Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/EmitHLSPasses.html">Emit HLS Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/FuncExtPasses.html">Func Ext Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/LinalgExtPasses.html">Linalg Ext Passes</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">C++ API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="library_root.html">C++ API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">picea</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Program Listing for File HoistReductionUnpack.cpp</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/program_listing_file_lib_Dialect_CGRA_Transforms_HoistReductionUnpack.cpp.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="program-listing-for-file-hoistreductionunpack-cpp">
+<span id="program-listing-file-lib-dialect-cgra-transforms-hoistreductionunpack-cpp"></span><h1>Program Listing for File HoistReductionUnpack.cpp<a class="headerlink" href="#program-listing-for-file-hoistreductionunpack-cpp" title="Link to this heading"></a></h1>
+<p>↰ <a class="reference internal" href="file_lib_Dialect_CGRA_Transforms_HoistReductionUnpack.cpp.html#file-lib-dialect-cgra-transforms-hoistreductionunpack-cpp"><span class="std std-ref">Return to documentation for file</span></a> (<code class="docutils literal notranslate"><span class="pre">lib/Dialect/CGRA/Transforms/HoistReductionUnpack.cpp</span></code>)</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">"mlir/Dialect/Affine/IR/AffineOps.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"mlir/Dialect/Arith/IR/Arith.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"mlir/Dialect/Func/IR/FuncOps.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"mlir/Dialect/MemRef/IR/MemRef.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"mlir/IR/IRMapping.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"mlir/IR/Matchers.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"mlir/Pass/Pass.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"picea-mlir/Dialect/CGRA/IR/CGRA.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"picea-mlir/Dialect/CGRA/Transforms/Passes.h"</span>
+
+<span class="k">using</span><span class="w"> </span><span class="k">namespace</span><span class="w"> </span><span class="nn">mlir</span><span class="p">;</span>
+
+<span class="k">namespace</span><span class="w"> </span><span class="p">{</span>
+
+<span class="c1">// A quantized convolution reduces over `sext_i8(patch[k]) * sext_i8(w[k])`, so</span>
+<span class="c1">// the i8 unpacking — `and 255; shl 24; shr 24` — sits INSIDE the reduction</span>
+<span class="c1">// loop. On the fabric that is wrong: a reduction whose body contains SHIFT ops</span>
+<span class="c1">// computes incorrect results, while the same chain in an elementwise nest is</span>
+<span class="c1">// fine.</span>
+<span class="c1">//</span>
+<span class="c1">// Measured with src/models/qred, four otherwise identical dot products of</span>
+<span class="c1">// length 18 differing only in the reduction body:</span>
+<span class="c1">//     mul, add                        (2 FUs)  PASSES</span>
+<span class="c1">//     and, mul, add                   (3 FUs)  PASSES</span>
+<span class="c1">//     and, add, mul, mul, add         (depth 3, no shifts)  PASSES</span>
+<span class="c1">//     and, shl, shr, mul, add         (depth 3, with shifts)  FAILS</span>
+<span class="c1">// so it is the shift ops specifically, not the body size and not the chain</span>
+<span class="c1">// depth. `MYRTUS_requant` runs the same shift chain elementwise and is</span>
+<span class="c1">// byte-correct, and `conv_mc` is the same im2col dot product with a 2-FU body</span>
+<span class="c1">// and is byte-correct.</span>
+<span class="c1">//</span>
+<span class="c1">// The preprocessing is per-element and depends only on the loaded value, so it</span>
+<span class="c1">// does not have to be in the reduction at all: apply it once over the operand</span>
+<span class="c1">// array and let the reduction read the prepared values. That is the same trade</span>
+<span class="c1">// --conv-to-im2col already makes — do the awkward part on the host, hand the</span>
+<span class="c1">// fabric a shape it streams well. It writes into a SEPARATE buffer rather than</span>
+<span class="c1">// in place: an in-place nest streams one array through an input and an output</span>
+<span class="c1">// memory node at once, and the two race on the same memory.</span>
+<span class="k">struct</span><span class="w"> </span><span class="nc">CGRAHoistReductionUnpackPass</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">PassWrapper</span><span class="o">&lt;</span>
+<span class="w">                                          </span><span class="n">CGRAHoistReductionUnpackPass</span><span class="p">,</span>
+<span class="w">                                          </span><span class="n">OperationPass</span><span class="o">&lt;</span><span class="n">func</span><span class="o">::</span><span class="n">FuncOp</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">    </span><span class="n">MLIR_DEFINE_EXPLICIT_INTERNAL_INLINE_TYPE_ID</span><span class="p">(</span><span class="n">CGRAHoistReductionUnpackPass</span><span class="p">)</span>
+
+<span class="w">    </span><span class="n">StringRef</span><span class="w"> </span><span class="n">getArgument</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">final</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="s">"hoist-reduction-unpack"</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="n">StringRef</span><span class="w"> </span><span class="nf">getDescription</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">final</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="s">"Move per-element preprocessing of a reduction operand out of "</span>
+<span class="w">               </span><span class="s">"the "</span>
+<span class="w">               </span><span class="s">"reduction loop (fabric reductions miscompute with shifts "</span>
+<span class="w">               </span><span class="s">"inside)"</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="nf">getDependentDialects</span><span class="p">(</span><span class="n">mlir</span><span class="o">::</span><span class="n">DialectRegistry</span><span class="w"> </span><span class="o">&amp;</span><span class="n">registry</span><span class="p">)</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">override</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="n">registry</span><span class="p">.</span><span class="n">insert</span><span class="o">&lt;</span>
+<span class="w">            </span><span class="n">affine</span><span class="o">::</span><span class="n">AffineDialect</span><span class="p">,</span>
+<span class="w">            </span><span class="n">memref</span><span class="o">::</span><span class="n">MemRefDialect</span><span class="p">,</span>
+<span class="w">            </span><span class="n">arith</span><span class="o">::</span><span class="n">ArithDialect</span><span class="o">&gt;</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="c1">// Ops that may form a per-element chain: exactly one non-constant operand,</span>
+<span class="w">    </span><span class="c1">// so the whole chain is a function of the single loaded value.</span>
+<span class="w">    </span><span class="k">static</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="nf">isUnaryWithConst</span><span class="p">(</span><span class="n">Operation</span><span class="o">*</span><span class="w"> </span><span class="n">op</span><span class="p">,</span><span class="w"> </span><span class="n">Value</span><span class="w"> </span><span class="o">&amp;</span><span class="n">dataIn</span><span class="p">)</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">isa</span><span class="o">&lt;</span>
+<span class="w">                </span><span class="n">arith</span><span class="o">::</span><span class="n">AndIOp</span><span class="p">,</span>
+<span class="w">                </span><span class="n">arith</span><span class="o">::</span><span class="n">OrIOp</span><span class="p">,</span>
+<span class="w">                </span><span class="n">arith</span><span class="o">::</span><span class="n">XOrIOp</span><span class="p">,</span>
+<span class="w">                </span><span class="n">arith</span><span class="o">::</span><span class="n">ShLIOp</span><span class="p">,</span>
+<span class="w">                </span><span class="n">arith</span><span class="o">::</span><span class="n">ShRSIOp</span><span class="p">,</span>
+<span class="w">                </span><span class="n">arith</span><span class="o">::</span><span class="n">ShRUIOp</span><span class="p">,</span>
+<span class="w">                </span><span class="n">arith</span><span class="o">::</span><span class="n">AddIOp</span><span class="p">,</span>
+<span class="w">                </span><span class="n">arith</span><span class="o">::</span><span class="n">SubIOp</span><span class="p">,</span>
+<span class="w">                </span><span class="n">arith</span><span class="o">::</span><span class="n">MulIOp</span><span class="o">&gt;</span><span class="p">(</span><span class="n">op</span><span class="p">))</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">unsigned</span><span class="w"> </span><span class="n">nonConst</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">Value</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">op</span><span class="o">-&gt;</span><span class="n">getOperands</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">APInt</span><span class="w"> </span><span class="n">c</span><span class="p">;</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">matchPattern</span><span class="p">(</span><span class="n">v</span><span class="p">,</span><span class="w"> </span><span class="n">m_ConstantInt</span><span class="p">(</span><span class="o">&amp;</span><span class="n">c</span><span class="p">)))</span><span class="w"> </span><span class="k">continue</span><span class="p">;</span>
+<span class="w">            </span><span class="o">++</span><span class="n">nonConst</span><span class="p">;</span>
+<span class="w">            </span><span class="n">dataIn</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">v</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">nonConst</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="c1">// Is this a compiler-created scratch buffer? Only those are safe to</span>
+<span class="w">    </span><span class="c1">// re-stage.</span>
+<span class="w">    </span><span class="k">static</span><span class="w"> </span><span class="n">memref</span><span class="o">::</span><span class="n">GlobalOp</span><span class="w"> </span><span class="nf">compilerTemp</span><span class="p">(</span><span class="n">Value</span><span class="w"> </span><span class="n">memref</span><span class="p">,</span><span class="w"> </span><span class="n">ModuleOp</span><span class="w"> </span><span class="k">module</span><span class="p">)</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="k">auto</span><span class="w"> </span><span class="n">get</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">memref</span><span class="p">.</span><span class="n">getDefiningOp</span><span class="o">&lt;</span><span class="n">memref</span><span class="o">::</span><span class="n">GetGlobalOp</span><span class="o">&gt;</span><span class="p">();</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">get</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="p">{};</span>
+<span class="w">        </span><span class="k">auto</span><span class="w"> </span><span class="n">g</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dyn_cast_or_null</span><span class="o">&lt;</span><span class="n">memref</span><span class="o">::</span><span class="n">GlobalOp</span><span class="o">&gt;</span><span class="p">(</span>
+<span class="w">            </span><span class="n">SymbolTable</span><span class="o">::</span><span class="n">lookupSymbolIn</span><span class="p">(</span><span class="k">module</span><span class="p">,</span><span class="w"> </span><span class="n">get</span><span class="p">.</span><span class="n">getName</span><span class="p">()));</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">g</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">g</span><span class="p">.</span><span class="n">getConstant</span><span class="p">())</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="p">{};</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">g</span><span class="p">.</span><span class="n">getSymVisibility</span><span class="p">()</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="o">*</span><span class="n">g</span><span class="p">.</span><span class="n">getSymVisibility</span><span class="p">()</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="s">"private"</span><span class="p">)</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="p">{};</span>
+<span class="w">        </span><span class="n">StringRef</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">g</span><span class="p">.</span><span class="n">getSymName</span><span class="p">();</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">n</span><span class="p">.</span><span class="n">starts_with</span><span class="p">(</span><span class="s">"im2col_"</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="o">!</span><span class="n">n</span><span class="p">.</span><span class="n">starts_with</span><span class="p">(</span><span class="s">"__cgra_"</span><span class="p">))</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="p">{};</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">g</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="nf">runOnOperation</span><span class="p">()</span><span class="w"> </span><span class="k">override</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="n">func</span><span class="o">::</span><span class="n">FuncOp</span><span class="w"> </span><span class="n">fn</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">getOperation</span><span class="p">();</span>
+<span class="w">        </span><span class="n">ModuleOp</span><span class="w"> </span><span class="k">module</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">fn</span><span class="o">-&gt;</span><span class="n">getParentOfType</span><span class="o">&lt;</span><span class="n">ModuleOp</span><span class="o">&gt;</span><span class="p">();</span>
+
+<span class="w">        </span><span class="c1">// Reduction nests: an affine.for carrying an iter_arg accumulator.</span>
+<span class="w">        </span><span class="n">SmallVector</span><span class="o">&lt;</span><span class="n">affine</span><span class="o">::</span><span class="n">AffineForOp</span><span class="o">&gt;</span><span class="w"> </span><span class="n">reductions</span><span class="p">;</span>
+<span class="w">        </span><span class="n">fn</span><span class="p">.</span><span class="n">walk</span><span class="p">([</span><span class="o">&amp;</span><span class="p">](</span><span class="n">affine</span><span class="o">::</span><span class="n">AffineForOp</span><span class="w"> </span><span class="n">f</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">f</span><span class="p">.</span><span class="n">getNumRegionIterArgs</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="n">reductions</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">f</span><span class="p">);</span>
+<span class="w">        </span><span class="p">});</span>
+
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">affine</span><span class="o">::</span><span class="n">AffineForOp</span><span class="w"> </span><span class="n">red</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">reductions</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="c1">// Only act when the body actually contains a shift — that is the</span>
+<span class="w">            </span><span class="c1">// shape known to miscompute, and staying narrow keeps every kernel</span>
+<span class="w">            </span><span class="c1">// that works today bit-for-bit unchanged.</span>
+<span class="w">            </span><span class="kt">bool</span><span class="w"> </span><span class="n">hasShift</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="w">            </span><span class="n">red</span><span class="p">.</span><span class="n">getBody</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">walk</span><span class="p">([</span><span class="o">&amp;</span><span class="p">](</span><span class="n">Operation</span><span class="o">*</span><span class="w"> </span><span class="n">op</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">isa</span><span class="o">&lt;</span><span class="n">arith</span><span class="o">::</span><span class="n">ShLIOp</span><span class="p">,</span><span class="w"> </span><span class="n">arith</span><span class="o">::</span><span class="n">ShRSIOp</span><span class="p">,</span><span class="w"> </span><span class="n">arith</span><span class="o">::</span><span class="n">ShRUIOp</span><span class="o">&gt;</span><span class="p">(</span><span class="n">op</span><span class="p">))</span>
+<span class="w">                    </span><span class="n">hasShift</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="w">            </span><span class="p">});</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">hasShift</span><span class="p">)</span><span class="w"> </span><span class="k">continue</span><span class="p">;</span>
+
+<span class="w">            </span><span class="n">SmallVector</span><span class="o">&lt;</span><span class="n">affine</span><span class="o">::</span><span class="n">AffineLoadOp</span><span class="o">&gt;</span><span class="w"> </span><span class="n">loads</span><span class="p">;</span>
+<span class="w">            </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">Operation</span><span class="w"> </span><span class="o">&amp;</span><span class="n">op</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="o">*</span><span class="n">red</span><span class="p">.</span><span class="n">getBody</span><span class="p">())</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="n">ld</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dyn_cast</span><span class="o">&lt;</span><span class="n">affine</span><span class="o">::</span><span class="n">AffineLoadOp</span><span class="o">&gt;</span><span class="p">(</span><span class="o">&amp;</span><span class="n">op</span><span class="p">))</span>
+<span class="w">                    </span><span class="n">loads</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">ld</span><span class="p">);</span>
+
+<span class="w">            </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">affine</span><span class="o">::</span><span class="n">AffineLoadOp</span><span class="w"> </span><span class="n">ld</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">loads</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="c1">// Walk the chain of single-input ops hanging off this load.</span>
+<span class="w">                </span><span class="n">SmallVector</span><span class="o">&lt;</span><span class="n">Operation</span><span class="o">*&gt;</span><span class="w"> </span><span class="n">chain</span><span class="p">;</span>
+<span class="w">                </span><span class="n">Value</span><span class="w"> </span><span class="n">cur</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ld</span><span class="p">.</span><span class="n">getResult</span><span class="p">();</span>
+<span class="w">                </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">cur</span><span class="p">.</span><span class="n">hasOneUse</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                    </span><span class="n">Operation</span><span class="o">*</span><span class="w"> </span><span class="n">user</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">*</span><span class="n">cur</span><span class="p">.</span><span class="n">getUsers</span><span class="p">().</span><span class="n">begin</span><span class="p">();</span>
+<span class="w">                    </span><span class="n">Value</span><span class="w"> </span><span class="n">dataIn</span><span class="p">;</span>
+<span class="w">                    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">user</span><span class="o">-&gt;</span><span class="n">getBlock</span><span class="p">()</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">red</span><span class="p">.</span><span class="n">getBody</span><span class="p">()</span>
+<span class="w">                        </span><span class="o">||</span><span class="w"> </span><span class="o">!</span><span class="n">isUnaryWithConst</span><span class="p">(</span><span class="n">user</span><span class="p">,</span><span class="w"> </span><span class="n">dataIn</span><span class="p">)</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">dataIn</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">cur</span><span class="p">)</span>
+<span class="w">                        </span><span class="k">break</span><span class="p">;</span>
+<span class="w">                    </span><span class="n">chain</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">user</span><span class="p">);</span>
+<span class="w">                    </span><span class="n">cur</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">user</span><span class="o">-&gt;</span><span class="n">getResult</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">chain</span><span class="p">.</span><span class="n">empty</span><span class="p">())</span><span class="w"> </span><span class="k">continue</span><span class="p">;</span>
+<span class="w">                </span><span class="kt">bool</span><span class="w"> </span><span class="n">chainHasShift</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="w">                </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">Operation</span><span class="o">*</span><span class="w"> </span><span class="n">op</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">chain</span><span class="p">)</span>
+<span class="w">                    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">isa</span><span class="o">&lt;</span><span class="n">arith</span><span class="o">::</span><span class="n">ShLIOp</span><span class="p">,</span><span class="w"> </span><span class="n">arith</span><span class="o">::</span><span class="n">ShRSIOp</span><span class="p">,</span><span class="w"> </span><span class="n">arith</span><span class="o">::</span><span class="n">ShRUIOp</span><span class="o">&gt;</span><span class="p">(</span><span class="n">op</span><span class="p">))</span>
+<span class="w">                        </span><span class="n">chainHasShift</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">chainHasShift</span><span class="p">)</span><span class="w"> </span><span class="k">continue</span><span class="p">;</span>
+
+<span class="w">                </span><span class="k">auto</span><span class="w"> </span><span class="n">g</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">compilerTemp</span><span class="p">(</span><span class="n">ld</span><span class="p">.</span><span class="n">getMemRef</span><span class="p">(),</span><span class="w"> </span><span class="k">module</span><span class="p">);</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">g</span><span class="p">)</span><span class="w"> </span><span class="k">continue</span><span class="p">;</span><span class="w"> </span><span class="c1">// not a compiler scratch buffer</span>
+<span class="w">                </span><span class="k">auto</span><span class="w"> </span><span class="n">ty</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dyn_cast</span><span class="o">&lt;</span><span class="n">MemRefType</span><span class="o">&gt;</span><span class="p">(</span><span class="n">ld</span><span class="p">.</span><span class="n">getMemRef</span><span class="p">().</span><span class="n">getType</span><span class="p">());</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">ty</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="o">!</span><span class="n">ty</span><span class="p">.</span><span class="n">hasStaticShape</span><span class="p">())</span><span class="w"> </span><span class="k">continue</span><span class="p">;</span>
+
+<span class="w">                </span><span class="c1">// FIRST: if the array is produced by a single PURE-COPY nest</span>
+<span class="w">                </span><span class="c1">// (the gather</span>
+<span class="w">                </span><span class="c1">// `--conv-to-im2col` emits: `im2col[j] = in[...]`, no</span>
+<span class="w">                </span><span class="c1">// arithmetic), apply the chain THERE instead of materialising a</span>
+<span class="w">                </span><span class="c1">// second array. The copy is elementwise, so a shift in it is</span>
+<span class="w">                </span><span class="c1">// harmless — the fabric only miscomputes shifts inside a</span>
+<span class="w">                </span><span class="c1">// REDUCTION — and the reduction then reads the prepared values</span>
+<span class="w">                </span><span class="c1">// straight out of the original buffer. This is pure memory: the</span>
+<span class="w">                </span><span class="c1">// separate `_unpacked` copy of tiny_kws' 72 000-element im2col</span>
+<span class="w">                </span><span class="c1">// buffer cost 281 KB on a machine with 928 KB, i.e. a quarter</span>
+<span class="w">                </span><span class="c1">// of the budget for data that is already being written one</span>
+<span class="w">                </span><span class="c1">// element at a time right there. EVERY writer must be a pure</span>
+<span class="w">                </span><span class="c1">// copy — a network has one gather per convolution writing the</span>
+<span class="w">                </span><span class="c1">// same scratch (tiny_kws: four), so requiring a single writer</span>
+<span class="w">                </span><span class="c1">// never fires. Folding rewrites what the BUFFER holds, so EVERY</span>
+<span class="w">                </span><span class="c1">// reader must be one that applies this same chain — otherwise</span>
+<span class="w">                </span><span class="c1">// some reader would silently start seeing prepared values where</span>
+<span class="w">                </span><span class="c1">// it expects raw ones. A network reads the same im2col scratch</span>
+<span class="w">                </span><span class="c1">// from one reduction per convolution, each with an identical</span>
+<span class="w">                </span><span class="c1">// unpack chain, so they all fold together and every chain is</span>
+<span class="w">                </span><span class="c1">// dropped below.</span>
+<span class="w">                </span><span class="k">auto</span><span class="w"> </span><span class="n">chainOf</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="o">&amp;</span><span class="p">](</span><span class="n">affine</span><span class="o">::</span><span class="n">AffineLoadOp</span><span class="w"> </span><span class="n">l</span><span class="p">,</span>
+<span class="w">                                   </span><span class="n">SmallVectorImpl</span><span class="o">&lt;</span><span class="n">Operation</span><span class="o">*&gt;</span><span class="w"> </span><span class="o">&amp;</span><span class="n">out</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                    </span><span class="n">Value</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">l</span><span class="p">.</span><span class="n">getResult</span><span class="p">();</span>
+<span class="w">                    </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">c</span><span class="p">.</span><span class="n">hasOneUse</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                        </span><span class="n">Operation</span><span class="o">*</span><span class="w"> </span><span class="n">u</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">*</span><span class="n">c</span><span class="p">.</span><span class="n">getUsers</span><span class="p">().</span><span class="n">begin</span><span class="p">();</span>
+<span class="w">                        </span><span class="n">Value</span><span class="w"> </span><span class="n">din</span><span class="p">;</span>
+<span class="w">                        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">isUnaryWithConst</span><span class="p">(</span><span class="n">u</span><span class="p">,</span><span class="w"> </span><span class="n">din</span><span class="p">)</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">din</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">c</span><span class="p">)</span><span class="w"> </span><span class="k">break</span><span class="p">;</span>
+<span class="w">                        </span><span class="n">out</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">u</span><span class="p">);</span>
+<span class="w">                        </span><span class="n">c</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">u</span><span class="o">-&gt;</span><span class="n">getResult</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+<span class="w">                    </span><span class="p">}</span>
+<span class="w">                </span><span class="p">};</span>
+<span class="w">                </span><span class="k">auto</span><span class="w"> </span><span class="n">sameChain</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="o">&amp;</span><span class="p">](</span><span class="n">ArrayRef</span><span class="o">&lt;</span><span class="n">Operation</span><span class="o">*&gt;</span><span class="w"> </span><span class="n">a</span><span class="p">,</span>
+<span class="w">                                     </span><span class="n">ArrayRef</span><span class="o">&lt;</span><span class="n">Operation</span><span class="o">*&gt;</span><span class="w"> </span><span class="n">b</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">a</span><span class="p">.</span><span class="n">size</span><span class="p">()</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">b</span><span class="p">.</span><span class="n">size</span><span class="p">())</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="w">                    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="p">[</span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">y</span><span class="p">]</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">llvm</span><span class="o">::</span><span class="n">zip</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">x</span><span class="o">-&gt;</span><span class="n">getName</span><span class="p">()</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">y</span><span class="o">-&gt;</span><span class="n">getName</span><span class="p">())</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="w">                        </span><span class="n">APInt</span><span class="w"> </span><span class="n">cx</span><span class="p">,</span><span class="w"> </span><span class="n">cy</span><span class="p">;</span>
+<span class="w">                        </span><span class="kt">bool</span><span class="w"> </span><span class="n">hx</span><span class="w"> </span><span class="o">=</span>
+<span class="w">                            </span><span class="n">matchPattern</span><span class="p">(</span><span class="n">x</span><span class="o">-&gt;</span><span class="n">getOperand</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span><span class="w"> </span><span class="n">m_ConstantInt</span><span class="p">(</span><span class="o">&amp;</span><span class="n">cx</span><span class="p">));</span>
+<span class="w">                        </span><span class="kt">bool</span><span class="w"> </span><span class="n">hy</span><span class="w"> </span><span class="o">=</span>
+<span class="w">                            </span><span class="n">matchPattern</span><span class="p">(</span><span class="n">y</span><span class="o">-&gt;</span><span class="n">getOperand</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span><span class="w"> </span><span class="n">m_ConstantInt</span><span class="p">(</span><span class="o">&amp;</span><span class="n">cy</span><span class="p">));</span>
+<span class="w">                        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">hx</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">hy</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="p">(</span><span class="n">hx</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">cx</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">cy</span><span class="p">))</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="w">                    </span><span class="p">}</span>
+<span class="w">                    </span><span class="k">return</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="w">                </span><span class="p">};</span>
+<span class="w">                </span><span class="n">SmallVector</span><span class="o">&lt;</span><span class="n">affine</span><span class="o">::</span><span class="n">AffineLoadOp</span><span class="o">&gt;</span><span class="w"> </span><span class="n">peers</span><span class="p">;</span>
+<span class="w">                </span><span class="kt">bool</span><span class="w"> </span><span class="n">readersUniform</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="w">                </span><span class="n">fn</span><span class="p">.</span><span class="n">walk</span><span class="p">([</span><span class="o">&amp;</span><span class="p">](</span><span class="n">affine</span><span class="o">::</span><span class="n">AffineLoadOp</span><span class="w"> </span><span class="n">o</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                    </span><span class="k">auto</span><span class="w"> </span><span class="n">og</span><span class="w"> </span><span class="o">=</span>
+<span class="w">                        </span><span class="n">o</span><span class="p">.</span><span class="n">getMemRef</span><span class="p">().</span><span class="n">getDefiningOp</span><span class="o">&lt;</span><span class="n">memref</span><span class="o">::</span><span class="n">GetGlobalOp</span><span class="o">&gt;</span><span class="p">();</span>
+<span class="w">                    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">og</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">og</span><span class="p">.</span><span class="n">getName</span><span class="p">()</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">g</span><span class="p">.</span><span class="n">getSymName</span><span class="p">()</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">o</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">ld</span><span class="p">)</span>
+<span class="w">                        </span><span class="k">return</span><span class="p">;</span>
+<span class="w">                    </span><span class="n">SmallVector</span><span class="o">&lt;</span><span class="n">Operation</span><span class="o">*&gt;</span><span class="w"> </span><span class="n">oc</span><span class="p">;</span>
+<span class="w">                    </span><span class="n">chainOf</span><span class="p">(</span><span class="n">o</span><span class="p">,</span><span class="w"> </span><span class="n">oc</span><span class="p">);</span>
+<span class="w">                    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">oc</span><span class="p">.</span><span class="n">empty</span><span class="p">()</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="o">!</span><span class="n">sameChain</span><span class="p">(</span><span class="n">chain</span><span class="p">,</span><span class="w"> </span><span class="n">oc</span><span class="p">))</span>
+<span class="w">                        </span><span class="n">readersUniform</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="w">                    </span><span class="k">else</span>
+<span class="w">                        </span><span class="n">peers</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">o</span><span class="p">);</span>
+<span class="w">                </span><span class="p">});</span>
+<span class="w">                </span><span class="n">SmallVector</span><span class="o">&lt;</span><span class="n">affine</span><span class="o">::</span><span class="n">AffineStoreOp</span><span class="o">&gt;</span><span class="w"> </span><span class="n">prodStores</span><span class="p">;</span>
+<span class="w">                </span><span class="kt">bool</span><span class="w"> </span><span class="n">allCopies</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">readersUniform</span><span class="p">;</span>
+<span class="w">                </span><span class="n">fn</span><span class="p">.</span><span class="n">walk</span><span class="p">([</span><span class="o">&amp;</span><span class="p">](</span><span class="n">affine</span><span class="o">::</span><span class="n">AffineStoreOp</span><span class="w"> </span><span class="n">st</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                    </span><span class="k">auto</span><span class="w"> </span><span class="n">sg</span><span class="w"> </span><span class="o">=</span>
+<span class="w">                        </span><span class="n">st</span><span class="p">.</span><span class="n">getMemRef</span><span class="p">().</span><span class="n">getDefiningOp</span><span class="o">&lt;</span><span class="n">memref</span><span class="o">::</span><span class="n">GetGlobalOp</span><span class="o">&gt;</span><span class="p">();</span>
+<span class="w">                    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">sg</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">sg</span><span class="p">.</span><span class="n">getName</span><span class="p">()</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">g</span><span class="p">.</span><span class="n">getSymName</span><span class="p">())</span><span class="w"> </span><span class="k">return</span><span class="p">;</span>
+<span class="w">                    </span><span class="c1">// Any stored value works — the chain is applied to it, so</span>
+<span class="w">                    </span><span class="c1">// the buffer uniformly holds prepared values. That includes</span>
+<span class="w">                    </span><span class="c1">// the zero-FILL a stage does before the gather (`chain(0)`,</span>
+<span class="w">                    </span><span class="c1">// folded at compile time), which is why requiring a plain</span>
+<span class="w">                    </span><span class="c1">// load never fired: im2col scratch is zeroed first. The one</span>
+<span class="w">                    </span><span class="c1">// thing we cannot fold into is a store from the reduction</span>
+<span class="w">                    </span><span class="c1">// itself.</span>
+<span class="w">                    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">red</span><span class="o">-&gt;</span><span class="n">isAncestor</span><span class="p">(</span><span class="n">st</span><span class="p">))</span>
+<span class="w">                        </span><span class="n">allCopies</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="w">                    </span><span class="k">else</span>
+<span class="w">                        </span><span class="n">prodStores</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">st</span><span class="p">);</span>
+<span class="w">                </span><span class="p">});</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">allCopies</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="o">!</span><span class="n">prodStores</span><span class="p">.</span><span class="n">empty</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">affine</span><span class="o">::</span><span class="n">AffineStoreOp</span><span class="w"> </span><span class="n">ps</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">prodStores</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                        </span><span class="n">OpBuilder</span><span class="w"> </span><span class="n">pb</span><span class="p">(</span><span class="n">ps</span><span class="p">);</span>
+<span class="w">                        </span><span class="n">IRMapping</span><span class="w"> </span><span class="n">pm</span><span class="p">;</span>
+<span class="w">                        </span><span class="n">pm</span><span class="p">.</span><span class="n">map</span><span class="p">(</span><span class="n">ld</span><span class="p">.</span><span class="n">getResult</span><span class="p">(),</span><span class="w"> </span><span class="n">ps</span><span class="p">.</span><span class="n">getValueToStore</span><span class="p">());</span>
+<span class="w">                        </span><span class="n">Value</span><span class="w"> </span><span class="n">plast</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ps</span><span class="p">.</span><span class="n">getValueToStore</span><span class="p">();</span>
+<span class="w">                        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">Operation</span><span class="o">*</span><span class="w"> </span><span class="n">op</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">chain</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                            </span><span class="n">Operation</span><span class="o">*</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">pb</span><span class="p">.</span><span class="n">clone</span><span class="p">(</span><span class="o">*</span><span class="n">op</span><span class="p">,</span><span class="w"> </span><span class="n">pm</span><span class="p">);</span>
+<span class="w">                            </span><span class="n">pm</span><span class="p">.</span><span class="n">map</span><span class="p">(</span><span class="n">op</span><span class="o">-&gt;</span><span class="n">getResult</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span><span class="w"> </span><span class="n">c</span><span class="o">-&gt;</span><span class="n">getResult</span><span class="p">(</span><span class="mi">0</span><span class="p">));</span>
+<span class="w">                            </span><span class="n">plast</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">c</span><span class="o">-&gt;</span><span class="n">getResult</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+<span class="w">                        </span><span class="p">}</span>
+<span class="w">                        </span><span class="n">ps</span><span class="p">.</span><span class="n">getValueMutable</span><span class="p">().</span><span class="n">assign</span><span class="p">(</span><span class="n">plast</span><span class="p">);</span>
+<span class="w">                    </span><span class="p">}</span>
+<span class="w">                    </span><span class="n">chain</span><span class="p">.</span><span class="n">back</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">getResult</span><span class="p">(</span><span class="mi">0</span><span class="p">).</span><span class="n">replaceAllUsesWith</span><span class="p">(</span>
+<span class="w">                        </span><span class="n">ld</span><span class="p">.</span><span class="n">getResult</span><span class="p">());</span>
+<span class="w">                    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">Operation</span><span class="o">*</span><span class="w"> </span><span class="n">op</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">llvm</span><span class="o">::</span><span class="n">reverse</span><span class="p">(</span><span class="n">chain</span><span class="p">))</span><span class="w"> </span><span class="n">op</span><span class="o">-&gt;</span><span class="n">erase</span><span class="p">();</span>
+<span class="w">                    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">affine</span><span class="o">::</span><span class="n">AffineLoadOp</span><span class="w"> </span><span class="n">pl</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">peers</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                        </span><span class="n">SmallVector</span><span class="o">&lt;</span><span class="n">Operation</span><span class="o">*&gt;</span><span class="w"> </span><span class="n">pc</span><span class="p">;</span>
+<span class="w">                        </span><span class="n">chainOf</span><span class="p">(</span><span class="n">pl</span><span class="p">,</span><span class="w"> </span><span class="n">pc</span><span class="p">);</span>
+<span class="w">                        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">pc</span><span class="p">.</span><span class="n">empty</span><span class="p">())</span><span class="w"> </span><span class="k">continue</span><span class="p">;</span>
+<span class="w">                        </span><span class="n">pc</span><span class="p">.</span><span class="n">back</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">getResult</span><span class="p">(</span><span class="mi">0</span><span class="p">).</span><span class="n">replaceAllUsesWith</span><span class="p">(</span>
+<span class="w">                            </span><span class="n">pl</span><span class="p">.</span><span class="n">getResult</span><span class="p">());</span>
+<span class="w">                        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">Operation</span><span class="o">*</span><span class="w"> </span><span class="n">op</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">llvm</span><span class="o">::</span><span class="n">reverse</span><span class="p">(</span><span class="n">pc</span><span class="p">))</span><span class="w"> </span><span class="n">op</span><span class="o">-&gt;</span><span class="n">erase</span><span class="p">();</span>
+<span class="w">                    </span><span class="p">}</span>
+<span class="w">                    </span><span class="k">continue</span><span class="p">;</span>
+<span class="w">                </span><span class="p">}</span>
+
+<span class="w">                </span><span class="c1">// Otherwise: emit, immediately before the enclosing nest, a</span>
+<span class="w">                </span><span class="c1">// pass over the whole array applying the chain into a SEPARATE</span>
+<span class="w">                </span><span class="c1">// buffer: dst[i] = chain(src[i]). NOT in place: an in-place</span>
+<span class="w">                </span><span class="c1">// nest streams the same array through an input and an output</span>
+<span class="w">                </span><span class="c1">// memory node at once, and the fabric's two nodes then race on</span>
+<span class="w">                </span><span class="c1">// the same memory — the read side runs ahead of the write side</span>
+<span class="w">                </span><span class="c1">// and the config returns corrupted data. (That is what an</span>
+<span class="w">                </span><span class="c1">// earlier in-place version of this pass produced, and it looks</span>
+<span class="w">                </span><span class="c1">// exactly like the bug it was meant to fix.)</span>
+<span class="w">                </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">dstName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">g</span><span class="p">.</span><span class="n">getSymName</span><span class="p">()</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">"_unpacked"</span><span class="p">).</span><span class="n">str</span><span class="p">();</span>
+<span class="w">                </span><span class="k">auto</span><span class="w"> </span><span class="n">module2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">fn</span><span class="o">-&gt;</span><span class="n">getParentOfType</span><span class="o">&lt;</span><span class="n">ModuleOp</span><span class="o">&gt;</span><span class="p">();</span>
+<span class="w">                </span><span class="n">memref</span><span class="o">::</span><span class="n">GlobalOp</span><span class="w"> </span><span class="n">dst</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dyn_cast_or_null</span><span class="o">&lt;</span><span class="n">memref</span><span class="o">::</span><span class="n">GlobalOp</span><span class="o">&gt;</span><span class="p">(</span>
+<span class="w">                    </span><span class="n">SymbolTable</span><span class="o">::</span><span class="n">lookupSymbolIn</span><span class="p">(</span><span class="n">module2</span><span class="p">,</span><span class="w"> </span><span class="n">dstName</span><span class="p">));</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">dst</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                    </span><span class="n">OpBuilder</span><span class="w"> </span><span class="n">gb</span><span class="p">(</span><span class="n">module2</span><span class="p">.</span><span class="n">getBodyRegion</span><span class="p">());</span>
+<span class="w">                    </span><span class="n">gb</span><span class="p">.</span><span class="n">setInsertionPointToStart</span><span class="p">(</span><span class="n">module2</span><span class="p">.</span><span class="n">getBody</span><span class="p">());</span>
+<span class="w">                    </span><span class="k">auto</span><span class="w"> </span><span class="n">zero</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DenseElementsAttr</span><span class="o">::</span><span class="n">get</span><span class="p">(</span>
+<span class="w">                        </span><span class="n">RankedTensorType</span><span class="o">::</span><span class="n">get</span><span class="p">(</span>
+<span class="w">                            </span><span class="n">ty</span><span class="p">.</span><span class="n">getShape</span><span class="p">(),</span>
+<span class="w">                            </span><span class="n">ty</span><span class="p">.</span><span class="n">getElementType</span><span class="p">()),</span>
+<span class="w">                        </span><span class="n">gb</span><span class="p">.</span><span class="n">getZeroAttr</span><span class="p">(</span><span class="n">ty</span><span class="p">.</span><span class="n">getElementType</span><span class="p">()));</span>
+<span class="w">                    </span><span class="n">dst</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">memref</span><span class="o">::</span><span class="n">GlobalOp</span><span class="o">::</span><span class="n">create</span><span class="p">(</span>
+<span class="w">                        </span><span class="n">gb</span><span class="p">,</span>
+<span class="w">                        </span><span class="n">g</span><span class="p">.</span><span class="n">getLoc</span><span class="p">(),</span>
+<span class="w">                        </span><span class="n">StringRef</span><span class="p">(</span><span class="n">dstName</span><span class="p">),</span>
+<span class="w">                        </span><span class="n">gb</span><span class="p">.</span><span class="n">getStringAttr</span><span class="p">(</span><span class="s">"private"</span><span class="p">),</span>
+<span class="w">                        </span><span class="n">ty</span><span class="p">,</span>
+<span class="w">                        </span><span class="n">cast</span><span class="o">&lt;</span><span class="n">Attribute</span><span class="o">&gt;</span><span class="p">(</span><span class="n">zero</span><span class="p">),</span>
+<span class="w">                        </span><span class="cm">/*constant=*/</span><span class="nb">false</span><span class="p">,</span>
+<span class="w">                        </span><span class="n">IntegerAttr</span><span class="p">());</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">                </span><span class="n">affine</span><span class="o">::</span><span class="n">AffineForOp</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">red</span><span class="p">;</span>
+<span class="w">                </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">root</span><span class="o">-&gt;</span><span class="n">getParentOfType</span><span class="o">&lt;</span><span class="n">affine</span><span class="o">::</span><span class="n">AffineForOp</span><span class="o">&gt;</span><span class="p">())</span>
+<span class="w">                    </span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p</span><span class="p">;</span>
+<span class="w">                </span><span class="n">OpBuilder</span><span class="w"> </span><span class="n">b</span><span class="p">(</span><span class="n">root</span><span class="p">);</span>
+<span class="w">                </span><span class="n">Location</span><span class="w"> </span><span class="n">loc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">red</span><span class="p">.</span><span class="n">getLoc</span><span class="p">();</span>
+
+<span class="w">                </span><span class="c1">// The buffer reference has to be a value of the ENCLOSING</span>
+<span class="w">                </span><span class="c1">// function, created before the nest — not inside the loop body.</span>
+<span class="w">                </span><span class="c1">// --annotate-to-cgra takes a nest's streams from the memrefs it</span>
+<span class="w">                </span><span class="c1">// uses that are defined outside it, so a memref.get_global</span>
+<span class="w">                </span><span class="c1">// emitted in the innermost body ends up inside the cgra.deploy</span>
+<span class="w">                </span><span class="c1">// region and is never recognised as a stream. The fabric then</span>
+<span class="w">                </span><span class="c1">// runs the nest with no output memory node bound:</span>
+<span class="w">                </span><span class="c1">// `im2col_buf_unpacked` came back all-zero on device (checksum</span>
+<span class="w">                </span><span class="c1">// 0 against a non-zero reference), the reduction read zeros,</span>
+<span class="w">                </span><span class="c1">// and every output of residual_small saturated to -128.</span>
+<span class="w">                </span><span class="n">Value</span><span class="w"> </span><span class="n">dstRef</span><span class="w"> </span><span class="o">=</span>
+<span class="w">                    </span><span class="n">memref</span><span class="o">::</span><span class="n">GetGlobalOp</span><span class="o">::</span><span class="n">create</span><span class="p">(</span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="n">loc</span><span class="p">,</span><span class="w"> </span><span class="n">ty</span><span class="p">,</span><span class="w"> </span><span class="n">dst</span><span class="p">.</span><span class="n">getSymName</span><span class="p">());</span>
+
+<span class="w">                </span><span class="n">SmallVector</span><span class="o">&lt;</span><span class="n">affine</span><span class="o">::</span><span class="n">AffineForOp</span><span class="o">&gt;</span><span class="w"> </span><span class="n">loops</span><span class="p">;</span>
+<span class="w">                </span><span class="n">SmallVector</span><span class="o">&lt;</span><span class="n">Value</span><span class="o">&gt;</span><span class="w"> </span><span class="n">ivs</span><span class="p">;</span>
+<span class="w">                </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int64_t</span><span class="w"> </span><span class="n">d</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">ty</span><span class="p">.</span><span class="n">getShape</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                    </span><span class="k">auto</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">affine</span><span class="o">::</span><span class="n">AffineForOp</span><span class="o">::</span><span class="n">create</span><span class="p">(</span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="n">loc</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">d</span><span class="p">);</span>
+<span class="w">                    </span><span class="n">loops</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">f</span><span class="p">);</span>
+<span class="w">                    </span><span class="n">ivs</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">f</span><span class="p">.</span><span class="n">getInductionVar</span><span class="p">());</span>
+<span class="w">                    </span><span class="n">b</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">OpBuilder</span><span class="o">::</span><span class="n">atBlockBegin</span><span class="p">(</span><span class="n">f</span><span class="p">.</span><span class="n">getBody</span><span class="p">());</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">                </span><span class="n">Value</span><span class="w"> </span><span class="n">src</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">affine</span><span class="o">::</span><span class="n">AffineLoadOp</span><span class="o">::</span><span class="n">create</span><span class="p">(</span>
+<span class="w">                    </span><span class="n">b</span><span class="p">,</span>
+<span class="w">                    </span><span class="n">loc</span><span class="p">,</span>
+<span class="w">                    </span><span class="n">ld</span><span class="p">.</span><span class="n">getMemRef</span><span class="p">(),</span>
+<span class="w">                    </span><span class="n">b</span><span class="p">.</span><span class="n">getMultiDimIdentityMap</span><span class="p">(</span><span class="n">ty</span><span class="p">.</span><span class="n">getRank</span><span class="p">()),</span>
+<span class="w">                    </span><span class="n">ivs</span><span class="p">);</span>
+<span class="w">                </span><span class="n">IRMapping</span><span class="w"> </span><span class="n">m</span><span class="p">;</span>
+<span class="w">                </span><span class="n">m</span><span class="p">.</span><span class="n">map</span><span class="p">(</span><span class="n">ld</span><span class="p">.</span><span class="n">getResult</span><span class="p">(),</span><span class="w"> </span><span class="n">src</span><span class="p">);</span>
+<span class="w">                </span><span class="n">Value</span><span class="w"> </span><span class="n">last</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">src</span><span class="p">;</span>
+<span class="w">                </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">Operation</span><span class="o">*</span><span class="w"> </span><span class="n">op</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">chain</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                    </span><span class="n">Operation</span><span class="o">*</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">b</span><span class="p">.</span><span class="n">clone</span><span class="p">(</span><span class="o">*</span><span class="n">op</span><span class="p">,</span><span class="w"> </span><span class="n">m</span><span class="p">);</span>
+<span class="w">                    </span><span class="n">m</span><span class="p">.</span><span class="n">map</span><span class="p">(</span><span class="n">op</span><span class="o">-&gt;</span><span class="n">getResult</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span><span class="w"> </span><span class="n">c</span><span class="o">-&gt;</span><span class="n">getResult</span><span class="p">(</span><span class="mi">0</span><span class="p">));</span>
+<span class="w">                    </span><span class="n">last</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">c</span><span class="o">-&gt;</span><span class="n">getResult</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">                </span><span class="n">affine</span><span class="o">::</span><span class="n">AffineStoreOp</span><span class="o">::</span><span class="n">create</span><span class="p">(</span>
+<span class="w">                    </span><span class="n">b</span><span class="p">,</span>
+<span class="w">                    </span><span class="n">loc</span><span class="p">,</span>
+<span class="w">                    </span><span class="n">last</span><span class="p">,</span>
+<span class="w">                    </span><span class="n">dstRef</span><span class="p">,</span>
+<span class="w">                    </span><span class="n">b</span><span class="p">.</span><span class="n">getMultiDimIdentityMap</span><span class="p">(</span><span class="n">ty</span><span class="p">.</span><span class="n">getRank</span><span class="p">()),</span>
+<span class="w">                    </span><span class="n">ivs</span><span class="p">);</span>
+
+<span class="w">                </span><span class="c1">// …and point the reduction at the prepared buffer, dropping the</span>
+<span class="w">                </span><span class="c1">// chain. Same rule as above: this reference is created before</span>
+<span class="w">                </span><span class="c1">// the reduction's OUTERMOST loop, so it is a stream of that</span>
+<span class="w">                </span><span class="c1">// nest rather than a value buried inside the deploy region.</span>
+<span class="w">                </span><span class="c1">// Built at `root` (which now follows the unpack nest) it still</span>
+<span class="w">                </span><span class="c1">// dominates every use.</span>
+<span class="w">                </span><span class="n">OpBuilder</span><span class="w"> </span><span class="n">rb</span><span class="p">(</span><span class="n">root</span><span class="p">);</span>
+<span class="w">                </span><span class="n">Value</span><span class="w"> </span><span class="n">newRef</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">memref</span><span class="o">::</span><span class="n">GetGlobalOp</span><span class="o">::</span><span class="n">create</span><span class="p">(</span>
+<span class="w">                    </span><span class="n">rb</span><span class="p">,</span>
+<span class="w">                    </span><span class="n">ld</span><span class="p">.</span><span class="n">getLoc</span><span class="p">(),</span>
+<span class="w">                    </span><span class="n">ty</span><span class="p">,</span>
+<span class="w">                    </span><span class="n">dst</span><span class="p">.</span><span class="n">getSymName</span><span class="p">());</span>
+<span class="w">                </span><span class="n">ld</span><span class="p">.</span><span class="n">getMemrefMutable</span><span class="p">().</span><span class="n">assign</span><span class="p">(</span><span class="n">newRef</span><span class="p">);</span>
+<span class="w">                </span><span class="n">chain</span><span class="p">.</span><span class="n">back</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">getResult</span><span class="p">(</span><span class="mi">0</span><span class="p">).</span><span class="n">replaceAllUsesWith</span><span class="p">(</span><span class="n">ld</span><span class="p">.</span><span class="n">getResult</span><span class="p">());</span>
+<span class="w">                </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">Operation</span><span class="o">*</span><span class="w"> </span><span class="n">op</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">llvm</span><span class="o">::</span><span class="n">reverse</span><span class="p">(</span><span class="n">chain</span><span class="p">))</span><span class="w"> </span><span class="n">op</span><span class="o">-&gt;</span><span class="n">erase</span><span class="p">();</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">};</span>
+<span class="p">}</span><span class="w"> </span><span class="c1">// namespace</span>
+
+<span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">mlir</span><span class="o">::</span><span class="n">Pass</span><span class="o">&gt;</span><span class="w"> </span><span class="n">mlir</span><span class="o">::</span><span class="n">cgra</span><span class="o">::</span><span class="n">createCGRAHoistReductionUnpackPass</span><span class="p">()</span>
+<span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">make_unique</span><span class="o">&lt;</span><span class="n">CGRAHoistReductionUnpackPass</span><span class="o">&gt;</span><span class="p">();</span><span class="w"> </span><span class="p">}</span>
+</pre></div>
+</div>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

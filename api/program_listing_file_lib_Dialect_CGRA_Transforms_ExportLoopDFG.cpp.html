@@ -1,0 +1,1009 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Program Listing for File ExportLoopDFG.cpp &mdash; picea 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/collapsible-lists/css/tree_view.css?v=a885cde7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js?v=73120307"></script>
+      <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js?v=660e4f45"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            picea
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Installation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../README.html">About the project</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#guides">Guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#related-projects">Related projects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#development-environment-nix">Development Environment (Nix)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#build-on-ubuntu-24-04-no-nix">Build on Ubuntu 24.04 (no Nix)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#gurobi-license">Gurobi license</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#installing">Installing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#run-the-tests">Run the tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#build-the-documentation">Build the documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#compiling-a-design">Compiling a design</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#running-a-design-on-the-board">Running a design on the board</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#exporting-a-profiled-application-to-mocasin">Exporting a profiled application to Mocasin</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Guides</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../guides/laksa.html">The FPGA Variant using LAKSA backend</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/cgra.html">The CGRA Variant</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">MLIR Dialects</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/Base2Ops.html">‘base2’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/CGRAOps.html">‘cgra’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/DFGOps.html">‘dfg’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/EmitHLSOps.html">‘emithls’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/FilterOps.html">‘filter’ Dialect</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Passes</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/PICEAConversionPasses.html">PICEA Conversion Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/CGRAPasses.html">CGRA Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/DFGPasses.html">DFG Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/EmitHLSPasses.html">Emit HLS Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/FuncExtPasses.html">Func Ext Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/LinalgExtPasses.html">Linalg Ext Passes</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">C++ API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="library_root.html">C++ API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">picea</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Program Listing for File ExportLoopDFG.cpp</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/program_listing_file_lib_Dialect_CGRA_Transforms_ExportLoopDFG.cpp.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="program-listing-for-file-exportloopdfg-cpp">
+<span id="program-listing-file-lib-dialect-cgra-transforms-exportloopdfg-cpp"></span><h1>Program Listing for File ExportLoopDFG.cpp<a class="headerlink" href="#program-listing-for-file-exportloopdfg-cpp" title="Link to this heading"></a></h1>
+<p>↰ <a class="reference internal" href="file_lib_Dialect_CGRA_Transforms_ExportLoopDFG.cpp.html#file-lib-dialect-cgra-transforms-exportloopdfg-cpp"><span class="std std-ref">Return to documentation for file</span></a> (<code class="docutils literal notranslate"><span class="pre">lib/Dialect/CGRA/Transforms/ExportLoopDFG.cpp</span></code>)</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="c1">//===- ExportLoopDFG.cpp - CGRA DFG .dot export for affine.for loops ------===//</span>
+<span class="c1">//</span>
+<span class="c1">// For each innermost affine.for loop that contains arith computation ops (no</span>
+<span class="c1">// nested loops, no llvm.call), builds a CGRA dataflow graph and writes it to</span>
+<span class="c1">// a .dot file.  Mirrors the behaviour of mlir_loops_to_dot.py but operates</span>
+<span class="c1">// directly on the MLIR IR instead of parsing text via regex.</span>
+<span class="c1">//</span>
+<span class="c1">// Pass option:</span>
+<span class="c1">//   --output-dir=&lt;path&gt;   directory for .dot files (default: "dot_results")</span>
+<span class="c1">//</span>
+<span class="c1">//===----------------------------------------------------------------------===//</span>
+
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"mlir/Dialect/Affine/IR/AffineOps.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"mlir/Dialect/Arith/IR/Arith.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"mlir/Dialect/LLVMIR/LLVMDialect.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"mlir/Dialect/MemRef/IR/MemRef.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"mlir/IR/BuiltinOps.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"mlir/IR/Matchers.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"mlir/Pass/Pass.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"picea-mlir/Dialect/CGRA/IR/CGRA.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"picea-mlir/Dialect/CGRA/Transforms/CGRAAnalysisUtils.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"picea-mlir/Dialect/CGRA/Transforms/Passes.h"</span>
+
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"llvm/ADT/DenseMap.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"llvm/ADT/DenseSet.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"llvm/Support/FileSystem.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"llvm/Support/raw_ostream.h"</span>
+
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;algorithm&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;limits&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;string&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;vector&gt;</span>
+
+<span class="k">using</span><span class="w"> </span><span class="k">namespace</span><span class="w"> </span><span class="nn">mlir</span><span class="p">;</span>
+
+<span class="k">namespace</span><span class="w"> </span><span class="p">{</span>
+
+<span class="c1">// ─── DFG layout constants (must match mlir_loops_to_dot.py) ─────────────────</span>
+<span class="k">static</span><span class="w"> </span><span class="k">constexpr</span><span class="w"> </span><span class="kt">uint64_t</span><span class="w"> </span><span class="n">BASE_IN</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mh">0x200</span><span class="p">;</span>
+<span class="k">static</span><span class="w"> </span><span class="k">constexpr</span><span class="w"> </span><span class="kt">uint64_t</span><span class="w"> </span><span class="n">BASE_OUT</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mh">0x400</span><span class="p">;</span>
+<span class="k">static</span><span class="w"> </span><span class="k">constexpr</span><span class="w"> </span><span class="kt">uint64_t</span><span class="w"> </span><span class="n">STRIDE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">4</span><span class="p">;</span>
+
+<span class="c1">// ─── Ordered attribute list ──────────────────────────────────────────────────</span>
+<span class="k">using</span><span class="w"> </span><span class="n">Attrs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">pair</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;&gt;</span><span class="p">;</span>
+
+<span class="k">static</span><span class="w"> </span><span class="n">Attrs</span><span class="w"> </span><span class="nf">inputAttrs</span><span class="p">(</span><span class="kt">uint64_t</span><span class="w"> </span><span class="n">addr</span><span class="p">,</span><span class="w"> </span><span class="kt">int64_t</span><span class="w"> </span><span class="n">size</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="p">{</span><span class="s">"address"</span><span class="p">,</span><span class="w"> </span><span class="s">"</span><span class="se">\"</span><span class="s">0x"</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">llvm</span><span class="o">::</span><span class="n">utohexstr</span><span class="p">(</span><span class="n">addr</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">"</span><span class="se">\"</span><span class="s">"</span><span class="p">},</span>
+<span class="w">        </span><span class="p">{</span><span class="w"> </span><span class="s">"stride"</span><span class="p">,</span><span class="w">                </span><span class="n">std</span><span class="o">::</span><span class="n">to_string</span><span class="p">(</span><span class="n">STRIDE</span><span class="p">)},</span>
+<span class="w">        </span><span class="p">{</span><span class="w">   </span><span class="s">"size"</span><span class="p">,</span><span class="w">                  </span><span class="n">std</span><span class="o">::</span><span class="n">to_string</span><span class="p">(</span><span class="n">size</span><span class="p">)},</span>
+<span class="w">        </span><span class="p">{</span><span class="w"> </span><span class="s">"border"</span><span class="p">,</span><span class="w">                               </span><span class="s">"north"</span><span class="p">}</span>
+<span class="w">    </span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="k">static</span><span class="w"> </span><span class="n">Attrs</span><span class="w"> </span><span class="nf">outputAttrs</span><span class="p">(</span><span class="kt">uint64_t</span><span class="w"> </span><span class="n">addr</span><span class="p">,</span><span class="w"> </span><span class="kt">int64_t</span><span class="w"> </span><span class="n">size</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="p">{</span><span class="s">"address"</span><span class="p">,</span><span class="w"> </span><span class="s">"</span><span class="se">\"</span><span class="s">0x"</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">llvm</span><span class="o">::</span><span class="n">utohexstr</span><span class="p">(</span><span class="n">addr</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">"</span><span class="se">\"</span><span class="s">"</span><span class="p">},</span>
+<span class="w">        </span><span class="p">{</span><span class="w">   </span><span class="s">"size"</span><span class="p">,</span><span class="w">                  </span><span class="n">std</span><span class="o">::</span><span class="n">to_string</span><span class="p">(</span><span class="n">size</span><span class="p">)},</span>
+<span class="w">        </span><span class="p">{</span><span class="w"> </span><span class="s">"border"</span><span class="p">,</span><span class="w">                               </span><span class="s">"south"</span><span class="p">}</span>
+<span class="w">    </span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="k">static</span><span class="w"> </span><span class="n">Attrs</span><span class="w"> </span><span class="nf">fuAttrs</span><span class="p">(</span>
+<span class="w">    </span><span class="kt">int64_t</span><span class="w"> </span><span class="n">feedback</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">    </span><span class="kt">int64_t</span><span class="w"> </span><span class="n">constant</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">    </span><span class="kt">int64_t</span><span class="w"> </span><span class="n">cfi</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">    </span><span class="kt">int64_t</span><span class="w"> </span><span class="n">delay</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="p">{</span><span class="w">         </span><span class="s">"feedback"</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">to_string</span><span class="p">(</span><span class="n">feedback</span><span class="p">)},</span>
+<span class="w">        </span><span class="p">{</span><span class="w">         </span><span class="s">"constant"</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">to_string</span><span class="p">(</span><span class="n">constant</span><span class="p">)},</span>
+<span class="w">        </span><span class="p">{</span><span class="s">"constant_fu_input"</span><span class="p">,</span><span class="w">      </span><span class="n">std</span><span class="o">::</span><span class="n">to_string</span><span class="p">(</span><span class="n">cfi</span><span class="p">)},</span>
+<span class="w">        </span><span class="p">{</span><span class="w">    </span><span class="s">"initial_value"</span><span class="p">,</span><span class="w">                      </span><span class="s">"0"</span><span class="p">},</span>
+<span class="w">        </span><span class="p">{</span><span class="w">    </span><span class="s">"initial_valid"</span><span class="p">,</span><span class="w">                      </span><span class="s">"0"</span><span class="p">},</span>
+<span class="w">        </span><span class="p">{</span><span class="w">      </span><span class="s">"delay_value"</span><span class="p">,</span><span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">to_string</span><span class="p">(</span><span class="n">delay</span><span class="p">)}</span>
+<span class="w">    </span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="c1">// ─── DFG node / edge ─────────────────────────────────────────────────────────</span>
+<span class="k">enum</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">NodeKind</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">Input</span><span class="p">,</span><span class="w"> </span><span class="n">Output</span><span class="p">,</span><span class="w"> </span><span class="n">FU</span><span class="w"> </span><span class="p">};</span>
+
+<span class="k">struct</span><span class="w"> </span><span class="nc">DFGNode</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">name</span><span class="p">;</span>
+<span class="w">    </span><span class="n">NodeKind</span><span class="w"> </span><span class="n">kind</span><span class="p">;</span>
+<span class="w">    </span><span class="n">Attrs</span><span class="w"> </span><span class="n">attrs</span><span class="p">;</span>
+<span class="p">};</span>
+<span class="k">struct</span><span class="w"> </span><span class="nc">DFGEdge</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">src</span><span class="p">,</span><span class="w"> </span><span class="n">dst</span><span class="p">;</span>
+<span class="w">    </span><span class="n">Attrs</span><span class="w"> </span><span class="n">attrs</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="k">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">emitNode</span><span class="p">(</span><span class="n">llvm</span><span class="o">::</span><span class="n">raw_ostream</span><span class="w"> </span><span class="o">&amp;</span><span class="n">os</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">DFGNode</span><span class="w"> </span><span class="o">&amp;</span><span class="n">n</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">os</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">n</span><span class="p">.</span><span class="n">name</span><span class="p">;</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="o">&amp;</span><span class="p">[</span><span class="n">k</span><span class="p">,</span><span class="w"> </span><span class="n">v</span><span class="p">]</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">n</span><span class="p">.</span><span class="n">attrs</span><span class="p">)</span><span class="w"> </span><span class="n">os</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"["</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">k</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"="</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"]"</span><span class="p">;</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">n</span><span class="p">.</span><span class="n">kind</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">NodeKind</span><span class="o">::</span><span class="n">FU</span><span class="p">)</span><span class="w"> </span><span class="n">os</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">";"</span><span class="p">;</span>
+<span class="w">    </span><span class="n">os</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c1">// Operand-order attributes for a NON-COMMUTATIVE FU (sub, shifts). Without them</span>
+<span class="c1">// map2bitstream assigns the two FU input slots by SORTING the producer names,</span>
+<span class="c1">// which is arbitrary: `sub0` fed by {mul0, input1} sorts to `input1 - mul0`</span>
+<span class="c1">// (wrong) while `sub1` fed by {add0, input3} sorts to `add0 - input3` (right) —</span>
+<span class="c1">// the operand order then depends on the node names the mapper happens to</span>
+<span class="c1">// produce. Emitting the order explicitly makes the encoding independent of</span>
+<span class="c1">// naming and placement.</span>
+<span class="k">static</span><span class="w"> </span><span class="n">Attrs</span><span class="w"> </span><span class="nf">operandAttr</span><span class="p">(</span><span class="kt">unsigned</span><span class="w"> </span><span class="n">idx</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="p">{</span><span class="s">"operand"</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">to_string</span><span class="p">(</span><span class="n">idx</span><span class="p">)}</span>
+<span class="w">    </span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="k">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">emitEdge</span><span class="p">(</span><span class="n">llvm</span><span class="o">::</span><span class="n">raw_ostream</span><span class="w"> </span><span class="o">&amp;</span><span class="n">os</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">DFGEdge</span><span class="w"> </span><span class="o">&amp;</span><span class="n">e</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">os</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">e</span><span class="p">.</span><span class="n">src</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"-&gt;"</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">e</span><span class="p">.</span><span class="n">dst</span><span class="p">;</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">e</span><span class="p">.</span><span class="n">attrs</span><span class="p">.</span><span class="n">empty</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">os</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">" "</span><span class="p">;</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="o">&amp;</span><span class="p">[</span><span class="n">k</span><span class="p">,</span><span class="w"> </span><span class="n">v</span><span class="p">]</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">e</span><span class="p">.</span><span class="n">attrs</span><span class="p">)</span><span class="w"> </span><span class="n">os</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"["</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">k</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"="</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"]"</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="n">os</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">";</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">writeDot</span><span class="p">(</span>
+<span class="w">    </span><span class="n">llvm</span><span class="o">::</span><span class="n">raw_ostream</span><span class="w"> </span><span class="o">&amp;</span><span class="n">os</span><span class="p">,</span>
+<span class="w">    </span><span class="n">llvm</span><span class="o">::</span><span class="n">ArrayRef</span><span class="o">&lt;</span><span class="n">DFGNode</span><span class="o">&gt;</span><span class="w"> </span><span class="n">nodes</span><span class="p">,</span>
+<span class="w">    </span><span class="n">llvm</span><span class="o">::</span><span class="n">ArrayRef</span><span class="o">&lt;</span><span class="n">DFGEdge</span><span class="o">&gt;</span><span class="w"> </span><span class="n">edges</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">os</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"digraph G {</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="o">&amp;</span><span class="n">n</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">nodes</span><span class="p">)</span><span class="w"> </span><span class="n">emitNode</span><span class="p">(</span><span class="n">os</span><span class="p">,</span><span class="w"> </span><span class="n">n</span><span class="p">);</span>
+<span class="w">    </span><span class="n">os</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="o">&amp;</span><span class="n">e</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">edges</span><span class="p">)</span><span class="w"> </span><span class="n">emitEdge</span><span class="p">(</span><span class="n">os</span><span class="p">,</span><span class="w"> </span><span class="n">e</span><span class="p">);</span>
+<span class="w">    </span><span class="n">os</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"}</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c1">// ─── IR helpers ──────────────────────────────────────────────────────────────</span>
+<span class="k">static</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="nf">tryGetConst</span><span class="p">(</span><span class="n">Value</span><span class="w"> </span><span class="n">v</span><span class="p">,</span><span class="w"> </span><span class="kt">int64_t</span><span class="w"> </span><span class="o">&amp;</span><span class="n">out</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">APInt</span><span class="w"> </span><span class="n">val</span><span class="p">;</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">matchPattern</span><span class="p">(</span><span class="n">v</span><span class="p">,</span><span class="w"> </span><span class="n">m_ConstantInt</span><span class="p">(</span><span class="o">&amp;</span><span class="n">val</span><span class="p">)))</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="w">    </span><span class="n">out</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">val</span><span class="p">.</span><span class="n">getSExtValue</span><span class="p">();</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c1">// Returns the flat element count of a memref. A dynamic (pointer-derived)</span>
+<span class="c1">// dimension has no static extent, so fall back to @p dynFallback — the</span>
+<span class="c1">// enclosing loop's trip count, which is the stream length the fabric actually</span>
+<span class="c1">// consumes. Without this a memref&lt;?xi32&gt; stream reports size 1, and consecutive</span>
+<span class="c1">// input streams are then packed 1 element apart (0x200, 0x204, …) so they</span>
+<span class="c1">// overlap. Number of ELEMENTS a memory node streams from @p v: the product of</span>
+<span class="c1">// the memref's dimensions, not its outermost one.</span>
+<span class="c1">//</span>
+<span class="c1">// Using shape[0] silently mis-sized every rank&gt;1 stream.</span>
+<span class="c1">// `memref&lt;1x10x10x8xi32&gt;` — how a bufferized NHWC activation arrives — declared</span>
+<span class="c1">// **1** where the nest really streams 800, and the generated bitstream then</span>
+<span class="c1">// disagreed with the descriptor the driver programs (the driver sizes streams</span>
+<span class="c1">// from the access pattern, and got 800 right). The consumer FU expects one</span>
+<span class="c1">// token, the memory node pushes 800, the elastic FIFO fills, the node never</span>
+<span class="c1">// reaches its programmed size, and since `exec_done_i = &amp;mn_done` the whole</span>
+<span class="c1">// configuration deadlocks. On residual_small every one of the 6 configurations</span>
+<span class="c1">// with such a stream hung, 6 of 6.</span>
+<span class="c1">//</span>
+<span class="c1">// A dynamic dimension still falls back to the enclosing trip count, and a</span>
+<span class="c1">// rank-1 static memref is unchanged (product == shape[0]), so 1-D kernels are</span>
+<span class="c1">// untouched.</span>
+<span class="k">static</span><span class="w"> </span><span class="kt">int64_t</span><span class="w"> </span><span class="nf">memRefSize</span><span class="p">(</span><span class="n">Value</span><span class="w"> </span><span class="n">v</span><span class="p">,</span><span class="w"> </span><span class="kt">int64_t</span><span class="w"> </span><span class="n">dynFallback</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">auto</span><span class="w"> </span><span class="n">mrt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dyn_cast</span><span class="o">&lt;</span><span class="n">MemRefType</span><span class="o">&gt;</span><span class="p">(</span><span class="n">v</span><span class="p">.</span><span class="n">getType</span><span class="p">());</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">mrt</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">mrt</span><span class="p">.</span><span class="n">getRank</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">dynFallback</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">int64_t</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int64_t</span><span class="w"> </span><span class="n">d</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">mrt</span><span class="p">.</span><span class="n">getShape</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">d</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">ShapedType</span><span class="o">::</span><span class="n">kDynamic</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">dynFallback</span><span class="p">;</span>
+<span class="w">        </span><span class="n">n</span><span class="w"> </span><span class="o">*=</span><span class="w"> </span><span class="n">d</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">n</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">static</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="nf">cmpStr</span><span class="p">(</span><span class="n">arith</span><span class="o">::</span><span class="n">CmpIPredicate</span><span class="w"> </span><span class="n">pred</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">switch</span><span class="w"> </span><span class="p">(</span><span class="n">pred</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="c1">// The hardware spells equality-against-zero "=0" (CGRA.py _HW_CMP_OPS);</span>
+<span class="w">    </span><span class="c1">// "==0" is rejected by map2bitstream. --normalize-cgra-compare leaves</span>
+<span class="w">    </span><span class="c1">// exactly this predicate and "&gt;0", so these two are the only ones that</span>
+<span class="w">    </span><span class="c1">// should ever reach it.</span>
+<span class="w">    </span><span class="k">case</span><span class="w"> </span><span class="no">arith</span><span class="o">::</span><span class="no">CmpIPredicate</span><span class="o">::</span><span class="no">eq</span><span class="p">:</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="s">"=0"</span><span class="p">;</span>
+<span class="w">    </span><span class="k">case</span><span class="w"> </span><span class="no">arith</span><span class="o">::</span><span class="no">CmpIPredicate</span><span class="o">::</span><span class="no">ne</span><span class="p">:</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="s">"!=0"</span><span class="p">;</span>
+<span class="w">    </span><span class="k">case</span><span class="w"> </span><span class="no">arith</span><span class="o">::</span><span class="no">CmpIPredicate</span><span class="o">::</span><span class="no">slt</span><span class="p">:</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="s">"&lt;0"</span><span class="p">;</span>
+<span class="w">    </span><span class="k">case</span><span class="w"> </span><span class="no">arith</span><span class="o">::</span><span class="no">CmpIPredicate</span><span class="o">::</span><span class="no">sle</span><span class="p">:</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="s">"&lt;=0"</span><span class="p">;</span>
+<span class="w">    </span><span class="k">case</span><span class="w"> </span><span class="no">arith</span><span class="o">::</span><span class="no">CmpIPredicate</span><span class="o">::</span><span class="no">sgt</span><span class="p">:</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="s">"&gt;0"</span><span class="p">;</span>
+<span class="w">    </span><span class="k">case</span><span class="w"> </span><span class="no">arith</span><span class="o">::</span><span class="no">CmpIPredicate</span><span class="o">::</span><span class="no">sge</span><span class="p">:</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="s">"&gt;=0"</span><span class="p">;</span>
+<span class="w">    </span><span class="k">case</span><span class="w"> </span><span class="no">arith</span><span class="o">::</span><span class="no">CmpIPredicate</span><span class="o">::</span><span class="no">ult</span><span class="p">:</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="s">"&lt;0"</span><span class="p">;</span>
+<span class="w">    </span><span class="k">case</span><span class="w"> </span><span class="no">arith</span><span class="o">::</span><span class="no">CmpIPredicate</span><span class="o">::</span><span class="no">ule</span><span class="p">:</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="s">"&lt;=0"</span><span class="p">;</span>
+<span class="w">    </span><span class="k">case</span><span class="w"> </span><span class="no">arith</span><span class="o">::</span><span class="no">CmpIPredicate</span><span class="o">::</span><span class="no">ugt</span><span class="p">:</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="s">"&gt;0"</span><span class="p">;</span>
+<span class="w">    </span><span class="k">case</span><span class="w"> </span><span class="no">arith</span><span class="o">::</span><span class="no">CmpIPredicate</span><span class="o">::</span><span class="no">uge</span><span class="p">:</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="s">"&gt;=0"</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">// An innermost computation loop has arith ops, no nested affine.for, no</span>
+<span class="c1">// llvm.call (which marks printf / other host-side calls, not CGRA work).</span>
+<span class="k">static</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="nf">isComputationLoop</span><span class="p">(</span><span class="n">affine</span><span class="o">::</span><span class="n">AffineForOp</span><span class="w"> </span><span class="n">forOp</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="c1">// Only the INNERMOST loop of a nest becomes a DFG (annotate wraps the</span>
+<span class="w">    </span><span class="c1">// OUTERMOST one in the cgra.deploy, so this picks the compute loop inside</span>
+<span class="w">    </span><span class="c1">// it).</span>
+<span class="w">    </span><span class="kt">bool</span><span class="w"> </span><span class="n">nested</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="w">    </span><span class="n">forOp</span><span class="p">.</span><span class="n">walk</span><span class="p">([</span><span class="o">&amp;</span><span class="p">](</span><span class="n">affine</span><span class="o">::</span><span class="n">AffineForOp</span><span class="w"> </span><span class="n">inner</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">inner</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">forOp</span><span class="p">)</span><span class="w"> </span><span class="n">nested</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="w">    </span><span class="p">});</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">nested</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="w">    </span><span class="c1">// Everything else is the SHARED predicate --annotate-to-cgra gates on. It</span>
+<span class="w">    </span><span class="c1">// used to be a second, independent copy here; see cgra::hasFabricArith for</span>
+<span class="w">    </span><span class="c1">// what that cost.</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">cgra</span><span class="o">::</span><span class="n">hasFabricArith</span><span class="p">(</span><span class="n">forOp</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="o">!</span><span class="n">cgra</span><span class="o">::</span><span class="n">hasHostCall</span><span class="p">(</span><span class="n">forOp</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="c1">// ─── DFG builder ─────────────────────────────────────────────────────────────</span>
+<span class="k">struct</span><span class="w"> </span><span class="nc">DFGBuilder</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">llvm</span><span class="o">::</span><span class="n">SmallVector</span><span class="o">&lt;</span><span class="n">DFGNode</span><span class="p">,</span><span class="w"> </span><span class="mi">16</span><span class="o">&gt;</span><span class="w"> </span><span class="n">nodes</span><span class="p">;</span>
+<span class="w">    </span><span class="n">llvm</span><span class="o">::</span><span class="n">SmallVector</span><span class="o">&lt;</span><span class="n">DFGEdge</span><span class="p">,</span><span class="w"> </span><span class="mi">16</span><span class="o">&gt;</span><span class="w"> </span><span class="n">edges</span><span class="p">;</span>
+<span class="w">    </span><span class="n">DenseMap</span><span class="o">&lt;</span><span class="n">Value</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span><span class="w"> </span><span class="n">valMap</span><span class="p">;</span><span class="w"> </span><span class="c1">// SSA value → DFG node name</span>
+<span class="w">    </span><span class="n">DenseSet</span><span class="o">&lt;</span><span class="n">Value</span><span class="o">&gt;</span><span class="w"> </span><span class="n">iterArgs</span><span class="p">;</span><span class="w">            </span><span class="c1">// iter_arg block arguments</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">map</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="o">&gt;</span><span class="w"> </span><span class="n">counters</span><span class="p">;</span><span class="w"> </span><span class="c1">// per-kind node counter</span>
+<span class="w">    </span><span class="kt">uint64_t</span><span class="w"> </span><span class="n">inAddr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">BASE_IN</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">uint64_t</span><span class="w"> </span><span class="n">outAddr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">BASE_OUT</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">outIdx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">bool</span><span class="w"> </span><span class="n">fatal</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span><span class="w"> </span><span class="c1">// an op the exporter must not silently translate</span>
+<span class="w">    </span><span class="kt">bool</span><span class="w"> </span><span class="n">isAccum</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">int64_t</span><span class="w"> </span><span class="n">streamLen</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span><span class="w"> </span><span class="c1">// enclosing loop trip count; size of dynamic streams</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">firstInput</span><span class="p">;</span><span class="w"> </span><span class="c1">// first input node, used as a token source</span>
+
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="nf">fresh</span><span class="p">(</span><span class="n">StringRef</span><span class="w"> </span><span class="n">kind</span><span class="p">)</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">counters</span><span class="p">[</span><span class="n">kind</span><span class="p">.</span><span class="n">str</span><span class="p">()]</span><span class="o">++</span><span class="p">;</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="p">(</span><span class="n">kind</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">llvm</span><span class="o">::</span><span class="n">Twine</span><span class="p">(</span><span class="n">n</span><span class="p">)).</span><span class="n">str</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="c1">// Produce @p c as a real DATA token, for the one case the FU cannot</span>
+<span class="w">    </span><span class="c1">// express: a select whose true AND false operands are both constants, where</span>
+<span class="w">    </span><span class="c1">// the single constant slot can only hold one of them. `x AND 0` turns any</span>
+<span class="w">    </span><span class="c1">// stream token into 0 (one FU); a non-zero constant then needs `OR c` on</span>
+<span class="w">    </span><span class="c1">// top (two). The token comes from the nest's first input node, which</span>
+<span class="w">    </span><span class="c1">// delivers exactly one value per firing, so the materialised constant</span>
+<span class="w">    </span><span class="c1">// arrives in step with the other operands.</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="nf">materialiseConst</span><span class="p">(</span><span class="kt">int64_t</span><span class="w"> </span><span class="n">c</span><span class="p">)</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">firstInput</span><span class="p">.</span><span class="n">empty</span><span class="p">())</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="p">{};</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">z</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">fresh</span><span class="p">(</span><span class="s">"and"</span><span class="p">);</span>
+<span class="w">        </span><span class="n">nodes</span><span class="p">.</span><span class="n">push_back</span><span class="p">({</span><span class="n">z</span><span class="p">,</span><span class="w"> </span><span class="n">NodeKind</span><span class="o">::</span><span class="n">FU</span><span class="p">,</span><span class="w"> </span><span class="n">fuAttrs</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">)});</span><span class="w"> </span><span class="c1">// x &amp; 0 == 0</span>
+<span class="w">        </span><span class="n">edges</span><span class="p">.</span><span class="n">push_back</span><span class="p">({</span><span class="n">firstInput</span><span class="p">,</span><span class="w"> </span><span class="n">z</span><span class="p">,</span><span class="w"> </span><span class="n">operandAttr</span><span class="p">(</span><span class="mi">1</span><span class="p">)});</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">c</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">z</span><span class="p">;</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">k</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">fresh</span><span class="p">(</span><span class="s">"or"</span><span class="p">);</span>
+<span class="w">        </span><span class="n">nodes</span><span class="p">.</span><span class="n">push_back</span><span class="p">({</span><span class="n">k</span><span class="p">,</span><span class="w"> </span><span class="n">NodeKind</span><span class="o">::</span><span class="n">FU</span><span class="p">,</span><span class="w"> </span><span class="n">fuAttrs</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">c</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">)});</span><span class="w"> </span><span class="c1">// 0 | c == c</span>
+<span class="w">        </span><span class="n">edges</span><span class="p">.</span><span class="n">push_back</span><span class="p">({</span><span class="n">z</span><span class="p">,</span><span class="w"> </span><span class="n">k</span><span class="p">,</span><span class="w"> </span><span class="n">operandAttr</span><span class="p">(</span><span class="mi">1</span><span class="p">)});</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">k</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="c1">// Resolves v: returns DFG node name if known, or sets constOut and returns</span>
+<span class="w">    </span><span class="c1">// "" with isConst=true, or returns "" with isConst=false if unknown.</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="nf">resolveOrConst</span><span class="p">(</span><span class="n">Value</span><span class="w"> </span><span class="n">v</span><span class="p">,</span><span class="w"> </span><span class="kt">int64_t</span><span class="w"> </span><span class="o">&amp;</span><span class="n">constOut</span><span class="p">,</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="o">&amp;</span><span class="n">isConst</span><span class="p">)</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="kt">int64_t</span><span class="w"> </span><span class="n">c</span><span class="p">;</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">tryGetConst</span><span class="p">(</span><span class="n">v</span><span class="p">,</span><span class="w"> </span><span class="n">c</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">constOut</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">c</span><span class="p">;</span>
+<span class="w">            </span><span class="n">isConst</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="s">""</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="n">isConst</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="w">        </span><span class="k">auto</span><span class="w"> </span><span class="n">it</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">valMap</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="n">v</span><span class="p">);</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="p">(</span><span class="n">it</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">valMap</span><span class="p">.</span><span class="n">end</span><span class="p">())</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">it</span><span class="o">-&gt;</span><span class="n">second</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="s">""</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="nf">addInputNode</span><span class="p">(</span><span class="n">Value</span><span class="w"> </span><span class="n">result</span><span class="p">,</span><span class="w"> </span><span class="n">Value</span><span class="w"> </span><span class="n">memref</span><span class="p">)</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="kt">int64_t</span><span class="w"> </span><span class="n">sz</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">memRefSize</span><span class="p">(</span><span class="n">memref</span><span class="p">,</span><span class="w"> </span><span class="n">streamLen</span><span class="p">);</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">fresh</span><span class="p">(</span><span class="s">"input"</span><span class="p">);</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">firstInput</span><span class="p">.</span><span class="n">empty</span><span class="p">())</span>
+<span class="w">            </span><span class="n">firstInput</span><span class="w"> </span><span class="o">=</span>
+<span class="w">                </span><span class="n">n</span><span class="p">;</span><span class="w"> </span><span class="c1">// token source for materialiseConst(), see the select case</span>
+<span class="w">        </span><span class="n">nodes</span><span class="p">.</span><span class="n">push_back</span><span class="p">({</span><span class="n">n</span><span class="p">,</span><span class="w"> </span><span class="n">NodeKind</span><span class="o">::</span><span class="n">Input</span><span class="p">,</span><span class="w"> </span><span class="n">inputAttrs</span><span class="p">(</span><span class="n">inAddr</span><span class="p">,</span><span class="w"> </span><span class="n">sz</span><span class="p">)});</span>
+<span class="w">        </span><span class="n">inAddr</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">sz</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">STRIDE</span><span class="p">;</span>
+<span class="w">        </span><span class="n">valMap</span><span class="p">[</span><span class="n">result</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">n</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="nf">addOutputNode</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="o">&amp;</span><span class="n">src</span><span class="p">,</span><span class="w"> </span><span class="kt">int64_t</span><span class="w"> </span><span class="n">size</span><span class="p">)</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"output"</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">to_string</span><span class="p">(</span><span class="n">outIdx</span><span class="o">++</span><span class="p">);</span>
+<span class="w">        </span><span class="n">nodes</span><span class="p">.</span><span class="n">push_back</span><span class="p">({</span><span class="n">n</span><span class="p">,</span><span class="w"> </span><span class="n">NodeKind</span><span class="o">::</span><span class="n">Output</span><span class="p">,</span><span class="w"> </span><span class="n">outputAttrs</span><span class="p">(</span><span class="n">outAddr</span><span class="p">,</span><span class="w"> </span><span class="n">size</span><span class="p">)});</span>
+<span class="w">        </span><span class="n">edges</span><span class="p">.</span><span class="n">push_back</span><span class="p">({</span><span class="n">src</span><span class="p">,</span><span class="w"> </span><span class="n">n</span><span class="p">,</span><span class="w"> </span><span class="p">{}});</span>
+<span class="w">        </span><span class="n">outAddr</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">size</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">STRIDE</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="kt">bool</span><span class="w"> </span><span class="nf">hasInputs</span><span class="p">()</span><span class="w"> </span><span class="k">const</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">llvm</span><span class="o">::</span><span class="n">any_of</span><span class="p">(</span><span class="n">nodes</span><span class="p">,</span><span class="w"> </span><span class="p">[](</span><span class="k">const</span><span class="w"> </span><span class="n">DFGNode</span><span class="w"> </span><span class="o">&amp;</span><span class="n">n</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="n">n</span><span class="p">.</span><span class="n">kind</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">NodeKind</span><span class="o">::</span><span class="n">Input</span><span class="p">;</span>
+<span class="w">        </span><span class="p">});</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="kt">bool</span><span class="w"> </span><span class="nf">hasFUs</span><span class="p">()</span><span class="w"> </span><span class="k">const</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">llvm</span><span class="o">::</span><span class="n">any_of</span><span class="p">(</span><span class="n">nodes</span><span class="p">,</span><span class="w"> </span><span class="p">[](</span><span class="k">const</span><span class="w"> </span><span class="n">DFGNode</span><span class="w"> </span><span class="o">&amp;</span><span class="n">n</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="n">n</span><span class="p">.</span><span class="n">kind</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">NodeKind</span><span class="o">::</span><span class="n">FU</span><span class="p">;</span>
+<span class="w">        </span><span class="p">});</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="kt">bool</span><span class="w"> </span><span class="nf">hasOutputs</span><span class="p">()</span><span class="w"> </span><span class="k">const</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">llvm</span><span class="o">::</span><span class="n">any_of</span><span class="p">(</span><span class="n">nodes</span><span class="p">,</span><span class="w"> </span><span class="p">[](</span><span class="k">const</span><span class="w"> </span><span class="n">DFGNode</span><span class="w"> </span><span class="o">&amp;</span><span class="n">n</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="n">n</span><span class="p">.</span><span class="n">kind</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">NodeKind</span><span class="o">::</span><span class="n">Output</span><span class="p">;</span>
+<span class="w">        </span><span class="p">});</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="nf">build</span><span class="p">(</span><span class="n">affine</span><span class="o">::</span><span class="n">AffineForOp</span><span class="w"> </span><span class="n">forOp</span><span class="p">)</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="n">Block</span><span class="o">*</span><span class="w"> </span><span class="n">body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">forOp</span><span class="p">.</span><span class="n">getBody</span><span class="p">();</span>
+
+<span class="w">        </span><span class="c1">// Stream length = loop trip count (step 1, matching the CGRA analysis</span>
+<span class="w">        </span><span class="c1">// helpers); used as the size of any dynamic (pointer-derived) memref</span>
+<span class="w">        </span><span class="c1">// stream.</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">forOp</span><span class="p">.</span><span class="n">hasConstantLowerBound</span><span class="p">()</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">forOp</span><span class="p">.</span><span class="n">hasConstantUpperBound</span><span class="p">())</span>
+<span class="w">            </span><span class="n">streamLen</span><span class="w"> </span><span class="o">=</span>
+<span class="w">                </span><span class="n">forOp</span><span class="p">.</span><span class="n">getConstantUpperBound</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">forOp</span><span class="p">.</span><span class="n">getConstantLowerBound</span><span class="p">();</span>
+
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">BlockArgument</span><span class="w"> </span><span class="n">ba</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">forOp</span><span class="p">.</span><span class="n">getRegionIterArgs</span><span class="p">())</span><span class="w"> </span><span class="n">iterArgs</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">ba</span><span class="p">);</span>
+
+<span class="w">        </span><span class="c1">// Pass 1: one input node per affine.load (each load is a distinct</span>
+<span class="w">        </span><span class="c1">// operand).</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">Operation</span><span class="w"> </span><span class="o">&amp;</span><span class="n">op</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="o">*</span><span class="n">body</span><span class="p">)</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="n">load</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dyn_cast</span><span class="o">&lt;</span><span class="n">affine</span><span class="o">::</span><span class="n">AffineLoadOp</span><span class="o">&gt;</span><span class="p">(</span><span class="o">&amp;</span><span class="n">op</span><span class="p">))</span>
+<span class="w">                </span><span class="n">addInputNode</span><span class="p">(</span><span class="n">load</span><span class="p">.</span><span class="n">getResult</span><span class="p">(),</span><span class="w"> </span><span class="n">load</span><span class="p">.</span><span class="n">getMemRef</span><span class="p">());</span>
+
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">lastFU</span><span class="p">;</span>
+
+<span class="w">        </span><span class="c1">// Pass 2: arithmetic ops → FU nodes, in source order.</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">Operation</span><span class="w"> </span><span class="o">&amp;</span><span class="n">op</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="o">*</span><span class="n">body</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">            </span><span class="c1">// Width casts (i1-&gt;i32 carry, sign/zero extend, truncate) carry no</span>
+<span class="w">            </span><span class="c1">// fabric operation — alias the result to the operand's node so the</span>
+<span class="w">            </span><span class="c1">// value keeps flowing (otherwise e.g. a carry cmp dead-ends at the</span>
+<span class="w">            </span><span class="c1">// extui and its edge is dropped).</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">isa</span><span class="o">&lt;</span><span class="n">arith</span><span class="o">::</span><span class="n">ExtUIOp</span><span class="p">,</span><span class="w"> </span><span class="n">arith</span><span class="o">::</span><span class="n">ExtSIOp</span><span class="p">,</span><span class="w"> </span><span class="n">arith</span><span class="o">::</span><span class="n">TruncIOp</span><span class="o">&gt;</span><span class="p">(</span><span class="o">&amp;</span><span class="n">op</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="k">auto</span><span class="w"> </span><span class="n">it</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">valMap</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="n">op</span><span class="p">.</span><span class="n">getOperand</span><span class="p">(</span><span class="mi">0</span><span class="p">));</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">it</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">valMap</span><span class="p">.</span><span class="n">end</span><span class="p">())</span><span class="w"> </span><span class="n">valMap</span><span class="p">[</span><span class="n">op</span><span class="p">.</span><span class="n">getResult</span><span class="p">(</span><span class="mi">0</span><span class="p">)]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">it</span><span class="o">-&gt;</span><span class="n">second</span><span class="p">;</span>
+<span class="w">                </span><span class="k">continue</span><span class="p">;</span>
+<span class="w">            </span><span class="p">}</span>
+
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="n">mul</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dyn_cast</span><span class="o">&lt;</span><span class="n">arith</span><span class="o">::</span><span class="n">MulIOp</span><span class="o">&gt;</span><span class="p">(</span><span class="o">&amp;</span><span class="n">op</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="kt">int64_t</span><span class="w"> </span><span class="n">c0</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">c1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">                </span><span class="kt">bool</span><span class="w"> </span><span class="n">ic0</span><span class="p">,</span><span class="w"> </span><span class="n">ic1</span><span class="p">;</span>
+<span class="w">                </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">d0</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">resolveOrConst</span><span class="p">(</span><span class="n">mul</span><span class="p">.</span><span class="n">getLhs</span><span class="p">(),</span><span class="w"> </span><span class="n">c0</span><span class="p">,</span><span class="w"> </span><span class="n">ic0</span><span class="p">);</span>
+<span class="w">                </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">d1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">resolveOrConst</span><span class="p">(</span><span class="n">mul</span><span class="p">.</span><span class="n">getRhs</span><span class="p">(),</span><span class="w"> </span><span class="n">c1</span><span class="p">,</span><span class="w"> </span><span class="n">ic1</span><span class="p">);</span>
+<span class="w">                </span><span class="kt">int64_t</span><span class="w"> </span><span class="n">cval</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ic0</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">c0</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="p">(</span><span class="n">ic1</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">c1</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
+<span class="w">                </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">fresh</span><span class="p">(</span><span class="s">"mul"</span><span class="p">);</span>
+<span class="w">                </span><span class="n">nodes</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span>
+<span class="w">                    </span><span class="p">{</span><span class="n">name</span><span class="p">,</span>
+<span class="w">                     </span><span class="n">NodeKind</span><span class="o">::</span><span class="n">FU</span><span class="p">,</span>
+<span class="w">                     </span><span class="n">fuAttrs</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">cval</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="n">ic0</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">ic1</span><span class="p">)</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="mi">0</span><span class="p">)});</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">ic0</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="o">!</span><span class="n">d0</span><span class="p">.</span><span class="n">empty</span><span class="p">())</span><span class="w"> </span><span class="n">edges</span><span class="p">.</span><span class="n">push_back</span><span class="p">({</span><span class="n">d0</span><span class="p">,</span><span class="w"> </span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="p">{}});</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">ic1</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="o">!</span><span class="n">d1</span><span class="p">.</span><span class="n">empty</span><span class="p">())</span><span class="w"> </span><span class="n">edges</span><span class="p">.</span><span class="n">push_back</span><span class="p">({</span><span class="n">d1</span><span class="p">,</span><span class="w"> </span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="p">{}});</span>
+<span class="w">                </span><span class="n">valMap</span><span class="p">[</span><span class="n">mul</span><span class="p">.</span><span class="n">getResult</span><span class="p">()]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">name</span><span class="p">;</span>
+<span class="w">                </span><span class="n">lastFU</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">name</span><span class="p">;</span>
+
+<span class="w">            </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="n">add</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dyn_cast</span><span class="o">&lt;</span><span class="n">arith</span><span class="o">::</span><span class="n">AddIOp</span><span class="o">&gt;</span><span class="p">(</span><span class="o">&amp;</span><span class="n">op</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="kt">bool</span><span class="w"> </span><span class="n">lhsIter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">iterArgs</span><span class="p">.</span><span class="n">count</span><span class="p">(</span><span class="n">add</span><span class="p">.</span><span class="n">getLhs</span><span class="p">());</span>
+<span class="w">                </span><span class="kt">bool</span><span class="w"> </span><span class="n">rhsIter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">iterArgs</span><span class="p">.</span><span class="n">count</span><span class="p">(</span><span class="n">add</span><span class="p">.</span><span class="n">getRhs</span><span class="p">());</span>
+<span class="w">                </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">name</span><span class="p">;</span>
+
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">lhsIter</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">rhsIter</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                    </span><span class="c1">// Accumulator pattern: loop-carried value via iter_arg →</span>
+<span class="w">                    </span><span class="c1">// feedback node. delay_value = the reduction trip count, so</span>
+<span class="w">                    </span><span class="c1">// the FU emits the summed result on fu_d once per completed</span>
+<span class="w">                    </span><span class="c1">// reduction (every `streamLen` firings) instead of every</span>
+<span class="w">                    </span><span class="c1">// firing.</span>
+<span class="w">                    </span><span class="n">isAccum</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="w">                    </span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">fresh</span><span class="p">(</span><span class="s">"add"</span><span class="p">);</span>
+<span class="w">                    </span><span class="n">nodes</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span>
+<span class="w">                        </span><span class="p">{</span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="n">NodeKind</span><span class="o">::</span><span class="n">FU</span><span class="p">,</span><span class="w"> </span><span class="n">fuAttrs</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">streamLen</span><span class="p">)});</span>
+<span class="w">                    </span><span class="n">Value</span><span class="w"> </span><span class="n">dataVal</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">lhsIter</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">add</span><span class="p">.</span><span class="n">getRhs</span><span class="p">()</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">add</span><span class="p">.</span><span class="n">getLhs</span><span class="p">();</span>
+<span class="w">                    </span><span class="kt">int64_t</span><span class="w"> </span><span class="n">dc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">                    </span><span class="kt">bool</span><span class="w"> </span><span class="n">idc</span><span class="p">;</span>
+<span class="w">                    </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">dd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">resolveOrConst</span><span class="p">(</span><span class="n">dataVal</span><span class="p">,</span><span class="w"> </span><span class="n">dc</span><span class="p">,</span><span class="w"> </span><span class="n">idc</span><span class="p">);</span>
+<span class="w">                    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">idc</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="o">!</span><span class="n">dd</span><span class="p">.</span><span class="n">empty</span><span class="p">())</span><span class="w"> </span><span class="n">edges</span><span class="p">.</span><span class="n">push_back</span><span class="p">({</span><span class="n">dd</span><span class="p">,</span><span class="w"> </span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="p">{}});</span>
+<span class="w">                    </span><span class="n">edges</span><span class="p">.</span><span class="n">push_back</span><span class="p">({</span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="p">{}});</span><span class="w"> </span><span class="c1">// self-loop = feedback</span>
+<span class="w">                </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                    </span><span class="kt">int64_t</span><span class="w"> </span><span class="n">c0</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">c1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">                    </span><span class="kt">bool</span><span class="w"> </span><span class="n">ic0</span><span class="p">,</span><span class="w"> </span><span class="n">ic1</span><span class="p">;</span>
+<span class="w">                    </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">d0</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">resolveOrConst</span><span class="p">(</span><span class="n">add</span><span class="p">.</span><span class="n">getLhs</span><span class="p">(),</span><span class="w"> </span><span class="n">c0</span><span class="p">,</span><span class="w"> </span><span class="n">ic0</span><span class="p">);</span>
+<span class="w">                    </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">d1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">resolveOrConst</span><span class="p">(</span><span class="n">add</span><span class="p">.</span><span class="n">getRhs</span><span class="p">(),</span><span class="w"> </span><span class="n">c1</span><span class="p">,</span><span class="w"> </span><span class="n">ic1</span><span class="p">);</span>
+<span class="w">                    </span><span class="kt">int64_t</span><span class="w"> </span><span class="n">cval</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ic0</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">c0</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="p">(</span><span class="n">ic1</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">c1</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
+<span class="w">                    </span><span class="kt">bool</span><span class="w"> </span><span class="n">hasConst</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ic0</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">ic1</span><span class="p">;</span>
+<span class="w">                    </span><span class="c1">// A negative constant on an add is represented as a sub</span>
+<span class="w">                    </span><span class="c1">// node — except for INT32_MIN, whose negation (2^31) does</span>
+<span class="w">                    </span><span class="c1">// not fit the bitstream's signed 32-bit immediate field. `x</span>
+<span class="w">                    </span><span class="c1">// + INT32_MIN` and `x - INT32_MIN` are the same value mod</span>
+<span class="w">                    </span><span class="c1">// 2^32, so keeping the ADD form with the original constant</span>
+<span class="w">                    </span><span class="c1">// is both correct and representable. The i64-add carry</span>
+<span class="w">                    </span><span class="c1">// chain in a quantized network adds exactly this constant.</span>
+<span class="w">                    </span><span class="kt">bool</span><span class="w"> </span><span class="n">asSub</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">hasConst</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">cval</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">                                 </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">cval</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">numeric_limits</span><span class="o">&lt;</span><span class="kt">int32_t</span><span class="o">&gt;::</span><span class="n">min</span><span class="p">();</span>
+<span class="w">                    </span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">asSub</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">fresh</span><span class="p">(</span><span class="s">"sub"</span><span class="p">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">fresh</span><span class="p">(</span><span class="s">"add"</span><span class="p">);</span>
+<span class="w">                    </span><span class="n">Attrs</span><span class="w"> </span><span class="n">fa</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">hasConst</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="p">(</span><span class="n">asSub</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">fuAttrs</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="o">-</span><span class="n">cval</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span>
+<span class="w">                                                 </span><span class="o">:</span><span class="w"> </span><span class="n">fuAttrs</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">cval</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">))</span>
+<span class="w">                                        </span><span class="o">:</span><span class="w"> </span><span class="n">fuAttrs</span><span class="p">();</span>
+<span class="w">                    </span><span class="n">nodes</span><span class="p">.</span><span class="n">push_back</span><span class="p">({</span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="n">NodeKind</span><span class="o">::</span><span class="n">FU</span><span class="p">,</span><span class="w"> </span><span class="n">fa</span><span class="p">});</span>
+<span class="w">                    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">ic0</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="o">!</span><span class="n">d0</span><span class="p">.</span><span class="n">empty</span><span class="p">())</span><span class="w"> </span><span class="n">edges</span><span class="p">.</span><span class="n">push_back</span><span class="p">({</span><span class="n">d0</span><span class="p">,</span><span class="w"> </span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="p">{}});</span>
+<span class="w">                    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">ic1</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="o">!</span><span class="n">d1</span><span class="p">.</span><span class="n">empty</span><span class="p">())</span><span class="w"> </span><span class="n">edges</span><span class="p">.</span><span class="n">push_back</span><span class="p">({</span><span class="n">d1</span><span class="p">,</span><span class="w"> </span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="p">{}});</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">                </span><span class="n">valMap</span><span class="p">[</span><span class="n">add</span><span class="p">.</span><span class="n">getResult</span><span class="p">()]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">name</span><span class="p">;</span>
+<span class="w">                </span><span class="n">lastFU</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">name</span><span class="p">;</span>
+
+<span class="w">            </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="n">sub</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dyn_cast</span><span class="o">&lt;</span><span class="n">arith</span><span class="o">::</span><span class="n">SubIOp</span><span class="o">&gt;</span><span class="p">(</span><span class="o">&amp;</span><span class="n">op</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="kt">int64_t</span><span class="w"> </span><span class="n">c0</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">c1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">                </span><span class="kt">bool</span><span class="w"> </span><span class="n">ic0</span><span class="p">,</span><span class="w"> </span><span class="n">ic1</span><span class="p">;</span>
+<span class="w">                </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">d0</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">resolveOrConst</span><span class="p">(</span><span class="n">sub</span><span class="p">.</span><span class="n">getLhs</span><span class="p">(),</span><span class="w"> </span><span class="n">c0</span><span class="p">,</span><span class="w"> </span><span class="n">ic0</span><span class="p">);</span>
+<span class="w">                </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">d1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">resolveOrConst</span><span class="p">(</span><span class="n">sub</span><span class="p">.</span><span class="n">getRhs</span><span class="p">(),</span><span class="w"> </span><span class="n">c1</span><span class="p">,</span><span class="w"> </span><span class="n">ic1</span><span class="p">);</span>
+<span class="w">                </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">fresh</span><span class="p">(</span><span class="s">"sub"</span><span class="p">);</span>
+<span class="w">                </span><span class="n">Attrs</span><span class="w"> </span><span class="n">fa</span><span class="p">;</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">ic1</span><span class="p">)</span>
+<span class="w">                    </span><span class="n">fa</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">fuAttrs</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">c1</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">);</span>
+<span class="w">                </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">ic0</span><span class="p">)</span>
+<span class="w">                    </span><span class="n">fa</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">fuAttrs</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">c0</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">);</span>
+<span class="w">                </span><span class="k">else</span>
+<span class="w">                    </span><span class="n">fa</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">fuAttrs</span><span class="p">();</span>
+<span class="w">                </span><span class="n">nodes</span><span class="p">.</span><span class="n">push_back</span><span class="p">({</span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="n">NodeKind</span><span class="o">::</span><span class="n">FU</span><span class="p">,</span><span class="w"> </span><span class="n">fa</span><span class="p">});</span>
+<span class="w">                </span><span class="c1">// sub is NON-COMMUTATIVE: pin lhs-&gt;fu_in1, rhs-&gt;fu_in2</span>
+<span class="w">                </span><span class="c1">// explicitly.</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">ic0</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="o">!</span><span class="n">d0</span><span class="p">.</span><span class="n">empty</span><span class="p">())</span>
+<span class="w">                    </span><span class="n">edges</span><span class="p">.</span><span class="n">push_back</span><span class="p">({</span><span class="n">d0</span><span class="p">,</span><span class="w"> </span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="n">operandAttr</span><span class="p">(</span><span class="mi">1</span><span class="p">)});</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">ic1</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="o">!</span><span class="n">d1</span><span class="p">.</span><span class="n">empty</span><span class="p">())</span>
+<span class="w">                    </span><span class="n">edges</span><span class="p">.</span><span class="n">push_back</span><span class="p">({</span><span class="n">d1</span><span class="p">,</span><span class="w"> </span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="n">operandAttr</span><span class="p">(</span><span class="mi">2</span><span class="p">)});</span>
+<span class="w">                </span><span class="n">valMap</span><span class="p">[</span><span class="n">sub</span><span class="p">.</span><span class="n">getResult</span><span class="p">()]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">name</span><span class="p">;</span>
+<span class="w">                </span><span class="n">lastFU</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">name</span><span class="p">;</span>
+
+<span class="w">            </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="n">cmp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dyn_cast</span><span class="o">&lt;</span><span class="n">arith</span><span class="o">::</span><span class="n">CmpIOp</span><span class="o">&gt;</span><span class="p">(</span><span class="o">&amp;</span><span class="n">op</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">cs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cmpStr</span><span class="p">(</span><span class="n">cmp</span><span class="p">.</span><span class="n">getPredicate</span><span class="p">());</span>
+<span class="w">                </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">fresh</span><span class="p">(</span><span class="s">"cmp"</span><span class="p">);</span>
+<span class="w">                </span><span class="n">nodes</span><span class="p">.</span><span class="n">push_back</span><span class="p">({</span>
+<span class="w">                    </span><span class="n">name</span><span class="p">,</span>
+<span class="w">                    </span><span class="n">NodeKind</span><span class="o">::</span><span class="n">FU</span><span class="p">,</span>
+<span class="w">                    </span><span class="p">{{</span><span class="s">"cmp_op"</span><span class="p">,</span><span class="w"> </span><span class="s">"</span><span class="se">\"</span><span class="s">"</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">cs</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">"</span><span class="se">\"</span><span class="s">"</span><span class="p">},</span><span class="w"> </span><span class="p">{</span><span class="s">"constant"</span><span class="p">,</span><span class="w"> </span><span class="s">"0"</span><span class="p">}}</span>
+<span class="w">                </span><span class="p">});</span>
+<span class="w">                </span><span class="kt">int64_t</span><span class="w"> </span><span class="n">c0</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">                </span><span class="kt">bool</span><span class="w"> </span><span class="n">ic0</span><span class="p">;</span>
+<span class="w">                </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">d0</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">resolveOrConst</span><span class="p">(</span><span class="n">cmp</span><span class="p">.</span><span class="n">getLhs</span><span class="p">(),</span><span class="w"> </span><span class="n">c0</span><span class="p">,</span><span class="w"> </span><span class="n">ic0</span><span class="p">);</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">ic0</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="o">!</span><span class="n">d0</span><span class="p">.</span><span class="n">empty</span><span class="p">())</span>
+<span class="w">                    </span><span class="n">edges</span><span class="p">.</span><span class="n">push_back</span><span class="p">({</span><span class="n">d0</span><span class="p">,</span><span class="w"> </span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="p">{{</span><span class="s">"operand"</span><span class="p">,</span><span class="w"> </span><span class="s">"1"</span><span class="p">}}});</span>
+<span class="w">                </span><span class="n">valMap</span><span class="p">[</span><span class="n">cmp</span><span class="p">.</span><span class="n">getResult</span><span class="p">()]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">name</span><span class="p">;</span>
+<span class="w">                </span><span class="n">lastFU</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">name</span><span class="p">;</span>
+
+<span class="w">            </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="n">sel</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dyn_cast</span><span class="o">&lt;</span><span class="n">arith</span><span class="o">::</span><span class="n">SelectOp</span><span class="o">&gt;</span><span class="p">(</span><span class="o">&amp;</span><span class="n">op</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="kt">int64_t</span><span class="w"> </span><span class="n">cc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">ct</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">cf</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">                </span><span class="kt">bool</span><span class="w"> </span><span class="n">icc</span><span class="p">,</span><span class="w"> </span><span class="n">ict</span><span class="p">,</span><span class="w"> </span><span class="n">icf</span><span class="p">;</span>
+<span class="w">                </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">dc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">resolveOrConst</span><span class="p">(</span><span class="n">sel</span><span class="p">.</span><span class="n">getCondition</span><span class="p">(),</span><span class="w"> </span><span class="n">cc</span><span class="p">,</span><span class="w"> </span><span class="n">icc</span><span class="p">);</span>
+<span class="w">                </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">dt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">resolveOrConst</span><span class="p">(</span><span class="n">sel</span><span class="p">.</span><span class="n">getTrueValue</span><span class="p">(),</span><span class="w"> </span><span class="n">ct</span><span class="p">,</span><span class="w"> </span><span class="n">ict</span><span class="p">);</span>
+<span class="w">                </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">df</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">resolveOrConst</span><span class="p">(</span><span class="n">sel</span><span class="p">.</span><span class="n">getFalseValue</span><span class="p">(),</span><span class="w"> </span><span class="n">cf</span><span class="p">,</span><span class="w"> </span><span class="n">icf</span><span class="p">);</span>
+<span class="w">                </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">fresh</span><span class="p">(</span><span class="s">"select"</span><span class="p">);</span>
+
+<span class="w">                </span><span class="c1">// BOTH data inputs of a select must have a source.</span>
+<span class="w">                </span><span class="c1">// map2bitstream configures it as `join_w_c`, whose RTL fires</span>
+<span class="w">                </span><span class="c1">// only on `din_1_v_i &amp; din_2_v_i &amp; cin_v_i`, so an undriven</span>
+<span class="w">                </span><span class="c1">// data input DEADLOCKS the whole configuration — no output node</span>
+<span class="w">                </span><span class="c1">// ever reaches its size and `exec_done_i = &amp;mn_done` never</span>
+<span class="w">                </span><span class="c1">// asserts. The FU has exactly ONE constant slot, and this used</span>
+<span class="w">                </span><span class="c1">// to spend it only on the FALSE value, so a constant TRUE value</span>
+<span class="w">                </span><span class="c1">// was dropped entirely: it got neither an edge nor the slot. On</span>
+<span class="w">                </span><span class="c1">// residual_small that was every one of the 8 hanging</span>
+<span class="w">                </span><span class="c1">// configurations, and none of the 8 working ones (each select</span>
+<span class="w">                </span><span class="c1">// there has two real sources).</span>
+<span class="w">                </span><span class="c1">//</span>
+<span class="w">                </span><span class="c1">// The slot goes to whichever side is constant; when BOTH are,</span>
+<span class="w">                </span><span class="c1">// the second one is MATERIALISED from a stream token: `x AND 0`</span>
+<span class="w">                </span><span class="c1">// yields 0 (one FU), and a non-zero constant needs `OR c` on</span>
+<span class="w">                </span><span class="c1">// top of it (two).</span>
+<span class="w">                </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">tSrc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dt</span><span class="p">,</span><span class="w"> </span><span class="n">fSrc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">df</span><span class="p">;</span>
+<span class="w">                </span><span class="kt">int</span><span class="w"> </span><span class="n">constInput</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">                </span><span class="kt">int64_t</span><span class="w"> </span><span class="n">constVal</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">icf</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="c1">// false side takes the slot (input 1)</span>
+<span class="w">                    </span><span class="n">constInput</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="w">                    </span><span class="n">constVal</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cf</span><span class="p">;</span>
+<span class="w">                </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">ict</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="c1">// only the true side is constant: slot =</span>
+<span class="w">                                  </span><span class="c1">// input 2</span>
+<span class="w">                    </span><span class="n">constInput</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="p">;</span>
+<span class="w">                    </span><span class="n">constVal</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ct</span><span class="p">;</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">ict</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">icf</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                    </span><span class="c1">// Both constant — keep FALSE in the slot and build the TRUE</span>
+<span class="w">                    </span><span class="c1">// value.</span>
+<span class="w">                    </span><span class="n">tSrc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">materialiseConst</span><span class="p">(</span><span class="n">ct</span><span class="p">);</span>
+<span class="w">                    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">tSrc</span><span class="p">.</span><span class="n">empty</span><span class="p">())</span>
+<span class="w">                        </span><span class="n">op</span><span class="p">.</span><span class="n">emitError</span><span class="p">(</span>
+<span class="w">                            </span><span class="s">"export-loop-dfg: arith.select with two constant "</span>
+<span class="w">                            </span><span class="s">"operands "</span>
+<span class="w">                            </span><span class="s">"needs a stream token to materialise one of them, "</span>
+<span class="w">                            </span><span class="s">"and this "</span>
+<span class="w">                            </span><span class="s">"nest has no input node"</span><span class="p">);</span>
+<span class="w">                    </span><span class="n">ict</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">                </span><span class="n">nodes</span><span class="p">.</span><span class="n">push_back</span><span class="p">({</span>
+<span class="w">                    </span><span class="n">name</span><span class="p">,</span>
+<span class="w">                    </span><span class="n">NodeKind</span><span class="o">::</span><span class="n">FU</span><span class="p">,</span>
+<span class="w">                    </span><span class="p">{{</span><span class="s">"constant"</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">to_string</span><span class="p">(</span><span class="n">constVal</span><span class="p">)},</span>
+<span class="w">                          </span><span class="p">{</span><span class="s">"constant_fu_input"</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">to_string</span><span class="p">(</span><span class="n">constInput</span><span class="p">)}}</span>
+<span class="w">                </span><span class="p">});</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">icc</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="o">!</span><span class="n">dc</span><span class="p">.</span><span class="n">empty</span><span class="p">())</span>
+<span class="w">                    </span><span class="n">edges</span><span class="p">.</span><span class="n">push_back</span><span class="p">({</span><span class="n">dc</span><span class="p">,</span><span class="w"> </span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="p">{{</span><span class="s">"operand"</span><span class="p">,</span><span class="w"> </span><span class="s">"cond"</span><span class="p">}}});</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">ict</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="o">!</span><span class="n">tSrc</span><span class="p">.</span><span class="n">empty</span><span class="p">())</span>
+<span class="w">                    </span><span class="n">edges</span><span class="p">.</span><span class="n">push_back</span><span class="p">({</span><span class="n">tSrc</span><span class="p">,</span><span class="w"> </span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="p">{{</span><span class="s">"operand"</span><span class="p">,</span><span class="w"> </span><span class="s">"2"</span><span class="p">}}});</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">icf</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="o">!</span><span class="n">fSrc</span><span class="p">.</span><span class="n">empty</span><span class="p">())</span>
+<span class="w">                    </span><span class="n">edges</span><span class="p">.</span><span class="n">push_back</span><span class="p">({</span><span class="n">fSrc</span><span class="p">,</span><span class="w"> </span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="p">{{</span><span class="s">"operand"</span><span class="p">,</span><span class="w"> </span><span class="s">"1"</span><span class="p">}}});</span>
+<span class="w">                </span><span class="n">valMap</span><span class="p">[</span><span class="n">sel</span><span class="p">.</span><span class="n">getResult</span><span class="p">()]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">name</span><span class="p">;</span>
+<span class="w">                </span><span class="n">lastFU</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">name</span><span class="p">;</span>
+
+<span class="w">            </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span>
+<span class="w">                </span><span class="n">isa</span><span class="o">&lt;</span><span class="n">arith</span><span class="o">::</span><span class="n">ShLIOp</span><span class="p">,</span>
+<span class="w">                    </span><span class="n">arith</span><span class="o">::</span><span class="n">ShRSIOp</span><span class="p">,</span>
+<span class="w">                    </span><span class="n">arith</span><span class="o">::</span><span class="n">ShRUIOp</span><span class="p">,</span>
+<span class="w">                    </span><span class="n">arith</span><span class="o">::</span><span class="n">AndIOp</span><span class="p">,</span>
+<span class="w">                    </span><span class="n">arith</span><span class="o">::</span><span class="n">OrIOp</span><span class="p">,</span>
+<span class="w">                    </span><span class="n">arith</span><span class="o">::</span><span class="n">XOrIOp</span><span class="o">&gt;</span><span class="p">(</span><span class="o">&amp;</span><span class="n">op</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="c1">// Shift / bitwise ops — the i64-arithmetic emulation and</span>
+<span class="w">                </span><span class="c1">// quantization produce these. The fabric has a SHIFT FU (S:</span>
+<span class="w">                </span><span class="c1">// shl=SHF, shr=SHFA) and a LOGICAL FU (L: and/or/xor); emit</span>
+<span class="w">                </span><span class="c1">// them as nodes so the emulation's values keep flowing (an</span>
+<span class="w">                </span><span class="c1">// untracked result drops every edge through it, fragmenting the</span>
+<span class="w">                </span><span class="c1">// DFG).</span>
+<span class="w">                </span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="n">prefix</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">isa</span><span class="o">&lt;</span><span class="n">arith</span><span class="o">::</span><span class="n">ShLIOp</span><span class="o">&gt;</span><span class="p">(</span><span class="o">&amp;</span><span class="n">op</span><span class="p">)</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="s">"shl"</span>
+<span class="w">                                     </span><span class="o">:</span><span class="w"> </span><span class="n">isa</span><span class="o">&lt;</span><span class="n">arith</span><span class="o">::</span><span class="n">ShRSIOp</span><span class="p">,</span><span class="w"> </span><span class="n">arith</span><span class="o">::</span><span class="n">ShRUIOp</span><span class="o">&gt;</span><span class="p">(</span><span class="o">&amp;</span><span class="n">op</span><span class="p">)</span>
+<span class="w">                                         </span><span class="o">?</span><span class="w"> </span><span class="s">"shr"</span>
+<span class="w">                                     </span><span class="o">:</span><span class="w"> </span><span class="n">isa</span><span class="o">&lt;</span><span class="n">arith</span><span class="o">::</span><span class="n">AndIOp</span><span class="o">&gt;</span><span class="p">(</span><span class="o">&amp;</span><span class="n">op</span><span class="p">)</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="s">"and"</span>
+<span class="w">                                     </span><span class="o">:</span><span class="w"> </span><span class="n">isa</span><span class="o">&lt;</span><span class="n">arith</span><span class="o">::</span><span class="n">OrIOp</span><span class="o">&gt;</span><span class="p">(</span><span class="o">&amp;</span><span class="n">op</span><span class="p">)</span><span class="w">  </span><span class="o">?</span><span class="w"> </span><span class="s">"or"</span>
+<span class="w">                                                               </span><span class="o">:</span><span class="w"> </span><span class="s">"xor"</span><span class="p">;</span>
+<span class="w">                </span><span class="kt">int64_t</span><span class="w"> </span><span class="n">c0</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">c1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">                </span><span class="kt">bool</span><span class="w"> </span><span class="n">ic0</span><span class="p">,</span><span class="w"> </span><span class="n">ic1</span><span class="p">;</span>
+<span class="w">                </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">d0</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">resolveOrConst</span><span class="p">(</span><span class="n">op</span><span class="p">.</span><span class="n">getOperand</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span><span class="w"> </span><span class="n">c0</span><span class="p">,</span><span class="w"> </span><span class="n">ic0</span><span class="p">);</span>
+<span class="w">                </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">d1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">resolveOrConst</span><span class="p">(</span><span class="n">op</span><span class="p">.</span><span class="n">getOperand</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span><span class="w"> </span><span class="n">c1</span><span class="p">,</span><span class="w"> </span><span class="n">ic1</span><span class="p">);</span>
+<span class="w">                </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">fresh</span><span class="p">(</span><span class="n">prefix</span><span class="p">);</span>
+<span class="w">                </span><span class="n">Attrs</span><span class="w"> </span><span class="n">fa</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ic1</span><span class="w">   </span><span class="o">?</span><span class="w"> </span><span class="n">fuAttrs</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">c1</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span>
+<span class="w">                           </span><span class="o">:</span><span class="w"> </span><span class="n">ic0</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">fuAttrs</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">c0</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span>
+<span class="w">                                 </span><span class="o">:</span><span class="w"> </span><span class="n">fuAttrs</span><span class="p">();</span>
+<span class="w">                </span><span class="n">nodes</span><span class="p">.</span><span class="n">push_back</span><span class="p">({</span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="n">NodeKind</span><span class="o">::</span><span class="n">FU</span><span class="p">,</span><span class="w"> </span><span class="n">fa</span><span class="p">});</span>
+<span class="w">                </span><span class="c1">// shl/shr are NON-COMMUTATIVE (value, amount); tag and/or/xor</span>
+<span class="w">                </span><span class="c1">// too so the slot assignment never depends on node naming.</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">ic0</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="o">!</span><span class="n">d0</span><span class="p">.</span><span class="n">empty</span><span class="p">())</span>
+<span class="w">                    </span><span class="n">edges</span><span class="p">.</span><span class="n">push_back</span><span class="p">({</span><span class="n">d0</span><span class="p">,</span><span class="w"> </span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="n">operandAttr</span><span class="p">(</span><span class="mi">1</span><span class="p">)});</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">ic1</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="o">!</span><span class="n">d1</span><span class="p">.</span><span class="n">empty</span><span class="p">())</span>
+<span class="w">                    </span><span class="n">edges</span><span class="p">.</span><span class="n">push_back</span><span class="p">({</span><span class="n">d1</span><span class="p">,</span><span class="w"> </span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="n">operandAttr</span><span class="p">(</span><span class="mi">2</span><span class="p">)});</span>
+<span class="w">                </span><span class="n">valMap</span><span class="p">[</span><span class="n">op</span><span class="p">.</span><span class="n">getResult</span><span class="p">(</span><span class="mi">0</span><span class="p">)]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">name</span><span class="p">;</span>
+<span class="w">                </span><span class="n">lastFU</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">name</span><span class="p">;</span>
+
+<span class="w">                </span><span class="c1">// The fabric right shift is LOGICAL only:</span>
+<span class="w">                </span><span class="c1">// FU_data_superpolyvalent.sv declares din_1_i unsigned, so</span>
+<span class="w">                </span><span class="c1">// opcode 5 (`&gt;&gt;&gt;`) behaves as opcode 4 (`&gt;&gt;`). Therefore</span>
+<span class="w">                </span><span class="c1">// arith.shrui needs no correction, and arith.shrsi must already</span>
+<span class="w">                </span><span class="c1">// have been rewritten by --expand-fabric-ops into</span>
+<span class="w">                </span><span class="c1">//     x &gt;&gt;s n  ==  ((x &gt;&gt;u n) ^ sb) - sb,  sb = 1 &lt;&lt; (31 - n)</span>
+<span class="w">                </span><span class="c1">// If one survives here the pass chain is wrong and the</span>
+<span class="w">                </span><span class="c1">// bitstream would zero-fill where sign extension was asked for</span>
+<span class="w">                </span><span class="c1">// — refuse rather than emit.</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">isa</span><span class="o">&lt;</span><span class="n">arith</span><span class="o">::</span><span class="n">ShRSIOp</span><span class="o">&gt;</span><span class="p">(</span><span class="o">&amp;</span><span class="n">op</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                    </span><span class="n">op</span><span class="p">.</span><span class="n">emitError</span><span class="p">(</span>
+<span class="w">                        </span><span class="s">"export-loop-dfg: arith.shrsi reached the exporter — "</span>
+<span class="w">                        </span><span class="s">"run "</span>
+<span class="w">                        </span><span class="s">"--expand-fabric-ops (inside --legalize-fabric-body) "</span>
+<span class="w">                        </span><span class="s">"first; "</span>
+<span class="w">                        </span><span class="s">"the fabric shift FU is LOGICAL and this would "</span>
+<span class="w">                        </span><span class="s">"silently "</span>
+<span class="w">                        </span><span class="s">"zero-fill for negative values"</span><span class="p">);</span>
+<span class="w">                    </span><span class="n">fatal</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">                </span><span class="c1">// A VARIABLE-amount shrsi needs the same correction with `sb`</span>
+<span class="w">                </span><span class="c1">// computed at run time: sb = 1 &lt;&lt; (31 - n), which is two more</span>
+<span class="w">                </span><span class="c1">// FUs (a subtract and a shift) on top of the xor/sub pair. Five</span>
+<span class="w">                </span><span class="c1">// FUs in total against one for the logical shift, but the</span>
+<span class="w">                </span><span class="c1">// alternative is a wrong answer.</span>
+<span class="w">                </span><span class="c1">//</span>
+<span class="w">                </span><span class="c1">// This used to `emitError` and CONTINUE. Because `verify()`</span>
+<span class="w">                </span><span class="c1">// only marks div/rem/math ops, `bad` stayed false, the pass</span>
+<span class="w">                </span><span class="c1">// succeeded, and the Makefile runs `picea-opt &gt;/dev/null 2&gt;&amp;1`</span>
+<span class="w">                </span><span class="c1">// — so the message was thrown away and the exporter emitted a</span>
+<span class="w">                </span><span class="c1">// plain LOGICAL shift. `shared8 &gt;&gt;s shared6` in</span>
+<span class="w">                </span><span class="c1">// residual_small's 64-bit shift emulation then zero-filled</span>
+<span class="w">                </span><span class="c1">// instead of sign-extending, which is wrong exactly for the</span>
+<span class="w">                </span><span class="c1">// channels whose value is negative: 3 of its 8 output channels,</span>
+<span class="w">                </span><span class="c1">// 192 of 512 elements.</span>
+<span class="w">                </span><span class="c1">//</span>
+<span class="w">                </span><span class="c1">// Valid for n in [0,31]: n=0 gives sb=1&lt;&lt;31 and</span>
+<span class="w">                </span><span class="c1">// ((x^2^31)-2^31)==x, n=31 gives sb=1 and maps {0,1} to {0,-1}.</span>
+<span class="w">                </span><span class="c1">// n&gt;=32 is UB in the source anyway and the emulation guards it</span>
+<span class="w">                </span><span class="c1">// with a select.</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">isa</span><span class="o">&lt;</span><span class="n">arith</span><span class="o">::</span><span class="n">ShRSIOp</span><span class="o">&gt;</span><span class="p">(</span><span class="o">&amp;</span><span class="n">op</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="o">!</span><span class="n">ic1</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="o">!</span><span class="n">d1</span><span class="p">.</span><span class="n">empty</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                    </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">mname</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">fresh</span><span class="p">(</span><span class="s">"sub"</span><span class="p">);</span><span class="w"> </span><span class="c1">// m  = 31 - n</span>
+<span class="w">                    </span><span class="n">nodes</span><span class="p">.</span><span class="n">push_back</span><span class="p">({</span><span class="n">mname</span><span class="p">,</span><span class="w"> </span><span class="n">NodeKind</span><span class="o">::</span><span class="n">FU</span><span class="p">,</span><span class="w"> </span><span class="n">fuAttrs</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">31</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">)});</span>
+<span class="w">                    </span><span class="n">edges</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span>
+<span class="w">                        </span><span class="p">{</span><span class="n">d1</span><span class="p">,</span><span class="w"> </span><span class="n">mname</span><span class="p">,</span><span class="w"> </span><span class="n">operandAttr</span><span class="p">(</span><span class="mi">2</span><span class="p">)});</span><span class="w"> </span><span class="c1">// non-commutative: 31 - n</span>
+<span class="w">                    </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">bname</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">fresh</span><span class="p">(</span><span class="s">"shl"</span><span class="p">);</span><span class="w"> </span><span class="c1">// sb = 1 &lt;&lt; m</span>
+<span class="w">                    </span><span class="n">nodes</span><span class="p">.</span><span class="n">push_back</span><span class="p">({</span><span class="n">bname</span><span class="p">,</span><span class="w"> </span><span class="n">NodeKind</span><span class="o">::</span><span class="n">FU</span><span class="p">,</span><span class="w"> </span><span class="n">fuAttrs</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">)});</span>
+<span class="w">                    </span><span class="n">edges</span><span class="p">.</span><span class="n">push_back</span><span class="p">({</span><span class="n">mname</span><span class="p">,</span><span class="w"> </span><span class="n">bname</span><span class="p">,</span><span class="w"> </span><span class="n">operandAttr</span><span class="p">(</span><span class="mi">2</span><span class="p">)});</span>
+<span class="w">                    </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">xname</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">fresh</span><span class="p">(</span><span class="s">"xor"</span><span class="p">);</span><span class="w"> </span><span class="c1">// t ^ sb</span>
+<span class="w">                    </span><span class="n">nodes</span><span class="p">.</span><span class="n">push_back</span><span class="p">({</span><span class="n">xname</span><span class="p">,</span><span class="w"> </span><span class="n">NodeKind</span><span class="o">::</span><span class="n">FU</span><span class="p">,</span><span class="w"> </span><span class="n">fuAttrs</span><span class="p">()});</span>
+<span class="w">                    </span><span class="n">edges</span><span class="p">.</span><span class="n">push_back</span><span class="p">({</span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="n">xname</span><span class="p">,</span><span class="w"> </span><span class="n">operandAttr</span><span class="p">(</span><span class="mi">1</span><span class="p">)});</span>
+<span class="w">                    </span><span class="n">edges</span><span class="p">.</span><span class="n">push_back</span><span class="p">({</span><span class="n">bname</span><span class="p">,</span><span class="w"> </span><span class="n">xname</span><span class="p">,</span><span class="w"> </span><span class="n">operandAttr</span><span class="p">(</span><span class="mi">2</span><span class="p">)});</span>
+<span class="w">                    </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">sname</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">fresh</span><span class="p">(</span><span class="s">"sub"</span><span class="p">);</span><span class="w"> </span><span class="c1">// (t ^ sb) - sb</span>
+<span class="w">                    </span><span class="n">nodes</span><span class="p">.</span><span class="n">push_back</span><span class="p">({</span><span class="n">sname</span><span class="p">,</span><span class="w"> </span><span class="n">NodeKind</span><span class="o">::</span><span class="n">FU</span><span class="p">,</span><span class="w"> </span><span class="n">fuAttrs</span><span class="p">()});</span>
+<span class="w">                    </span><span class="n">edges</span><span class="p">.</span><span class="n">push_back</span><span class="p">({</span><span class="n">xname</span><span class="p">,</span><span class="w"> </span><span class="n">sname</span><span class="p">,</span><span class="w"> </span><span class="n">operandAttr</span><span class="p">(</span><span class="mi">1</span><span class="p">)});</span>
+<span class="w">                    </span><span class="n">edges</span><span class="p">.</span><span class="n">push_back</span><span class="p">({</span><span class="n">bname</span><span class="p">,</span><span class="w"> </span><span class="n">sname</span><span class="p">,</span><span class="w"> </span><span class="n">operandAttr</span><span class="p">(</span><span class="mi">2</span><span class="p">)});</span>
+<span class="w">                    </span><span class="n">valMap</span><span class="p">[</span><span class="n">op</span><span class="p">.</span><span class="n">getResult</span><span class="p">(</span><span class="mi">0</span><span class="p">)]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sname</span><span class="p">;</span>
+<span class="w">                    </span><span class="n">lastFU</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sname</span><span class="p">;</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="c1">// Output size: 1 for accumulator loops; otherwise the largest loaded</span>
+<span class="w">        </span><span class="c1">// array.</span>
+<span class="w">        </span><span class="kt">int64_t</span><span class="w"> </span><span class="n">outSize</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">isAccum</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">Operation</span><span class="w"> </span><span class="o">&amp;</span><span class="n">op</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="o">*</span><span class="n">body</span><span class="p">)</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="n">load</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dyn_cast</span><span class="o">&lt;</span><span class="n">affine</span><span class="o">::</span><span class="n">AffineLoadOp</span><span class="o">&gt;</span><span class="p">(</span><span class="o">&amp;</span><span class="n">op</span><span class="p">))</span>
+<span class="w">                    </span><span class="n">outSize</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">max</span><span class="p">(</span>
+<span class="w">                        </span><span class="n">outSize</span><span class="p">,</span>
+<span class="w">                        </span><span class="n">memRefSize</span><span class="p">(</span><span class="n">load</span><span class="p">.</span><span class="n">getMemRef</span><span class="p">(),</span><span class="w"> </span><span class="n">streamLen</span><span class="p">));</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="c1">// Output nodes: one per affine.yield operand when the loop carries</span>
+<span class="w">        </span><span class="c1">// values, one per affine.store value otherwise (conv2d / gemm_cpu</span>
+<span class="w">        </span><span class="c1">// pattern), or fallback to the last FU.</span>
+<span class="w">        </span><span class="k">auto</span><span class="o">*</span><span class="w"> </span><span class="n">term</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">body</span><span class="o">-&gt;</span><span class="n">getTerminator</span><span class="p">();</span>
+<span class="w">        </span><span class="k">auto</span><span class="w"> </span><span class="n">yieldOp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dyn_cast</span><span class="o">&lt;</span><span class="n">affine</span><span class="o">::</span><span class="n">AffineYieldOp</span><span class="o">&gt;</span><span class="p">(</span><span class="n">term</span><span class="p">);</span>
+<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">hasYield</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">yieldOp</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="o">!</span><span class="n">yieldOp</span><span class="p">.</span><span class="n">getOperands</span><span class="p">().</span><span class="n">empty</span><span class="p">();</span>
+
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">hasYield</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">Value</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">yieldOp</span><span class="p">.</span><span class="n">getOperands</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="k">auto</span><span class="w"> </span><span class="n">it</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">valMap</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="n">v</span><span class="p">);</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">it</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">valMap</span><span class="p">.</span><span class="n">end</span><span class="p">())</span><span class="w"> </span><span class="n">addOutputNode</span><span class="p">(</span><span class="n">it</span><span class="o">-&gt;</span><span class="n">second</span><span class="p">,</span><span class="w"> </span><span class="n">outSize</span><span class="p">);</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">Operation</span><span class="w"> </span><span class="o">&amp;</span><span class="n">op</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="o">*</span><span class="n">body</span><span class="p">)</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="n">store</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dyn_cast</span><span class="o">&lt;</span><span class="n">affine</span><span class="o">::</span><span class="n">AffineStoreOp</span><span class="o">&gt;</span><span class="p">(</span><span class="o">&amp;</span><span class="n">op</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                    </span><span class="k">auto</span><span class="w"> </span><span class="n">it</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">valMap</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="n">store</span><span class="p">.</span><span class="n">getValue</span><span class="p">());</span>
+<span class="w">                    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">it</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">valMap</span><span class="p">.</span><span class="n">end</span><span class="p">())</span><span class="w"> </span><span class="n">addOutputNode</span><span class="p">(</span><span class="n">it</span><span class="o">-&gt;</span><span class="n">second</span><span class="p">,</span><span class="w"> </span><span class="n">outSize</span><span class="p">);</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">hasOutputs</span><span class="p">()</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="o">!</span><span class="n">lastFU</span><span class="p">.</span><span class="n">empty</span><span class="p">())</span><span class="w"> </span><span class="n">addOutputNode</span><span class="p">(</span><span class="n">lastFU</span><span class="p">,</span><span class="w"> </span><span class="n">outSize</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">};</span>
+
+<span class="c1">// ─── Pass ────────────────────────────────────────────────────────────────────</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">CGRAExportLoopDFGPass</span>
+<span class="w">        </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">PassWrapper</span><span class="o">&lt;</span><span class="n">CGRAExportLoopDFGPass</span><span class="p">,</span><span class="w"> </span><span class="n">OperationPass</span><span class="o">&lt;</span><span class="n">ModuleOp</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+<span class="w">    </span><span class="n">MLIR_DEFINE_EXPLICIT_INTERNAL_INLINE_TYPE_ID</span><span class="p">(</span><span class="n">CGRAExportLoopDFGPass</span><span class="p">)</span>
+
+<span class="w">    </span><span class="n">CGRAExportLoopDFGPass</span><span class="p">()</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">default</span><span class="p">;</span>
+<span class="w">    </span><span class="c1">// Option&lt;&gt; is not copyable, so we delegate to the default constructor</span>
+<span class="w">    </span><span class="c1">// (which re-initialises all Options to their defaults) and then copy option</span>
+<span class="w">    </span><span class="c1">// values.</span>
+<span class="w">    </span><span class="n">CGRAExportLoopDFGPass</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">CGRAExportLoopDFGPass</span><span class="w"> </span><span class="o">&amp;</span><span class="n">other</span><span class="p">)</span>
+<span class="w">            </span><span class="o">:</span><span class="w"> </span><span class="n">CGRAExportLoopDFGPass</span><span class="p">()</span>
+<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="n">copyOptionValuesFrom</span><span class="p">(</span><span class="o">&amp;</span><span class="n">other</span><span class="p">);</span><span class="w"> </span><span class="p">}</span>
+
+<span class="w">    </span><span class="n">StringRef</span><span class="w"> </span><span class="n">getArgument</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">final</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="s">"export-loop-dfg"</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="n">StringRef</span><span class="w"> </span><span class="n">getDescription</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">final</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="s">"Export innermost affine.for computation loops as CGRA DFG .dot "</span>
+<span class="w">               </span><span class="s">"files"</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="n">Option</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span><span class="w"> </span><span class="n">outputDir</span><span class="p">{</span>
+<span class="w">        </span><span class="o">*</span><span class="k">this</span><span class="p">,</span>
+<span class="w">        </span><span class="s">"output-dir"</span><span class="p">,</span>
+<span class="w">        </span><span class="n">llvm</span><span class="o">::</span><span class="n">cl</span><span class="o">::</span><span class="n">desc</span><span class="p">(</span><span class="s">"Directory for output .dot files"</span><span class="p">),</span>
+<span class="w">        </span><span class="n">llvm</span><span class="o">::</span><span class="n">cl</span><span class="o">::</span><span class="n">init</span><span class="p">(</span><span class="s">"dot_results"</span><span class="p">)};</span>
+
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="nf">runOnOperation</span><span class="p">()</span><span class="w"> </span><span class="k">override</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="n">ModuleOp</span><span class="w"> </span><span class="k">module</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">getOperation</span><span class="p">();</span>
+<span class="w">        </span><span class="n">StringRef</span><span class="w"> </span><span class="n">dir</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">outputDir</span><span class="p">.</span><span class="n">getValue</span><span class="p">();</span>
+
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="n">ec</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">llvm</span><span class="o">::</span><span class="n">sys</span><span class="o">::</span><span class="n">fs</span><span class="o">::</span><span class="n">create_directories</span><span class="p">(</span><span class="n">dir</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">module</span><span class="p">.</span><span class="n">emitError</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"cannot create output directory '"</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">dir</span>
+<span class="w">                               </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"': "</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">ec</span><span class="p">.</span><span class="n">message</span><span class="p">();</span>
+<span class="w">            </span><span class="n">signalPassFailure</span><span class="p">();</span>
+<span class="w">            </span><span class="k">return</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="c1">// When the module has already been annotated (cgra.deploy regions</span>
+<span class="w">        </span><span class="c1">// exist), export ONLY the loops the driver actually offloads — those</span>
+<span class="w">        </span><span class="c1">// nested in a cgra.deploy. This keeps the per-loop DFG (→</span>
+<span class="w">        </span><span class="c1">// bitstream/io_map) indices in lock-step with --generate-cgra-driver's</span>
+<span class="w">        </span><span class="c1">// per-deploy config indices, even when the source carries extra</span>
+<span class="w">        </span><span class="c1">// host-side loops the driver never runs (a hand-written CPU reference</span>
+<span class="w">        </span><span class="c1">// function, array-init loops). On un-annotated IR (no deploys) the pass</span>
+<span class="w">        </span><span class="c1">// keeps its original whole-module behaviour.</span>
+<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">hasDeploy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="w">        </span><span class="k">module</span><span class="p">.</span><span class="n">walk</span><span class="p">([</span><span class="o">&amp;</span><span class="p">](</span><span class="n">cgra</span><span class="o">::</span><span class="n">DeployOp</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">hasDeploy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span><span class="w"> </span><span class="p">});</span>
+
+<span class="w">        </span><span class="c1">// The node emitter has no case for a divide/remainder or a `math`</span>
+<span class="w">        </span><span class="c1">// intrinsic, and DOES NOT FAIL on one: it contributes no node, its</span>
+<span class="w">        </span><span class="c1">// edges are dropped, and the .dot still parses — so the mapper produces</span>
+<span class="w">        </span><span class="c1">// a perfectly valid bitstream for a graph that computes something else.</span>
+<span class="w">        </span><span class="c1">// --annotate-to-cgra offloads a power-of-two divide and the integer</span>
+<span class="w">        </span><span class="c1">// math ops on the promise that</span>
+<span class="w">        </span><span class="c1">// --expand-fabric-ops lowered them first; that promise lives in a</span>
+<span class="w">        </span><span class="c1">// Makefile, so verify it here rather than trust it.</span>
+<span class="w">        </span><span class="c1">//</span>
+<span class="w">        </span><span class="c1">// A HARD ERROR, not a warning: the shipped DFG-export rules run</span>
+<span class="w">        </span><span class="c1">// picea-opt with</span>
+<span class="w">        </span><span class="c1">// `&gt;/dev/null 2&gt;&amp;1`, so a warning would be discarded and the wrong</span>
+<span class="w">        </span><span class="c1">// bitstream built anyway, whereas a non-zero exit stops the rule's `&amp;&amp;`</span>
+<span class="w">        </span><span class="c1">// chain.</span>
+<span class="w">        </span><span class="c1">//</span>
+<span class="w">        </span><span class="c1">// Only for a loop that is actually WRITTEN, which is not the same as</span>
+<span class="w">        </span><span class="c1">// one that passes the filters above — a store-only array-init nest gets</span>
+<span class="w">        </span><span class="c1">// an index but no file (no input streams), and conv_gen/conv_mc</span>
+<span class="w">        </span><span class="c1">// initialise their inputs with `(i*7 + j*3) % 11`. Checking before the</span>
+<span class="w">        </span><span class="c1">// build flagged those and broke two working kernels. Hence the single</span>
+<span class="w">        </span><span class="c1">// pass below: build everything, keep the text in memory, and write only</span>
+<span class="w">        </span><span class="c1">// once every exported loop has been verified — which also means a</span>
+<span class="w">        </span><span class="c1">// failure can never leave a PARTIAL .dot set behind, and the driver</span>
+<span class="w">        </span><span class="c1">// indexes configurations by position in that set.</span>
+<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">bad</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="w">        </span><span class="k">auto</span><span class="w"> </span><span class="n">verify</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="o">&amp;</span><span class="p">](</span><span class="n">affine</span><span class="o">::</span><span class="n">AffineForOp</span><span class="w"> </span><span class="n">forOp</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">forOp</span><span class="p">.</span><span class="n">walk</span><span class="p">([</span><span class="o">&amp;</span><span class="p">](</span><span class="n">Operation</span><span class="o">*</span><span class="w"> </span><span class="n">op</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="kt">bool</span><span class="w"> </span><span class="n">divRem</span><span class="w"> </span><span class="o">=</span>
+<span class="w">                    </span><span class="n">isa</span><span class="o">&lt;</span><span class="n">arith</span><span class="o">::</span><span class="n">DivSIOp</span><span class="p">,</span>
+<span class="w">                        </span><span class="n">arith</span><span class="o">::</span><span class="n">DivUIOp</span><span class="p">,</span>
+<span class="w">                        </span><span class="n">arith</span><span class="o">::</span><span class="n">RemSIOp</span><span class="p">,</span>
+<span class="w">                        </span><span class="n">arith</span><span class="o">::</span><span class="n">RemUIOp</span><span class="p">,</span>
+<span class="w">                        </span><span class="n">arith</span><span class="o">::</span><span class="n">CeilDivSIOp</span><span class="p">,</span>
+<span class="w">                        </span><span class="n">arith</span><span class="o">::</span><span class="n">CeilDivUIOp</span><span class="p">,</span>
+<span class="w">                        </span><span class="n">arith</span><span class="o">::</span><span class="n">FloorDivSIOp</span><span class="o">&gt;</span><span class="p">(</span><span class="n">op</span><span class="p">);</span>
+<span class="w">                </span><span class="kt">bool</span><span class="w"> </span><span class="n">mathOp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">op</span><span class="o">-&gt;</span><span class="n">getDialect</span><span class="p">()</span>
+<span class="w">                              </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">op</span><span class="o">-&gt;</span><span class="n">getDialect</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">getNamespace</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s">"math"</span><span class="p">;</span>
+<span class="w">                </span><span class="c1">// An arith.shrsi the exporter cannot correct (a shift amount</span>
+<span class="w">                </span><span class="c1">// that is neither a constant in [1,31] nor a routed value)</span>
+<span class="w">                </span><span class="c1">// would become a plain logical shift — silently wrong for</span>
+<span class="w">                </span><span class="c1">// negative inputs. It must be FATAL: `emitError` alone is</span>
+<span class="w">                </span><span class="c1">// invisible here, because the Makefile discards stderr and only</span>
+<span class="w">                </span><span class="c1">// the exit code is observed.</span>
+<span class="w">                </span><span class="kt">bool</span><span class="w"> </span><span class="n">badShift</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="n">sr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dyn_cast</span><span class="o">&lt;</span><span class="n">arith</span><span class="o">::</span><span class="n">ShRSIOp</span><span class="o">&gt;</span><span class="p">(</span><span class="n">op</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                    </span><span class="n">APInt</span><span class="w"> </span><span class="n">amt</span><span class="p">;</span>
+<span class="w">                    </span><span class="kt">bool</span><span class="w"> </span><span class="n">constAmt</span><span class="w"> </span><span class="o">=</span>
+<span class="w">                        </span><span class="n">matchPattern</span><span class="p">(</span><span class="n">sr</span><span class="p">.</span><span class="n">getRhs</span><span class="p">(),</span><span class="w"> </span><span class="n">m_ConstantInt</span><span class="p">(</span><span class="o">&amp;</span><span class="n">amt</span><span class="p">));</span>
+<span class="w">                    </span><span class="kt">int64_t</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">constAmt</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">amt</span><span class="p">.</span><span class="n">getSExtValue</span><span class="p">()</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">                    </span><span class="n">badShift</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">constAmt</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="p">(</span><span class="n">a</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">32</span><span class="p">);</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">divRem</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="o">!</span><span class="n">mathOp</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="o">!</span><span class="n">badShift</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="p">;</span>
+<span class="w">                </span><span class="n">bad</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="w">                </span><span class="n">op</span><span class="o">-&gt;</span><span class="n">emitError</span><span class="p">(</span><span class="s">"export-loop-dfg: '"</span><span class="p">)</span>
+<span class="w">                    </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">op</span><span class="o">-&gt;</span><span class="n">getName</span><span class="p">().</span><span class="n">getStringRef</span><span class="p">()</span>
+<span class="w">                    </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"' has no DFG node, so it would be silently DROPPED "</span>
+<span class="w">                       </span><span class="s">"from the "</span>
+<span class="w">                       </span><span class="s">"exported graph and the bitstream would compute "</span>
+<span class="w">                       </span><span class="s">"something else; "</span>
+<span class="w">                       </span><span class="s">"run --expand-fabric-ops before this pass"</span><span class="p">;</span>
+<span class="w">            </span><span class="p">});</span>
+<span class="w">        </span><span class="p">};</span>
+<span class="w">        </span><span class="n">llvm</span><span class="o">::</span><span class="n">SmallVector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">pair</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;&gt;</span>
+<span class="w">            </span><span class="n">pending</span><span class="p">;</span><span class="w"> </span><span class="c1">// stem, dot</span>
+
+<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">loopIdx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">        </span><span class="k">module</span><span class="p">.</span><span class="n">walk</span><span class="p">([</span><span class="o">&amp;</span><span class="p">](</span><span class="n">affine</span><span class="o">::</span><span class="n">AffineForOp</span><span class="w"> </span><span class="n">forOp</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">hasDeploy</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="o">!</span><span class="n">forOp</span><span class="o">-&gt;</span><span class="n">getParentOfType</span><span class="o">&lt;</span><span class="n">cgra</span><span class="o">::</span><span class="n">DeployOp</span><span class="o">&gt;</span><span class="p">())</span><span class="w"> </span><span class="k">return</span><span class="p">;</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">isComputationLoop</span><span class="p">(</span><span class="n">forOp</span><span class="p">))</span><span class="w"> </span><span class="k">return</span><span class="p">;</span>
+<span class="w">            </span><span class="c1">// Emit a DFG only for the loops the driver runs on the fabric — the</span>
+<span class="w">            </span><span class="c1">// same streamability predicate --generate-cgra-driver uses — so the</span>
+<span class="w">            </span><span class="c1">// per-loop DFG (and hence bitstream) indices line up with the</span>
+<span class="w">            </span><span class="c1">// driver's config indices. A reduction/conv nest runs on the CPU</span>
+<span class="w">            </span><span class="c1">// and gets no DFG.</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">cgra</span><span class="o">::</span><span class="n">isFabricStreamable</span><span class="p">(</span><span class="n">forOp</span><span class="p">))</span><span class="w"> </span><span class="k">return</span><span class="p">;</span>
+
+<span class="w">            </span><span class="kt">int</span><span class="w"> </span><span class="n">thisIdx</span><span class="w"> </span><span class="o">=</span>
+<span class="w">                </span><span class="n">loopIdx</span><span class="o">++</span><span class="p">;</span><span class="w"> </span><span class="c1">// increment regardless, so filename indices match</span>
+<span class="w">                           </span><span class="c1">// the Python script's per-file loop enumeration</span>
+
+<span class="w">            </span><span class="n">DFGBuilder</span><span class="w"> </span><span class="n">b</span><span class="p">;</span>
+<span class="w">            </span><span class="n">b</span><span class="p">.</span><span class="n">build</span><span class="p">(</span><span class="n">forOp</span><span class="p">);</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">b</span><span class="p">.</span><span class="n">fatal</span><span class="p">)</span><span class="w"> </span><span class="n">bad</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+
+<span class="w">            </span><span class="c1">// Skip loops that produced no inputs or no FU nodes (e.g.</span>
+<span class="w">            </span><span class="c1">// index-cast init loops that slipped through the arith check). This</span>
+<span class="w">            </span><span class="c1">// is the point at which a loop is committed to becoming a file, so</span>
+<span class="w">            </span><span class="c1">// it is also the point at which it must be verified.</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">b</span><span class="p">.</span><span class="n">hasInputs</span><span class="p">()</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="o">!</span><span class="n">b</span><span class="p">.</span><span class="n">hasFUs</span><span class="p">())</span><span class="w"> </span><span class="k">return</span><span class="p">;</span>
+<span class="w">            </span><span class="n">verify</span><span class="p">(</span><span class="n">forOp</span><span class="p">);</span>
+
+<span class="w">            </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">lb</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"0"</span><span class="p">,</span><span class="w"> </span><span class="n">ub</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"?"</span><span class="p">;</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">forOp</span><span class="p">.</span><span class="n">hasConstantLowerBound</span><span class="p">())</span>
+<span class="w">                </span><span class="n">lb</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">to_string</span><span class="p">(</span><span class="n">forOp</span><span class="p">.</span><span class="n">getConstantLowerBound</span><span class="p">());</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">forOp</span><span class="p">.</span><span class="n">hasConstantUpperBound</span><span class="p">())</span>
+<span class="w">                </span><span class="n">ub</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">to_string</span><span class="p">(</span><span class="n">forOp</span><span class="p">.</span><span class="n">getConstantUpperBound</span><span class="p">());</span>
+
+<span class="w">            </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">idxStr</span><span class="w"> </span><span class="o">=</span>
+<span class="w">                </span><span class="p">(</span><span class="n">thisIdx</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">10</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="s">"0"</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="s">""</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">to_string</span><span class="p">(</span><span class="n">thisIdx</span><span class="p">);</span>
+<span class="w">            </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">stem</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"loop_"</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">idxStr</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">"_iter"</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">lb</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">"to"</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">ub</span><span class="p">;</span>
+
+<span class="w">            </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">dot</span><span class="p">;</span>
+<span class="w">            </span><span class="n">llvm</span><span class="o">::</span><span class="n">raw_string_ostream</span><span class="w"> </span><span class="n">os</span><span class="p">(</span><span class="n">dot</span><span class="p">);</span>
+<span class="w">            </span><span class="n">writeDot</span><span class="p">(</span><span class="n">os</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="p">.</span><span class="n">nodes</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="p">.</span><span class="n">edges</span><span class="p">);</span>
+<span class="w">            </span><span class="n">pending</span><span class="p">.</span><span class="n">emplace_back</span><span class="p">(</span><span class="n">stem</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">dot</span><span class="p">));</span>
+<span class="w">        </span><span class="p">});</span>
+
+<span class="w">        </span><span class="c1">// Every cgra.deploy MUST have produced exactly one .dot. The driver</span>
+<span class="w">        </span><span class="c1">// numbers its configurations from the deploys and the mapper numbers</span>
+<span class="w">        </span><span class="c1">// its bitstreams from these files, so a shortfall pairs configuration k</span>
+<span class="w">        </span><span class="c1">// with bitstream k-1 from the first missing one onward — silently,</span>
+<span class="w">        </span><span class="c1">// because both artifacts are individually valid. lenet shipped 60</span>
+<span class="w">        </span><span class="c1">// deploys against 58 contiguously-numbered .dot files this way. Now</span>
+<span class="w">        </span><span class="c1">// that both sides share cgra::hasFabricArith this should be</span>
+<span class="w">        </span><span class="c1">// unreachable; if it fires, a deploy exists that the exporter cannot</span>
+<span class="w">        </span><span class="c1">// express and that is a hard error.</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">hasDeploy</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="c1">// Count what the DRIVER will call a fabric configuration, not every</span>
+<span class="w">            </span><span class="c1">// deploy: it marks `onFabric = isFabricStreamable(nest)` and leaves</span>
+<span class="w">            </span><span class="c1">// the rest on the CPU, so a non-streamable deploy legitimately has</span>
+<span class="w">            </span><span class="c1">// no .dot. Comparing against ALL deploys instead flagged lenet's</span>
+<span class="w">            </span><span class="c1">// 60-vs-58 as an error when the driver also counts 58.</span>
+<span class="w">            </span><span class="kt">unsigned</span><span class="w"> </span><span class="n">deploys</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">            </span><span class="k">module</span><span class="p">.</span><span class="n">walk</span><span class="p">([</span><span class="o">&amp;</span><span class="p">](</span><span class="n">cgra</span><span class="o">::</span><span class="n">DeployOp</span><span class="w"> </span><span class="n">d</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="kt">bool</span><span class="w"> </span><span class="n">fabric</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="w">                </span><span class="n">d</span><span class="p">.</span><span class="n">getBody</span><span class="p">().</span><span class="n">walk</span><span class="p">([</span><span class="o">&amp;</span><span class="p">](</span><span class="n">affine</span><span class="o">::</span><span class="n">AffineForOp</span><span class="w"> </span><span class="n">f</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">cgra</span><span class="o">::</span><span class="n">isFabricStreamable</span><span class="p">(</span><span class="n">f</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">isComputationLoop</span><span class="p">(</span><span class="n">f</span><span class="p">))</span>
+<span class="w">                        </span><span class="n">fabric</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="w">                </span><span class="p">});</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">fabric</span><span class="p">)</span><span class="w"> </span><span class="o">++</span><span class="n">deploys</span><span class="p">;</span>
+<span class="w">            </span><span class="p">});</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">deploys</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">pending</span><span class="p">.</span><span class="n">size</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="k">module</span><span class="p">.</span><span class="n">emitError</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"export-loop-dfg: "</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">deploys</span>
+<span class="w">                                   </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">" cgra.deploy but "</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">pending</span><span class="p">.</span><span class="n">size</span><span class="p">()</span>
+<span class="w">                                   </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">" DFGs — the configuration and bitstream "</span>
+<span class="w">                                      </span><span class="s">"indices would not line up"</span><span class="p">;</span>
+<span class="w">                </span><span class="n">bad</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">bad</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">signalPassFailure</span><span class="p">();</span>
+<span class="w">            </span><span class="k">return</span><span class="p">;</span><span class="w"> </span><span class="c1">// nothing written: a partial .dot set misnumbers every</span>
+<span class="w">                    </span><span class="c1">// later config</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="o">&amp;</span><span class="p">[</span><span class="n">stem</span><span class="p">,</span><span class="w"> </span><span class="n">dot</span><span class="p">]</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">pending</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">outPath</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dir</span><span class="p">.</span><span class="n">str</span><span class="p">()</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">"/"</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">stem</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">".dot"</span><span class="p">;</span>
+<span class="w">            </span><span class="n">std</span><span class="o">::</span><span class="n">error_code</span><span class="w"> </span><span class="n">ec</span><span class="p">;</span>
+<span class="w">            </span><span class="n">llvm</span><span class="o">::</span><span class="n">raw_fd_ostream</span><span class="w"> </span><span class="n">os</span><span class="p">(</span><span class="n">outPath</span><span class="p">,</span><span class="w"> </span><span class="n">ec</span><span class="p">);</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">ec</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="k">module</span><span class="p">.</span><span class="n">emitError</span><span class="p">()</span>
+<span class="w">                    </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"cannot write '"</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">outPath</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"': "</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">ec</span><span class="p">.</span><span class="n">message</span><span class="p">();</span>
+<span class="w">                </span><span class="n">signalPassFailure</span><span class="p">();</span>
+<span class="w">                </span><span class="k">return</span><span class="p">;</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="n">os</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">dot</span><span class="p">;</span>
+<span class="w">            </span><span class="n">llvm</span><span class="o">::</span><span class="n">outs</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"  "</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">stem</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">".dot</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">};</span>
+
+<span class="p">}</span><span class="w"> </span><span class="c1">// namespace</span>
+
+<span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">mlir</span><span class="o">::</span><span class="n">Pass</span><span class="o">&gt;</span><span class="w"> </span><span class="n">cgra</span><span class="o">::</span><span class="n">createCGRAExportLoopDFGPass</span><span class="p">()</span>
+<span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">make_unique</span><span class="o">&lt;</span><span class="n">CGRAExportLoopDFGPass</span><span class="o">&gt;</span><span class="p">();</span><span class="w"> </span><span class="p">}</span>
+</pre></div>
+</div>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

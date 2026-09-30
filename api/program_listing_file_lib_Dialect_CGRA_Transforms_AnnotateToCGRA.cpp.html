@@ -1,0 +1,323 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Program Listing for File AnnotateToCGRA.cpp &mdash; picea 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/collapsible-lists/css/tree_view.css?v=a885cde7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js?v=73120307"></script>
+      <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js?v=660e4f45"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            picea
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Installation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../README.html">About the project</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#guides">Guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#related-projects">Related projects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#development-environment-nix">Development Environment (Nix)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#build-on-ubuntu-24-04-no-nix">Build on Ubuntu 24.04 (no Nix)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#gurobi-license">Gurobi license</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#installing">Installing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#run-the-tests">Run the tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#build-the-documentation">Build the documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#compiling-a-design">Compiling a design</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#running-a-design-on-the-board">Running a design on the board</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#exporting-a-profiled-application-to-mocasin">Exporting a profiled application to Mocasin</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Guides</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../guides/laksa.html">The FPGA Variant using LAKSA backend</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/cgra.html">The CGRA Variant</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">MLIR Dialects</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/Base2Ops.html">‘base2’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/CGRAOps.html">‘cgra’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/DFGOps.html">‘dfg’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/EmitHLSOps.html">‘emithls’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/FilterOps.html">‘filter’ Dialect</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Passes</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/PICEAConversionPasses.html">PICEA Conversion Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/CGRAPasses.html">CGRA Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/DFGPasses.html">DFG Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/EmitHLSPasses.html">Emit HLS Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/FuncExtPasses.html">Func Ext Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/LinalgExtPasses.html">Linalg Ext Passes</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">C++ API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="library_root.html">C++ API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">picea</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Program Listing for File AnnotateToCGRA.cpp</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/program_listing_file_lib_Dialect_CGRA_Transforms_AnnotateToCGRA.cpp.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="program-listing-for-file-annotatetocgra-cpp">
+<span id="program-listing-file-lib-dialect-cgra-transforms-annotatetocgra-cpp"></span><h1>Program Listing for File AnnotateToCGRA.cpp<a class="headerlink" href="#program-listing-for-file-annotatetocgra-cpp" title="Link to this heading"></a></h1>
+<p>↰ <a class="reference internal" href="file_lib_Dialect_CGRA_Transforms_AnnotateToCGRA.cpp.html#file-lib-dialect-cgra-transforms-annotatetocgra-cpp"><span class="std std-ref">Return to documentation for file</span></a> (<code class="docutils literal notranslate"><span class="pre">lib/Dialect/CGRA/Transforms/AnnotateToCGRA.cpp</span></code>)</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">"mlir/Dialect/Affine/IR/AffineOps.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"mlir/Dialect/Arith/IR/Arith.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"mlir/Dialect/Func/IR/FuncOps.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"mlir/IR/IRMapping.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"mlir/Pass/Pass.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"picea-mlir/Dialect/CGRA/IR/CGRA.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"picea-mlir/Dialect/CGRA/Transforms/CGRAAnalysisUtils.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"picea-mlir/Dialect/CGRA/Transforms/Passes.h"</span>
+
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"llvm/ADT/SetVector.h"</span>
+
+<span class="k">using</span><span class="w"> </span><span class="k">namespace</span><span class="w"> </span><span class="nn">mlir</span><span class="p">;</span>
+
+<span class="k">namespace</span><span class="w"> </span><span class="p">{</span>
+<span class="k">struct</span><span class="w"> </span><span class="nc">CGRAAnnotateToCGRAPass</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">PassWrapper</span><span class="o">&lt;</span>
+<span class="w">                                    </span><span class="n">CGRAAnnotateToCGRAPass</span><span class="p">,</span>
+<span class="w">                                    </span><span class="n">OperationPass</span><span class="o">&lt;</span><span class="n">func</span><span class="o">::</span><span class="n">FuncOp</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">    </span><span class="n">MLIR_DEFINE_EXPLICIT_INTERNAL_INLINE_TYPE_ID</span><span class="p">(</span><span class="n">CGRAAnnotateToCGRAPass</span><span class="p">)</span>
+
+<span class="w">    </span><span class="n">StringRef</span><span class="w"> </span><span class="n">getArgument</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">final</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="s">"annotate-to-cgra"</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="n">StringRef</span><span class="w"> </span><span class="nf">getDescription</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">final</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="s">"Wrap affine.for loops in cgra.deploy regions for CGRA "</span>
+<span class="w">               </span><span class="s">"offloading"</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="nf">getDependentDialects</span><span class="p">(</span><span class="n">mlir</span><span class="o">::</span><span class="n">DialectRegistry</span><span class="w"> </span><span class="o">&amp;</span><span class="n">registry</span><span class="p">)</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">override</span>
+<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="n">registry</span><span class="p">.</span><span class="n">insert</span><span class="o">&lt;</span><span class="n">cgra</span><span class="o">::</span><span class="n">CGRADialect</span><span class="o">&gt;</span><span class="p">();</span><span class="w"> </span><span class="p">}</span>
+
+<span class="w">    </span><span class="c1">// A loop is a CGRA kernel if it both reads and writes memory — it streams</span>
+<span class="w">    </span><span class="c1">// data in, computes, and streams a result out. This keeps the real kernel</span>
+<span class="w">    </span><span class="c1">// shapes (reductions like `s += a[i]*b[i]`, elementwise maps like `b[i] =</span>
+<span class="w">    </span><span class="c1">// a[i]+1`, `a[i] += b[i]`, and in-place self-maps like `a[i] = relu(a[i])`)</span>
+<span class="w">    </span><span class="c1">// while leaving on the host the two shapes that only surround a kernel:</span>
+<span class="w">    </span><span class="c1">//   * initialisation loops that only store (e.g. a[i] = i) — no load;</span>
+<span class="w">    </span><span class="c1">//   * printf/dump loops that only load an already-computed array — no</span>
+<span class="w">    </span><span class="c1">//   store.</span>
+<span class="w">    </span><span class="c1">// An in-place self-map (the loaded array is also the stored one, no</span>
+<span class="w">    </span><span class="c1">// distinct input) is a valid streamed kernel on STRELA: the fabric reads</span>
+<span class="w">    </span><span class="c1">// the array on an IMN and writes it back on an OMN (the stream is</span>
+<span class="w">    </span><span class="c1">// classified `inout` downstream by --annotate-dispatch-io). It is offloaded</span>
+<span class="w">    </span><span class="c1">// too.</span>
+<span class="w">    </span><span class="k">static</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="nf">hasComputation</span><span class="p">(</span><span class="n">affine</span><span class="o">::</span><span class="n">AffineForOp</span><span class="w"> </span><span class="n">forOp</span><span class="p">)</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">stored</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">,</span><span class="w"> </span><span class="n">loaded</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="w">        </span><span class="n">forOp</span><span class="p">.</span><span class="n">walk</span><span class="p">([</span><span class="o">&amp;</span><span class="p">](</span><span class="n">affine</span><span class="o">::</span><span class="n">AffineStoreOp</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">stored</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span><span class="w"> </span><span class="p">});</span>
+<span class="w">        </span><span class="n">forOp</span><span class="p">.</span><span class="n">walk</span><span class="p">([</span><span class="o">&amp;</span><span class="p">](</span><span class="n">affine</span><span class="o">::</span><span class="n">AffineLoadOp</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">loaded</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span><span class="w"> </span><span class="p">});</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">stored</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="o">!</span><span class="n">loaded</span><span class="p">)</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span><span class="w"> </span><span class="c1">// needs both a genuine input read and an output write</span>
+<span class="w">        </span><span class="c1">// …and something to actually COMPUTE. A pure copy (`b[i] = a[i]`, or</span>
+<span class="w">        </span><span class="c1">// the gather that --conv-to-im2col emits) has no arithmetic: offloading</span>
+<span class="w">        </span><span class="c1">// it burns a configuration to move data the core could copy directly.</span>
+<span class="w">        </span><span class="c1">// It also breaks the pipeline, because --export-loop-dfg refuses to</span>
+<span class="w">        </span><span class="c1">// emit a DFG for a nest with no arith op (isComputationLoop), so the</span>
+<span class="w">        </span><span class="c1">// driver would emit a config whose bitstream never exists. Keep the two</span>
+<span class="w">        </span><span class="c1">// in agreement. THE shared predicate — the same one --export-loop-dfg</span>
+<span class="w">        </span><span class="c1">// gates on, so a nest that becomes a cgra.deploy here is guaranteed to</span>
+<span class="w">        </span><span class="c1">// become a .dot there. This was a second, independent copy of the arith</span>
+<span class="w">        </span><span class="c1">// check and it had drifted: the exporter also refused a nest containing</span>
+<span class="w">        </span><span class="c1">// an LLVM::CallOp and this did not, so a deploy could be created that</span>
+<span class="w">        </span><span class="c1">// never produced a bitstream. Take the MORE RESTRICTIVE condition.</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">cgra</span><span class="o">::</span><span class="n">hasFabricArith</span><span class="p">(</span><span class="n">forOp</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="o">!</span><span class="n">cgra</span><span class="o">::</span><span class="n">hasHostCall</span><span class="p">(</span><span class="n">forOp</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="nf">runOnOperation</span><span class="p">()</span><span class="w"> </span><span class="k">override</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="n">func</span><span class="o">::</span><span class="n">FuncOp</span><span class="w"> </span><span class="n">funcOp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">getOperation</span><span class="p">();</span>
+
+<span class="w">        </span><span class="c1">// Only wrap the outermost affine.for of each maximal loop nest: collect</span>
+<span class="w">        </span><span class="c1">// every affine.for that does not itself sit inside another affine.for.</span>
+<span class="w">        </span><span class="c1">// Cloning the outermost loop pulls its entire nested body along with</span>
+<span class="w">        </span><span class="c1">// it, so a multi-level nest ends up under a single cgra.deploy instead</span>
+<span class="w">        </span><span class="c1">// of one nested cgra.deploy per loop level. Collect first, then mutate,</span>
+<span class="w">        </span><span class="c1">// so erasing outer loops doesn't invalidate the walk.</span>
+<span class="w">        </span><span class="n">llvm</span><span class="o">::</span><span class="n">SmallVector</span><span class="o">&lt;</span><span class="n">affine</span><span class="o">::</span><span class="n">AffineForOp</span><span class="o">&gt;</span><span class="w"> </span><span class="n">topLevelLoops</span><span class="p">;</span>
+<span class="w">        </span><span class="n">funcOp</span><span class="p">.</span><span class="n">walk</span><span class="p">([</span><span class="o">&amp;</span><span class="p">](</span><span class="n">affine</span><span class="o">::</span><span class="n">AffineForOp</span><span class="w"> </span><span class="n">forOp</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">forOp</span><span class="o">-&gt;</span><span class="n">getParentOfType</span><span class="o">&lt;</span><span class="n">affine</span><span class="o">::</span><span class="n">AffineForOp</span><span class="o">&gt;</span><span class="p">()</span>
+<span class="w">                </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">hasComputation</span><span class="p">(</span><span class="n">forOp</span><span class="p">))</span>
+<span class="w">                </span><span class="n">topLevelLoops</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">forOp</span><span class="p">);</span>
+<span class="w">        </span><span class="p">});</span>
+
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">affine</span><span class="o">::</span><span class="n">AffineForOp</span><span class="w"> </span><span class="n">forOp</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">topLevelLoops</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="c1">// Offloadability gate. The CGRA legalization passes</span>
+<span class="w">            </span><span class="c1">// (--legalize-to-i32,</span>
+<span class="w">            </span><span class="c1">// --affine-to-cgra, --normalize-cgra-compare,</span>
+<span class="w">            </span><span class="c1">// --predicated-store-to-select) rewrite i8/i64 arith, max/min,</span>
+<span class="w">            </span><span class="c1">// ext/trunc and unsupported compares into fabric-native ops. They</span>
+<span class="w">            </span><span class="c1">// run WHOLE-MODULE — in the shipped pipelines BEFORE this pass — so</span>
+<span class="w">            </span><span class="c1">// those ops are usually already lowered by the time we get here;</span>
+<span class="w">            </span><span class="c1">// the classification is deliberately order-independent (it treats</span>
+<span class="w">            </span><span class="c1">// them as Ok either way). Only reject an op that NO CGRA transform</span>
+<span class="w">            </span><span class="c1">// can ever turn into a fabric op (float, integer divide/remainder,</span>
+<span class="w">            </span><span class="c1">// math, a call): that loop can never run on the fabric, so it is a</span>
+<span class="w">            </span><span class="c1">// hard error and is left on the host. An unrecognised op is a</span>
+<span class="w">            </span><span class="c1">// warning only (it may still be handled downstream, or be harmless)</span>
+<span class="w">            </span><span class="c1">// and the loop is offloaded as before.</span>
+<span class="w">            </span><span class="n">Operation</span><span class="o">*</span><span class="w"> </span><span class="n">unlowerable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">nullptr</span><span class="p">;</span>
+<span class="w">            </span><span class="n">forOp</span><span class="p">.</span><span class="n">walk</span><span class="p">([</span><span class="o">&amp;</span><span class="p">](</span><span class="n">Operation</span><span class="o">*</span><span class="w"> </span><span class="n">op</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">cgra</span><span class="o">::</span><span class="n">classifyFabricOp</span><span class="p">(</span><span class="n">op</span><span class="p">)</span>
+<span class="w">                    </span><span class="o">==</span><span class="w"> </span><span class="n">cgra</span><span class="o">::</span><span class="n">FabricOpSupport</span><span class="o">::</span><span class="n">Unlowerable</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                    </span><span class="n">unlowerable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">op</span><span class="p">;</span>
+<span class="w">                    </span><span class="k">return</span><span class="w"> </span><span class="n">WalkResult</span><span class="o">::</span><span class="n">interrupt</span><span class="p">();</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="n">WalkResult</span><span class="o">::</span><span class="n">advance</span><span class="p">();</span>
+<span class="w">            </span><span class="p">});</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">unlowerable</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">unlowerable</span><span class="o">-&gt;</span><span class="n">emitError</span><span class="p">(</span><span class="s">"annotate-to-cgra: '"</span><span class="p">)</span>
+<span class="w">                    </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">unlowerable</span><span class="o">-&gt;</span><span class="n">getName</span><span class="p">().</span><span class="n">getStringRef</span><span class="p">()</span>
+<span class="w">                    </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"' has no STRELA fabric equivalent and cannot be "</span>
+<span class="w">                       </span><span class="s">"legalized to one; "</span>
+<span class="w">                       </span><span class="s">"the enclosing loop is not offloadable (left on the "</span>
+<span class="w">                       </span><span class="s">"host)"</span><span class="p">;</span>
+<span class="w">                </span><span class="n">signalPassFailure</span><span class="p">();</span>
+<span class="w">                </span><span class="k">continue</span><span class="p">;</span><span class="w"> </span><span class="c1">// do not wrap it in cgra.deploy</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="n">forOp</span><span class="p">.</span><span class="n">walk</span><span class="p">([</span><span class="o">&amp;</span><span class="p">](</span><span class="n">Operation</span><span class="o">*</span><span class="w"> </span><span class="n">op</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">cgra</span><span class="o">::</span><span class="n">classifyFabricOp</span><span class="p">(</span><span class="n">op</span><span class="p">)</span>
+<span class="w">                    </span><span class="o">==</span><span class="w"> </span><span class="n">cgra</span><span class="o">::</span><span class="n">FabricOpSupport</span><span class="o">::</span><span class="n">Unknown</span><span class="p">)</span>
+<span class="w">                    </span><span class="n">op</span><span class="o">-&gt;</span><span class="n">emitWarning</span><span class="p">(</span><span class="s">"annotate-to-cgra: '"</span><span class="p">)</span>
+<span class="w">                        </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">op</span><span class="o">-&gt;</span><span class="n">getName</span><span class="p">().</span><span class="n">getStringRef</span><span class="p">()</span>
+<span class="w">                        </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"' is not known to be CGRA-mappable (e.g. an "</span>
+<span class="w">                           </span><span class="s">"unsigned compare — "</span>
+<span class="w">                           </span><span class="s">"the fabric comparator is signed &gt;0/==0 only — or "</span>
+<span class="w">                           </span><span class="s">"an unrecognised "</span>
+<span class="w">                           </span><span class="s">"op); offloading anyway, verify it survives "</span>
+<span class="w">                           </span><span class="s">"--export-loop-dfg and "</span>
+<span class="w">                           </span><span class="s">"the mapper"</span><span class="p">;</span>
+<span class="w">            </span><span class="p">});</span>
+
+<span class="w">            </span><span class="n">OpBuilder</span><span class="w"> </span><span class="n">builder</span><span class="p">(</span><span class="n">forOp</span><span class="p">);</span>
+
+<span class="w">            </span><span class="c1">// The kernel's streams are the memref values the loop uses that are</span>
+<span class="w">            </span><span class="c1">// defined outside it (function arguments, allocas, globals). They</span>
+<span class="w">            </span><span class="c1">// become explicit operands of cgra.deploy, and the region receives</span>
+<span class="w">            </span><span class="c1">// them as block arguments, so the offloaded data flow is explicit</span>
+<span class="w">            </span><span class="c1">// rather than captured.</span>
+<span class="w">            </span><span class="n">llvm</span><span class="o">::</span><span class="n">SetVector</span><span class="o">&lt;</span><span class="n">Value</span><span class="o">&gt;</span><span class="w"> </span><span class="n">streams</span><span class="p">;</span>
+<span class="w">            </span><span class="n">forOp</span><span class="p">.</span><span class="n">walk</span><span class="p">([</span><span class="o">&amp;</span><span class="p">](</span><span class="n">Operation</span><span class="o">*</span><span class="w"> </span><span class="n">op</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">Value</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">op</span><span class="o">-&gt;</span><span class="n">getOperands</span><span class="p">())</span>
+<span class="w">                    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">isa</span><span class="o">&lt;</span><span class="n">MemRefType</span><span class="o">&gt;</span><span class="p">(</span><span class="n">v</span><span class="p">.</span><span class="n">getType</span><span class="p">()))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                        </span><span class="n">Operation</span><span class="o">*</span><span class="w"> </span><span class="n">d</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">v</span><span class="p">.</span><span class="n">getDefiningOp</span><span class="p">();</span>
+<span class="w">                        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">d</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="o">!</span><span class="n">forOp</span><span class="o">-&gt;</span><span class="n">isAncestor</span><span class="p">(</span><span class="n">d</span><span class="p">))</span><span class="w"> </span><span class="n">streams</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">v</span><span class="p">);</span>
+<span class="w">                    </span><span class="p">}</span>
+<span class="w">            </span><span class="p">});</span>
+<span class="w">            </span><span class="n">SmallVector</span><span class="o">&lt;</span><span class="n">Value</span><span class="o">&gt;</span><span class="w"> </span><span class="n">streamVec</span><span class="p">(</span><span class="n">streams</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span><span class="w"> </span><span class="n">streams</span><span class="p">.</span><span class="n">end</span><span class="p">());</span>
+
+<span class="w">            </span><span class="k">auto</span><span class="w"> </span><span class="n">deployOp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cgra</span><span class="o">::</span><span class="n">DeployOp</span><span class="o">::</span><span class="n">create</span><span class="p">(</span>
+<span class="w">                </span><span class="n">builder</span><span class="p">,</span>
+<span class="w">                </span><span class="n">forOp</span><span class="p">.</span><span class="n">getLoc</span><span class="p">(),</span>
+<span class="w">                </span><span class="n">streamVec</span><span class="p">,</span>
+<span class="w">                </span><span class="n">forOp</span><span class="p">.</span><span class="n">getResultTypes</span><span class="p">());</span>
+
+<span class="w">            </span><span class="n">Block</span><span class="o">*</span><span class="w"> </span><span class="n">bodyBlock</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&amp;</span><span class="n">deployOp</span><span class="p">.</span><span class="n">getBody</span><span class="p">().</span><span class="n">front</span><span class="p">();</span>
+<span class="w">            </span><span class="c1">// Clone the loop into the region, rewriting each stream use to the</span>
+<span class="w">            </span><span class="c1">// matching block argument (non-memref captures such as constants</span>
+<span class="w">            </span><span class="c1">// are left as-is).</span>
+<span class="w">            </span><span class="n">IRMapping</span><span class="w"> </span><span class="n">map</span><span class="p">;</span>
+<span class="w">            </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="n">s</span><span class="p">]</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">llvm</span><span class="o">::</span><span class="n">enumerate</span><span class="p">(</span><span class="n">streamVec</span><span class="p">))</span>
+<span class="w">                </span><span class="n">map</span><span class="p">.</span><span class="n">map</span><span class="p">(</span><span class="n">s</span><span class="p">,</span><span class="w"> </span><span class="n">bodyBlock</span><span class="o">-&gt;</span><span class="n">getArgument</span><span class="p">(</span><span class="n">i</span><span class="p">));</span>
+<span class="w">            </span><span class="n">OpBuilder</span><span class="w"> </span><span class="n">bodyBuilder</span><span class="p">(</span><span class="n">bodyBlock</span><span class="p">,</span><span class="w"> </span><span class="n">bodyBlock</span><span class="o">-&gt;</span><span class="n">begin</span><span class="p">());</span>
+<span class="w">            </span><span class="n">Operation</span><span class="o">*</span><span class="w"> </span><span class="n">clonedOp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">bodyBuilder</span><span class="p">.</span><span class="n">clone</span><span class="p">(</span><span class="o">*</span><span class="n">forOp</span><span class="p">.</span><span class="n">getOperation</span><span class="p">(),</span><span class="w"> </span><span class="n">map</span><span class="p">);</span>
+<span class="w">            </span><span class="n">cgra</span><span class="o">::</span><span class="n">YieldOp</span><span class="o">::</span><span class="n">create</span><span class="p">(</span>
+<span class="w">                </span><span class="n">bodyBuilder</span><span class="p">,</span>
+<span class="w">                </span><span class="n">forOp</span><span class="p">.</span><span class="n">getLoc</span><span class="p">(),</span>
+<span class="w">                </span><span class="n">clonedOp</span><span class="o">-&gt;</span><span class="n">getResults</span><span class="p">());</span>
+
+<span class="w">            </span><span class="n">forOp</span><span class="p">.</span><span class="n">replaceAllUsesWith</span><span class="p">(</span><span class="n">deployOp</span><span class="p">.</span><span class="n">getResults</span><span class="p">());</span>
+<span class="w">            </span><span class="n">forOp</span><span class="p">.</span><span class="n">erase</span><span class="p">();</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">};</span>
+<span class="p">}</span><span class="w"> </span><span class="c1">// namespace</span>
+
+<span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">mlir</span><span class="o">::</span><span class="n">Pass</span><span class="o">&gt;</span><span class="w"> </span><span class="n">mlir</span><span class="o">::</span><span class="n">cgra</span><span class="o">::</span><span class="n">createCGRAAnnotateToCGRAPass</span><span class="p">()</span>
+<span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">make_unique</span><span class="o">&lt;</span><span class="n">CGRAAnnotateToCGRAPass</span><span class="o">&gt;</span><span class="p">();</span><span class="w"> </span><span class="p">}</span>
+</pre></div>
+</div>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

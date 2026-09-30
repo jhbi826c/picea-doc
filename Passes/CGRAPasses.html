@@ -1,0 +1,296 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CGRA Passes &mdash; picea 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/collapsible-lists/css/tree_view.css?v=a885cde7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js?v=73120307"></script>
+      <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js?v=660e4f45"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="DFG Passes" href="DFGPasses.html" />
+    <link rel="prev" title="PICEA Conversion Passes" href="PICEAConversionPasses.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            picea
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Installation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../README.html">About the project</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#guides">Guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#related-projects">Related projects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#development-environment-nix">Development Environment (Nix)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#build-on-ubuntu-24-04-no-nix">Build on Ubuntu 24.04 (no Nix)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#gurobi-license">Gurobi license</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#installing">Installing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#run-the-tests">Run the tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#build-the-documentation">Build the documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#compiling-a-design">Compiling a design</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#running-a-design-on-the-board">Running a design on the board</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#exporting-a-profiled-application-to-mocasin">Exporting a profiled application to Mocasin</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Guides</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../guides/laksa.html">The FPGA Variant using LAKSA backend</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/cgra.html">The CGRA Variant</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">MLIR Dialects</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/Base2Ops.html">‘base2’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/CGRAOps.html">‘cgra’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/DFGOps.html">‘dfg’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/EmitHLSOps.html">‘emithls’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/FilterOps.html">‘filter’ Dialect</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Passes</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="PICEAConversionPasses.html">PICEA Conversion Passes</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">CGRA Passes</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#annotate-dispatch-io"><code class="docutils literal notranslate"><span class="pre">-annotate-dispatch-io</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#annotate-to-cgra"><code class="docutils literal notranslate"><span class="pre">-annotate-to-cgra</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#cgra-deploy-to-strela"><code class="docutils literal notranslate"><span class="pre">-cgra-deploy-to-strela</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#conv-to-im2col"><code class="docutils literal notranslate"><span class="pre">-conv-to-im2col</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#dfg-operator-to-cgra"><code class="docutils literal notranslate"><span class="pre">-dfg-operator-to-cgra</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#expand-fabric-ops"><code class="docutils literal notranslate"><span class="pre">-expand-fabric-ops</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#expand-memref-copy"><code class="docutils literal notranslate"><span class="pre">-expand-memref-copy</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#export-loop-dfg"><code class="docutils literal notranslate"><span class="pre">-export-loop-dfg</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#fuse-cgra-nests"><code class="docutils literal notranslate"><span class="pre">-fuse-cgra-nests</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#generate-cgra-driver"><code class="docutils literal notranslate"><span class="pre">-generate-cgra-driver</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#hoist-reduction-unpack"><code class="docutils literal notranslate"><span class="pre">-hoist-reduction-unpack</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#legalize-to-i32"><code class="docutils literal notranslate"><span class="pre">-legalize-to-i32</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#legalize-to-i32-func"><code class="docutils literal notranslate"><span class="pre">-legalize-to-i32-func</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#normalize-cgra-compare"><code class="docutils literal notranslate"><span class="pre">-normalize-cgra-compare</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#outline-cgra-deploy"><code class="docutils literal notranslate"><span class="pre">-outline-cgra-deploy</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#pack-cgra-buffers"><code class="docutils literal notranslate"><span class="pre">-pack-cgra-buffers</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#partition-cgra-dfg"><code class="docutils literal notranslate"><span class="pre">-partition-cgra-dfg</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#predicated-store-to-select"><code class="docutils literal notranslate"><span class="pre">-predicated-store-to-select</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#promote-accumulator"><code class="docutils literal notranslate"><span class="pre">-promote-accumulator</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#promote-alloca-to-global"><code class="docutils literal notranslate"><span class="pre">-promote-alloca-to-global</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#promote-scalar-reduction"><code class="docutils literal notranslate"><span class="pre">-promote-scalar-reduction</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#promote-shared-buffers"><code class="docutils literal notranslate"><span class="pre">-promote-shared-buffers</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#split-reduction-bias"><code class="docutils literal notranslate"><span class="pre">-split-reduction-bias</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#strela-to-llvm"><code class="docutils literal notranslate"><span class="pre">-strela-to-llvm</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#strip-stage-prints"><code class="docutils literal notranslate"><span class="pre">-strip-stage-prints</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#options">Options</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#unroll-lanes"><code class="docutils literal notranslate"><span class="pre">-unroll-lanes</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#widen-storage-to-i32"><code class="docutils literal notranslate"><span class="pre">-widen-storage-to-i32</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="DFGPasses.html">DFG Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="EmitHLSPasses.html">Emit HLS Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="FuncExtPasses.html">Func Ext Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="LinalgExtPasses.html">Linalg Ext Passes</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">C++ API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../api/library_root.html">C++ API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">picea</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">CGRA Passes</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/Passes/CGRAPasses.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="cgra-passes">
+<h1>CGRA Passes<a class="headerlink" href="#cgra-passes" title="Link to this heading"></a></h1>
+<!-- Autogenerated by mlir-tblgen; don't manually edit -->
+<section id="annotate-dispatch-io">
+<h2><code class="docutils literal notranslate"><span class="pre">-annotate-dispatch-io</span></code><a class="headerlink" href="#annotate-dispatch-io" title="Link to this heading"></a></h2>
+<p><em>Stamp dispatch I/O metadata onto each cgra.deploy</em></p>
+</section>
+<section id="annotate-to-cgra">
+<h2><code class="docutils literal notranslate"><span class="pre">-annotate-to-cgra</span></code><a class="headerlink" href="#annotate-to-cgra" title="Link to this heading"></a></h2>
+<p><em>Wrap offloadable affine.for loops in cgra.deploy regions</em></p>
+</section>
+<section id="cgra-deploy-to-strela">
+<h2><code class="docutils literal notranslate"><span class="pre">-cgra-deploy-to-strela</span></code><a class="headerlink" href="#cgra-deploy-to-strela" title="Link to this heading"></a></h2>
+<p><em>Replace each cgra.deploy with the STRELA programming sequence</em></p>
+</section>
+<section id="conv-to-im2col">
+<h2><code class="docutils literal notranslate"><span class="pre">-conv-to-im2col</span></code><a class="headerlink" href="#conv-to-im2col" title="Link to this heading"></a></h2>
+<p><em>Rewrite a general 2-D convolution into im2col + a 1-D dot-product reduction</em></p>
+</section>
+<section id="dfg-operator-to-cgra">
+<h2><code class="docutils literal notranslate"><span class="pre">-dfg-operator-to-cgra</span></code><a class="headerlink" href="#dfg-operator-to-cgra" title="Link to this heading"></a></h2>
+<p><em>Lower a self-contained dfg.operator to the func.func the CGRA pipeline compiles</em></p>
+</section>
+<section id="expand-fabric-ops">
+<h2><code class="docutils literal notranslate"><span class="pre">-expand-fabric-ops</span></code><a class="headerlink" href="#expand-fabric-ops" title="Link to this heading"></a></h2>
+<p><em>Expand power-of-two divide/remainder and math integer intrinsics into fabric-native ALU sequences</em></p>
+</section>
+<section id="expand-memref-copy">
+<h2><code class="docutils literal notranslate"><span class="pre">-expand-memref-copy</span></code><a class="headerlink" href="#expand-memref-copy" title="Link to this heading"></a></h2>
+<p><em>Rewrite memref.copy into an affine loop nest (no memrefCopy helper)</em></p>
+</section>
+<section id="export-loop-dfg">
+<h2><code class="docutils literal notranslate"><span class="pre">-export-loop-dfg</span></code><a class="headerlink" href="#export-loop-dfg" title="Link to this heading"></a></h2>
+<p><em>Write one GraphViz .dot per innermost computation loop</em></p>
+</section>
+<section id="fuse-cgra-nests">
+<h2><code class="docutils literal notranslate"><span class="pre">-fuse-cgra-nests</span></code><a class="headerlink" href="#fuse-cgra-nests" title="Link to this heading"></a></h2>
+<p><em>Fuse an adjacent producer-&gt;consumer affine nest pair into one CGRA configuration</em></p>
+</section>
+<section id="generate-cgra-driver">
+<h2><code class="docutils literal notranslate"><span class="pre">-generate-cgra-driver</span></code><a class="headerlink" href="#generate-cgra-driver" title="Link to this heading"></a></h2>
+<p><em>Generate the C driver (and GR-HEEP dataset.h) for an outlined CGRA kernel</em></p>
+</section>
+<section id="hoist-reduction-unpack">
+<h2><code class="docutils literal notranslate"><span class="pre">-hoist-reduction-unpack</span></code><a class="headerlink" href="#hoist-reduction-unpack" title="Link to this heading"></a></h2>
+<p><em>Move per-element preprocessing of a reduction operand out of the reduction loop</em></p>
+</section>
+<section id="legalize-to-i32">
+<h2><code class="docutils literal notranslate"><span class="pre">-legalize-to-i32</span></code><a class="headerlink" href="#legalize-to-i32" title="Link to this heading"></a></h2>
+<p><em>Rewrite the module’s i8/i64 arith into i32-only sequences</em></p>
+</section>
+<section id="legalize-to-i32-func">
+<h2><code class="docutils literal notranslate"><span class="pre">-legalize-to-i32-func</span></code><a class="headerlink" href="#legalize-to-i32-func" title="Link to this heading"></a></h2>
+<p><em>Rewrite one function’s i8/i64 arith into i32-only sequences</em></p>
+</section>
+<section id="normalize-cgra-compare">
+<h2><code class="docutils literal notranslate"><span class="pre">-normalize-cgra-compare</span></code><a class="headerlink" href="#normalize-cgra-compare" title="Link to this heading"></a></h2>
+<p><em>Rewrite arith.cmpi into the fabric-supported &gt;0 / ==0 vs zero forms</em></p>
+</section>
+<section id="outline-cgra-deploy">
+<h2><code class="docutils literal notranslate"><span class="pre">-outline-cgra-deploy</span></code><a class="headerlink" href="#outline-cgra-deploy" title="Link to this heading"></a></h2>
+<p><em>Outline a cgra.deploy and its host code into init/kernel/post</em></p>
+</section>
+<section id="pack-cgra-buffers">
+<h2><code class="docutils literal notranslate"><span class="pre">-pack-cgra-buffers</span></code><a class="headerlink" href="#pack-cgra-buffers" title="Link to this heading"></a></h2>
+<p><em>Share one buffer between intermediates whose live ranges are disjoint</em></p>
+</section>
+<section id="partition-cgra-dfg">
+<h2><code class="docutils literal notranslate"><span class="pre">-partition-cgra-dfg</span></code><a class="headerlink" href="#partition-cgra-dfg" title="Link to this heading"></a></h2>
+<p><em>Split a compute nest too large for one CGRA configuration into several, staged through temporary buffers</em></p>
+</section>
+<section id="predicated-store-to-select">
+<h2><code class="docutils literal notranslate"><span class="pre">-predicated-store-to-select</span></code><a class="headerlink" href="#predicated-store-to-select" title="Link to this heading"></a></h2>
+<p><em>Rewrite scf.if predicated affine.stores into affine.store of arith.select</em></p>
+</section>
+<section id="promote-accumulator">
+<h2><code class="docutils literal notranslate"><span class="pre">-promote-accumulator</span></code><a class="headerlink" href="#promote-accumulator" title="Link to this heading"></a></h2>
+<p><em>Rewrite an in-memory reduction accumulator (C[i][j] += …) into iter_args</em></p>
+</section>
+<section id="promote-alloca-to-global">
+<h2><code class="docutils literal notranslate"><span class="pre">-promote-alloca-to-global</span></code><a class="headerlink" href="#promote-alloca-to-global" title="Link to this heading"></a></h2>
+<p><em>Give stack buffers of an orchestrated-reduction nest static storage (memref.global)</em></p>
+</section>
+<section id="promote-scalar-reduction">
+<h2><code class="docutils literal notranslate"><span class="pre">-promote-scalar-reduction</span></code><a class="headerlink" href="#promote-scalar-reduction" title="Link to this heading"></a></h2>
+<p><em>Bufferize a top-level affine.for scalar accumulator (iter_args) into a 1-element memref</em></p>
+</section>
+<section id="promote-shared-buffers">
+<h2><code class="docutils literal notranslate"><span class="pre">-promote-shared-buffers</span></code><a class="headerlink" href="#promote-shared-buffers" title="Link to this heading"></a></h2>
+<p><em>Promote buffers streamed by more than one cgra.deploy to memref.global</em></p>
+</section>
+<section id="split-reduction-bias">
+<h2><code class="docutils literal notranslate"><span class="pre">-split-reduction-bias</span></code><a class="headerlink" href="#split-reduction-bias" title="Link to this heading"></a></h2>
+<p><em>Split <code class="docutils literal notranslate"><span class="pre">C</span> <span class="pre">=</span> <span class="pre">beta*C</span> <span class="pre">+</span> <span class="pre">reduce</span></code> into a zero-seeded reduction + elementwise bias</em></p>
+</section>
+<section id="strela-to-llvm">
+<h2><code class="docutils literal notranslate"><span class="pre">-strela-to-llvm</span></code><a class="headerlink" href="#strela-to-llvm" title="Link to this heading"></a></h2>
+<p><em>Lower cgra.strela_write/read to volatile llvm.store/load</em></p>
+</section>
+<section id="strip-stage-prints">
+<h2><code class="docutils literal notranslate"><span class="pre">-strip-stage-prints</span></code><a class="headerlink" href="#strip-stage-prints" title="Link to this heading"></a></h2>
+<p><em>Drop printf calls from outlined interleaved host stages (measurement builds)</em></p>
+<section id="options">
+<h3>Options<a class="headerlink" href="#options" title="Link to this heading"></a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">-</span><span class="n">include</span><span class="o">-</span><span class="n">post</span> <span class="p">:</span> <span class="n">Also</span> <span class="n">drop</span> <span class="n">the</span> <span class="n">printf</span> <span class="n">calls</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">final</span> <span class="n">host</span> <span class="n">segment</span> <span class="p">(</span><span class="o">*</span><span class="n">_post</span><span class="p">),</span> <span class="n">so</span> <span class="n">a</span> <span class="n">measurement</span> <span class="n">run</span> <span class="n">reaches</span> <span class="n">the</span> <span class="n">driver</span><span class="s1">'s SUCCESS/FAIL verdict as well as its cycle counts</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="unroll-lanes">
+<h2><code class="docutils literal notranslate"><span class="pre">-unroll-lanes</span></code><a class="headerlink" href="#unroll-lanes" title="Link to this heading"></a></h2>
+<p><em>Unroll-and-jam a compute nest by as many lanes as the fabric stream budget allows</em></p>
+</section>
+<section id="widen-storage-to-i32">
+<h2><code class="docutils literal notranslate"><span class="pre">-widen-storage-to-i32</span></code><a class="headerlink" href="#widen-storage-to-i32" title="Link to this heading"></a></h2>
+<p><em>Retype i8/i16 memref storage to i32 with load/store boundary casts</em></p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="PICEAConversionPasses.html" class="btn btn-neutral float-left" title="PICEA Conversion Passes" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="DFGPasses.html" class="btn btn-neutral float-right" title="DFG Passes" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

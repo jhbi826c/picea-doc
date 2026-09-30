@@ -1,0 +1,760 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Program Listing for File EmitHLSEnums.h.inc &mdash; picea 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/collapsible-lists/css/tree_view.css?v=a885cde7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js?v=73120307"></script>
+      <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js?v=660e4f45"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            picea
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Installation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../README.html">About the project</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#guides">Guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#related-projects">Related projects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#development-environment-nix">Development Environment (Nix)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#build-on-ubuntu-24-04-no-nix">Build on Ubuntu 24.04 (no Nix)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#gurobi-license">Gurobi license</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#installing">Installing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#run-the-tests">Run the tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#build-the-documentation">Build the documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#compiling-a-design">Compiling a design</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#running-a-design-on-the-board">Running a design on the board</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#exporting-a-profiled-application-to-mocasin">Exporting a profiled application to Mocasin</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Guides</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../guides/laksa.html">The FPGA Variant using LAKSA backend</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/cgra.html">The CGRA Variant</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">MLIR Dialects</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/Base2Ops.html">‘base2’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/CGRAOps.html">‘cgra’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/DFGOps.html">‘dfg’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/EmitHLSOps.html">‘emithls’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/FilterOps.html">‘filter’ Dialect</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Passes</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/PICEAConversionPasses.html">PICEA Conversion Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/CGRAPasses.html">CGRA Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/DFGPasses.html">DFG Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/EmitHLSPasses.html">Emit HLS Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/FuncExtPasses.html">Func Ext Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/LinalgExtPasses.html">Linalg Ext Passes</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">C++ API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="library_root.html">C++ API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">picea</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Program Listing for File EmitHLSEnums.h.inc</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/program_listing_file_build_include_picea-mlir_Dialect_EmitHLS_EmitHLSEnums.h.inc.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="program-listing-for-file-emithlsenums-h-inc">
+<span id="program-listing-file-build-include-picea-mlir-dialect-emithls-emithlsenums-h-inc"></span><h1>Program Listing for File EmitHLSEnums.h.inc<a class="headerlink" href="#program-listing-for-file-emithlsenums-h-inc" title="Link to this heading"></a></h1>
+<p>↰ <a class="reference internal" href="file_build_include_picea-mlir_Dialect_EmitHLS_EmitHLSEnums.h.inc.html#file-build-include-picea-mlir-dialect-emithls-emithlsenums-h-inc"><span class="std std-ref">Return to documentation for file</span></a> (<code class="docutils literal notranslate"><span class="pre">build/include/picea-mlir/Dialect/EmitHLS/EmitHLSEnums.h.inc</span></code>)</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cm">/*===- TableGen'erated file -------------------------------------*- C++ -*-===*\</span>
+<span class="cm">|*                                                                            *|</span>
+<span class="cm">|* Enum Utility Declarations                                                  *|</span>
+<span class="cm">|*                                                                            *|</span>
+<span class="cm">|* Automatically generated file, do not edit!                                 *|</span>
+<span class="cm">|* From: EmitHLSEnums.td                                                      *|</span>
+<span class="cm">|*                                                                            *|</span>
+<span class="cm">\*===----------------------------------------------------------------------===*/</span>
+
+<span class="k">namespace</span><span class="w"> </span><span class="nn">mlir</span><span class="o">::</span><span class="nn">emithls</span><span class="w"> </span><span class="p">{</span>
+
+<span class="c1">// #pragma HLS array_partition type=?</span>
+<span class="k">enum</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">ArrayPartitionType</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="kt">uint32_t</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="n">cyclic</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">  </span><span class="n">block</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">  </span><span class="n">complete</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span>
+<span class="p">};</span>
+
+<span class="o">::</span><span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;</span><span class="n">ArrayPartitionType</span><span class="o">&gt;</span><span class="w"> </span><span class="n">symbolizeArrayPartitionType</span><span class="p">(</span><span class="kt">uint32_t</span><span class="p">);</span>
+<span class="o">::</span><span class="n">llvm</span><span class="o">::</span><span class="n">StringRef</span><span class="w"> </span><span class="nf">stringifyArrayPartitionType</span><span class="p">(</span><span class="n">ArrayPartitionType</span><span class="p">);</span>
+<span class="o">::</span><span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;</span><span class="n">ArrayPartitionType</span><span class="o">&gt;</span><span class="w"> </span><span class="n">symbolizeArrayPartitionType</span><span class="p">(</span><span class="o">::</span><span class="n">llvm</span><span class="o">::</span><span class="n">StringRef</span><span class="p">);</span>
+<span class="kr">inline</span><span class="w"> </span><span class="k">constexpr</span><span class="w"> </span><span class="kt">unsigned</span><span class="w"> </span><span class="nf">getMaxEnumValForArrayPartitionType</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="mi">2</span><span class="p">;</span>
+<span class="p">}</span>
+
+
+<span class="kr">inline</span><span class="w"> </span><span class="o">::</span><span class="n">llvm</span><span class="o">::</span><span class="n">StringRef</span><span class="w"> </span><span class="nf">stringifyEnum</span><span class="p">(</span><span class="n">ArrayPartitionType</span><span class="w"> </span><span class="n">enumValue</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">stringifyArrayPartitionType</span><span class="p">(</span><span class="n">enumValue</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="k">template</span><span class="w"> </span><span class="o">&lt;</span><span class="k">typename</span><span class="w"> </span><span class="nc">EnumType</span><span class="o">&gt;</span>
+<span class="o">::</span><span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;</span><span class="n">EnumType</span><span class="o">&gt;</span><span class="w"> </span><span class="n">symbolizeEnum</span><span class="p">(</span><span class="o">::</span><span class="n">llvm</span><span class="o">::</span><span class="n">StringRef</span><span class="p">);</span>
+
+<span class="k">template</span><span class="w"> </span><span class="o">&lt;&gt;</span>
+<span class="kr">inline</span><span class="w"> </span><span class="o">::</span><span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;</span><span class="n">ArrayPartitionType</span><span class="o">&gt;</span><span class="w"> </span><span class="n">symbolizeEnum</span><span class="o">&lt;</span><span class="n">ArrayPartitionType</span><span class="o">&gt;</span><span class="p">(</span><span class="o">::</span><span class="n">llvm</span><span class="o">::</span><span class="n">StringRef</span><span class="w"> </span><span class="n">str</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">symbolizeArrayPartitionType</span><span class="p">(</span><span class="n">str</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">ArrayPartitionTypeAttr</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="o">::</span><span class="n">mlir</span><span class="o">::</span><span class="n">IntegerAttr</span><span class="w"> </span><span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+<span class="w">  </span><span class="k">using</span><span class="w"> </span><span class="n">ValueType</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ArrayPartitionType</span><span class="p">;</span>
+<span class="w">  </span><span class="k">using</span><span class="w"> </span><span class="o">::</span><span class="n">mlir</span><span class="o">::</span><span class="n">IntegerAttr</span><span class="o">::</span><span class="n">IntegerAttr</span><span class="p">;</span>
+<span class="w">  </span><span class="k">static</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="nf">classof</span><span class="p">(</span><span class="o">::</span><span class="n">mlir</span><span class="o">::</span><span class="n">Attribute</span><span class="w"> </span><span class="n">attr</span><span class="p">);</span>
+<span class="w">  </span><span class="k">static</span><span class="w"> </span><span class="n">ArrayPartitionTypeAttr</span><span class="w"> </span><span class="nf">get</span><span class="p">(</span><span class="o">::</span><span class="n">mlir</span><span class="o">::</span><span class="n">MLIRContext</span><span class="w"> </span><span class="o">*</span><span class="n">context</span><span class="p">,</span><span class="w"> </span><span class="n">ArrayPartitionType</span><span class="w"> </span><span class="n">val</span><span class="p">);</span>
+<span class="w">  </span><span class="n">ArrayPartitionType</span><span class="w"> </span><span class="nf">getValue</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="p">}</span><span class="w"> </span><span class="c1">// namespace mlir::emithls</span>
+
+<span class="k">namespace</span><span class="w"> </span><span class="nn">mlir</span><span class="w"> </span><span class="p">{</span>
+<span class="k">template</span><span class="w"> </span><span class="o">&lt;</span><span class="k">typename</span><span class="w"> </span><span class="nc">T</span><span class="p">,</span><span class="w"> </span><span class="k">typename</span><span class="o">&gt;</span>
+<span class="k">struct</span><span class="w"> </span><span class="nc">FieldParser</span><span class="p">;</span>
+
+<span class="k">template</span><span class="o">&lt;&gt;</span>
+<span class="k">struct</span><span class="w"> </span><span class="nc">FieldParser</span><span class="o">&lt;::</span><span class="n">mlir</span><span class="o">::</span><span class="n">emithls</span><span class="o">::</span><span class="n">ArrayPartitionType</span><span class="p">,</span><span class="w"> </span><span class="o">::</span><span class="n">mlir</span><span class="o">::</span><span class="n">emithls</span><span class="o">::</span><span class="n">ArrayPartitionType</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">template</span><span class="w"> </span><span class="o">&lt;</span><span class="k">typename</span><span class="w"> </span><span class="nc">ParserT</span><span class="o">&gt;</span>
+<span class="w">  </span><span class="k">static</span><span class="w"> </span><span class="n">FailureOr</span><span class="o">&lt;::</span><span class="n">mlir</span><span class="o">::</span><span class="n">emithls</span><span class="o">::</span><span class="n">ArrayPartitionType</span><span class="o">&gt;</span><span class="w"> </span><span class="n">parse</span><span class="p">(</span><span class="n">ParserT</span><span class="w"> </span><span class="o">&amp;</span><span class="n">parser</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="c1">// Parse the keyword/string containing the enum.</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">enumKeyword</span><span class="p">;</span>
+<span class="w">    </span><span class="k">auto</span><span class="w"> </span><span class="n">loc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">parser</span><span class="p">.</span><span class="n">getCurrentLocation</span><span class="p">();</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">failed</span><span class="p">(</span><span class="n">parser</span><span class="p">.</span><span class="n">parseOptionalKeywordOrString</span><span class="p">(</span><span class="o">&amp;</span><span class="n">enumKeyword</span><span class="p">)))</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="n">parser</span><span class="p">.</span><span class="n">emitError</span><span class="p">(</span><span class="n">loc</span><span class="p">,</span><span class="w"> </span><span class="s">"expected keyword for #pragma HLS array_partition type=?"</span><span class="p">);</span>
+
+<span class="w">    </span><span class="c1">// Symbolize the keyword.</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">::</span><span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;::</span><span class="n">mlir</span><span class="o">::</span><span class="n">emithls</span><span class="o">::</span><span class="n">ArrayPartitionType</span><span class="o">&gt;</span><span class="w"> </span><span class="n">attr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">::</span><span class="n">mlir</span><span class="o">::</span><span class="n">emithls</span><span class="o">::</span><span class="n">symbolizeEnum</span><span class="o">&lt;::</span><span class="n">mlir</span><span class="o">::</span><span class="n">emithls</span><span class="o">::</span><span class="n">ArrayPartitionType</span><span class="o">&gt;</span><span class="p">(</span><span class="n">enumKeyword</span><span class="p">))</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="o">*</span><span class="n">attr</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">parser</span><span class="p">.</span><span class="n">emitError</span><span class="p">(</span><span class="n">loc</span><span class="p">,</span><span class="w"> </span><span class="s">"expected one of [cyclic, block, complete] for #pragma HLS array_partition type=?, got: "</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">enumKeyword</span><span class="p">;</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">};</span>
+
+<span class="k">template</span><span class="o">&lt;&gt;</span>
+<span class="k">struct</span><span class="w"> </span><span class="nc">FieldParser</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;::</span><span class="n">mlir</span><span class="o">::</span><span class="n">emithls</span><span class="o">::</span><span class="n">ArrayPartitionType</span><span class="o">&gt;</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;::</span><span class="n">mlir</span><span class="o">::</span><span class="n">emithls</span><span class="o">::</span><span class="n">ArrayPartitionType</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">template</span><span class="w"> </span><span class="o">&lt;</span><span class="k">typename</span><span class="w"> </span><span class="nc">ParserT</span><span class="o">&gt;</span>
+<span class="w">  </span><span class="k">static</span><span class="w"> </span><span class="n">FailureOr</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;::</span><span class="n">mlir</span><span class="o">::</span><span class="n">emithls</span><span class="o">::</span><span class="n">ArrayPartitionType</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="n">parse</span><span class="p">(</span><span class="n">ParserT</span><span class="w"> </span><span class="o">&amp;</span><span class="n">parser</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="c1">// Parse the keyword/string containing the enum.</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">enumKeyword</span><span class="p">;</span>
+<span class="w">    </span><span class="k">auto</span><span class="w"> </span><span class="n">loc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">parser</span><span class="p">.</span><span class="n">getCurrentLocation</span><span class="p">();</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">failed</span><span class="p">(</span><span class="n">parser</span><span class="p">.</span><span class="n">parseOptionalKeywordOrString</span><span class="p">(</span><span class="o">&amp;</span><span class="n">enumKeyword</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="s">"cyclic"</span><span class="p">,</span><span class="w"> </span><span class="s">"block"</span><span class="p">,</span><span class="w"> </span><span class="s">"complete"</span><span class="p">})))</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;::</span><span class="n">mlir</span><span class="o">::</span><span class="n">emithls</span><span class="o">::</span><span class="n">ArrayPartitionType</span><span class="o">&gt;</span><span class="p">{};</span>
+
+<span class="w">    </span><span class="c1">// Symbolize the keyword.</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">::</span><span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;::</span><span class="n">mlir</span><span class="o">::</span><span class="n">emithls</span><span class="o">::</span><span class="n">ArrayPartitionType</span><span class="o">&gt;</span><span class="w"> </span><span class="n">attr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">::</span><span class="n">mlir</span><span class="o">::</span><span class="n">emithls</span><span class="o">::</span><span class="n">symbolizeEnum</span><span class="o">&lt;::</span><span class="n">mlir</span><span class="o">::</span><span class="n">emithls</span><span class="o">::</span><span class="n">ArrayPartitionType</span><span class="o">&gt;</span><span class="p">(</span><span class="n">enumKeyword</span><span class="p">))</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="n">attr</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">parser</span><span class="p">.</span><span class="n">emitError</span><span class="p">(</span><span class="n">loc</span><span class="p">,</span><span class="w"> </span><span class="s">"expected one of [cyclic, block, complete] for #pragma HLS array_partition type=?, got: "</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">enumKeyword</span><span class="p">;</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">};</span>
+<span class="p">}</span><span class="w"> </span><span class="c1">// namespace mlir</span>
+
+<span class="k">namespace</span><span class="w"> </span><span class="nn">llvm</span><span class="w"> </span><span class="p">{</span>
+<span class="kr">inline</span><span class="w"> </span><span class="o">::</span><span class="n">llvm</span><span class="o">::</span><span class="n">raw_ostream</span><span class="w"> </span><span class="o">&amp;</span><span class="k">operator</span><span class="o">&lt;&lt;</span><span class="p">(</span><span class="o">::</span><span class="n">llvm</span><span class="o">::</span><span class="n">raw_ostream</span><span class="w"> </span><span class="o">&amp;</span><span class="n">p</span><span class="p">,</span><span class="w"> </span><span class="o">::</span><span class="n">mlir</span><span class="o">::</span><span class="n">emithls</span><span class="o">::</span><span class="n">ArrayPartitionType</span><span class="w"> </span><span class="n">value</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">auto</span><span class="w"> </span><span class="n">valueStr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">stringifyEnum</span><span class="p">(</span><span class="n">value</span><span class="p">);</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">valueStr</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="p">}</span><span class="w"> </span><span class="c1">// namespace llvm</span>
+
+<span class="k">namespace</span><span class="w"> </span><span class="nn">llvm</span><span class="w"> </span><span class="p">{</span>
+<span class="k">template</span><span class="o">&lt;&gt;</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">DenseMapInfo</span><span class="o">&lt;::</span><span class="n">mlir</span><span class="o">::</span><span class="n">emithls</span><span class="o">::</span><span class="n">ArrayPartitionType</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">using</span><span class="w"> </span><span class="n">StorageInfo</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">::</span><span class="n">llvm</span><span class="o">::</span><span class="n">DenseMapInfo</span><span class="o">&lt;</span><span class="kt">uint32_t</span><span class="o">&gt;</span><span class="p">;</span>
+
+<span class="w">  </span><span class="k">static</span><span class="w"> </span><span class="kt">unsigned</span><span class="w"> </span><span class="nf">getHashValue</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="o">::</span><span class="n">mlir</span><span class="o">::</span><span class="n">emithls</span><span class="o">::</span><span class="n">ArrayPartitionType</span><span class="w"> </span><span class="o">&amp;</span><span class="n">val</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">StorageInfo</span><span class="o">::</span><span class="n">getHashValue</span><span class="p">(</span><span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">uint32_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">val</span><span class="p">));</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="k">static</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="nf">isEqual</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="o">::</span><span class="n">mlir</span><span class="o">::</span><span class="n">emithls</span><span class="o">::</span><span class="n">ArrayPartitionType</span><span class="w"> </span><span class="o">&amp;</span><span class="n">lhs</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="o">::</span><span class="n">mlir</span><span class="o">::</span><span class="n">emithls</span><span class="o">::</span><span class="n">ArrayPartitionType</span><span class="w"> </span><span class="o">&amp;</span><span class="n">rhs</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">lhs</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">rhs</span><span class="p">;</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">};</span>
+<span class="p">}</span>
+
+<span class="k">namespace</span><span class="w"> </span><span class="nn">mlir</span><span class="o">::</span><span class="nn">emithls</span><span class="w"> </span><span class="p">{</span>
+
+<span class="c1">// #pragma HLS bind_storage impl=?</span>
+<span class="k">enum</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">BindStorageImpl</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="kt">uint32_t</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="n">bram</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">  </span><span class="n">lutram</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">  </span><span class="n">srl</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span>
+<span class="p">};</span>
+
+<span class="o">::</span><span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;</span><span class="n">BindStorageImpl</span><span class="o">&gt;</span><span class="w"> </span><span class="n">symbolizeBindStorageImpl</span><span class="p">(</span><span class="kt">uint32_t</span><span class="p">);</span>
+<span class="o">::</span><span class="n">llvm</span><span class="o">::</span><span class="n">StringRef</span><span class="w"> </span><span class="nf">stringifyBindStorageImpl</span><span class="p">(</span><span class="n">BindStorageImpl</span><span class="p">);</span>
+<span class="o">::</span><span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;</span><span class="n">BindStorageImpl</span><span class="o">&gt;</span><span class="w"> </span><span class="n">symbolizeBindStorageImpl</span><span class="p">(</span><span class="o">::</span><span class="n">llvm</span><span class="o">::</span><span class="n">StringRef</span><span class="p">);</span>
+<span class="kr">inline</span><span class="w"> </span><span class="k">constexpr</span><span class="w"> </span><span class="kt">unsigned</span><span class="w"> </span><span class="nf">getMaxEnumValForBindStorageImpl</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="mi">2</span><span class="p">;</span>
+<span class="p">}</span>
+
+
+<span class="kr">inline</span><span class="w"> </span><span class="o">::</span><span class="n">llvm</span><span class="o">::</span><span class="n">StringRef</span><span class="w"> </span><span class="nf">stringifyEnum</span><span class="p">(</span><span class="n">BindStorageImpl</span><span class="w"> </span><span class="n">enumValue</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">stringifyBindStorageImpl</span><span class="p">(</span><span class="n">enumValue</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="k">template</span><span class="w"> </span><span class="o">&lt;</span><span class="k">typename</span><span class="w"> </span><span class="nc">EnumType</span><span class="o">&gt;</span>
+<span class="o">::</span><span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;</span><span class="n">EnumType</span><span class="o">&gt;</span><span class="w"> </span><span class="n">symbolizeEnum</span><span class="p">(</span><span class="o">::</span><span class="n">llvm</span><span class="o">::</span><span class="n">StringRef</span><span class="p">);</span>
+
+<span class="k">template</span><span class="w"> </span><span class="o">&lt;&gt;</span>
+<span class="kr">inline</span><span class="w"> </span><span class="o">::</span><span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;</span><span class="n">BindStorageImpl</span><span class="o">&gt;</span><span class="w"> </span><span class="n">symbolizeEnum</span><span class="o">&lt;</span><span class="n">BindStorageImpl</span><span class="o">&gt;</span><span class="p">(</span><span class="o">::</span><span class="n">llvm</span><span class="o">::</span><span class="n">StringRef</span><span class="w"> </span><span class="n">str</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">symbolizeBindStorageImpl</span><span class="p">(</span><span class="n">str</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">BindStorageImplAttr</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="o">::</span><span class="n">mlir</span><span class="o">::</span><span class="n">IntegerAttr</span><span class="w"> </span><span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+<span class="w">  </span><span class="k">using</span><span class="w"> </span><span class="n">ValueType</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">BindStorageImpl</span><span class="p">;</span>
+<span class="w">  </span><span class="k">using</span><span class="w"> </span><span class="o">::</span><span class="n">mlir</span><span class="o">::</span><span class="n">IntegerAttr</span><span class="o">::</span><span class="n">IntegerAttr</span><span class="p">;</span>
+<span class="w">  </span><span class="k">static</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="nf">classof</span><span class="p">(</span><span class="o">::</span><span class="n">mlir</span><span class="o">::</span><span class="n">Attribute</span><span class="w"> </span><span class="n">attr</span><span class="p">);</span>
+<span class="w">  </span><span class="k">static</span><span class="w"> </span><span class="n">BindStorageImplAttr</span><span class="w"> </span><span class="nf">get</span><span class="p">(</span><span class="o">::</span><span class="n">mlir</span><span class="o">::</span><span class="n">MLIRContext</span><span class="w"> </span><span class="o">*</span><span class="n">context</span><span class="p">,</span><span class="w"> </span><span class="n">BindStorageImpl</span><span class="w"> </span><span class="n">val</span><span class="p">);</span>
+<span class="w">  </span><span class="n">BindStorageImpl</span><span class="w"> </span><span class="nf">getValue</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="p">}</span><span class="w"> </span><span class="c1">// namespace mlir::emithls</span>
+
+<span class="k">namespace</span><span class="w"> </span><span class="nn">mlir</span><span class="w"> </span><span class="p">{</span>
+<span class="k">template</span><span class="w"> </span><span class="o">&lt;</span><span class="k">typename</span><span class="w"> </span><span class="nc">T</span><span class="p">,</span><span class="w"> </span><span class="k">typename</span><span class="o">&gt;</span>
+<span class="k">struct</span><span class="w"> </span><span class="nc">FieldParser</span><span class="p">;</span>
+
+<span class="k">template</span><span class="o">&lt;&gt;</span>
+<span class="k">struct</span><span class="w"> </span><span class="nc">FieldParser</span><span class="o">&lt;::</span><span class="n">mlir</span><span class="o">::</span><span class="n">emithls</span><span class="o">::</span><span class="n">BindStorageImpl</span><span class="p">,</span><span class="w"> </span><span class="o">::</span><span class="n">mlir</span><span class="o">::</span><span class="n">emithls</span><span class="o">::</span><span class="n">BindStorageImpl</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">template</span><span class="w"> </span><span class="o">&lt;</span><span class="k">typename</span><span class="w"> </span><span class="nc">ParserT</span><span class="o">&gt;</span>
+<span class="w">  </span><span class="k">static</span><span class="w"> </span><span class="n">FailureOr</span><span class="o">&lt;::</span><span class="n">mlir</span><span class="o">::</span><span class="n">emithls</span><span class="o">::</span><span class="n">BindStorageImpl</span><span class="o">&gt;</span><span class="w"> </span><span class="n">parse</span><span class="p">(</span><span class="n">ParserT</span><span class="w"> </span><span class="o">&amp;</span><span class="n">parser</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="c1">// Parse the keyword/string containing the enum.</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">enumKeyword</span><span class="p">;</span>
+<span class="w">    </span><span class="k">auto</span><span class="w"> </span><span class="n">loc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">parser</span><span class="p">.</span><span class="n">getCurrentLocation</span><span class="p">();</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">failed</span><span class="p">(</span><span class="n">parser</span><span class="p">.</span><span class="n">parseOptionalKeywordOrString</span><span class="p">(</span><span class="o">&amp;</span><span class="n">enumKeyword</span><span class="p">)))</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="n">parser</span><span class="p">.</span><span class="n">emitError</span><span class="p">(</span><span class="n">loc</span><span class="p">,</span><span class="w"> </span><span class="s">"expected keyword for #pragma HLS bind_storage impl=?"</span><span class="p">);</span>
+
+<span class="w">    </span><span class="c1">// Symbolize the keyword.</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">::</span><span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;::</span><span class="n">mlir</span><span class="o">::</span><span class="n">emithls</span><span class="o">::</span><span class="n">BindStorageImpl</span><span class="o">&gt;</span><span class="w"> </span><span class="n">attr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">::</span><span class="n">mlir</span><span class="o">::</span><span class="n">emithls</span><span class="o">::</span><span class="n">symbolizeEnum</span><span class="o">&lt;::</span><span class="n">mlir</span><span class="o">::</span><span class="n">emithls</span><span class="o">::</span><span class="n">BindStorageImpl</span><span class="o">&gt;</span><span class="p">(</span><span class="n">enumKeyword</span><span class="p">))</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="o">*</span><span class="n">attr</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">parser</span><span class="p">.</span><span class="n">emitError</span><span class="p">(</span><span class="n">loc</span><span class="p">,</span><span class="w"> </span><span class="s">"expected one of [bram, lutram, srl] for #pragma HLS bind_storage impl=?, got: "</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">enumKeyword</span><span class="p">;</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">};</span>
+
+<span class="k">template</span><span class="o">&lt;&gt;</span>
+<span class="k">struct</span><span class="w"> </span><span class="nc">FieldParser</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;::</span><span class="n">mlir</span><span class="o">::</span><span class="n">emithls</span><span class="o">::</span><span class="n">BindStorageImpl</span><span class="o">&gt;</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;::</span><span class="n">mlir</span><span class="o">::</span><span class="n">emithls</span><span class="o">::</span><span class="n">BindStorageImpl</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">template</span><span class="w"> </span><span class="o">&lt;</span><span class="k">typename</span><span class="w"> </span><span class="nc">ParserT</span><span class="o">&gt;</span>
+<span class="w">  </span><span class="k">static</span><span class="w"> </span><span class="n">FailureOr</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;::</span><span class="n">mlir</span><span class="o">::</span><span class="n">emithls</span><span class="o">::</span><span class="n">BindStorageImpl</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="n">parse</span><span class="p">(</span><span class="n">ParserT</span><span class="w"> </span><span class="o">&amp;</span><span class="n">parser</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="c1">// Parse the keyword/string containing the enum.</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">enumKeyword</span><span class="p">;</span>
+<span class="w">    </span><span class="k">auto</span><span class="w"> </span><span class="n">loc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">parser</span><span class="p">.</span><span class="n">getCurrentLocation</span><span class="p">();</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">failed</span><span class="p">(</span><span class="n">parser</span><span class="p">.</span><span class="n">parseOptionalKeywordOrString</span><span class="p">(</span><span class="o">&amp;</span><span class="n">enumKeyword</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="s">"bram"</span><span class="p">,</span><span class="w"> </span><span class="s">"lutram"</span><span class="p">,</span><span class="w"> </span><span class="s">"srl"</span><span class="p">})))</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;::</span><span class="n">mlir</span><span class="o">::</span><span class="n">emithls</span><span class="o">::</span><span class="n">BindStorageImpl</span><span class="o">&gt;</span><span class="p">{};</span>
+
+<span class="w">    </span><span class="c1">// Symbolize the keyword.</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">::</span><span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;::</span><span class="n">mlir</span><span class="o">::</span><span class="n">emithls</span><span class="o">::</span><span class="n">BindStorageImpl</span><span class="o">&gt;</span><span class="w"> </span><span class="n">attr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">::</span><span class="n">mlir</span><span class="o">::</span><span class="n">emithls</span><span class="o">::</span><span class="n">symbolizeEnum</span><span class="o">&lt;::</span><span class="n">mlir</span><span class="o">::</span><span class="n">emithls</span><span class="o">::</span><span class="n">BindStorageImpl</span><span class="o">&gt;</span><span class="p">(</span><span class="n">enumKeyword</span><span class="p">))</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="n">attr</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">parser</span><span class="p">.</span><span class="n">emitError</span><span class="p">(</span><span class="n">loc</span><span class="p">,</span><span class="w"> </span><span class="s">"expected one of [bram, lutram, srl] for #pragma HLS bind_storage impl=?, got: "</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">enumKeyword</span><span class="p">;</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">};</span>
+<span class="p">}</span><span class="w"> </span><span class="c1">// namespace mlir</span>
+
+<span class="k">namespace</span><span class="w"> </span><span class="nn">llvm</span><span class="w"> </span><span class="p">{</span>
+<span class="kr">inline</span><span class="w"> </span><span class="o">::</span><span class="n">llvm</span><span class="o">::</span><span class="n">raw_ostream</span><span class="w"> </span><span class="o">&amp;</span><span class="k">operator</span><span class="o">&lt;&lt;</span><span class="p">(</span><span class="o">::</span><span class="n">llvm</span><span class="o">::</span><span class="n">raw_ostream</span><span class="w"> </span><span class="o">&amp;</span><span class="n">p</span><span class="p">,</span><span class="w"> </span><span class="o">::</span><span class="n">mlir</span><span class="o">::</span><span class="n">emithls</span><span class="o">::</span><span class="n">BindStorageImpl</span><span class="w"> </span><span class="n">value</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">auto</span><span class="w"> </span><span class="n">valueStr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">stringifyEnum</span><span class="p">(</span><span class="n">value</span><span class="p">);</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">valueStr</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="p">}</span><span class="w"> </span><span class="c1">// namespace llvm</span>
+
+<span class="k">namespace</span><span class="w"> </span><span class="nn">llvm</span><span class="w"> </span><span class="p">{</span>
+<span class="k">template</span><span class="o">&lt;&gt;</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">DenseMapInfo</span><span class="o">&lt;::</span><span class="n">mlir</span><span class="o">::</span><span class="n">emithls</span><span class="o">::</span><span class="n">BindStorageImpl</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">using</span><span class="w"> </span><span class="n">StorageInfo</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">::</span><span class="n">llvm</span><span class="o">::</span><span class="n">DenseMapInfo</span><span class="o">&lt;</span><span class="kt">uint32_t</span><span class="o">&gt;</span><span class="p">;</span>
+
+<span class="w">  </span><span class="k">static</span><span class="w"> </span><span class="kt">unsigned</span><span class="w"> </span><span class="nf">getHashValue</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="o">::</span><span class="n">mlir</span><span class="o">::</span><span class="n">emithls</span><span class="o">::</span><span class="n">BindStorageImpl</span><span class="w"> </span><span class="o">&amp;</span><span class="n">val</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">StorageInfo</span><span class="o">::</span><span class="n">getHashValue</span><span class="p">(</span><span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">uint32_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">val</span><span class="p">));</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="k">static</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="nf">isEqual</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="o">::</span><span class="n">mlir</span><span class="o">::</span><span class="n">emithls</span><span class="o">::</span><span class="n">BindStorageImpl</span><span class="w"> </span><span class="o">&amp;</span><span class="n">lhs</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="o">::</span><span class="n">mlir</span><span class="o">::</span><span class="n">emithls</span><span class="o">::</span><span class="n">BindStorageImpl</span><span class="w"> </span><span class="o">&amp;</span><span class="n">rhs</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">lhs</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">rhs</span><span class="p">;</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">};</span>
+<span class="p">}</span>
+
+<span class="k">namespace</span><span class="w"> </span><span class="nn">mlir</span><span class="o">::</span><span class="nn">emithls</span><span class="w"> </span><span class="p">{</span>
+
+<span class="c1">// #pragma HLS bind_storage type=?</span>
+<span class="k">enum</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">BindStorageType</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="kt">uint32_t</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="n">fifo</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">  </span><span class="n">ram_1p</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">  </span><span class="n">ram_2p</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span>
+<span class="w">  </span><span class="n">rom_1p</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span>
+<span class="w">  </span><span class="n">rom_2p</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span>
+<span class="p">};</span>
+
+<span class="o">::</span><span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;</span><span class="n">BindStorageType</span><span class="o">&gt;</span><span class="w"> </span><span class="n">symbolizeBindStorageType</span><span class="p">(</span><span class="kt">uint32_t</span><span class="p">);</span>
+<span class="o">::</span><span class="n">llvm</span><span class="o">::</span><span class="n">StringRef</span><span class="w"> </span><span class="nf">stringifyBindStorageType</span><span class="p">(</span><span class="n">BindStorageType</span><span class="p">);</span>
+<span class="o">::</span><span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;</span><span class="n">BindStorageType</span><span class="o">&gt;</span><span class="w"> </span><span class="n">symbolizeBindStorageType</span><span class="p">(</span><span class="o">::</span><span class="n">llvm</span><span class="o">::</span><span class="n">StringRef</span><span class="p">);</span>
+<span class="kr">inline</span><span class="w"> </span><span class="k">constexpr</span><span class="w"> </span><span class="kt">unsigned</span><span class="w"> </span><span class="nf">getMaxEnumValForBindStorageType</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="mi">4</span><span class="p">;</span>
+<span class="p">}</span>
+
+
+<span class="kr">inline</span><span class="w"> </span><span class="o">::</span><span class="n">llvm</span><span class="o">::</span><span class="n">StringRef</span><span class="w"> </span><span class="nf">stringifyEnum</span><span class="p">(</span><span class="n">BindStorageType</span><span class="w"> </span><span class="n">enumValue</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">stringifyBindStorageType</span><span class="p">(</span><span class="n">enumValue</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="k">template</span><span class="w"> </span><span class="o">&lt;</span><span class="k">typename</span><span class="w"> </span><span class="nc">EnumType</span><span class="o">&gt;</span>
+<span class="o">::</span><span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;</span><span class="n">EnumType</span><span class="o">&gt;</span><span class="w"> </span><span class="n">symbolizeEnum</span><span class="p">(</span><span class="o">::</span><span class="n">llvm</span><span class="o">::</span><span class="n">StringRef</span><span class="p">);</span>
+
+<span class="k">template</span><span class="w"> </span><span class="o">&lt;&gt;</span>
+<span class="kr">inline</span><span class="w"> </span><span class="o">::</span><span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;</span><span class="n">BindStorageType</span><span class="o">&gt;</span><span class="w"> </span><span class="n">symbolizeEnum</span><span class="o">&lt;</span><span class="n">BindStorageType</span><span class="o">&gt;</span><span class="p">(</span><span class="o">::</span><span class="n">llvm</span><span class="o">::</span><span class="n">StringRef</span><span class="w"> </span><span class="n">str</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">symbolizeBindStorageType</span><span class="p">(</span><span class="n">str</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">BindStorageTypeAttr</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="o">::</span><span class="n">mlir</span><span class="o">::</span><span class="n">IntegerAttr</span><span class="w"> </span><span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+<span class="w">  </span><span class="k">using</span><span class="w"> </span><span class="n">ValueType</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">BindStorageType</span><span class="p">;</span>
+<span class="w">  </span><span class="k">using</span><span class="w"> </span><span class="o">::</span><span class="n">mlir</span><span class="o">::</span><span class="n">IntegerAttr</span><span class="o">::</span><span class="n">IntegerAttr</span><span class="p">;</span>
+<span class="w">  </span><span class="k">static</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="nf">classof</span><span class="p">(</span><span class="o">::</span><span class="n">mlir</span><span class="o">::</span><span class="n">Attribute</span><span class="w"> </span><span class="n">attr</span><span class="p">);</span>
+<span class="w">  </span><span class="k">static</span><span class="w"> </span><span class="n">BindStorageTypeAttr</span><span class="w"> </span><span class="nf">get</span><span class="p">(</span><span class="o">::</span><span class="n">mlir</span><span class="o">::</span><span class="n">MLIRContext</span><span class="w"> </span><span class="o">*</span><span class="n">context</span><span class="p">,</span><span class="w"> </span><span class="n">BindStorageType</span><span class="w"> </span><span class="n">val</span><span class="p">);</span>
+<span class="w">  </span><span class="n">BindStorageType</span><span class="w"> </span><span class="nf">getValue</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="p">}</span><span class="w"> </span><span class="c1">// namespace mlir::emithls</span>
+
+<span class="k">namespace</span><span class="w"> </span><span class="nn">mlir</span><span class="w"> </span><span class="p">{</span>
+<span class="k">template</span><span class="w"> </span><span class="o">&lt;</span><span class="k">typename</span><span class="w"> </span><span class="nc">T</span><span class="p">,</span><span class="w"> </span><span class="k">typename</span><span class="o">&gt;</span>
+<span class="k">struct</span><span class="w"> </span><span class="nc">FieldParser</span><span class="p">;</span>
+
+<span class="k">template</span><span class="o">&lt;&gt;</span>
+<span class="k">struct</span><span class="w"> </span><span class="nc">FieldParser</span><span class="o">&lt;::</span><span class="n">mlir</span><span class="o">::</span><span class="n">emithls</span><span class="o">::</span><span class="n">BindStorageType</span><span class="p">,</span><span class="w"> </span><span class="o">::</span><span class="n">mlir</span><span class="o">::</span><span class="n">emithls</span><span class="o">::</span><span class="n">BindStorageType</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">template</span><span class="w"> </span><span class="o">&lt;</span><span class="k">typename</span><span class="w"> </span><span class="nc">ParserT</span><span class="o">&gt;</span>
+<span class="w">  </span><span class="k">static</span><span class="w"> </span><span class="n">FailureOr</span><span class="o">&lt;::</span><span class="n">mlir</span><span class="o">::</span><span class="n">emithls</span><span class="o">::</span><span class="n">BindStorageType</span><span class="o">&gt;</span><span class="w"> </span><span class="n">parse</span><span class="p">(</span><span class="n">ParserT</span><span class="w"> </span><span class="o">&amp;</span><span class="n">parser</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="c1">// Parse the keyword/string containing the enum.</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">enumKeyword</span><span class="p">;</span>
+<span class="w">    </span><span class="k">auto</span><span class="w"> </span><span class="n">loc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">parser</span><span class="p">.</span><span class="n">getCurrentLocation</span><span class="p">();</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">failed</span><span class="p">(</span><span class="n">parser</span><span class="p">.</span><span class="n">parseOptionalKeywordOrString</span><span class="p">(</span><span class="o">&amp;</span><span class="n">enumKeyword</span><span class="p">)))</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="n">parser</span><span class="p">.</span><span class="n">emitError</span><span class="p">(</span><span class="n">loc</span><span class="p">,</span><span class="w"> </span><span class="s">"expected keyword for #pragma HLS bind_storage type=?"</span><span class="p">);</span>
+
+<span class="w">    </span><span class="c1">// Symbolize the keyword.</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">::</span><span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;::</span><span class="n">mlir</span><span class="o">::</span><span class="n">emithls</span><span class="o">::</span><span class="n">BindStorageType</span><span class="o">&gt;</span><span class="w"> </span><span class="n">attr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">::</span><span class="n">mlir</span><span class="o">::</span><span class="n">emithls</span><span class="o">::</span><span class="n">symbolizeEnum</span><span class="o">&lt;::</span><span class="n">mlir</span><span class="o">::</span><span class="n">emithls</span><span class="o">::</span><span class="n">BindStorageType</span><span class="o">&gt;</span><span class="p">(</span><span class="n">enumKeyword</span><span class="p">))</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="o">*</span><span class="n">attr</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">parser</span><span class="p">.</span><span class="n">emitError</span><span class="p">(</span><span class="n">loc</span><span class="p">,</span><span class="w"> </span><span class="s">"expected one of [fifo, ram_1p, ram_2p, rom_1p, rom_2p] for #pragma HLS bind_storage type=?, got: "</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">enumKeyword</span><span class="p">;</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">};</span>
+
+<span class="k">template</span><span class="o">&lt;&gt;</span>
+<span class="k">struct</span><span class="w"> </span><span class="nc">FieldParser</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;::</span><span class="n">mlir</span><span class="o">::</span><span class="n">emithls</span><span class="o">::</span><span class="n">BindStorageType</span><span class="o">&gt;</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;::</span><span class="n">mlir</span><span class="o">::</span><span class="n">emithls</span><span class="o">::</span><span class="n">BindStorageType</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">template</span><span class="w"> </span><span class="o">&lt;</span><span class="k">typename</span><span class="w"> </span><span class="nc">ParserT</span><span class="o">&gt;</span>
+<span class="w">  </span><span class="k">static</span><span class="w"> </span><span class="n">FailureOr</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;::</span><span class="n">mlir</span><span class="o">::</span><span class="n">emithls</span><span class="o">::</span><span class="n">BindStorageType</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="n">parse</span><span class="p">(</span><span class="n">ParserT</span><span class="w"> </span><span class="o">&amp;</span><span class="n">parser</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="c1">// Parse the keyword/string containing the enum.</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">enumKeyword</span><span class="p">;</span>
+<span class="w">    </span><span class="k">auto</span><span class="w"> </span><span class="n">loc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">parser</span><span class="p">.</span><span class="n">getCurrentLocation</span><span class="p">();</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">failed</span><span class="p">(</span><span class="n">parser</span><span class="p">.</span><span class="n">parseOptionalKeywordOrString</span><span class="p">(</span><span class="o">&amp;</span><span class="n">enumKeyword</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="s">"fifo"</span><span class="p">,</span><span class="w"> </span><span class="s">"ram_1p"</span><span class="p">,</span><span class="w"> </span><span class="s">"ram_2p"</span><span class="p">,</span><span class="w"> </span><span class="s">"rom_1p"</span><span class="p">,</span><span class="w"> </span><span class="s">"rom_2p"</span><span class="p">})))</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;::</span><span class="n">mlir</span><span class="o">::</span><span class="n">emithls</span><span class="o">::</span><span class="n">BindStorageType</span><span class="o">&gt;</span><span class="p">{};</span>
+
+<span class="w">    </span><span class="c1">// Symbolize the keyword.</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">::</span><span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;::</span><span class="n">mlir</span><span class="o">::</span><span class="n">emithls</span><span class="o">::</span><span class="n">BindStorageType</span><span class="o">&gt;</span><span class="w"> </span><span class="n">attr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">::</span><span class="n">mlir</span><span class="o">::</span><span class="n">emithls</span><span class="o">::</span><span class="n">symbolizeEnum</span><span class="o">&lt;::</span><span class="n">mlir</span><span class="o">::</span><span class="n">emithls</span><span class="o">::</span><span class="n">BindStorageType</span><span class="o">&gt;</span><span class="p">(</span><span class="n">enumKeyword</span><span class="p">))</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="n">attr</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">parser</span><span class="p">.</span><span class="n">emitError</span><span class="p">(</span><span class="n">loc</span><span class="p">,</span><span class="w"> </span><span class="s">"expected one of [fifo, ram_1p, ram_2p, rom_1p, rom_2p] for #pragma HLS bind_storage type=?, got: "</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">enumKeyword</span><span class="p">;</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">};</span>
+<span class="p">}</span><span class="w"> </span><span class="c1">// namespace mlir</span>
+
+<span class="k">namespace</span><span class="w"> </span><span class="nn">llvm</span><span class="w"> </span><span class="p">{</span>
+<span class="kr">inline</span><span class="w"> </span><span class="o">::</span><span class="n">llvm</span><span class="o">::</span><span class="n">raw_ostream</span><span class="w"> </span><span class="o">&amp;</span><span class="k">operator</span><span class="o">&lt;&lt;</span><span class="p">(</span><span class="o">::</span><span class="n">llvm</span><span class="o">::</span><span class="n">raw_ostream</span><span class="w"> </span><span class="o">&amp;</span><span class="n">p</span><span class="p">,</span><span class="w"> </span><span class="o">::</span><span class="n">mlir</span><span class="o">::</span><span class="n">emithls</span><span class="o">::</span><span class="n">BindStorageType</span><span class="w"> </span><span class="n">value</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">auto</span><span class="w"> </span><span class="n">valueStr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">stringifyEnum</span><span class="p">(</span><span class="n">value</span><span class="p">);</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">valueStr</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="p">}</span><span class="w"> </span><span class="c1">// namespace llvm</span>
+
+<span class="k">namespace</span><span class="w"> </span><span class="nn">llvm</span><span class="w"> </span><span class="p">{</span>
+<span class="k">template</span><span class="o">&lt;&gt;</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">DenseMapInfo</span><span class="o">&lt;::</span><span class="n">mlir</span><span class="o">::</span><span class="n">emithls</span><span class="o">::</span><span class="n">BindStorageType</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">using</span><span class="w"> </span><span class="n">StorageInfo</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">::</span><span class="n">llvm</span><span class="o">::</span><span class="n">DenseMapInfo</span><span class="o">&lt;</span><span class="kt">uint32_t</span><span class="o">&gt;</span><span class="p">;</span>
+
+<span class="w">  </span><span class="k">static</span><span class="w"> </span><span class="kt">unsigned</span><span class="w"> </span><span class="nf">getHashValue</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="o">::</span><span class="n">mlir</span><span class="o">::</span><span class="n">emithls</span><span class="o">::</span><span class="n">BindStorageType</span><span class="w"> </span><span class="o">&amp;</span><span class="n">val</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">StorageInfo</span><span class="o">::</span><span class="n">getHashValue</span><span class="p">(</span><span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">uint32_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">val</span><span class="p">));</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="k">static</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="nf">isEqual</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="o">::</span><span class="n">mlir</span><span class="o">::</span><span class="n">emithls</span><span class="o">::</span><span class="n">BindStorageType</span><span class="w"> </span><span class="o">&amp;</span><span class="n">lhs</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="o">::</span><span class="n">mlir</span><span class="o">::</span><span class="n">emithls</span><span class="o">::</span><span class="n">BindStorageType</span><span class="w"> </span><span class="o">&amp;</span><span class="n">rhs</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">lhs</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">rhs</span><span class="p">;</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">};</span>
+<span class="p">}</span>
+
+<span class="k">namespace</span><span class="w"> </span><span class="nn">mlir</span><span class="o">::</span><span class="nn">emithls</span><span class="w"> </span><span class="p">{</span>
+
+<span class="c1">// predicate for comparison operation</span>
+<span class="k">enum</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">CmpPredicate</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="kt">uint32_t</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="n">eq</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">  </span><span class="n">ne</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">  </span><span class="n">lt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span>
+<span class="w">  </span><span class="n">le</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span>
+<span class="w">  </span><span class="n">gt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span>
+<span class="w">  </span><span class="n">ge</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span>
+<span class="p">};</span>
+
+<span class="o">::</span><span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;</span><span class="n">CmpPredicate</span><span class="o">&gt;</span><span class="w"> </span><span class="n">symbolizeCmpPredicate</span><span class="p">(</span><span class="kt">uint32_t</span><span class="p">);</span>
+<span class="o">::</span><span class="n">llvm</span><span class="o">::</span><span class="n">StringRef</span><span class="w"> </span><span class="nf">stringifyCmpPredicate</span><span class="p">(</span><span class="n">CmpPredicate</span><span class="p">);</span>
+<span class="o">::</span><span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;</span><span class="n">CmpPredicate</span><span class="o">&gt;</span><span class="w"> </span><span class="n">symbolizeCmpPredicate</span><span class="p">(</span><span class="o">::</span><span class="n">llvm</span><span class="o">::</span><span class="n">StringRef</span><span class="p">);</span>
+<span class="kr">inline</span><span class="w"> </span><span class="k">constexpr</span><span class="w"> </span><span class="kt">unsigned</span><span class="w"> </span><span class="nf">getMaxEnumValForCmpPredicate</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="mi">5</span><span class="p">;</span>
+<span class="p">}</span>
+
+
+<span class="kr">inline</span><span class="w"> </span><span class="o">::</span><span class="n">llvm</span><span class="o">::</span><span class="n">StringRef</span><span class="w"> </span><span class="nf">stringifyEnum</span><span class="p">(</span><span class="n">CmpPredicate</span><span class="w"> </span><span class="n">enumValue</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">stringifyCmpPredicate</span><span class="p">(</span><span class="n">enumValue</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="k">template</span><span class="w"> </span><span class="o">&lt;</span><span class="k">typename</span><span class="w"> </span><span class="nc">EnumType</span><span class="o">&gt;</span>
+<span class="o">::</span><span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;</span><span class="n">EnumType</span><span class="o">&gt;</span><span class="w"> </span><span class="n">symbolizeEnum</span><span class="p">(</span><span class="o">::</span><span class="n">llvm</span><span class="o">::</span><span class="n">StringRef</span><span class="p">);</span>
+
+<span class="k">template</span><span class="w"> </span><span class="o">&lt;&gt;</span>
+<span class="kr">inline</span><span class="w"> </span><span class="o">::</span><span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;</span><span class="n">CmpPredicate</span><span class="o">&gt;</span><span class="w"> </span><span class="n">symbolizeEnum</span><span class="o">&lt;</span><span class="n">CmpPredicate</span><span class="o">&gt;</span><span class="p">(</span><span class="o">::</span><span class="n">llvm</span><span class="o">::</span><span class="n">StringRef</span><span class="w"> </span><span class="n">str</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">symbolizeCmpPredicate</span><span class="p">(</span><span class="n">str</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">CmpPredicateAttr</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="o">::</span><span class="n">mlir</span><span class="o">::</span><span class="n">IntegerAttr</span><span class="w"> </span><span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+<span class="w">  </span><span class="k">using</span><span class="w"> </span><span class="n">ValueType</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">CmpPredicate</span><span class="p">;</span>
+<span class="w">  </span><span class="k">using</span><span class="w"> </span><span class="o">::</span><span class="n">mlir</span><span class="o">::</span><span class="n">IntegerAttr</span><span class="o">::</span><span class="n">IntegerAttr</span><span class="p">;</span>
+<span class="w">  </span><span class="k">static</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="nf">classof</span><span class="p">(</span><span class="o">::</span><span class="n">mlir</span><span class="o">::</span><span class="n">Attribute</span><span class="w"> </span><span class="n">attr</span><span class="p">);</span>
+<span class="w">  </span><span class="k">static</span><span class="w"> </span><span class="n">CmpPredicateAttr</span><span class="w"> </span><span class="nf">get</span><span class="p">(</span><span class="o">::</span><span class="n">mlir</span><span class="o">::</span><span class="n">MLIRContext</span><span class="w"> </span><span class="o">*</span><span class="n">context</span><span class="p">,</span><span class="w"> </span><span class="n">CmpPredicate</span><span class="w"> </span><span class="n">val</span><span class="p">);</span>
+<span class="w">  </span><span class="n">CmpPredicate</span><span class="w"> </span><span class="nf">getValue</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="p">}</span><span class="w"> </span><span class="c1">// namespace mlir::emithls</span>
+
+<span class="k">namespace</span><span class="w"> </span><span class="nn">mlir</span><span class="w"> </span><span class="p">{</span>
+<span class="k">template</span><span class="w"> </span><span class="o">&lt;</span><span class="k">typename</span><span class="w"> </span><span class="nc">T</span><span class="p">,</span><span class="w"> </span><span class="k">typename</span><span class="o">&gt;</span>
+<span class="k">struct</span><span class="w"> </span><span class="nc">FieldParser</span><span class="p">;</span>
+
+<span class="k">template</span><span class="o">&lt;&gt;</span>
+<span class="k">struct</span><span class="w"> </span><span class="nc">FieldParser</span><span class="o">&lt;::</span><span class="n">mlir</span><span class="o">::</span><span class="n">emithls</span><span class="o">::</span><span class="n">CmpPredicate</span><span class="p">,</span><span class="w"> </span><span class="o">::</span><span class="n">mlir</span><span class="o">::</span><span class="n">emithls</span><span class="o">::</span><span class="n">CmpPredicate</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">template</span><span class="w"> </span><span class="o">&lt;</span><span class="k">typename</span><span class="w"> </span><span class="nc">ParserT</span><span class="o">&gt;</span>
+<span class="w">  </span><span class="k">static</span><span class="w"> </span><span class="n">FailureOr</span><span class="o">&lt;::</span><span class="n">mlir</span><span class="o">::</span><span class="n">emithls</span><span class="o">::</span><span class="n">CmpPredicate</span><span class="o">&gt;</span><span class="w"> </span><span class="n">parse</span><span class="p">(</span><span class="n">ParserT</span><span class="w"> </span><span class="o">&amp;</span><span class="n">parser</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="c1">// Parse the keyword/string containing the enum.</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">enumKeyword</span><span class="p">;</span>
+<span class="w">    </span><span class="k">auto</span><span class="w"> </span><span class="n">loc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">parser</span><span class="p">.</span><span class="n">getCurrentLocation</span><span class="p">();</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">failed</span><span class="p">(</span><span class="n">parser</span><span class="p">.</span><span class="n">parseOptionalKeywordOrString</span><span class="p">(</span><span class="o">&amp;</span><span class="n">enumKeyword</span><span class="p">)))</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="n">parser</span><span class="p">.</span><span class="n">emitError</span><span class="p">(</span><span class="n">loc</span><span class="p">,</span><span class="w"> </span><span class="s">"expected keyword for predicate for comparison operation"</span><span class="p">);</span>
+
+<span class="w">    </span><span class="c1">// Symbolize the keyword.</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">::</span><span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;::</span><span class="n">mlir</span><span class="o">::</span><span class="n">emithls</span><span class="o">::</span><span class="n">CmpPredicate</span><span class="o">&gt;</span><span class="w"> </span><span class="n">attr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">::</span><span class="n">mlir</span><span class="o">::</span><span class="n">emithls</span><span class="o">::</span><span class="n">symbolizeEnum</span><span class="o">&lt;::</span><span class="n">mlir</span><span class="o">::</span><span class="n">emithls</span><span class="o">::</span><span class="n">CmpPredicate</span><span class="o">&gt;</span><span class="p">(</span><span class="n">enumKeyword</span><span class="p">))</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="o">*</span><span class="n">attr</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">parser</span><span class="p">.</span><span class="n">emitError</span><span class="p">(</span><span class="n">loc</span><span class="p">,</span><span class="w"> </span><span class="s">"expected one of [eq, ne, lt, le, gt, ge] for predicate for comparison operation, got: "</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">enumKeyword</span><span class="p">;</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">};</span>
+
+<span class="k">template</span><span class="o">&lt;&gt;</span>
+<span class="k">struct</span><span class="w"> </span><span class="nc">FieldParser</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;::</span><span class="n">mlir</span><span class="o">::</span><span class="n">emithls</span><span class="o">::</span><span class="n">CmpPredicate</span><span class="o">&gt;</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;::</span><span class="n">mlir</span><span class="o">::</span><span class="n">emithls</span><span class="o">::</span><span class="n">CmpPredicate</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">template</span><span class="w"> </span><span class="o">&lt;</span><span class="k">typename</span><span class="w"> </span><span class="nc">ParserT</span><span class="o">&gt;</span>
+<span class="w">  </span><span class="k">static</span><span class="w"> </span><span class="n">FailureOr</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;::</span><span class="n">mlir</span><span class="o">::</span><span class="n">emithls</span><span class="o">::</span><span class="n">CmpPredicate</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="n">parse</span><span class="p">(</span><span class="n">ParserT</span><span class="w"> </span><span class="o">&amp;</span><span class="n">parser</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="c1">// Parse the keyword/string containing the enum.</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">enumKeyword</span><span class="p">;</span>
+<span class="w">    </span><span class="k">auto</span><span class="w"> </span><span class="n">loc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">parser</span><span class="p">.</span><span class="n">getCurrentLocation</span><span class="p">();</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">failed</span><span class="p">(</span><span class="n">parser</span><span class="p">.</span><span class="n">parseOptionalKeywordOrString</span><span class="p">(</span><span class="o">&amp;</span><span class="n">enumKeyword</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="s">"eq"</span><span class="p">,</span><span class="w"> </span><span class="s">"ne"</span><span class="p">,</span><span class="w"> </span><span class="s">"lt"</span><span class="p">,</span><span class="w"> </span><span class="s">"le"</span><span class="p">,</span><span class="w"> </span><span class="s">"gt"</span><span class="p">,</span><span class="w"> </span><span class="s">"ge"</span><span class="p">})))</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;::</span><span class="n">mlir</span><span class="o">::</span><span class="n">emithls</span><span class="o">::</span><span class="n">CmpPredicate</span><span class="o">&gt;</span><span class="p">{};</span>
+
+<span class="w">    </span><span class="c1">// Symbolize the keyword.</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">::</span><span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;::</span><span class="n">mlir</span><span class="o">::</span><span class="n">emithls</span><span class="o">::</span><span class="n">CmpPredicate</span><span class="o">&gt;</span><span class="w"> </span><span class="n">attr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">::</span><span class="n">mlir</span><span class="o">::</span><span class="n">emithls</span><span class="o">::</span><span class="n">symbolizeEnum</span><span class="o">&lt;::</span><span class="n">mlir</span><span class="o">::</span><span class="n">emithls</span><span class="o">::</span><span class="n">CmpPredicate</span><span class="o">&gt;</span><span class="p">(</span><span class="n">enumKeyword</span><span class="p">))</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="n">attr</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">parser</span><span class="p">.</span><span class="n">emitError</span><span class="p">(</span><span class="n">loc</span><span class="p">,</span><span class="w"> </span><span class="s">"expected one of [eq, ne, lt, le, gt, ge] for predicate for comparison operation, got: "</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">enumKeyword</span><span class="p">;</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">};</span>
+<span class="p">}</span><span class="w"> </span><span class="c1">// namespace mlir</span>
+
+<span class="k">namespace</span><span class="w"> </span><span class="nn">llvm</span><span class="w"> </span><span class="p">{</span>
+<span class="kr">inline</span><span class="w"> </span><span class="o">::</span><span class="n">llvm</span><span class="o">::</span><span class="n">raw_ostream</span><span class="w"> </span><span class="o">&amp;</span><span class="k">operator</span><span class="o">&lt;&lt;</span><span class="p">(</span><span class="o">::</span><span class="n">llvm</span><span class="o">::</span><span class="n">raw_ostream</span><span class="w"> </span><span class="o">&amp;</span><span class="n">p</span><span class="p">,</span><span class="w"> </span><span class="o">::</span><span class="n">mlir</span><span class="o">::</span><span class="n">emithls</span><span class="o">::</span><span class="n">CmpPredicate</span><span class="w"> </span><span class="n">value</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">auto</span><span class="w"> </span><span class="n">valueStr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">stringifyEnum</span><span class="p">(</span><span class="n">value</span><span class="p">);</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">valueStr</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="p">}</span><span class="w"> </span><span class="c1">// namespace llvm</span>
+
+<span class="k">namespace</span><span class="w"> </span><span class="nn">llvm</span><span class="w"> </span><span class="p">{</span>
+<span class="k">template</span><span class="o">&lt;&gt;</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">DenseMapInfo</span><span class="o">&lt;::</span><span class="n">mlir</span><span class="o">::</span><span class="n">emithls</span><span class="o">::</span><span class="n">CmpPredicate</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">using</span><span class="w"> </span><span class="n">StorageInfo</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">::</span><span class="n">llvm</span><span class="o">::</span><span class="n">DenseMapInfo</span><span class="o">&lt;</span><span class="kt">uint32_t</span><span class="o">&gt;</span><span class="p">;</span>
+
+<span class="w">  </span><span class="k">static</span><span class="w"> </span><span class="kt">unsigned</span><span class="w"> </span><span class="nf">getHashValue</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="o">::</span><span class="n">mlir</span><span class="o">::</span><span class="n">emithls</span><span class="o">::</span><span class="n">CmpPredicate</span><span class="w"> </span><span class="o">&amp;</span><span class="n">val</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">StorageInfo</span><span class="o">::</span><span class="n">getHashValue</span><span class="p">(</span><span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">uint32_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">val</span><span class="p">));</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="k">static</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="nf">isEqual</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="o">::</span><span class="n">mlir</span><span class="o">::</span><span class="n">emithls</span><span class="o">::</span><span class="n">CmpPredicate</span><span class="w"> </span><span class="o">&amp;</span><span class="n">lhs</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="o">::</span><span class="n">mlir</span><span class="o">::</span><span class="n">emithls</span><span class="o">::</span><span class="n">CmpPredicate</span><span class="w"> </span><span class="o">&amp;</span><span class="n">rhs</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">lhs</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">rhs</span><span class="p">;</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">};</span>
+<span class="p">}</span>
+
+<span class="k">namespace</span><span class="w"> </span><span class="nn">mlir</span><span class="o">::</span><span class="nn">emithls</span><span class="w"> </span><span class="p">{</span>
+
+<span class="c1">// fused operator such as `+=`</span>
+<span class="k">enum</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">FusedOperator</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="kt">uint32_t</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="n">add</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">  </span><span class="n">sub</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">  </span><span class="n">mul</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span>
+<span class="p">};</span>
+
+<span class="o">::</span><span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;</span><span class="n">FusedOperator</span><span class="o">&gt;</span><span class="w"> </span><span class="n">symbolizeFusedOperator</span><span class="p">(</span><span class="kt">uint32_t</span><span class="p">);</span>
+<span class="o">::</span><span class="n">llvm</span><span class="o">::</span><span class="n">StringRef</span><span class="w"> </span><span class="nf">stringifyFusedOperator</span><span class="p">(</span><span class="n">FusedOperator</span><span class="p">);</span>
+<span class="o">::</span><span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;</span><span class="n">FusedOperator</span><span class="o">&gt;</span><span class="w"> </span><span class="n">symbolizeFusedOperator</span><span class="p">(</span><span class="o">::</span><span class="n">llvm</span><span class="o">::</span><span class="n">StringRef</span><span class="p">);</span>
+<span class="kr">inline</span><span class="w"> </span><span class="k">constexpr</span><span class="w"> </span><span class="kt">unsigned</span><span class="w"> </span><span class="nf">getMaxEnumValForFusedOperator</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="mi">2</span><span class="p">;</span>
+<span class="p">}</span>
+
+
+<span class="kr">inline</span><span class="w"> </span><span class="o">::</span><span class="n">llvm</span><span class="o">::</span><span class="n">StringRef</span><span class="w"> </span><span class="nf">stringifyEnum</span><span class="p">(</span><span class="n">FusedOperator</span><span class="w"> </span><span class="n">enumValue</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">stringifyFusedOperator</span><span class="p">(</span><span class="n">enumValue</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="k">template</span><span class="w"> </span><span class="o">&lt;</span><span class="k">typename</span><span class="w"> </span><span class="nc">EnumType</span><span class="o">&gt;</span>
+<span class="o">::</span><span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;</span><span class="n">EnumType</span><span class="o">&gt;</span><span class="w"> </span><span class="n">symbolizeEnum</span><span class="p">(</span><span class="o">::</span><span class="n">llvm</span><span class="o">::</span><span class="n">StringRef</span><span class="p">);</span>
+
+<span class="k">template</span><span class="w"> </span><span class="o">&lt;&gt;</span>
+<span class="kr">inline</span><span class="w"> </span><span class="o">::</span><span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;</span><span class="n">FusedOperator</span><span class="o">&gt;</span><span class="w"> </span><span class="n">symbolizeEnum</span><span class="o">&lt;</span><span class="n">FusedOperator</span><span class="o">&gt;</span><span class="p">(</span><span class="o">::</span><span class="n">llvm</span><span class="o">::</span><span class="n">StringRef</span><span class="w"> </span><span class="n">str</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">symbolizeFusedOperator</span><span class="p">(</span><span class="n">str</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">FusedOperatorAttr</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="o">::</span><span class="n">mlir</span><span class="o">::</span><span class="n">IntegerAttr</span><span class="w"> </span><span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+<span class="w">  </span><span class="k">using</span><span class="w"> </span><span class="n">ValueType</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">FusedOperator</span><span class="p">;</span>
+<span class="w">  </span><span class="k">using</span><span class="w"> </span><span class="o">::</span><span class="n">mlir</span><span class="o">::</span><span class="n">IntegerAttr</span><span class="o">::</span><span class="n">IntegerAttr</span><span class="p">;</span>
+<span class="w">  </span><span class="k">static</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="nf">classof</span><span class="p">(</span><span class="o">::</span><span class="n">mlir</span><span class="o">::</span><span class="n">Attribute</span><span class="w"> </span><span class="n">attr</span><span class="p">);</span>
+<span class="w">  </span><span class="k">static</span><span class="w"> </span><span class="n">FusedOperatorAttr</span><span class="w"> </span><span class="nf">get</span><span class="p">(</span><span class="o">::</span><span class="n">mlir</span><span class="o">::</span><span class="n">MLIRContext</span><span class="w"> </span><span class="o">*</span><span class="n">context</span><span class="p">,</span><span class="w"> </span><span class="n">FusedOperator</span><span class="w"> </span><span class="n">val</span><span class="p">);</span>
+<span class="w">  </span><span class="n">FusedOperator</span><span class="w"> </span><span class="nf">getValue</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="p">}</span><span class="w"> </span><span class="c1">// namespace mlir::emithls</span>
+
+<span class="k">namespace</span><span class="w"> </span><span class="nn">mlir</span><span class="w"> </span><span class="p">{</span>
+<span class="k">template</span><span class="w"> </span><span class="o">&lt;</span><span class="k">typename</span><span class="w"> </span><span class="nc">T</span><span class="p">,</span><span class="w"> </span><span class="k">typename</span><span class="o">&gt;</span>
+<span class="k">struct</span><span class="w"> </span><span class="nc">FieldParser</span><span class="p">;</span>
+
+<span class="k">template</span><span class="o">&lt;&gt;</span>
+<span class="k">struct</span><span class="w"> </span><span class="nc">FieldParser</span><span class="o">&lt;::</span><span class="n">mlir</span><span class="o">::</span><span class="n">emithls</span><span class="o">::</span><span class="n">FusedOperator</span><span class="p">,</span><span class="w"> </span><span class="o">::</span><span class="n">mlir</span><span class="o">::</span><span class="n">emithls</span><span class="o">::</span><span class="n">FusedOperator</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">template</span><span class="w"> </span><span class="o">&lt;</span><span class="k">typename</span><span class="w"> </span><span class="nc">ParserT</span><span class="o">&gt;</span>
+<span class="w">  </span><span class="k">static</span><span class="w"> </span><span class="n">FailureOr</span><span class="o">&lt;::</span><span class="n">mlir</span><span class="o">::</span><span class="n">emithls</span><span class="o">::</span><span class="n">FusedOperator</span><span class="o">&gt;</span><span class="w"> </span><span class="n">parse</span><span class="p">(</span><span class="n">ParserT</span><span class="w"> </span><span class="o">&amp;</span><span class="n">parser</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="c1">// Parse the keyword/string containing the enum.</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">enumKeyword</span><span class="p">;</span>
+<span class="w">    </span><span class="k">auto</span><span class="w"> </span><span class="n">loc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">parser</span><span class="p">.</span><span class="n">getCurrentLocation</span><span class="p">();</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">failed</span><span class="p">(</span><span class="n">parser</span><span class="p">.</span><span class="n">parseOptionalKeywordOrString</span><span class="p">(</span><span class="o">&amp;</span><span class="n">enumKeyword</span><span class="p">)))</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="n">parser</span><span class="p">.</span><span class="n">emitError</span><span class="p">(</span><span class="n">loc</span><span class="p">,</span><span class="w"> </span><span class="s">"expected keyword for fused operator such as `+=`"</span><span class="p">);</span>
+
+<span class="w">    </span><span class="c1">// Symbolize the keyword.</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">::</span><span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;::</span><span class="n">mlir</span><span class="o">::</span><span class="n">emithls</span><span class="o">::</span><span class="n">FusedOperator</span><span class="o">&gt;</span><span class="w"> </span><span class="n">attr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">::</span><span class="n">mlir</span><span class="o">::</span><span class="n">emithls</span><span class="o">::</span><span class="n">symbolizeEnum</span><span class="o">&lt;::</span><span class="n">mlir</span><span class="o">::</span><span class="n">emithls</span><span class="o">::</span><span class="n">FusedOperator</span><span class="o">&gt;</span><span class="p">(</span><span class="n">enumKeyword</span><span class="p">))</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="o">*</span><span class="n">attr</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">parser</span><span class="p">.</span><span class="n">emitError</span><span class="p">(</span><span class="n">loc</span><span class="p">,</span><span class="w"> </span><span class="s">"expected one of [add, sub, mul] for fused operator such as `+=`, got: "</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">enumKeyword</span><span class="p">;</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">};</span>
+
+<span class="k">template</span><span class="o">&lt;&gt;</span>
+<span class="k">struct</span><span class="w"> </span><span class="nc">FieldParser</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;::</span><span class="n">mlir</span><span class="o">::</span><span class="n">emithls</span><span class="o">::</span><span class="n">FusedOperator</span><span class="o">&gt;</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;::</span><span class="n">mlir</span><span class="o">::</span><span class="n">emithls</span><span class="o">::</span><span class="n">FusedOperator</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">template</span><span class="w"> </span><span class="o">&lt;</span><span class="k">typename</span><span class="w"> </span><span class="nc">ParserT</span><span class="o">&gt;</span>
+<span class="w">  </span><span class="k">static</span><span class="w"> </span><span class="n">FailureOr</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;::</span><span class="n">mlir</span><span class="o">::</span><span class="n">emithls</span><span class="o">::</span><span class="n">FusedOperator</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="n">parse</span><span class="p">(</span><span class="n">ParserT</span><span class="w"> </span><span class="o">&amp;</span><span class="n">parser</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="c1">// Parse the keyword/string containing the enum.</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">enumKeyword</span><span class="p">;</span>
+<span class="w">    </span><span class="k">auto</span><span class="w"> </span><span class="n">loc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">parser</span><span class="p">.</span><span class="n">getCurrentLocation</span><span class="p">();</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">failed</span><span class="p">(</span><span class="n">parser</span><span class="p">.</span><span class="n">parseOptionalKeywordOrString</span><span class="p">(</span><span class="o">&amp;</span><span class="n">enumKeyword</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="s">"add"</span><span class="p">,</span><span class="w"> </span><span class="s">"sub"</span><span class="p">,</span><span class="w"> </span><span class="s">"mul"</span><span class="p">})))</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;::</span><span class="n">mlir</span><span class="o">::</span><span class="n">emithls</span><span class="o">::</span><span class="n">FusedOperator</span><span class="o">&gt;</span><span class="p">{};</span>
+
+<span class="w">    </span><span class="c1">// Symbolize the keyword.</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">::</span><span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;::</span><span class="n">mlir</span><span class="o">::</span><span class="n">emithls</span><span class="o">::</span><span class="n">FusedOperator</span><span class="o">&gt;</span><span class="w"> </span><span class="n">attr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">::</span><span class="n">mlir</span><span class="o">::</span><span class="n">emithls</span><span class="o">::</span><span class="n">symbolizeEnum</span><span class="o">&lt;::</span><span class="n">mlir</span><span class="o">::</span><span class="n">emithls</span><span class="o">::</span><span class="n">FusedOperator</span><span class="o">&gt;</span><span class="p">(</span><span class="n">enumKeyword</span><span class="p">))</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="n">attr</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">parser</span><span class="p">.</span><span class="n">emitError</span><span class="p">(</span><span class="n">loc</span><span class="p">,</span><span class="w"> </span><span class="s">"expected one of [add, sub, mul] for fused operator such as `+=`, got: "</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">enumKeyword</span><span class="p">;</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">};</span>
+<span class="p">}</span><span class="w"> </span><span class="c1">// namespace mlir</span>
+
+<span class="k">namespace</span><span class="w"> </span><span class="nn">llvm</span><span class="w"> </span><span class="p">{</span>
+<span class="kr">inline</span><span class="w"> </span><span class="o">::</span><span class="n">llvm</span><span class="o">::</span><span class="n">raw_ostream</span><span class="w"> </span><span class="o">&amp;</span><span class="k">operator</span><span class="o">&lt;&lt;</span><span class="p">(</span><span class="o">::</span><span class="n">llvm</span><span class="o">::</span><span class="n">raw_ostream</span><span class="w"> </span><span class="o">&amp;</span><span class="n">p</span><span class="p">,</span><span class="w"> </span><span class="o">::</span><span class="n">mlir</span><span class="o">::</span><span class="n">emithls</span><span class="o">::</span><span class="n">FusedOperator</span><span class="w"> </span><span class="n">value</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">auto</span><span class="w"> </span><span class="n">valueStr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">stringifyEnum</span><span class="p">(</span><span class="n">value</span><span class="p">);</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">valueStr</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="p">}</span><span class="w"> </span><span class="c1">// namespace llvm</span>
+
+<span class="k">namespace</span><span class="w"> </span><span class="nn">llvm</span><span class="w"> </span><span class="p">{</span>
+<span class="k">template</span><span class="o">&lt;&gt;</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">DenseMapInfo</span><span class="o">&lt;::</span><span class="n">mlir</span><span class="o">::</span><span class="n">emithls</span><span class="o">::</span><span class="n">FusedOperator</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">using</span><span class="w"> </span><span class="n">StorageInfo</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">::</span><span class="n">llvm</span><span class="o">::</span><span class="n">DenseMapInfo</span><span class="o">&lt;</span><span class="kt">uint32_t</span><span class="o">&gt;</span><span class="p">;</span>
+
+<span class="w">  </span><span class="k">static</span><span class="w"> </span><span class="kt">unsigned</span><span class="w"> </span><span class="nf">getHashValue</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="o">::</span><span class="n">mlir</span><span class="o">::</span><span class="n">emithls</span><span class="o">::</span><span class="n">FusedOperator</span><span class="w"> </span><span class="o">&amp;</span><span class="n">val</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">StorageInfo</span><span class="o">::</span><span class="n">getHashValue</span><span class="p">(</span><span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">uint32_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">val</span><span class="p">));</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="k">static</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="nf">isEqual</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="o">::</span><span class="n">mlir</span><span class="o">::</span><span class="n">emithls</span><span class="o">::</span><span class="n">FusedOperator</span><span class="w"> </span><span class="o">&amp;</span><span class="n">lhs</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="o">::</span><span class="n">mlir</span><span class="o">::</span><span class="n">emithls</span><span class="o">::</span><span class="n">FusedOperator</span><span class="w"> </span><span class="o">&amp;</span><span class="n">rhs</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">lhs</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">rhs</span><span class="p">;</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">};</span>
+<span class="p">}</span>
+
+<span class="k">namespace</span><span class="w"> </span><span class="nn">mlir</span><span class="o">::</span><span class="nn">emithls</span><span class="w"> </span><span class="p">{</span>
+
+<span class="c1">// ##pragma HLS HLS pipeline style=?</span>
+<span class="k">enum</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">PipelineStyle</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="kt">uint32_t</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="n">stp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">  </span><span class="n">flp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">  </span><span class="n">frp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span>
+<span class="p">};</span>
+
+<span class="o">::</span><span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;</span><span class="n">PipelineStyle</span><span class="o">&gt;</span><span class="w"> </span><span class="n">symbolizePipelineStyle</span><span class="p">(</span><span class="kt">uint32_t</span><span class="p">);</span>
+<span class="o">::</span><span class="n">llvm</span><span class="o">::</span><span class="n">StringRef</span><span class="w"> </span><span class="nf">stringifyPipelineStyle</span><span class="p">(</span><span class="n">PipelineStyle</span><span class="p">);</span>
+<span class="o">::</span><span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;</span><span class="n">PipelineStyle</span><span class="o">&gt;</span><span class="w"> </span><span class="n">symbolizePipelineStyle</span><span class="p">(</span><span class="o">::</span><span class="n">llvm</span><span class="o">::</span><span class="n">StringRef</span><span class="p">);</span>
+<span class="kr">inline</span><span class="w"> </span><span class="k">constexpr</span><span class="w"> </span><span class="kt">unsigned</span><span class="w"> </span><span class="nf">getMaxEnumValForPipelineStyle</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="mi">2</span><span class="p">;</span>
+<span class="p">}</span>
+
+
+<span class="kr">inline</span><span class="w"> </span><span class="o">::</span><span class="n">llvm</span><span class="o">::</span><span class="n">StringRef</span><span class="w"> </span><span class="nf">stringifyEnum</span><span class="p">(</span><span class="n">PipelineStyle</span><span class="w"> </span><span class="n">enumValue</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">stringifyPipelineStyle</span><span class="p">(</span><span class="n">enumValue</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="k">template</span><span class="w"> </span><span class="o">&lt;</span><span class="k">typename</span><span class="w"> </span><span class="nc">EnumType</span><span class="o">&gt;</span>
+<span class="o">::</span><span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;</span><span class="n">EnumType</span><span class="o">&gt;</span><span class="w"> </span><span class="n">symbolizeEnum</span><span class="p">(</span><span class="o">::</span><span class="n">llvm</span><span class="o">::</span><span class="n">StringRef</span><span class="p">);</span>
+
+<span class="k">template</span><span class="w"> </span><span class="o">&lt;&gt;</span>
+<span class="kr">inline</span><span class="w"> </span><span class="o">::</span><span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;</span><span class="n">PipelineStyle</span><span class="o">&gt;</span><span class="w"> </span><span class="n">symbolizeEnum</span><span class="o">&lt;</span><span class="n">PipelineStyle</span><span class="o">&gt;</span><span class="p">(</span><span class="o">::</span><span class="n">llvm</span><span class="o">::</span><span class="n">StringRef</span><span class="w"> </span><span class="n">str</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">symbolizePipelineStyle</span><span class="p">(</span><span class="n">str</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">PipelineStyleAttr</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="o">::</span><span class="n">mlir</span><span class="o">::</span><span class="n">IntegerAttr</span><span class="w"> </span><span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+<span class="w">  </span><span class="k">using</span><span class="w"> </span><span class="n">ValueType</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">PipelineStyle</span><span class="p">;</span>
+<span class="w">  </span><span class="k">using</span><span class="w"> </span><span class="o">::</span><span class="n">mlir</span><span class="o">::</span><span class="n">IntegerAttr</span><span class="o">::</span><span class="n">IntegerAttr</span><span class="p">;</span>
+<span class="w">  </span><span class="k">static</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="nf">classof</span><span class="p">(</span><span class="o">::</span><span class="n">mlir</span><span class="o">::</span><span class="n">Attribute</span><span class="w"> </span><span class="n">attr</span><span class="p">);</span>
+<span class="w">  </span><span class="k">static</span><span class="w"> </span><span class="n">PipelineStyleAttr</span><span class="w"> </span><span class="nf">get</span><span class="p">(</span><span class="o">::</span><span class="n">mlir</span><span class="o">::</span><span class="n">MLIRContext</span><span class="w"> </span><span class="o">*</span><span class="n">context</span><span class="p">,</span><span class="w"> </span><span class="n">PipelineStyle</span><span class="w"> </span><span class="n">val</span><span class="p">);</span>
+<span class="w">  </span><span class="n">PipelineStyle</span><span class="w"> </span><span class="nf">getValue</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="p">}</span><span class="w"> </span><span class="c1">// namespace mlir::emithls</span>
+
+<span class="k">namespace</span><span class="w"> </span><span class="nn">mlir</span><span class="w"> </span><span class="p">{</span>
+<span class="k">template</span><span class="w"> </span><span class="o">&lt;</span><span class="k">typename</span><span class="w"> </span><span class="nc">T</span><span class="p">,</span><span class="w"> </span><span class="k">typename</span><span class="o">&gt;</span>
+<span class="k">struct</span><span class="w"> </span><span class="nc">FieldParser</span><span class="p">;</span>
+
+<span class="k">template</span><span class="o">&lt;&gt;</span>
+<span class="k">struct</span><span class="w"> </span><span class="nc">FieldParser</span><span class="o">&lt;::</span><span class="n">mlir</span><span class="o">::</span><span class="n">emithls</span><span class="o">::</span><span class="n">PipelineStyle</span><span class="p">,</span><span class="w"> </span><span class="o">::</span><span class="n">mlir</span><span class="o">::</span><span class="n">emithls</span><span class="o">::</span><span class="n">PipelineStyle</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">template</span><span class="w"> </span><span class="o">&lt;</span><span class="k">typename</span><span class="w"> </span><span class="nc">ParserT</span><span class="o">&gt;</span>
+<span class="w">  </span><span class="k">static</span><span class="w"> </span><span class="n">FailureOr</span><span class="o">&lt;::</span><span class="n">mlir</span><span class="o">::</span><span class="n">emithls</span><span class="o">::</span><span class="n">PipelineStyle</span><span class="o">&gt;</span><span class="w"> </span><span class="n">parse</span><span class="p">(</span><span class="n">ParserT</span><span class="w"> </span><span class="o">&amp;</span><span class="n">parser</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="c1">// Parse the keyword/string containing the enum.</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">enumKeyword</span><span class="p">;</span>
+<span class="w">    </span><span class="k">auto</span><span class="w"> </span><span class="n">loc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">parser</span><span class="p">.</span><span class="n">getCurrentLocation</span><span class="p">();</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">failed</span><span class="p">(</span><span class="n">parser</span><span class="p">.</span><span class="n">parseOptionalKeywordOrString</span><span class="p">(</span><span class="o">&amp;</span><span class="n">enumKeyword</span><span class="p">)))</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="n">parser</span><span class="p">.</span><span class="n">emitError</span><span class="p">(</span><span class="n">loc</span><span class="p">,</span><span class="w"> </span><span class="s">"expected keyword for ##pragma HLS HLS pipeline style=?"</span><span class="p">);</span>
+
+<span class="w">    </span><span class="c1">// Symbolize the keyword.</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">::</span><span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;::</span><span class="n">mlir</span><span class="o">::</span><span class="n">emithls</span><span class="o">::</span><span class="n">PipelineStyle</span><span class="o">&gt;</span><span class="w"> </span><span class="n">attr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">::</span><span class="n">mlir</span><span class="o">::</span><span class="n">emithls</span><span class="o">::</span><span class="n">symbolizeEnum</span><span class="o">&lt;::</span><span class="n">mlir</span><span class="o">::</span><span class="n">emithls</span><span class="o">::</span><span class="n">PipelineStyle</span><span class="o">&gt;</span><span class="p">(</span><span class="n">enumKeyword</span><span class="p">))</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="o">*</span><span class="n">attr</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">parser</span><span class="p">.</span><span class="n">emitError</span><span class="p">(</span><span class="n">loc</span><span class="p">,</span><span class="w"> </span><span class="s">"expected one of [stp, flp, frp] for ##pragma HLS HLS pipeline style=?, got: "</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">enumKeyword</span><span class="p">;</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">};</span>
+
+<span class="k">template</span><span class="o">&lt;&gt;</span>
+<span class="k">struct</span><span class="w"> </span><span class="nc">FieldParser</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;::</span><span class="n">mlir</span><span class="o">::</span><span class="n">emithls</span><span class="o">::</span><span class="n">PipelineStyle</span><span class="o">&gt;</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;::</span><span class="n">mlir</span><span class="o">::</span><span class="n">emithls</span><span class="o">::</span><span class="n">PipelineStyle</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">template</span><span class="w"> </span><span class="o">&lt;</span><span class="k">typename</span><span class="w"> </span><span class="nc">ParserT</span><span class="o">&gt;</span>
+<span class="w">  </span><span class="k">static</span><span class="w"> </span><span class="n">FailureOr</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;::</span><span class="n">mlir</span><span class="o">::</span><span class="n">emithls</span><span class="o">::</span><span class="n">PipelineStyle</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="n">parse</span><span class="p">(</span><span class="n">ParserT</span><span class="w"> </span><span class="o">&amp;</span><span class="n">parser</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="c1">// Parse the keyword/string containing the enum.</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">enumKeyword</span><span class="p">;</span>
+<span class="w">    </span><span class="k">auto</span><span class="w"> </span><span class="n">loc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">parser</span><span class="p">.</span><span class="n">getCurrentLocation</span><span class="p">();</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">failed</span><span class="p">(</span><span class="n">parser</span><span class="p">.</span><span class="n">parseOptionalKeywordOrString</span><span class="p">(</span><span class="o">&amp;</span><span class="n">enumKeyword</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="s">"stp"</span><span class="p">,</span><span class="w"> </span><span class="s">"flp"</span><span class="p">,</span><span class="w"> </span><span class="s">"frp"</span><span class="p">})))</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;::</span><span class="n">mlir</span><span class="o">::</span><span class="n">emithls</span><span class="o">::</span><span class="n">PipelineStyle</span><span class="o">&gt;</span><span class="p">{};</span>
+
+<span class="w">    </span><span class="c1">// Symbolize the keyword.</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">::</span><span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;::</span><span class="n">mlir</span><span class="o">::</span><span class="n">emithls</span><span class="o">::</span><span class="n">PipelineStyle</span><span class="o">&gt;</span><span class="w"> </span><span class="n">attr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">::</span><span class="n">mlir</span><span class="o">::</span><span class="n">emithls</span><span class="o">::</span><span class="n">symbolizeEnum</span><span class="o">&lt;::</span><span class="n">mlir</span><span class="o">::</span><span class="n">emithls</span><span class="o">::</span><span class="n">PipelineStyle</span><span class="o">&gt;</span><span class="p">(</span><span class="n">enumKeyword</span><span class="p">))</span>
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="n">attr</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">parser</span><span class="p">.</span><span class="n">emitError</span><span class="p">(</span><span class="n">loc</span><span class="p">,</span><span class="w"> </span><span class="s">"expected one of [stp, flp, frp] for ##pragma HLS HLS pipeline style=?, got: "</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">enumKeyword</span><span class="p">;</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">};</span>
+<span class="p">}</span><span class="w"> </span><span class="c1">// namespace mlir</span>
+
+<span class="k">namespace</span><span class="w"> </span><span class="nn">llvm</span><span class="w"> </span><span class="p">{</span>
+<span class="kr">inline</span><span class="w"> </span><span class="o">::</span><span class="n">llvm</span><span class="o">::</span><span class="n">raw_ostream</span><span class="w"> </span><span class="o">&amp;</span><span class="k">operator</span><span class="o">&lt;&lt;</span><span class="p">(</span><span class="o">::</span><span class="n">llvm</span><span class="o">::</span><span class="n">raw_ostream</span><span class="w"> </span><span class="o">&amp;</span><span class="n">p</span><span class="p">,</span><span class="w"> </span><span class="o">::</span><span class="n">mlir</span><span class="o">::</span><span class="n">emithls</span><span class="o">::</span><span class="n">PipelineStyle</span><span class="w"> </span><span class="n">value</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">auto</span><span class="w"> </span><span class="n">valueStr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">stringifyEnum</span><span class="p">(</span><span class="n">value</span><span class="p">);</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">valueStr</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="p">}</span><span class="w"> </span><span class="c1">// namespace llvm</span>
+
+<span class="k">namespace</span><span class="w"> </span><span class="nn">llvm</span><span class="w"> </span><span class="p">{</span>
+<span class="k">template</span><span class="o">&lt;&gt;</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">DenseMapInfo</span><span class="o">&lt;::</span><span class="n">mlir</span><span class="o">::</span><span class="n">emithls</span><span class="o">::</span><span class="n">PipelineStyle</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">using</span><span class="w"> </span><span class="n">StorageInfo</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">::</span><span class="n">llvm</span><span class="o">::</span><span class="n">DenseMapInfo</span><span class="o">&lt;</span><span class="kt">uint32_t</span><span class="o">&gt;</span><span class="p">;</span>
+
+<span class="w">  </span><span class="k">static</span><span class="w"> </span><span class="kt">unsigned</span><span class="w"> </span><span class="nf">getHashValue</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="o">::</span><span class="n">mlir</span><span class="o">::</span><span class="n">emithls</span><span class="o">::</span><span class="n">PipelineStyle</span><span class="w"> </span><span class="o">&amp;</span><span class="n">val</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">StorageInfo</span><span class="o">::</span><span class="n">getHashValue</span><span class="p">(</span><span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">uint32_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">val</span><span class="p">));</span>
+<span class="w">  </span><span class="p">}</span>
+
+<span class="w">  </span><span class="k">static</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="nf">isEqual</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="o">::</span><span class="n">mlir</span><span class="o">::</span><span class="n">emithls</span><span class="o">::</span><span class="n">PipelineStyle</span><span class="w"> </span><span class="o">&amp;</span><span class="n">lhs</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="o">::</span><span class="n">mlir</span><span class="o">::</span><span class="n">emithls</span><span class="o">::</span><span class="n">PipelineStyle</span><span class="w"> </span><span class="o">&amp;</span><span class="n">rhs</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">lhs</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">rhs</span><span class="p">;</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">};</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

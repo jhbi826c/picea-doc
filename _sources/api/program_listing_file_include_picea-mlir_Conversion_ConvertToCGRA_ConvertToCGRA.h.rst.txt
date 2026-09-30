@@ -1,0 +1,33 @@
+
+.. _program_listing_file_include_picea-mlir_Conversion_ConvertToCGRA_ConvertToCGRA.h:
+
+Program Listing for File ConvertToCGRA.h
+========================================
+
+|exhale_lsh| :ref:`Return to documentation for file <file_include_picea-mlir_Conversion_ConvertToCGRA_ConvertToCGRA.h>` (``include/picea-mlir/Conversion/ConvertToCGRA/ConvertToCGRA.h``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. code-block:: cpp
+
+   
+   
+   #pragma once
+   
+   #include "mlir/Pass/PassManager.h"
+   
+   namespace mlir {
+   
+   namespace picea {
+   void registerConvertToCGRAPipelines();
+   
+   void addCGRADeployToLLVMPasses(OpPassManager &pm);
+   
+   void addLegalizeFabricBodyPasses(OpPassManager &pm);
+   
+   void addShapeCGRAReductionsPasses(OpPassManager &pm);
+   
+   void addPlaceCGRABuffersPasses(OpPassManager &pm);
+   } // namespace picea
+   
+   } // namespace mlir

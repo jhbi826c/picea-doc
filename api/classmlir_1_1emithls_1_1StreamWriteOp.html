@@ -1,0 +1,385 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Class StreamWriteOp &mdash; picea 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/collapsible-lists/css/tree_view.css?v=a885cde7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js?v=73120307"></script>
+      <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js?v=660e4f45"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Class StreamWriteOpAdaptor" href="classmlir_1_1emithls_1_1StreamWriteOpAdaptor.html" />
+    <link rel="prev" title="Class StreamType" href="classmlir_1_1emithls_1_1StreamType.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            picea
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Installation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../README.html">About the project</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#guides">Guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#related-projects">Related projects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#development-environment-nix">Development Environment (Nix)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#build-on-ubuntu-24-04-no-nix">Build on Ubuntu 24.04 (no Nix)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#gurobi-license">Gurobi license</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#installing">Installing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#run-the-tests">Run the tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#build-the-documentation">Build the documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#compiling-a-design">Compiling a design</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#running-a-design-on-the-board">Running a design on the board</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#exporting-a-profiled-application-to-mocasin">Exporting a profiled application to Mocasin</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Guides</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../guides/laksa.html">The FPGA Variant using LAKSA backend</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/cgra.html">The CGRA Variant</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">MLIR Dialects</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/Base2Ops.html">‘base2’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/CGRAOps.html">‘cgra’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/DFGOps.html">‘dfg’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/EmitHLSOps.html">‘emithls’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/FilterOps.html">‘filter’ Dialect</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Passes</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/PICEAConversionPasses.html">PICEA Conversion Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/CGRAPasses.html">CGRA Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/DFGPasses.html">DFG Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/EmitHLSPasses.html">Emit HLS Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/FuncExtPasses.html">Func Ext Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/LinalgExtPasses.html">Linalg Ext Passes</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">C++ API</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="library_root.html">C++ API Reference</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="library_root.html#picea">picea</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="library_root.html#page-hierarchy">Page Hierarchy</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="library_root.html#full-api">Full API</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="library_root.html#namespaces">Namespaces</a></li>
+<li class="toctree-l4 current"><a class="reference internal" href="library_root.html#classes-and-structs">Classes and Structs</a></li>
+<li class="toctree-l4"><a class="reference internal" href="library_root.html#enums">Enums</a></li>
+<li class="toctree-l4"><a class="reference internal" href="library_root.html#functions">Functions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="library_root.html#variables">Variables</a></li>
+<li class="toctree-l4"><a class="reference internal" href="library_root.html#defines">Defines</a></li>
+<li class="toctree-l4"><a class="reference internal" href="library_root.html#typedefs">Typedefs</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">picea</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="library_root.html">C++ API Reference</a></li>
+      <li class="breadcrumb-item active">Class StreamWriteOp</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/classmlir_1_1emithls_1_1StreamWriteOp.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="class-streamwriteop">
+<span id="exhale-class-classmlir-1-1emithls-1-1streamwriteop"></span><h1>Class StreamWriteOp<a class="headerlink" href="#class-streamwriteop" title="Link to this heading"></a></h1>
+<ul class="simple">
+<li><p>Defined in <a class="reference internal" href="file_build_include_picea-mlir_Dialect_EmitHLS_IR_EmitHLSOps.h.inc.html#file-build-include-picea-mlir-dialect-emithls-ir-emithlsops-h-inc"><span class="std std-ref">File EmitHLSOps.h.inc</span></a></p></li>
+</ul>
+<section id="inheritance-relationships">
+<h2>Inheritance Relationships<a class="headerlink" href="#inheritance-relationships" title="Link to this heading"></a></h2>
+<section id="base-type">
+<h3>Base Type<a class="headerlink" href="#base-type" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">public</span> <span class="pre">mlir::Op&lt;</span> <span class="pre">StreamWriteOp,</span> <span class="pre">::mlir::OpTrait::ZeroRegions,</span> <span class="pre">::mlir::OpTrait::ZeroResults,</span> <span class="pre">::mlir::OpTrait::ZeroSuccessors,</span> <span class="pre">::mlir::OpTrait::AtLeastNOperands&lt;</span> <span class="pre">2</span> <span class="pre">&gt;::Impl,</span> <span class="pre">::mlir::OpTrait::OpInvariants,</span> <span class="pre">::mlir::MemoryEffectOpInterface::Trait</span> <span class="pre">&gt;</span></code></p></li>
+</ul>
+</section>
+</section>
+<section id="class-documentation">
+<h2>Class Documentation<a class="headerlink" href="#class-documentation" title="Link to this heading"></a></h2>
+<dl class="cpp class">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir7emithls13StreamWriteOpE">
+<span id="_CPPv3N4mlir7emithls13StreamWriteOpE"></span><span id="_CPPv2N4mlir7emithls13StreamWriteOpE"></span><span id="mlir::emithls::StreamWriteOp"></span><span class="target" id="classmlir_1_1emithls_1_1StreamWriteOp"></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">StreamWriteOp</span></span></span><span class="w"> </span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="k"><span class="pre">public</span></span><span class="w"> </span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">Op</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4N4mlir7emithls13StreamWriteOpE" title="mlir::emithls::StreamWriteOp"><span class="n"><span class="pre">StreamWriteOp</span></span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">OpTrait</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">ZeroRegions</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">OpTrait</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">ZeroResults</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">OpTrait</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">ZeroSuccessors</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">OpTrait</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">AtLeastNOperands</span></span><span class="p"><span class="pre">&lt;</span></span><span class="m"><span class="pre">2</span></span><span class="p"><span class="pre">&gt;</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">Impl</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">OpTrait</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">OpInvariants</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">MemoryEffectOpInterface</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">Trait</span></span><span class="p"><span class="pre">&gt;</span></span><a class="headerlink" href="#_CPPv4N4mlir7emithls13StreamWriteOpE" title="Link to this definition"></a><br /></dt>
+<dd><div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-types">Public Types</p>
+<dl class="cpp type">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir7emithls13StreamWriteOp7AdaptorE">
+<span id="_CPPv3N4mlir7emithls13StreamWriteOp7AdaptorE"></span><span id="_CPPv2N4mlir7emithls13StreamWriteOp7AdaptorE"></span><span class="target" id="classmlir_1_1emithls_1_1StreamWriteOp_1af55b7c2c51c78c8af0dc80d981f21470"></span><span class="k"><span class="pre">using</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Adaptor</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><a class="reference internal" href="classmlir_1_1emithls_1_1StreamWriteOpAdaptor.html#_CPPv4N4mlir7emithls20StreamWriteOpAdaptorE" title="mlir::emithls::StreamWriteOpAdaptor"><span class="n"><span class="pre">StreamWriteOpAdaptor</span></span></a><a class="headerlink" href="#_CPPv4N4mlir7emithls13StreamWriteOp7AdaptorE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp type">
+<dt class="sig sig-object cpp" id="_CPPv4I0EN4mlir7emithls13StreamWriteOp14GenericAdaptorE">
+<span id="_CPPv3I0EN4mlir7emithls13StreamWriteOp14GenericAdaptorE"></span><span id="_CPPv2I0EN4mlir7emithls13StreamWriteOp14GenericAdaptorE"></span><span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="k"><span class="pre">typename</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">RangeT</span></span></span><span class="p"><span class="pre">&gt;</span></span><br /><span class="target" id="classmlir_1_1emithls_1_1StreamWriteOp_1a755caa7f04a4c387a4d6a161a7ac6ce6"></span><span class="k"><span class="pre">using</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">GenericAdaptor</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><a class="reference internal" href="classmlir_1_1emithls_1_1StreamWriteOpGenericAdaptor.html#_CPPv4I0EN4mlir7emithls27StreamWriteOpGenericAdaptorE" title="mlir::emithls::StreamWriteOpGenericAdaptor"><span class="n"><span class="pre">StreamWriteOpGenericAdaptor</span></span></a><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4I0EN4mlir7emithls13StreamWriteOp14GenericAdaptorE" title="mlir::emithls::StreamWriteOp::GenericAdaptor::RangeT"><span class="n"><span class="pre">RangeT</span></span></a><span class="p"><span class="pre">&gt;</span></span><a class="headerlink" href="#_CPPv4I0EN4mlir7emithls13StreamWriteOp14GenericAdaptorE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp type">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir7emithls13StreamWriteOp11FoldAdaptorE">
+<span id="_CPPv3N4mlir7emithls13StreamWriteOp11FoldAdaptorE"></span><span id="_CPPv2N4mlir7emithls13StreamWriteOp11FoldAdaptorE"></span><span class="target" id="classmlir_1_1emithls_1_1StreamWriteOp_1ab3cf63eabdd48d713c0da05fd52bccb7"></span><span class="k"><span class="pre">using</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">FoldAdaptor</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4I0EN4mlir7emithls13StreamWriteOp14GenericAdaptorE" title="mlir::emithls::StreamWriteOp::GenericAdaptor"><span class="n"><span class="pre">GenericAdaptor</span></span></a><span class="p"><span class="pre">&lt;</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">llvm</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">ArrayRef</span></span><span class="p"><span class="pre">&lt;</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">Attribute</span></span><span class="p"><span class="pre">&gt;</span></span><span class="p"><span class="pre">&gt;</span></span><a class="headerlink" href="#_CPPv4N4mlir7emithls13StreamWriteOp11FoldAdaptorE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp type">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir7emithls13StreamWriteOp10PropertiesE">
+<span id="_CPPv3N4mlir7emithls13StreamWriteOp10PropertiesE"></span><span id="_CPPv2N4mlir7emithls13StreamWriteOp10PropertiesE"></span><span class="target" id="classmlir_1_1emithls_1_1StreamWriteOp_1ab959bb55dafca442b165562f72663f62"></span><span class="k"><span class="pre">using</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Properties</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N4mlir7emithls13StreamWriteOp11FoldAdaptorE" title="mlir::emithls::StreamWriteOp::FoldAdaptor"><span class="n"><span class="pre">FoldAdaptor</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">Properties</span></span><a class="headerlink" href="#_CPPv4N4mlir7emithls13StreamWriteOp10PropertiesE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir7emithls13StreamWriteOp17getAttributeNamesEv">
+<span id="_CPPv3N4mlir7emithls13StreamWriteOp17getAttributeNamesEv"></span><span id="_CPPv2N4mlir7emithls13StreamWriteOp17getAttributeNamesEv"></span><span id="mlir::emithls::StreamWriteOp::getAttributeNames"></span><span class="target" id="classmlir_1_1emithls_1_1StreamWriteOp_1ac387697dae4d37de566e0663f94d480f"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">llvm</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">ArrayRef</span></span><span class="p"><span class="pre">&lt;</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">llvm</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">StringRef</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">getAttributeNames</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4mlir7emithls13StreamWriteOp17getAttributeNamesEv" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir7emithls13StreamWriteOp27getODSOperandIndexAndLengthEj">
+<span id="_CPPv3N4mlir7emithls13StreamWriteOp27getODSOperandIndexAndLengthEj"></span><span id="_CPPv2N4mlir7emithls13StreamWriteOp27getODSOperandIndexAndLengthEj"></span><span id="mlir::emithls::StreamWriteOp::getODSOperandIndexAndLength__unsigned"></span><span class="target" id="classmlir_1_1emithls_1_1StreamWriteOp_1a0fddfaff12f5055a05cc370ab453888c"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">pair</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">unsigned</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="kt"><span class="pre">unsigned</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">getODSOperandIndexAndLength</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">unsigned</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">index</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4mlir7emithls13StreamWriteOp27getODSOperandIndexAndLengthEj" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir7emithls13StreamWriteOp14getODSOperandsEj">
+<span id="_CPPv3N4mlir7emithls13StreamWriteOp14getODSOperandsEj"></span><span id="_CPPv2N4mlir7emithls13StreamWriteOp14getODSOperandsEj"></span><span id="mlir::emithls::StreamWriteOp::getODSOperands__unsigned"></span><span class="target" id="classmlir_1_1emithls_1_1StreamWriteOp_1adaef690592749a9958549584cb9b5cf5"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">Operation</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">operand_range</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">getODSOperands</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">unsigned</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">index</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4mlir7emithls13StreamWriteOp14getODSOperandsEj" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir7emithls13StreamWriteOp7getDataEv">
+<span id="_CPPv3N4mlir7emithls13StreamWriteOp7getDataEv"></span><span id="_CPPv2N4mlir7emithls13StreamWriteOp7getDataEv"></span><span id="mlir::emithls::StreamWriteOp::getData"></span><span class="target" id="classmlir_1_1emithls_1_1StreamWriteOp_1affd356b33b716b2a358ddf12f8b02a71"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">TypedValue</span></span><span class="p"><span class="pre">&lt;</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">Type</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">getData</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4mlir7emithls13StreamWriteOp7getDataEv" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir7emithls13StreamWriteOp9getStreamEv">
+<span id="_CPPv3N4mlir7emithls13StreamWriteOp9getStreamEv"></span><span id="_CPPv2N4mlir7emithls13StreamWriteOp9getStreamEv"></span><span id="mlir::emithls::StreamWriteOp::getStream"></span><span class="target" id="classmlir_1_1emithls_1_1StreamWriteOp_1aabb399f5de07881408b4c0629e133680"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">TypedValue</span></span><span class="p"><span class="pre">&lt;</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">Type</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">getStream</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4mlir7emithls13StreamWriteOp9getStreamEv" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir7emithls13StreamWriteOp10getIndicesEv">
+<span id="_CPPv3N4mlir7emithls13StreamWriteOp10getIndicesEv"></span><span id="_CPPv2N4mlir7emithls13StreamWriteOp10getIndicesEv"></span><span id="mlir::emithls::StreamWriteOp::getIndices"></span><span class="target" id="classmlir_1_1emithls_1_1StreamWriteOp_1a1bf93d7e3e571dad36b74cd46de5af70"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">Operation</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">operand_range</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">getIndices</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4mlir7emithls13StreamWriteOp10getIndicesEv" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir7emithls13StreamWriteOp14getDataMutableEv">
+<span id="_CPPv3N4mlir7emithls13StreamWriteOp14getDataMutableEv"></span><span id="_CPPv2N4mlir7emithls13StreamWriteOp14getDataMutableEv"></span><span id="mlir::emithls::StreamWriteOp::getDataMutable"></span><span class="target" id="classmlir_1_1emithls_1_1StreamWriteOp_1a01aedceb3c0dc8f050e0be4bce2e8f50"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">OpOperand</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="sig-name descname"><span class="n"><span class="pre">getDataMutable</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4mlir7emithls13StreamWriteOp14getDataMutableEv" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir7emithls13StreamWriteOp16getStreamMutableEv">
+<span id="_CPPv3N4mlir7emithls13StreamWriteOp16getStreamMutableEv"></span><span id="_CPPv2N4mlir7emithls13StreamWriteOp16getStreamMutableEv"></span><span id="mlir::emithls::StreamWriteOp::getStreamMutable"></span><span class="target" id="classmlir_1_1emithls_1_1StreamWriteOp_1a65db762e510a7a160742ffe1407d0b3d"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">OpOperand</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="sig-name descname"><span class="n"><span class="pre">getStreamMutable</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4mlir7emithls13StreamWriteOp16getStreamMutableEv" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir7emithls13StreamWriteOp17getIndicesMutableEv">
+<span id="_CPPv3N4mlir7emithls13StreamWriteOp17getIndicesMutableEv"></span><span id="_CPPv2N4mlir7emithls13StreamWriteOp17getIndicesMutableEv"></span><span id="mlir::emithls::StreamWriteOp::getIndicesMutable"></span><span class="target" id="classmlir_1_1emithls_1_1StreamWriteOp_1af2f7f4252b5219bac1e19e76c9c652b8"></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">MutableOperandRange</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">getIndicesMutable</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4mlir7emithls13StreamWriteOp17getIndicesMutableEv" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir7emithls13StreamWriteOp26getODSResultIndexAndLengthEj">
+<span id="_CPPv3N4mlir7emithls13StreamWriteOp26getODSResultIndexAndLengthEj"></span><span id="_CPPv2N4mlir7emithls13StreamWriteOp26getODSResultIndexAndLengthEj"></span><span id="mlir::emithls::StreamWriteOp::getODSResultIndexAndLength__unsigned"></span><span class="target" id="classmlir_1_1emithls_1_1StreamWriteOp_1af9ec14ed6a59972dc4ceb171eb615590"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">pair</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">unsigned</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="kt"><span class="pre">unsigned</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">getODSResultIndexAndLength</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">unsigned</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">index</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4mlir7emithls13StreamWriteOp26getODSResultIndexAndLengthEj" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir7emithls13StreamWriteOp13getODSResultsEj">
+<span id="_CPPv3N4mlir7emithls13StreamWriteOp13getODSResultsEj"></span><span id="_CPPv2N4mlir7emithls13StreamWriteOp13getODSResultsEj"></span><span id="mlir::emithls::StreamWriteOp::getODSResults__unsigned"></span><span class="target" id="classmlir_1_1emithls_1_1StreamWriteOp_1aee11b08cd91799a01425c5405f301d51"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">Operation</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">result_range</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">getODSResults</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">unsigned</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">index</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4mlir7emithls13StreamWriteOp13getODSResultsEj" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir7emithls13StreamWriteOp20verifyInvariantsImplEv">
+<span id="_CPPv3N4mlir7emithls13StreamWriteOp20verifyInvariantsImplEv"></span><span id="_CPPv2N4mlir7emithls13StreamWriteOp20verifyInvariantsImplEv"></span><span id="mlir::emithls::StreamWriteOp::verifyInvariantsImpl"></span><span class="target" id="classmlir_1_1emithls_1_1StreamWriteOp_1ad33f3b01d493f06d810c14ee584f8e8d"></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">llvm</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">LogicalResult</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">verifyInvariantsImpl</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4mlir7emithls13StreamWriteOp20verifyInvariantsImplEv" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir7emithls13StreamWriteOp16verifyInvariantsEv">
+<span id="_CPPv3N4mlir7emithls13StreamWriteOp16verifyInvariantsEv"></span><span id="_CPPv2N4mlir7emithls13StreamWriteOp16verifyInvariantsEv"></span><span id="mlir::emithls::StreamWriteOp::verifyInvariants"></span><span class="target" id="classmlir_1_1emithls_1_1StreamWriteOp_1a41263e5cae9369e1c62b6c3d3cd90c03"></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">llvm</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">LogicalResult</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">verifyInvariants</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4mlir7emithls13StreamWriteOp16verifyInvariantsEv" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir7emithls13StreamWriteOp6verifyEv">
+<span id="_CPPv3N4mlir7emithls13StreamWriteOp6verifyEv"></span><span id="_CPPv2N4mlir7emithls13StreamWriteOp6verifyEv"></span><span id="mlir::emithls::StreamWriteOp::verify"></span><span class="target" id="classmlir_1_1emithls_1_1StreamWriteOp_1aab7ede4995fd3ef57c56f20691914623"></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">llvm</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">LogicalResult</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">verify</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4mlir7emithls13StreamWriteOp6verifyEv" title="Link to this definition"></a><br /></dt>
+<dd><p>Verifies an <code class="docutils literal notranslate"><a class="reference internal" href="#classmlir_1_1emithls_1_1StreamWriteOp"><span class="std std-ref"><span class="pre">emithls::StreamWriteOp</span></span></a></code> has consistent stream and data types. </p>
+<p>When the operand is an <code class="docutils literal notranslate"><a class="reference internal" href="classmlir_1_1emithls_1_1ArrayType.html#classmlir_1_1emithls_1_1ArrayType"><span class="std std-ref"><span class="pre">ArrayType</span></span></a></code>, its element must be a <code class="docutils literal notranslate"><a class="reference internal" href="classmlir_1_1emithls_1_1StreamType.html#classmlir_1_1emithls_1_1StreamType"><span class="std std-ref"><span class="pre">StreamType</span></span></a></code> and the number of indices must match the array rank. For a plain <code class="docutils literal notranslate"><a class="reference internal" href="classmlir_1_1emithls_1_1StreamType.html#classmlir_1_1emithls_1_1StreamType"><span class="std std-ref"><span class="pre">StreamType</span></span></a></code> no indices are allowed. In both cases the stream’s element type must equal the type of the data operand. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir7emithls13StreamWriteOp5printERN4mlir12OpAsmPrinterE">
+<span id="_CPPv3N4mlir7emithls13StreamWriteOp5printERN4mlir12OpAsmPrinterE"></span><span id="_CPPv2N4mlir7emithls13StreamWriteOp5printERN4mlir12OpAsmPrinterE"></span><span id="mlir::emithls::StreamWriteOp::print__mlir::OpAsmPrinterR"></span><span class="target" id="classmlir_1_1emithls_1_1StreamWriteOp_1aebbe699fb2ad8737d3fd7418f17b16bd"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">print</span></span></span><span class="sig-paren">(</span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">OpAsmPrinter</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">_odsPrinter</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4mlir7emithls13StreamWriteOp5printERN4mlir12OpAsmPrinterE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir7emithls13StreamWriteOp10getEffectsER15SmallVectorImplIN11SideEffects14EffectInstanceIN13MemoryEffects6EffectEEEE">
+<span id="_CPPv3N4mlir7emithls13StreamWriteOp10getEffectsER15SmallVectorImplIN11SideEffects14EffectInstanceIN13MemoryEffects6EffectEEEE"></span><span id="_CPPv2N4mlir7emithls13StreamWriteOp10getEffectsER15SmallVectorImplIN11SideEffects14EffectInstanceIN13MemoryEffects6EffectEEEE"></span><span id="mlir::emithls::StreamWriteOp::getEffects__SmallVectorImpl:SideEffects::EffectInstance:MemoryEffects::Effect::R"></span><span class="target" id="classmlir_1_1emithls_1_1StreamWriteOp_1a54f9e174639eb997206b6143edb21b29"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">getEffects</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">SmallVectorImpl</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">SideEffects</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">EffectInstance</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">MemoryEffects</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">Effect</span></span><span class="p"><span class="pre">&gt;</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">effects</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4mlir7emithls13StreamWriteOp10getEffectsER15SmallVectorImplIN11SideEffects14EffectInstanceIN13MemoryEffects6EffectEEEE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-static-functions">Public Static Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir7emithls13StreamWriteOp16getOperationNameEv">
+<span id="_CPPv3N4mlir7emithls13StreamWriteOp16getOperationNameEv"></span><span id="_CPPv2N4mlir7emithls13StreamWriteOp16getOperationNameEv"></span><span id="mlir::emithls::StreamWriteOp::getOperationNameCE"></span><span class="target" id="classmlir_1_1emithls_1_1StreamWriteOp_1afb3dba2d1b6fec3ec711df6f6e3dbb4e"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="k"><span class="pre">constexpr</span></span><span class="w"> </span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">llvm</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">StringLiteral</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">getOperationName</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4mlir7emithls13StreamWriteOp16getOperationNameEv" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir7emithls13StreamWriteOp21setPropertiesFromAttrER10PropertiesN4mlir9AttributeEN4llvm12function_refIFN4mlir18InFlightDiagnosticEvEEE">
+<span id="_CPPv3N4mlir7emithls13StreamWriteOp21setPropertiesFromAttrER10PropertiesN4mlir9AttributeEN4llvm12function_refIFN4mlir18InFlightDiagnosticEvEEE"></span><span id="_CPPv2N4mlir7emithls13StreamWriteOp21setPropertiesFromAttrER10PropertiesN4mlir9AttributeEN4llvm12function_refIFN4mlir18InFlightDiagnosticEvEEE"></span><span class="target" id="classmlir_1_1emithls_1_1StreamWriteOp_1a162d50fbeadf9cd8008e52d6244c7cae"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">llvm</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">LogicalResult</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">setPropertiesFromAttr</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4N4mlir7emithls13StreamWriteOp10PropertiesE" title="mlir::emithls::StreamWriteOp::Properties"><span class="n"><span class="pre">Properties</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">prop</span></span>, <span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">Attribute</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">attr</span></span>, <span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">llvm</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">function_ref</span></span><span class="p"><span class="pre">&lt;</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">InFlightDiagnostic</span></span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">emitError</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4mlir7emithls13StreamWriteOp21setPropertiesFromAttrER10PropertiesN4mlir9AttributeEN4llvm12function_refIFN4mlir18InFlightDiagnosticEvEEE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir7emithls13StreamWriteOp19getPropertiesAsAttrEPN4mlir11MLIRContextERK10Properties">
+<span id="_CPPv3N4mlir7emithls13StreamWriteOp19getPropertiesAsAttrEPN4mlir11MLIRContextERK10Properties"></span><span id="_CPPv2N4mlir7emithls13StreamWriteOp19getPropertiesAsAttrEPN4mlir11MLIRContextERK10Properties"></span><span id="mlir::emithls::StreamWriteOp::getPropertiesAsAttr__mlir::MLIRContextP.PropertiesCR"></span><span class="target" id="classmlir_1_1emithls_1_1StreamWriteOp_1a2499112b73ef9b2577f3d5c1ec0f492a"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">Attribute</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">getPropertiesAsAttr</span></span></span><span class="sig-paren">(</span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">MLIRContext</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">ctx</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N4mlir7emithls13StreamWriteOp10PropertiesE" title="mlir::emithls::StreamWriteOp::Properties"><span class="n"><span class="pre">Properties</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">prop</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4mlir7emithls13StreamWriteOp19getPropertiesAsAttrEPN4mlir11MLIRContextERK10Properties" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir7emithls13StreamWriteOp21computePropertiesHashERK10Properties">
+<span id="_CPPv3N4mlir7emithls13StreamWriteOp21computePropertiesHashERK10Properties"></span><span id="_CPPv2N4mlir7emithls13StreamWriteOp21computePropertiesHashERK10Properties"></span><span id="mlir::emithls::StreamWriteOp::computePropertiesHash__PropertiesCR"></span><span class="target" id="classmlir_1_1emithls_1_1StreamWriteOp_1ac26df4da49802185017048a7ee44104e"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="n"><span class="pre">llvm</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">hash_code</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">computePropertiesHash</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N4mlir7emithls13StreamWriteOp10PropertiesE" title="mlir::emithls::StreamWriteOp::Properties"><span class="n"><span class="pre">Properties</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">prop</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4mlir7emithls13StreamWriteOp21computePropertiesHashERK10Properties" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir7emithls13StreamWriteOp15getInherentAttrEPN4mlir11MLIRContextERK10PropertiesN4llvm9StringRefE">
+<span id="_CPPv3N4mlir7emithls13StreamWriteOp15getInherentAttrEPN4mlir11MLIRContextERK10PropertiesN4llvm9StringRefE"></span><span id="_CPPv2N4mlir7emithls13StreamWriteOp15getInherentAttrEPN4mlir11MLIRContextERK10PropertiesN4llvm9StringRefE"></span><span id="mlir::emithls::StreamWriteOp::getInherentAttr__mlir::MLIRContextP.PropertiesCR.llvm::StringRef"></span><span class="target" id="classmlir_1_1emithls_1_1StreamWriteOp_1af2d630a6f6507925fde4d4f79bbb0dc0"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">optional</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">Attribute</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">getInherentAttr</span></span></span><span class="sig-paren">(</span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">MLIRContext</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">ctx</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N4mlir7emithls13StreamWriteOp10PropertiesE" title="mlir::emithls::StreamWriteOp::Properties"><span class="n"><span class="pre">Properties</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">prop</span></span>, <span class="n"><span class="pre">llvm</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">StringRef</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">name</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4mlir7emithls13StreamWriteOp15getInherentAttrEPN4mlir11MLIRContextERK10PropertiesN4llvm9StringRefE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir7emithls13StreamWriteOp15setInherentAttrER10PropertiesN4llvm9StringRefEN4mlir9AttributeE">
+<span id="_CPPv3N4mlir7emithls13StreamWriteOp15setInherentAttrER10PropertiesN4llvm9StringRefEN4mlir9AttributeE"></span><span id="_CPPv2N4mlir7emithls13StreamWriteOp15setInherentAttrER10PropertiesN4llvm9StringRefEN4mlir9AttributeE"></span><span id="mlir::emithls::StreamWriteOp::setInherentAttr__PropertiesR.llvm::StringRef.mlir::Attribute"></span><span class="target" id="classmlir_1_1emithls_1_1StreamWriteOp_1adc4548aa6b33e85e8e4224192fe1047c"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">setInherentAttr</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4N4mlir7emithls13StreamWriteOp10PropertiesE" title="mlir::emithls::StreamWriteOp::Properties"><span class="n"><span class="pre">Properties</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">prop</span></span>, <span class="n"><span class="pre">llvm</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">StringRef</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">name</span></span>, <span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">Attribute</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">value</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4mlir7emithls13StreamWriteOp15setInherentAttrER10PropertiesN4llvm9StringRefEN4mlir9AttributeE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir7emithls13StreamWriteOp21populateInherentAttrsEPN4mlir11MLIRContextERK10PropertiesRN4mlir13NamedAttrListE">
+<span id="_CPPv3N4mlir7emithls13StreamWriteOp21populateInherentAttrsEPN4mlir11MLIRContextERK10PropertiesRN4mlir13NamedAttrListE"></span><span id="_CPPv2N4mlir7emithls13StreamWriteOp21populateInherentAttrsEPN4mlir11MLIRContextERK10PropertiesRN4mlir13NamedAttrListE"></span><span id="mlir::emithls::StreamWriteOp::populateInherentAttrs__mlir::MLIRContextP.PropertiesCR.mlir::NamedAttrListR"></span><span class="target" id="classmlir_1_1emithls_1_1StreamWriteOp_1a02996f516391f4fe072f3532514ce2d9"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">populateInherentAttrs</span></span></span><span class="sig-paren">(</span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">MLIRContext</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">ctx</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N4mlir7emithls13StreamWriteOp10PropertiesE" title="mlir::emithls::StreamWriteOp::Properties"><span class="n"><span class="pre">Properties</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">prop</span></span>, <span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">NamedAttrList</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">attrs</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4mlir7emithls13StreamWriteOp21populateInherentAttrsEPN4mlir11MLIRContextERK10PropertiesRN4mlir13NamedAttrListE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir7emithls13StreamWriteOp19verifyInherentAttrsEN4mlir13OperationNameERN4mlir13NamedAttrListEN4llvm12function_refIFN4mlir18InFlightDiagnosticEvEEE">
+<span id="_CPPv3N4mlir7emithls13StreamWriteOp19verifyInherentAttrsEN4mlir13OperationNameERN4mlir13NamedAttrListEN4llvm12function_refIFN4mlir18InFlightDiagnosticEvEEE"></span><span id="_CPPv2N4mlir7emithls13StreamWriteOp19verifyInherentAttrsEN4mlir13OperationNameERN4mlir13NamedAttrListEN4llvm12function_refIFN4mlir18InFlightDiagnosticEvEEE"></span><span class="target" id="classmlir_1_1emithls_1_1StreamWriteOp_1ac4618d795e3de354a08419b8322ba2b0"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">llvm</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">LogicalResult</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">verifyInherentAttrs</span></span></span><span class="sig-paren">(</span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">OperationName</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">opName</span></span>, <span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">NamedAttrList</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">attrs</span></span>, <span class="n"><span class="pre">llvm</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">function_ref</span></span><span class="p"><span class="pre">&lt;</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">InFlightDiagnostic</span></span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">emitError</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4mlir7emithls13StreamWriteOp19verifyInherentAttrsEN4mlir13OperationNameERN4mlir13NamedAttrListEN4llvm12function_refIFN4mlir18InFlightDiagnosticEvEEE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir7emithls13StreamWriteOp5buildERN4mlir9OpBuilderERN4mlir14OperationStateE5Value5Value10ValueRange">
+<span id="_CPPv3N4mlir7emithls13StreamWriteOp5buildERN4mlir9OpBuilderERN4mlir14OperationStateE5Value5Value10ValueRange"></span><span id="_CPPv2N4mlir7emithls13StreamWriteOp5buildERN4mlir9OpBuilderERN4mlir14OperationStateE5Value5Value10ValueRange"></span><span id="mlir::emithls::StreamWriteOp::build__mlir::OpBuilderR.mlir::OperationStateR.Value.Value.ValueRange"></span><span class="target" id="classmlir_1_1emithls_1_1StreamWriteOp_1a719c66e32e547e748d88ac9f8a709a60"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">build</span></span></span><span class="sig-paren">(</span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">OpBuilder</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">odsBuilder</span></span>, <span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">OperationState</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">odsState</span></span>, <span class="n"><span class="pre">Value</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">data</span></span>, <span class="n"><span class="pre">Value</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">stream</span></span>, <span class="n"><span class="pre">ValueRange</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">indices</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4mlir7emithls13StreamWriteOp5buildERN4mlir9OpBuilderERN4mlir14OperationStateE5Value5Value10ValueRange" title="Link to this definition"></a><br /></dt>
+<dd><p>Builds an <code class="docutils literal notranslate"><a class="reference internal" href="#classmlir_1_1emithls_1_1StreamWriteOp"><span class="std std-ref"><span class="pre">emithls::StreamWriteOp</span></span></a></code>. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> – The value to write into the stream. </p></li>
+<li><p><strong>stream</strong> – The stream (or array of streams) to write to. </p></li>
+<li><p><strong>indices</strong> – Index operands when <code class="docutils literal notranslate"><span class="pre">stream</span></code> is an array of streams; empty for a plain stream. </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir7emithls13StreamWriteOp6createERN4mlir9OpBuilderEN4mlir8LocationE5Value5Value10ValueRange">
+<span id="_CPPv3N4mlir7emithls13StreamWriteOp6createERN4mlir9OpBuilderEN4mlir8LocationE5Value5Value10ValueRange"></span><span id="_CPPv2N4mlir7emithls13StreamWriteOp6createERN4mlir9OpBuilderEN4mlir8LocationE5Value5Value10ValueRange"></span><span id="mlir::emithls::StreamWriteOp::create__mlir::OpBuilderR.mlir::Location.Value.Value.ValueRange"></span><span class="target" id="classmlir_1_1emithls_1_1StreamWriteOp_1a7b17fadd5392d6fc921e8545ecb6ee49"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N4mlir7emithls13StreamWriteOpE" title="mlir::emithls::StreamWriteOp"><span class="n"><span class="pre">StreamWriteOp</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">create</span></span></span><span class="sig-paren">(</span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">OpBuilder</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">builder</span></span>, <span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">Location</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">location</span></span>, <span class="n"><span class="pre">Value</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">data</span></span>, <span class="n"><span class="pre">Value</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">stream</span></span>, <span class="n"><span class="pre">ValueRange</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">indices</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4mlir7emithls13StreamWriteOp6createERN4mlir9OpBuilderEN4mlir8LocationE5Value5Value10ValueRange" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir7emithls13StreamWriteOp6createERN4mlir20ImplicitLocOpBuilderE5Value5Value10ValueRange">
+<span id="_CPPv3N4mlir7emithls13StreamWriteOp6createERN4mlir20ImplicitLocOpBuilderE5Value5Value10ValueRange"></span><span id="_CPPv2N4mlir7emithls13StreamWriteOp6createERN4mlir20ImplicitLocOpBuilderE5Value5Value10ValueRange"></span><span id="mlir::emithls::StreamWriteOp::create__mlir::ImplicitLocOpBuilderR.Value.Value.ValueRange"></span><span class="target" id="classmlir_1_1emithls_1_1StreamWriteOp_1ac5001a2891055b9010a2c30de9028671"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N4mlir7emithls13StreamWriteOpE" title="mlir::emithls::StreamWriteOp"><span class="n"><span class="pre">StreamWriteOp</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">create</span></span></span><span class="sig-paren">(</span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">ImplicitLocOpBuilder</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">builder</span></span>, <span class="n"><span class="pre">Value</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">data</span></span>, <span class="n"><span class="pre">Value</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">stream</span></span>, <span class="n"><span class="pre">ValueRange</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">indices</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4mlir7emithls13StreamWriteOp6createERN4mlir20ImplicitLocOpBuilderE5Value5Value10ValueRange" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir7emithls13StreamWriteOp5parseERN4mlir11OpAsmParserERN4mlir14OperationStateE">
+<span id="_CPPv3N4mlir7emithls13StreamWriteOp5parseERN4mlir11OpAsmParserERN4mlir14OperationStateE"></span><span id="_CPPv2N4mlir7emithls13StreamWriteOp5parseERN4mlir11OpAsmParserERN4mlir14OperationStateE"></span><span id="mlir::emithls::StreamWriteOp::parse__mlir::OpAsmParserR.mlir::OperationStateR"></span><span class="target" id="classmlir_1_1emithls_1_1StreamWriteOp_1aa9e5031d6d8934361ab1edc56d935d96"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">ParseResult</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">parse</span></span></span><span class="sig-paren">(</span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">OpAsmParser</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">parser</span></span>, <span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">OperationState</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">result</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4mlir7emithls13StreamWriteOp5parseERN4mlir11OpAsmParserERN4mlir14OperationStateE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-static-attributes">Public Static Attributes</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir7emithls13StreamWriteOp13odsIndex_dataE">
+<span id="_CPPv3N4mlir7emithls13StreamWriteOp13odsIndex_dataE"></span><span id="_CPPv2N4mlir7emithls13StreamWriteOp13odsIndex_dataE"></span><span id="mlir::emithls::StreamWriteOp::odsIndex_data__i"></span><span class="target" id="classmlir_1_1emithls_1_1StreamWriteOp_1a2109a7f53d0ec18839f7fd0266a06fc8"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="k"><span class="pre">constexpr</span></span><span class="w"> </span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">odsIndex_data</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">0</span></span><a class="headerlink" href="#_CPPv4N4mlir7emithls13StreamWriteOp13odsIndex_dataE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir7emithls13StreamWriteOp15odsIndex_streamE">
+<span id="_CPPv3N4mlir7emithls13StreamWriteOp15odsIndex_streamE"></span><span id="_CPPv2N4mlir7emithls13StreamWriteOp15odsIndex_streamE"></span><span id="mlir::emithls::StreamWriteOp::odsIndex_stream__i"></span><span class="target" id="classmlir_1_1emithls_1_1StreamWriteOp_1a6d6e2e5d2158797b16ee51824d475cc8"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="k"><span class="pre">constexpr</span></span><span class="w"> </span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">odsIndex_stream</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">1</span></span><a class="headerlink" href="#_CPPv4N4mlir7emithls13StreamWriteOp15odsIndex_streamE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir7emithls13StreamWriteOp16odsIndex_indicesE">
+<span id="_CPPv3N4mlir7emithls13StreamWriteOp16odsIndex_indicesE"></span><span id="_CPPv2N4mlir7emithls13StreamWriteOp16odsIndex_indicesE"></span><span id="mlir::emithls::StreamWriteOp::odsIndex_indices__i"></span><span class="target" id="classmlir_1_1emithls_1_1StreamWriteOp_1ae61a52db157e2669b8acd69f50b900c8"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="k"><span class="pre">constexpr</span></span><span class="w"> </span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">odsIndex_indices</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">2</span></span><a class="headerlink" href="#_CPPv4N4mlir7emithls13StreamWriteOp16odsIndex_indicesE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+</div>
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="classmlir_1_1emithls_1_1StreamType.html" class="btn btn-neutral float-left" title="Class StreamType" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="classmlir_1_1emithls_1_1StreamWriteOpAdaptor.html" class="btn btn-neutral float-right" title="Class StreamWriteOpAdaptor" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

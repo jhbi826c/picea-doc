@@ -1,0 +1,272 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>File EmitHLSEnums.h.inc &mdash; picea 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/collapsible-lists/css/tree_view.css?v=a885cde7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js?v=73120307"></script>
+      <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js?v=660e4f45"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            picea
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Installation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../README.html">About the project</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#guides">Guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#related-projects">Related projects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#development-environment-nix">Development Environment (Nix)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#build-on-ubuntu-24-04-no-nix">Build on Ubuntu 24.04 (no Nix)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#gurobi-license">Gurobi license</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#installing">Installing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#run-the-tests">Run the tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#build-the-documentation">Build the documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#compiling-a-design">Compiling a design</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#running-a-design-on-the-board">Running a design on the board</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#exporting-a-profiled-application-to-mocasin">Exporting a profiled application to Mocasin</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Guides</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../guides/laksa.html">The FPGA Variant using LAKSA backend</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/cgra.html">The CGRA Variant</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">MLIR Dialects</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/Base2Ops.html">‘base2’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/CGRAOps.html">‘cgra’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/DFGOps.html">‘dfg’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/EmitHLSOps.html">‘emithls’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/FilterOps.html">‘filter’ Dialect</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Passes</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/PICEAConversionPasses.html">PICEA Conversion Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/CGRAPasses.html">CGRA Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/DFGPasses.html">DFG Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/EmitHLSPasses.html">Emit HLS Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/FuncExtPasses.html">Func Ext Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/LinalgExtPasses.html">Linalg Ext Passes</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">C++ API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="library_root.html">C++ API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">picea</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">File EmitHLSEnums.h.inc</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/file_build_include_picea-mlir_Dialect_EmitHLS_EmitHLSEnums.h.inc.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="file-emithlsenums-h-inc">
+<span id="file-build-include-picea-mlir-dialect-emithls-emithlsenums-h-inc"></span><h1>File EmitHLSEnums.h.inc<a class="headerlink" href="#file-emithlsenums-h-inc" title="Link to this heading"></a></h1>
+<p>↰ <a class="reference internal" href="dir_build_include_picea-mlir_Dialect_EmitHLS.html#dir-build-include-picea-mlir-dialect-emithls"><span class="std std-ref">Parent directory</span></a> (<code class="docutils literal notranslate"><span class="pre">build/include/picea-mlir/Dialect/EmitHLS</span></code>)</p>
+<nav class="contents local" id="contents">
+<p class="topic-title">Contents</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#definition-build-include-picea-mlir-dialect-emithls-emithlsenums-h-inc" id="id1">Definition (<code class="docutils literal notranslate"><span class="pre">build/include/picea-mlir/Dialect/EmitHLS/EmitHLSEnums.h.inc</span></code>)</a></p></li>
+<li><p><a class="reference internal" href="#included-by" id="id2">Included By</a></p></li>
+<li><p><a class="reference internal" href="#namespaces" id="id3">Namespaces</a></p></li>
+<li><p><a class="reference internal" href="#classes" id="id4">Classes</a></p></li>
+<li><p><a class="reference internal" href="#enums" id="id5">Enums</a></p></li>
+<li><p><a class="reference internal" href="#functions" id="id6">Functions</a></p></li>
+<li><p><a class="reference internal" href="#variables" id="id7">Variables</a></p></li>
+</ul>
+</nav>
+<section id="definition-build-include-picea-mlir-dialect-emithls-emithlsenums-h-inc">
+<h2>Definition (<code class="docutils literal notranslate"><span class="pre">build/include/picea-mlir/Dialect/EmitHLS/EmitHLSEnums.h.inc</span></code>)<a class="headerlink" href="#definition-build-include-picea-mlir-dialect-emithls-emithlsenums-h-inc" title="Link to this heading"></a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="program_listing_file_build_include_picea-mlir_Dialect_EmitHLS_EmitHLSEnums.h.inc.html">Program Listing for File EmitHLSEnums.h.inc</a></li>
+</ul>
+</div>
+</section>
+<section id="included-by">
+<h2>Included By<a class="headerlink" href="#included-by" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="file_include_picea-mlir_Dialect_EmitHLS_EmitHLSEnums.h.html#file-include-picea-mlir-dialect-emithls-emithlsenums-h"><span class="std std-ref">File EmitHLSEnums.h</span></a></p></li>
+</ul>
+</section>
+<section id="namespaces">
+<h2>Namespaces<a class="headerlink" href="#namespaces" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="namespace_llvm.html#namespace-llvm"><span class="std std-ref">Namespace llvm</span></a></p></li>
+<li><p><a class="reference internal" href="namespace_mlir.html#namespace-mlir"><span class="std std-ref">Namespace mlir</span></a></p></li>
+<li><p><a class="reference internal" href="namespace_mlir__emithls.html#namespace-mlir-emithls"><span class="std std-ref">Namespace mlir::emithls</span></a></p></li>
+</ul>
+</section>
+<section id="classes">
+<h2>Classes<a class="headerlink" href="#classes" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="structllvm_1_1DenseMapInfo_3_1_1mlir_1_1emithls_1_1ArrayPartitionType_01_4.html#exhale-struct-structllvm-1-1densemapinfo-3-1-1mlir-1-1emithls-1-1arraypartitiontype-01-4"><span class="std std-ref">Template Struct DenseMapInfo&lt; ::mlir::emithls::ArrayPartitionType &gt;</span></a></p></li>
+<li><p><a class="reference internal" href="structllvm_1_1DenseMapInfo_3_1_1mlir_1_1emithls_1_1BindStorageImpl_01_4.html#exhale-struct-structllvm-1-1densemapinfo-3-1-1mlir-1-1emithls-1-1bindstorageimpl-01-4"><span class="std std-ref">Template Struct DenseMapInfo&lt; ::mlir::emithls::BindStorageImpl &gt;</span></a></p></li>
+<li><p><a class="reference internal" href="structllvm_1_1DenseMapInfo_3_1_1mlir_1_1emithls_1_1BindStorageType_01_4.html#exhale-struct-structllvm-1-1densemapinfo-3-1-1mlir-1-1emithls-1-1bindstoragetype-01-4"><span class="std std-ref">Template Struct DenseMapInfo&lt; ::mlir::emithls::BindStorageType &gt;</span></a></p></li>
+<li><p><a class="reference internal" href="structllvm_1_1DenseMapInfo_3_1_1mlir_1_1emithls_1_1CmpPredicate_01_4.html#exhale-struct-structllvm-1-1densemapinfo-3-1-1mlir-1-1emithls-1-1cmppredicate-01-4"><span class="std std-ref">Template Struct DenseMapInfo&lt; ::mlir::emithls::CmpPredicate &gt;</span></a></p></li>
+<li><p><a class="reference internal" href="structllvm_1_1DenseMapInfo_3_1_1mlir_1_1emithls_1_1FusedOperator_01_4.html#exhale-struct-structllvm-1-1densemapinfo-3-1-1mlir-1-1emithls-1-1fusedoperator-01-4"><span class="std std-ref">Template Struct DenseMapInfo&lt; ::mlir::emithls::FusedOperator &gt;</span></a></p></li>
+<li><p><a class="reference internal" href="structllvm_1_1DenseMapInfo_3_1_1mlir_1_1emithls_1_1PipelineStyle_01_4.html#exhale-struct-structllvm-1-1densemapinfo-3-1-1mlir-1-1emithls-1-1pipelinestyle-01-4"><span class="std std-ref">Template Struct DenseMapInfo&lt; ::mlir::emithls::PipelineStyle &gt;</span></a></p></li>
+<li><p><a class="reference internal" href="structmlir_1_1FieldParser_3_01std_1_1optional_3_1_1mlir_1_1emithls_1_1ArrayPartitionType_01_4_001e333af38bb2e7d7b18097ec1566bd08.html#exhale-struct-structmlir-1-1fieldparser-3-01std-1-1optional-3-1-1mlir-1-1emithls-1-1arraypartitiontype-01-4-001e333af38bb2e7d7b18097ec1566bd08"><span class="std std-ref">Template Struct FieldParser&lt; std::optional&lt; ::mlir::emithls::ArrayPartitionType &gt;, std::optional&lt; ::mlir::emithls::ArrayPartitionType &gt; &gt;</span></a></p></li>
+<li><p><a class="reference internal" href="structmlir_1_1FieldParser_3_01std_1_1optional_3_1_1mlir_1_1emithls_1_1BindStorageImpl_01_4_00_0194134000e6415e65ab635236edb1fe43.html#exhale-struct-structmlir-1-1fieldparser-3-01std-1-1optional-3-1-1mlir-1-1emithls-1-1bindstorageimpl-01-4-00-0194134000e6415e65ab635236edb1fe43"><span class="std std-ref">Template Struct FieldParser&lt; std::optional&lt; ::mlir::emithls::BindStorageImpl &gt;, std::optional&lt; ::mlir::emithls::BindStorageImpl &gt; &gt;</span></a></p></li>
+<li><p><a class="reference internal" href="structmlir_1_1FieldParser_3_01std_1_1optional_3_1_1mlir_1_1emithls_1_1BindStorageType_01_4_00_016254f681b443d4ec5eacfb5b8b8a6825.html#exhale-struct-structmlir-1-1fieldparser-3-01std-1-1optional-3-1-1mlir-1-1emithls-1-1bindstoragetype-01-4-00-016254f681b443d4ec5eacfb5b8b8a6825"><span class="std std-ref">Template Struct FieldParser&lt; std::optional&lt; ::mlir::emithls::BindStorageType &gt;, std::optional&lt; ::mlir::emithls::BindStorageType &gt; &gt;</span></a></p></li>
+<li><p><a class="reference internal" href="structmlir_1_1FieldParser_3_01std_1_1optional_3_1_1mlir_1_1emithls_1_1CmpPredicate_01_4_00_01std8c5ed2c290c9641fb2c995181e14fd51.html#exhale-struct-structmlir-1-1fieldparser-3-01std-1-1optional-3-1-1mlir-1-1emithls-1-1cmppredicate-01-4-00-01std8c5ed2c290c9641fb2c995181e14fd51"><span class="std std-ref">Template Struct FieldParser&lt; std::optional&lt; ::mlir::emithls::CmpPredicate &gt;, std::optional&lt; ::mlir::emithls::CmpPredicate &gt; &gt;</span></a></p></li>
+<li><p><a class="reference internal" href="structmlir_1_1FieldParser_3_01std_1_1optional_3_1_1mlir_1_1emithls_1_1FusedOperator_01_4_00_01steaeea88c4352f2ae40115fdaa14ef728.html#exhale-struct-structmlir-1-1fieldparser-3-01std-1-1optional-3-1-1mlir-1-1emithls-1-1fusedoperator-01-4-00-01steaeea88c4352f2ae40115fdaa14ef728"><span class="std std-ref">Template Struct FieldParser&lt; std::optional&lt; ::mlir::emithls::FusedOperator &gt;, std::optional&lt; ::mlir::emithls::FusedOperator &gt; &gt;</span></a></p></li>
+<li><p><a class="reference internal" href="structmlir_1_1FieldParser_3_01std_1_1optional_3_1_1mlir_1_1emithls_1_1PipelineStyle_01_4_00_01steac70d32c5608b08a717d2bf17e5ec4d.html#exhale-struct-structmlir-1-1fieldparser-3-01std-1-1optional-3-1-1mlir-1-1emithls-1-1pipelinestyle-01-4-00-01steac70d32c5608b08a717d2bf17e5ec4d"><span class="std std-ref">Template Struct FieldParser&lt; std::optional&lt; ::mlir::emithls::PipelineStyle &gt;, std::optional&lt; ::mlir::emithls::PipelineStyle &gt; &gt;</span></a></p></li>
+<li><p><a class="reference internal" href="structmlir_1_1FieldParser_3_1_1mlir_1_1emithls_1_1ArrayPartitionType_00_01_1_1mlir_1_1emithls_1_1ArrayPartitionType_01_4.html#exhale-struct-structmlir-1-1fieldparser-3-1-1mlir-1-1emithls-1-1arraypartitiontype-00-01-1-1mlir-1-1emithls-1-1arraypartitiontype-01-4"><span class="std std-ref">Template Struct FieldParser&lt; ::mlir::emithls::ArrayPartitionType::mlir::emithls::ArrayPartitionType &gt;</span></a></p></li>
+<li><p><a class="reference internal" href="structmlir_1_1FieldParser_3_1_1mlir_1_1emithls_1_1BindStorageImpl_00_01_1_1mlir_1_1emithls_1_1BindStorageImpl_01_4.html#exhale-struct-structmlir-1-1fieldparser-3-1-1mlir-1-1emithls-1-1bindstorageimpl-00-01-1-1mlir-1-1emithls-1-1bindstorageimpl-01-4"><span class="std std-ref">Template Struct FieldParser&lt; ::mlir::emithls::BindStorageImpl::mlir::emithls::BindStorageImpl &gt;</span></a></p></li>
+<li><p><a class="reference internal" href="structmlir_1_1FieldParser_3_1_1mlir_1_1emithls_1_1BindStorageType_00_01_1_1mlir_1_1emithls_1_1BindStorageType_01_4.html#exhale-struct-structmlir-1-1fieldparser-3-1-1mlir-1-1emithls-1-1bindstoragetype-00-01-1-1mlir-1-1emithls-1-1bindstoragetype-01-4"><span class="std std-ref">Template Struct FieldParser&lt; ::mlir::emithls::BindStorageType::mlir::emithls::BindStorageType &gt;</span></a></p></li>
+<li><p><a class="reference internal" href="structmlir_1_1FieldParser_3_1_1mlir_1_1emithls_1_1CmpPredicate_00_01_1_1mlir_1_1emithls_1_1CmpPredicate_01_4.html#exhale-struct-structmlir-1-1fieldparser-3-1-1mlir-1-1emithls-1-1cmppredicate-00-01-1-1mlir-1-1emithls-1-1cmppredicate-01-4"><span class="std std-ref">Template Struct FieldParser&lt; ::mlir::emithls::CmpPredicate::mlir::emithls::CmpPredicate &gt;</span></a></p></li>
+<li><p><a class="reference internal" href="structmlir_1_1FieldParser_3_1_1mlir_1_1emithls_1_1FusedOperator_00_01_1_1mlir_1_1emithls_1_1FusedOperator_01_4.html#exhale-struct-structmlir-1-1fieldparser-3-1-1mlir-1-1emithls-1-1fusedoperator-00-01-1-1mlir-1-1emithls-1-1fusedoperator-01-4"><span class="std std-ref">Template Struct FieldParser&lt; ::mlir::emithls::FusedOperator::mlir::emithls::FusedOperator &gt;</span></a></p></li>
+<li><p><a class="reference internal" href="structmlir_1_1FieldParser_3_1_1mlir_1_1emithls_1_1PipelineStyle_00_01_1_1mlir_1_1emithls_1_1PipelineStyle_01_4.html#exhale-struct-structmlir-1-1fieldparser-3-1-1mlir-1-1emithls-1-1pipelinestyle-00-01-1-1mlir-1-1emithls-1-1pipelinestyle-01-4"><span class="std std-ref">Template Struct FieldParser&lt; ::mlir::emithls::PipelineStyle::mlir::emithls::PipelineStyle &gt;</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1emithls_1_1ArrayPartitionTypeAttr.html#exhale-class-classmlir-1-1emithls-1-1arraypartitiontypeattr"><span class="std std-ref">Class ArrayPartitionTypeAttr</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1emithls_1_1BindStorageImplAttr.html#exhale-class-classmlir-1-1emithls-1-1bindstorageimplattr"><span class="std std-ref">Class BindStorageImplAttr</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1emithls_1_1BindStorageTypeAttr.html#exhale-class-classmlir-1-1emithls-1-1bindstoragetypeattr"><span class="std std-ref">Class BindStorageTypeAttr</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1emithls_1_1CmpPredicateAttr.html#exhale-class-classmlir-1-1emithls-1-1cmppredicateattr"><span class="std std-ref">Class CmpPredicateAttr</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1emithls_1_1FusedOperatorAttr.html#exhale-class-classmlir-1-1emithls-1-1fusedoperatorattr"><span class="std std-ref">Class FusedOperatorAttr</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1emithls_1_1PipelineStyleAttr.html#exhale-class-classmlir-1-1emithls-1-1pipelinestyleattr"><span class="std std-ref">Class PipelineStyleAttr</span></a></p></li>
+</ul>
+</section>
+<section id="enums">
+<h2>Enums<a class="headerlink" href="#enums" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="enum_namespacemlir_1_1emithls_1abfbc5bfa13793e36dbe7ddd374ea14b1.html#exhale-enum-namespacemlir-1-1emithls-1abfbc5bfa13793e36dbe7ddd374ea14b1"><span class="std std-ref">Enum ArrayPartitionType</span></a></p></li>
+<li><p><a class="reference internal" href="enum_namespacemlir_1_1emithls_1afe2918bedab965502b7fe5b2823789a3.html#exhale-enum-namespacemlir-1-1emithls-1afe2918bedab965502b7fe5b2823789a3"><span class="std std-ref">Enum BindStorageImpl</span></a></p></li>
+<li><p><a class="reference internal" href="enum_namespacemlir_1_1emithls_1a4501573383faf5b0a07fdb4a4c21a032.html#exhale-enum-namespacemlir-1-1emithls-1a4501573383faf5b0a07fdb4a4c21a032"><span class="std std-ref">Enum BindStorageType</span></a></p></li>
+<li><p><a class="reference internal" href="enum_namespacemlir_1_1emithls_1aa66c763e30b62c9719f4edee40c86eeb.html#exhale-enum-namespacemlir-1-1emithls-1aa66c763e30b62c9719f4edee40c86eeb"><span class="std std-ref">Enum CmpPredicate</span></a></p></li>
+<li><p><a class="reference internal" href="enum_namespacemlir_1_1emithls_1a1087e7a57d0190f0791023628f677a44.html#exhale-enum-namespacemlir-1-1emithls-1a1087e7a57d0190f0791023628f677a44"><span class="std std-ref">Enum FusedOperator</span></a></p></li>
+<li><p><a class="reference internal" href="enum_namespacemlir_1_1emithls_1af0e7aad8dd043ed902f3840c4fd1f356.html#exhale-enum-namespacemlir-1-1emithls-1af0e7aad8dd043ed902f3840c4fd1f356"><span class="std std-ref">Enum PipelineStyle</span></a></p></li>
+</ul>
+</section>
+<section id="functions">
+<h2>Functions<a class="headerlink" href="#functions" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="function_namespacellvm_1ac3e25bf7ebbb9d039600df443c44c094.html#exhale-function-namespacellvm-1ac3e25bf7ebbb9d039600df443c44c094"><span class="std std-ref">Function llvm::operator&lt;&lt;(::llvm::raw_ostream&amp;, ::mlir::emithls::BindStorageType)</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacellvm_1af53d336bccb96ab5de18008c60a23bc5.html#exhale-function-namespacellvm-1af53d336bccb96ab5de18008c60a23bc5"><span class="std std-ref">Function llvm::operator&lt;&lt;(::llvm::raw_ostream&amp;, ::mlir::emithls::CmpPredicate)</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacellvm_1a334f2ff2131bd77c2e147dc6345e6ddb.html#exhale-function-namespacellvm-1a334f2ff2131bd77c2e147dc6345e6ddb"><span class="std std-ref">Function llvm::operator&lt;&lt;(::llvm::raw_ostream&amp;, ::mlir::emithls::FusedOperator)</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacellvm_1a0388627806c47d9df584f03e88947d9c.html#exhale-function-namespacellvm-1a0388627806c47d9df584f03e88947d9c"><span class="std std-ref">Function llvm::operator&lt;&lt;(::llvm::raw_ostream&amp;, ::mlir::emithls::PipelineStyle)</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacellvm_1a010bf67f2cf0331f30e4b5b9c9479b95.html#exhale-function-namespacellvm-1a010bf67f2cf0331f30e4b5b9c9479b95"><span class="std std-ref">Function llvm::operator&lt;&lt;(::llvm::raw_ostream&amp;, ::mlir::emithls::ArrayPartitionType)</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacellvm_1a6360beb60bf9858a9cb97e199ebc3efc.html#exhale-function-namespacellvm-1a6360beb60bf9858a9cb97e199ebc3efc"><span class="std std-ref">Function llvm::operator&lt;&lt;(::llvm::raw_ostream&amp;, ::mlir::emithls::BindStorageImpl)</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacemlir_1_1emithls_1a76b049d6e847256a3d2032949ea2a624.html#exhale-function-namespacemlir-1-1emithls-1a76b049d6e847256a3d2032949ea2a624"><span class="std std-ref">Function mlir::emithls::getMaxEnumValForArrayPartitionType</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacemlir_1_1emithls_1a3b3eb3416032675768877f8c8d6760c5.html#exhale-function-namespacemlir-1-1emithls-1a3b3eb3416032675768877f8c8d6760c5"><span class="std std-ref">Function mlir::emithls::getMaxEnumValForBindStorageImpl</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacemlir_1_1emithls_1a8e819c1f1e9fec218352ceac3aa1c590.html#exhale-function-namespacemlir-1-1emithls-1a8e819c1f1e9fec218352ceac3aa1c590"><span class="std std-ref">Function mlir::emithls::getMaxEnumValForBindStorageType</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacemlir_1_1emithls_1a5f76c2d63ade392e47520f07102a951b.html#exhale-function-namespacemlir-1-1emithls-1a5f76c2d63ade392e47520f07102a951b"><span class="std std-ref">Function mlir::emithls::getMaxEnumValForCmpPredicate</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacemlir_1_1emithls_1a57468a43ddfa490b6b8657b8ce08de0f.html#exhale-function-namespacemlir-1-1emithls-1a57468a43ddfa490b6b8657b8ce08de0f"><span class="std std-ref">Function mlir::emithls::getMaxEnumValForFusedOperator</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacemlir_1_1emithls_1a3c3e320bc65c7d50e71ba8deda7f4346.html#exhale-function-namespacemlir-1-1emithls-1a3c3e320bc65c7d50e71ba8deda7f4346"><span class="std std-ref">Function mlir::emithls::getMaxEnumValForPipelineStyle</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacemlir_1_1emithls_1a768bfe6d474db6bd49c4a13ab0805dc3.html#exhale-function-namespacemlir-1-1emithls-1a768bfe6d474db6bd49c4a13ab0805dc3"><span class="std std-ref">Function mlir::emithls::stringifyArrayPartitionType</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacemlir_1_1emithls_1ac28a0775126bddb04bc3ae95579c650a.html#exhale-function-namespacemlir-1-1emithls-1ac28a0775126bddb04bc3ae95579c650a"><span class="std std-ref">Function mlir::emithls::stringifyBindStorageImpl</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacemlir_1_1emithls_1a3a89f0bd760530450f401951e9189664.html#exhale-function-namespacemlir-1-1emithls-1a3a89f0bd760530450f401951e9189664"><span class="std std-ref">Function mlir::emithls::stringifyBindStorageType</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacemlir_1_1emithls_1a760d0633a48e71939128fd5f8bfdafdc.html#exhale-function-namespacemlir-1-1emithls-1a760d0633a48e71939128fd5f8bfdafdc"><span class="std std-ref">Function mlir::emithls::stringifyCmpPredicate</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacemlir_1_1emithls_1a0f5592b303b5e0b77db3d620ce0a038c.html#exhale-function-namespacemlir-1-1emithls-1a0f5592b303b5e0b77db3d620ce0a038c"><span class="std std-ref">Function mlir::emithls::stringifyEnum(BindStorageType)</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacemlir_1_1emithls_1abea1b0ad70a2d22de1bff8532cd0fe07.html#exhale-function-namespacemlir-1-1emithls-1abea1b0ad70a2d22de1bff8532cd0fe07"><span class="std std-ref">Function mlir::emithls::stringifyEnum(CmpPredicate)</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacemlir_1_1emithls_1a788bed81f94fa5367e9c8a2ed682641e.html#exhale-function-namespacemlir-1-1emithls-1a788bed81f94fa5367e9c8a2ed682641e"><span class="std std-ref">Function mlir::emithls::stringifyEnum(FusedOperator)</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacemlir_1_1emithls_1ac170907c0c02cde62a6e82a11b5cea71.html#exhale-function-namespacemlir-1-1emithls-1ac170907c0c02cde62a6e82a11b5cea71"><span class="std std-ref">Function mlir::emithls::stringifyEnum(PipelineStyle)</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacemlir_1_1emithls_1a324812fae2f32daad8b7a0cd9812d056.html#exhale-function-namespacemlir-1-1emithls-1a324812fae2f32daad8b7a0cd9812d056"><span class="std std-ref">Function mlir::emithls::stringifyEnum(ArrayPartitionType)</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacemlir_1_1emithls_1af481fa879bfb443df0e68fb64442bb89.html#exhale-function-namespacemlir-1-1emithls-1af481fa879bfb443df0e68fb64442bb89"><span class="std std-ref">Function mlir::emithls::stringifyEnum(BindStorageImpl)</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacemlir_1_1emithls_1ad5be0b6dc1f997af8c3786a8f5c1c78a.html#exhale-function-namespacemlir-1-1emithls-1ad5be0b6dc1f997af8c3786a8f5c1c78a"><span class="std std-ref">Function mlir::emithls::stringifyFusedOperator</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacemlir_1_1emithls_1a2af0f793cefac66488b18ebcadbfceef.html#exhale-function-namespacemlir-1-1emithls-1a2af0f793cefac66488b18ebcadbfceef"><span class="std std-ref">Function mlir::emithls::stringifyPipelineStyle</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacemlir_1_1emithls_1ab29e862d741bfe4eb9e1751d5905c3aa.html#exhale-function-namespacemlir-1-1emithls-1ab29e862d741bfe4eb9e1751d5905c3aa"><span class="std std-ref">Function mlir::emithls::symbolizeArrayPartitionType</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacemlir_1_1emithls_1a405bd4570af6c38c66901c3cc20ccee6.html#exhale-function-namespacemlir-1-1emithls-1a405bd4570af6c38c66901c3cc20ccee6"><span class="std std-ref">Function mlir::emithls::symbolizeBindStorageImpl</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacemlir_1_1emithls_1a0a7a0529c4f7b30865ba645bf461f6ce.html#exhale-function-namespacemlir-1-1emithls-1a0a7a0529c4f7b30865ba645bf461f6ce"><span class="std std-ref">Function mlir::emithls::symbolizeBindStorageType</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacemlir_1_1emithls_1ae7a3a2a9a1d22039e942d7cb93be6f14.html#exhale-function-namespacemlir-1-1emithls-1ae7a3a2a9a1d22039e942d7cb93be6f14"><span class="std std-ref">Function mlir::emithls::symbolizeCmpPredicate</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacemlir_1_1emithls_1a9da1fe1769406c15e80ffa12723aaa85.html#exhale-function-namespacemlir-1-1emithls-1a9da1fe1769406c15e80ffa12723aaa85"><span class="std std-ref">Specialized Template Function mlir::emithls::symbolizeEnum&lt; ArrayPartitionType &gt;</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacemlir_1_1emithls_1ad890d02c75dfa482b16455638d54c1d3.html#exhale-function-namespacemlir-1-1emithls-1ad890d02c75dfa482b16455638d54c1d3"><span class="std std-ref">Specialized Template Function mlir::emithls::symbolizeEnum&lt; BindStorageImpl &gt;</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacemlir_1_1emithls_1aa75b05fa6369f01e0dd948c8717408dd.html#exhale-function-namespacemlir-1-1emithls-1aa75b05fa6369f01e0dd948c8717408dd"><span class="std std-ref">Specialized Template Function mlir::emithls::symbolizeEnum&lt; BindStorageType &gt;</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacemlir_1_1emithls_1a1cd000555db4326c5aba1c0be2994850.html#exhale-function-namespacemlir-1-1emithls-1a1cd000555db4326c5aba1c0be2994850"><span class="std std-ref">Specialized Template Function mlir::emithls::symbolizeEnum&lt; CmpPredicate &gt;</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacemlir_1_1emithls_1ae0b473cb97b7f69d37999b1142261070.html#exhale-function-namespacemlir-1-1emithls-1ae0b473cb97b7f69d37999b1142261070"><span class="std std-ref">Specialized Template Function mlir::emithls::symbolizeEnum&lt; FusedOperator &gt;</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacemlir_1_1emithls_1a2be34c33c06b7912c535aa315ac1106b.html#exhale-function-namespacemlir-1-1emithls-1a2be34c33c06b7912c535aa315ac1106b"><span class="std std-ref">Specialized Template Function mlir::emithls::symbolizeEnum&lt; PipelineStyle &gt;</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacemlir_1_1emithls_1a1db344cd617cce3254f3b54c3f505a66.html#exhale-function-namespacemlir-1-1emithls-1a1db344cd617cce3254f3b54c3f505a66"><span class="std std-ref">Function mlir::emithls::symbolizeFusedOperator</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacemlir_1_1emithls_1ac60619e47e2f2c28c157a12f06180438.html#exhale-function-namespacemlir-1-1emithls-1ac60619e47e2f2c28c157a12f06180438"><span class="std std-ref">Function mlir::emithls::symbolizePipelineStyle</span></a></p></li>
+</ul>
+</section>
+<section id="variables">
+<h2>Variables<a class="headerlink" href="#variables" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="variable_namespacemlir_1_1emithls_1aadd6070f5f1e54e4a0523e2b0fcec3e9.html#exhale-variable-namespacemlir-1-1emithls-1aadd6070f5f1e54e4a0523e2b0fcec3e9"><span class="std std-ref">Variable mlir::emithls::symbolizeArrayPartitionType</span></a></p></li>
+<li><p><a class="reference internal" href="variable_namespacemlir_1_1emithls_1a0323cef5d5c38e8d13a03ad8359eb11e.html#exhale-variable-namespacemlir-1-1emithls-1a0323cef5d5c38e8d13a03ad8359eb11e"><span class="std std-ref">Variable mlir::emithls::symbolizeBindStorageImpl</span></a></p></li>
+<li><p><a class="reference internal" href="variable_namespacemlir_1_1emithls_1a24adb50bd62bc14ae1092c1ff9bebc6a.html#exhale-variable-namespacemlir-1-1emithls-1a24adb50bd62bc14ae1092c1ff9bebc6a"><span class="std std-ref">Variable mlir::emithls::symbolizeBindStorageType</span></a></p></li>
+<li><p><a class="reference internal" href="variable_namespacemlir_1_1emithls_1a6b8dc4d0264fba226f00b54062ce21f3.html#exhale-variable-namespacemlir-1-1emithls-1a6b8dc4d0264fba226f00b54062ce21f3"><span class="std std-ref">Variable mlir::emithls::symbolizeCmpPredicate</span></a></p></li>
+<li><p><a class="reference internal" href="variable_namespacemlir_1_1emithls_1aa62c3abdb4262d65aff996b1fda87264.html#exhale-variable-namespacemlir-1-1emithls-1aa62c3abdb4262d65aff996b1fda87264"><span class="std std-ref">Variable mlir::emithls::symbolizeEnum</span></a></p></li>
+<li><p><a class="reference internal" href="variable_namespacemlir_1_1emithls_1a6454934615a1488151fc7654b2f94b5f.html#exhale-variable-namespacemlir-1-1emithls-1a6454934615a1488151fc7654b2f94b5f"><span class="std std-ref">Variable mlir::emithls::symbolizeFusedOperator</span></a></p></li>
+<li><p><a class="reference internal" href="variable_namespacemlir_1_1emithls_1a52b5fbbe54784ab351e319aa9dfed786.html#exhale-variable-namespacemlir-1-1emithls-1a52b5fbbe54784ab351e319aa9dfed786"><span class="std std-ref">Variable mlir::emithls::symbolizePipelineStyle</span></a></p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

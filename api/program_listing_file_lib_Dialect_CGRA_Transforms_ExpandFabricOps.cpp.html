@@ -1,0 +1,404 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Program Listing for File ExpandFabricOps.cpp &mdash; picea 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/collapsible-lists/css/tree_view.css?v=a885cde7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js?v=73120307"></script>
+      <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js?v=660e4f45"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            picea
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Installation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../README.html">About the project</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#guides">Guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#related-projects">Related projects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#development-environment-nix">Development Environment (Nix)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#build-on-ubuntu-24-04-no-nix">Build on Ubuntu 24.04 (no Nix)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#gurobi-license">Gurobi license</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#installing">Installing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#run-the-tests">Run the tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#build-the-documentation">Build the documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#compiling-a-design">Compiling a design</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#running-a-design-on-the-board">Running a design on the board</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#exporting-a-profiled-application-to-mocasin">Exporting a profiled application to Mocasin</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Guides</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../guides/laksa.html">The FPGA Variant using LAKSA backend</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/cgra.html">The CGRA Variant</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">MLIR Dialects</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/Base2Ops.html">‘base2’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/CGRAOps.html">‘cgra’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/DFGOps.html">‘dfg’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/EmitHLSOps.html">‘emithls’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/FilterOps.html">‘filter’ Dialect</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Passes</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/PICEAConversionPasses.html">PICEA Conversion Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/CGRAPasses.html">CGRA Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/DFGPasses.html">DFG Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/EmitHLSPasses.html">Emit HLS Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/FuncExtPasses.html">Func Ext Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/LinalgExtPasses.html">Linalg Ext Passes</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">C++ API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="library_root.html">C++ API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">picea</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Program Listing for File ExpandFabricOps.cpp</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/program_listing_file_lib_Dialect_CGRA_Transforms_ExpandFabricOps.cpp.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="program-listing-for-file-expandfabricops-cpp">
+<span id="program-listing-file-lib-dialect-cgra-transforms-expandfabricops-cpp"></span><h1>Program Listing for File ExpandFabricOps.cpp<a class="headerlink" href="#program-listing-for-file-expandfabricops-cpp" title="Link to this heading"></a></h1>
+<p>↰ <a class="reference internal" href="file_lib_Dialect_CGRA_Transforms_ExpandFabricOps.cpp.html#file-lib-dialect-cgra-transforms-expandfabricops-cpp"><span class="std std-ref">Return to documentation for file</span></a> (<code class="docutils literal notranslate"><span class="pre">lib/Dialect/CGRA/Transforms/ExpandFabricOps.cpp</span></code>)</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="c1">//===- ExpandFabricOps.cpp - div/rem/math -&gt; fabric ALU sequences ---------===//</span>
+<span class="c1">//</span>
+<span class="c1">// The fabric ALU realises {add, sub, mul, shl, shr, and, or, xor} plus a</span>
+<span class="c1">// compare against zero and a mux. This pass expands two families that would</span>
+<span class="c1">// otherwise keep their whole loop on the host, into ops --export-loop-dfg</span>
+<span class="c1">// already emits.</span>
+<span class="c1">//</span>
+<span class="c1">// Divide/remainder by a power-of-two constant (width-generic, m = 2^k - 1):</span>
+<span class="c1">//   divui x -&gt; x &gt;&gt;u k                 remui x -&gt; x &amp; m</span>
+<span class="c1">//   divsi x -&gt; (x + bias) &gt;&gt;s k        remsi x -&gt; x - ((x + bias) &amp; ~m)</span>
+<span class="c1">//   floordivsi x -&gt; x &gt;&gt;s k            ceildivsi x -&gt; (x &gt;&gt;s k) + bump</span>
+<span class="c1">//   ceildivui  x -&gt; (x &gt;&gt;u k) + bump</span>
+<span class="c1">//   bias = (x &gt;&gt;s N-1) &gt;&gt;u (N-k)       bump = ((x &amp; m) + m) &gt;&gt;u k</span>
+<span class="c1">// A negative divisor is the positive case with the quotient negated. A</span>
+<span class="c1">// non-power-of-two divisor is declined.</span>
+<span class="c1">//</span>
+<span class="c1">// math integer intrinsics (32-bit only):</span>
+<span class="c1">//   absi x -&gt; (x ^ s) - s, s = x &gt;&gt;s 31    ctpop -&gt; SWAR    ctlz/cttz -&gt; via</span>
+<span class="c1">//   ctpop</span>
+<span class="c1">//</span>
+<span class="c1">// Rationale, FU costs and the exactness argument: docs/guides/cgra.md.</span>
+<span class="c1">//</span>
+<span class="c1">//===----------------------------------------------------------------------===//</span>
+
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"mlir/Dialect/Arith/IR/Arith.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"mlir/Dialect/Math/IR/Math.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"mlir/IR/Builders.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"mlir/Pass/Pass.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"picea-mlir/Dialect/CGRA/Transforms/CGRAAnalysisUtils.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"picea-mlir/Dialect/CGRA/Transforms/Passes.h"</span>
+
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"llvm/ADT/STLExtras.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"llvm/ADT/SmallVector.h"</span>
+
+<span class="k">using</span><span class="w"> </span><span class="k">namespace</span><span class="w"> </span><span class="nn">mlir</span><span class="p">;</span>
+
+<span class="k">namespace</span><span class="w"> </span><span class="p">{</span>
+
+<span class="k">struct</span><span class="w"> </span><span class="nc">Emitter</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">OpBuilder</span><span class="w"> </span><span class="n">b</span><span class="p">;</span>
+<span class="w">    </span><span class="n">Location</span><span class="w"> </span><span class="n">loc</span><span class="p">;</span>
+<span class="w">    </span><span class="n">IntegerType</span><span class="w"> </span><span class="n">ty</span><span class="p">;</span>
+
+<span class="w">    </span><span class="n">Emitter</span><span class="p">(</span><span class="n">Operation</span><span class="o">*</span><span class="w"> </span><span class="n">op</span><span class="p">)</span>
+<span class="w">            </span><span class="o">:</span><span class="w"> </span><span class="n">b</span><span class="p">(</span><span class="n">op</span><span class="p">),</span>
+<span class="w">              </span><span class="n">loc</span><span class="p">(</span><span class="n">op</span><span class="o">-&gt;</span><span class="n">getLoc</span><span class="p">()),</span>
+<span class="w">              </span><span class="n">ty</span><span class="p">(</span><span class="n">cast</span><span class="o">&lt;</span><span class="n">IntegerType</span><span class="o">&gt;</span><span class="p">(</span>
+<span class="w">                  </span><span class="n">getElementTypeOrSelf</span><span class="p">(</span><span class="n">op</span><span class="o">-&gt;</span><span class="n">getResultTypes</span><span class="p">()[</span><span class="mi">0</span><span class="p">])))</span>
+<span class="w">    </span><span class="p">{}</span>
+
+<span class="w">    </span><span class="kt">unsigned</span><span class="w"> </span><span class="nf">width</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">ty</span><span class="p">.</span><span class="n">getWidth</span><span class="p">();</span><span class="w"> </span><span class="p">}</span>
+
+<span class="w">    </span><span class="n">Value</span><span class="w"> </span><span class="nf">k</span><span class="p">(</span><span class="kt">int64_t</span><span class="w"> </span><span class="n">v</span><span class="p">)</span>
+<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">arith</span><span class="o">::</span><span class="n">ConstantOp</span><span class="o">::</span><span class="n">create</span><span class="p">(</span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="n">loc</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="p">.</span><span class="n">getIntegerAttr</span><span class="p">(</span><span class="n">ty</span><span class="p">,</span><span class="w"> </span><span class="n">v</span><span class="p">));</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="n">Value</span><span class="w"> </span><span class="nf">kAP</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">llvm</span><span class="o">::</span><span class="n">APInt</span><span class="w"> </span><span class="o">&amp;</span><span class="n">v</span><span class="p">)</span>
+<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">arith</span><span class="o">::</span><span class="n">ConstantOp</span><span class="o">::</span><span class="n">create</span><span class="p">(</span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="n">loc</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="p">.</span><span class="n">getIntegerAttr</span><span class="p">(</span><span class="n">ty</span><span class="p">,</span><span class="w"> </span><span class="n">v</span><span class="p">));</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="n">Value</span><span class="w"> </span><span class="nf">add</span><span class="p">(</span><span class="n">Value</span><span class="w"> </span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">Value</span><span class="w"> </span><span class="n">y</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">arith</span><span class="o">::</span><span class="n">AddIOp</span><span class="o">::</span><span class="n">create</span><span class="p">(</span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="n">loc</span><span class="p">,</span><span class="w"> </span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">y</span><span class="p">);</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="n">Value</span><span class="w"> </span><span class="nf">sub</span><span class="p">(</span><span class="n">Value</span><span class="w"> </span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">Value</span><span class="w"> </span><span class="n">y</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">arith</span><span class="o">::</span><span class="n">SubIOp</span><span class="o">::</span><span class="n">create</span><span class="p">(</span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="n">loc</span><span class="p">,</span><span class="w"> </span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">y</span><span class="p">);</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="n">Value</span><span class="w"> </span><span class="nf">mul</span><span class="p">(</span><span class="n">Value</span><span class="w"> </span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">Value</span><span class="w"> </span><span class="n">y</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">arith</span><span class="o">::</span><span class="n">MulIOp</span><span class="o">::</span><span class="n">create</span><span class="p">(</span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="n">loc</span><span class="p">,</span><span class="w"> </span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">y</span><span class="p">);</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="n">Value</span><span class="w"> </span><span class="nf">andi</span><span class="p">(</span><span class="n">Value</span><span class="w"> </span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">Value</span><span class="w"> </span><span class="n">y</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">arith</span><span class="o">::</span><span class="n">AndIOp</span><span class="o">::</span><span class="n">create</span><span class="p">(</span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="n">loc</span><span class="p">,</span><span class="w"> </span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">y</span><span class="p">);</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="n">Value</span><span class="w"> </span><span class="nf">ori</span><span class="p">(</span><span class="n">Value</span><span class="w"> </span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">Value</span><span class="w"> </span><span class="n">y</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">arith</span><span class="o">::</span><span class="n">OrIOp</span><span class="o">::</span><span class="n">create</span><span class="p">(</span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="n">loc</span><span class="p">,</span><span class="w"> </span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">y</span><span class="p">);</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="n">Value</span><span class="w"> </span><span class="nf">xori</span><span class="p">(</span><span class="n">Value</span><span class="w"> </span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">Value</span><span class="w"> </span><span class="n">y</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">arith</span><span class="o">::</span><span class="n">XOrIOp</span><span class="o">::</span><span class="n">create</span><span class="p">(</span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="n">loc</span><span class="p">,</span><span class="w"> </span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">y</span><span class="p">);</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="n">Value</span><span class="w"> </span><span class="nf">shl</span><span class="p">(</span><span class="n">Value</span><span class="w"> </span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="kt">int64_t</span><span class="w"> </span><span class="n">n</span><span class="p">)</span>
+<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">arith</span><span class="o">::</span><span class="n">ShLIOp</span><span class="o">::</span><span class="n">create</span><span class="p">(</span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="n">loc</span><span class="p">,</span><span class="w"> </span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">k</span><span class="p">(</span><span class="n">n</span><span class="p">));</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="n">Value</span><span class="w"> </span><span class="nf">shrs</span><span class="p">(</span><span class="n">Value</span><span class="w"> </span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="kt">int64_t</span><span class="w"> </span><span class="n">n</span><span class="p">)</span>
+<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">arith</span><span class="o">::</span><span class="n">ShRSIOp</span><span class="o">::</span><span class="n">create</span><span class="p">(</span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="n">loc</span><span class="p">,</span><span class="w"> </span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">k</span><span class="p">(</span><span class="n">n</span><span class="p">));</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="n">Value</span><span class="w"> </span><span class="nf">shru</span><span class="p">(</span><span class="n">Value</span><span class="w"> </span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="kt">int64_t</span><span class="w"> </span><span class="n">n</span><span class="p">)</span>
+<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">arith</span><span class="o">::</span><span class="n">ShRUIOp</span><span class="o">::</span><span class="n">create</span><span class="p">(</span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="n">loc</span><span class="p">,</span><span class="w"> </span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">k</span><span class="p">(</span><span class="n">n</span><span class="p">));</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="n">Value</span><span class="w"> </span><span class="nf">neg</span><span class="p">(</span><span class="n">Value</span><span class="w"> </span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">sub</span><span class="p">(</span><span class="n">k</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span><span class="w"> </span><span class="n">x</span><span class="p">);</span><span class="w"> </span><span class="p">}</span>
+
+<span class="w">    </span><span class="n">Value</span><span class="w"> </span><span class="nf">truncBias</span><span class="p">(</span><span class="n">Value</span><span class="w"> </span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="kt">unsigned</span><span class="w"> </span><span class="n">kk</span><span class="p">)</span>
+<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">shru</span><span class="p">(</span><span class="n">shrs</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">width</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">),</span><span class="w"> </span><span class="n">width</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">kk</span><span class="p">);</span><span class="w"> </span><span class="p">}</span>
+
+<span class="w">    </span><span class="n">Value</span><span class="w"> </span><span class="nf">ceilBump</span><span class="p">(</span><span class="n">Value</span><span class="w"> </span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="kt">unsigned</span><span class="w"> </span><span class="n">kk</span><span class="p">)</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="n">Value</span><span class="w"> </span><span class="n">m</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">kAP</span><span class="p">(</span><span class="n">llvm</span><span class="o">::</span><span class="n">APInt</span><span class="o">::</span><span class="n">getLowBitsSet</span><span class="p">(</span><span class="n">width</span><span class="p">(),</span><span class="w"> </span><span class="n">kk</span><span class="p">));</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">shru</span><span class="p">(</span><span class="n">add</span><span class="p">(</span><span class="n">andi</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">m</span><span class="p">),</span><span class="w"> </span><span class="n">m</span><span class="p">),</span><span class="w"> </span><span class="n">kk</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">};</span>
+
+<span class="c1">//===- 1. Divide / remainder by a power of two ----------------------------===//</span>
+
+<span class="c1">// Expands one div/rem op, or returns null if its divisor is not a power-of-two</span>
+<span class="c1">// constant (the caller then leaves the op alone).</span>
+<span class="k">static</span><span class="w"> </span><span class="n">Value</span><span class="w"> </span><span class="nf">expandDivRem</span><span class="p">(</span><span class="n">Operation</span><span class="o">*</span><span class="w"> </span><span class="n">op</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">auto</span><span class="w"> </span><span class="n">d</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cgra</span><span class="o">::</span><span class="n">fabricPow2Divisor</span><span class="p">(</span><span class="n">op</span><span class="p">);</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">d</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="nb">nullptr</span><span class="p">;</span>
+
+<span class="w">    </span><span class="n">Emitter</span><span class="w"> </span><span class="n">e</span><span class="p">(</span><span class="n">op</span><span class="p">);</span>
+<span class="w">    </span><span class="n">Value</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">op</span><span class="o">-&gt;</span><span class="n">getOperand</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+<span class="w">    </span><span class="kt">unsigned</span><span class="w"> </span><span class="n">kk</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">d</span><span class="o">-&gt;</span><span class="n">k</span><span class="p">,</span><span class="w"> </span><span class="n">N</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">e</span><span class="p">.</span><span class="n">width</span><span class="p">();</span>
+
+<span class="w">    </span><span class="c1">// Divisor +-1: the quotient is +-x and the remainder is 0, with no shift to</span>
+<span class="w">    </span><span class="c1">// build (and `truncBias` would shift by N, which is undefined).</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">kk</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">isa</span><span class="o">&lt;</span><span class="n">arith</span><span class="o">::</span><span class="n">RemSIOp</span><span class="p">,</span><span class="w"> </span><span class="n">arith</span><span class="o">::</span><span class="n">RemUIOp</span><span class="o">&gt;</span><span class="p">(</span><span class="n">op</span><span class="p">))</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">e</span><span class="p">.</span><span class="n">k</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">d</span><span class="o">-&gt;</span><span class="n">negative</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">e</span><span class="p">.</span><span class="n">neg</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">x</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="n">llvm</span><span class="o">::</span><span class="n">APInt</span><span class="w"> </span><span class="n">mask</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">llvm</span><span class="o">::</span><span class="n">APInt</span><span class="o">::</span><span class="n">getLowBitsSet</span><span class="p">(</span><span class="n">N</span><span class="p">,</span><span class="w"> </span><span class="n">kk</span><span class="p">);</span><span class="w"> </span><span class="c1">// 2^k - 1</span>
+
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">isa</span><span class="o">&lt;</span><span class="n">arith</span><span class="o">::</span><span class="n">DivUIOp</span><span class="o">&gt;</span><span class="p">(</span><span class="n">op</span><span class="p">))</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">e</span><span class="p">.</span><span class="n">shru</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">kk</span><span class="p">);</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">isa</span><span class="o">&lt;</span><span class="n">arith</span><span class="o">::</span><span class="n">RemUIOp</span><span class="o">&gt;</span><span class="p">(</span><span class="n">op</span><span class="p">))</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">e</span><span class="p">.</span><span class="n">andi</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">e</span><span class="p">.</span><span class="n">kAP</span><span class="p">(</span><span class="n">mask</span><span class="p">));</span>
+<span class="w">    </span><span class="c1">// A shift already rounds toward -inf, so floor is the shift itself and ceil</span>
+<span class="w">    </span><span class="c1">// is the shift plus one wherever the division was not exact.</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">isa</span><span class="o">&lt;</span><span class="n">arith</span><span class="o">::</span><span class="n">FloorDivSIOp</span><span class="o">&gt;</span><span class="p">(</span><span class="n">op</span><span class="p">))</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">e</span><span class="p">.</span><span class="n">shrs</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">kk</span><span class="p">);</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">isa</span><span class="o">&lt;</span><span class="n">arith</span><span class="o">::</span><span class="n">CeilDivSIOp</span><span class="o">&gt;</span><span class="p">(</span><span class="n">op</span><span class="p">))</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">e</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">e</span><span class="p">.</span><span class="n">shrs</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">kk</span><span class="p">),</span><span class="w"> </span><span class="n">e</span><span class="p">.</span><span class="n">ceilBump</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">kk</span><span class="p">));</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">isa</span><span class="o">&lt;</span><span class="n">arith</span><span class="o">::</span><span class="n">CeilDivUIOp</span><span class="o">&gt;</span><span class="p">(</span><span class="n">op</span><span class="p">))</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">e</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">e</span><span class="p">.</span><span class="n">shru</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">kk</span><span class="p">),</span><span class="w"> </span><span class="n">e</span><span class="p">.</span><span class="n">ceilBump</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">kk</span><span class="p">));</span>
+
+<span class="w">    </span><span class="n">Value</span><span class="w"> </span><span class="n">bias</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">e</span><span class="p">.</span><span class="n">truncBias</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">kk</span><span class="p">);</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">isa</span><span class="o">&lt;</span><span class="n">arith</span><span class="o">::</span><span class="n">DivSIOp</span><span class="o">&gt;</span><span class="p">(</span><span class="n">op</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">Value</span><span class="w"> </span><span class="n">q</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">e</span><span class="p">.</span><span class="n">shrs</span><span class="p">(</span><span class="n">e</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">bias</span><span class="p">),</span><span class="w"> </span><span class="n">kk</span><span class="p">);</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">d</span><span class="o">-&gt;</span><span class="n">negative</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">e</span><span class="p">.</span><span class="n">neg</span><span class="p">(</span><span class="n">q</span><span class="p">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">q</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="c1">// remsi: x - trunc(x/2^k)*2^k, with the multiply folded into the mask. The</span>
+<span class="w">    </span><span class="c1">// divisor's SIGN does not reach the remainder (C: `x % -8 == x % 8`).</span>
+<span class="w">    </span><span class="n">Value</span><span class="w"> </span><span class="n">floored</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">e</span><span class="p">.</span><span class="n">andi</span><span class="p">(</span><span class="n">e</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">bias</span><span class="p">),</span><span class="w"> </span><span class="n">e</span><span class="p">.</span><span class="n">kAP</span><span class="p">(</span><span class="o">~</span><span class="n">mask</span><span class="p">));</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">e</span><span class="p">.</span><span class="n">sub</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">floored</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="c1">//===- 2. math integer intrinsics -----------------------------------------===//</span>
+
+<span class="c1">// Population count of a 32-bit value: the classic SWAR halve-and-add followed</span>
+<span class="c1">// by the 0x01010101 multiply that sums the four byte-lane counts into the top</span>
+<span class="c1">// byte.</span>
+<span class="k">static</span><span class="w"> </span><span class="n">Value</span><span class="w"> </span><span class="nf">emitCtPop</span><span class="p">(</span><span class="n">Emitter</span><span class="w"> </span><span class="o">&amp;</span><span class="n">e</span><span class="p">,</span><span class="w"> </span><span class="n">Value</span><span class="w"> </span><span class="n">x</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">Value</span><span class="w"> </span><span class="n">m1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">e</span><span class="p">.</span><span class="n">k</span><span class="p">(</span><span class="mh">0x55555555</span><span class="p">),</span><span class="w"> </span><span class="n">m2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">e</span><span class="p">.</span><span class="n">k</span><span class="p">(</span><span class="mh">0x33333333</span><span class="p">),</span><span class="w"> </span><span class="n">m4</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">e</span><span class="p">.</span><span class="n">k</span><span class="p">(</span><span class="mh">0x0F0F0F0F</span><span class="p">);</span>
+<span class="w">    </span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">e</span><span class="p">.</span><span class="n">sub</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">e</span><span class="p">.</span><span class="n">andi</span><span class="p">(</span><span class="n">e</span><span class="p">.</span><span class="n">shru</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">),</span><span class="w"> </span><span class="n">m1</span><span class="p">));</span>
+<span class="w">    </span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">e</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">e</span><span class="p">.</span><span class="n">andi</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">m2</span><span class="p">),</span><span class="w"> </span><span class="n">e</span><span class="p">.</span><span class="n">andi</span><span class="p">(</span><span class="n">e</span><span class="p">.</span><span class="n">shru</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">),</span><span class="w"> </span><span class="n">m2</span><span class="p">));</span>
+<span class="w">    </span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">e</span><span class="p">.</span><span class="n">andi</span><span class="p">(</span><span class="n">e</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">e</span><span class="p">.</span><span class="n">shru</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="mi">4</span><span class="p">)),</span><span class="w"> </span><span class="n">m4</span><span class="p">);</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">e</span><span class="p">.</span><span class="n">shru</span><span class="p">(</span><span class="n">e</span><span class="p">.</span><span class="n">mul</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">e</span><span class="p">.</span><span class="n">k</span><span class="p">(</span><span class="mh">0x01010101</span><span class="p">)),</span><span class="w"> </span><span class="mi">24</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="c1">// Expands one math intrinsic, or returns null if this pass does not handle it.</span>
+<span class="k">static</span><span class="w"> </span><span class="n">Value</span><span class="w"> </span><span class="nf">expandMath</span><span class="p">(</span><span class="n">Operation</span><span class="o">*</span><span class="w"> </span><span class="n">op</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">cgra</span><span class="o">::</span><span class="n">isFabricExpandableMathOp</span><span class="p">(</span><span class="n">op</span><span class="p">))</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="nb">nullptr</span><span class="p">;</span>
+
+<span class="w">    </span><span class="n">Emitter</span><span class="w"> </span><span class="n">e</span><span class="p">(</span><span class="n">op</span><span class="p">);</span>
+<span class="w">    </span><span class="n">Value</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">op</span><span class="o">-&gt;</span><span class="n">getOperand</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+
+<span class="w">    </span><span class="c1">// abs(x) = (x ^ s) - s with s = x &gt;&gt;s N-1 (0 or -1): for x &gt;= 0 this is x,</span>
+<span class="w">    </span><span class="c1">// for x &lt; 0 it is ~x + 1. Branch-free, and no compare unit is consumed.</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">isa</span><span class="o">&lt;</span><span class="n">math</span><span class="o">::</span><span class="n">AbsIOp</span><span class="o">&gt;</span><span class="p">(</span><span class="n">op</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">Value</span><span class="w"> </span><span class="n">s</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">e</span><span class="p">.</span><span class="n">shrs</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">e</span><span class="p">.</span><span class="n">width</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">);</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">e</span><span class="p">.</span><span class="n">sub</span><span class="p">(</span><span class="n">e</span><span class="p">.</span><span class="n">xori</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">s</span><span class="p">),</span><span class="w"> </span><span class="n">s</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">isa</span><span class="o">&lt;</span><span class="n">math</span><span class="o">::</span><span class="n">CtPopOp</span><span class="o">&gt;</span><span class="p">(</span><span class="n">op</span><span class="p">))</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">emitCtPop</span><span class="p">(</span><span class="n">e</span><span class="p">,</span><span class="w"> </span><span class="n">x</span><span class="p">);</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">isa</span><span class="o">&lt;</span><span class="n">math</span><span class="o">::</span><span class="n">CountLeadingZerosOp</span><span class="o">&gt;</span><span class="p">(</span><span class="n">op</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="c1">// Smear the highest set bit down over every lower bit, so the leading</span>
+<span class="w">        </span><span class="c1">// zeros are the only zeros left, then count the ones. ctlz(0) = 32 - 0</span>
+<span class="w">        </span><span class="c1">// = 32.</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">s</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span><span class="w"> </span><span class="mi">8</span><span class="p">,</span><span class="w"> </span><span class="mi">16</span><span class="p">})</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">e</span><span class="p">.</span><span class="n">ori</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">e</span><span class="p">.</span><span class="n">shru</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">s</span><span class="p">));</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">e</span><span class="p">.</span><span class="n">sub</span><span class="p">(</span><span class="n">e</span><span class="p">.</span><span class="n">k</span><span class="p">(</span><span class="mi">32</span><span class="p">),</span><span class="w"> </span><span class="n">emitCtPop</span><span class="p">(</span><span class="n">e</span><span class="p">,</span><span class="w"> </span><span class="n">x</span><span class="p">));</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="c1">// cttz(x) = ctpop((x &amp; -x) - 1): `x &amp; -x` isolates the lowest set bit, and</span>
+<span class="w">    </span><span class="c1">// subtracting one turns it into a mask of exactly the trailing zeros.</span>
+<span class="w">    </span><span class="c1">// cttz(0) = ctpop(0 - 1) = ctpop(~0) = 32.</span>
+<span class="w">    </span><span class="n">Value</span><span class="w"> </span><span class="n">lowest</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">e</span><span class="p">.</span><span class="n">andi</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">e</span><span class="p">.</span><span class="n">neg</span><span class="p">(</span><span class="n">x</span><span class="p">));</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">emitCtPop</span><span class="p">(</span><span class="n">e</span><span class="p">,</span><span class="w"> </span><span class="n">e</span><span class="p">.</span><span class="n">sub</span><span class="p">(</span><span class="n">lowest</span><span class="p">,</span><span class="w"> </span><span class="n">e</span><span class="p">.</span><span class="n">k</span><span class="p">(</span><span class="mi">1</span><span class="p">)));</span>
+<span class="p">}</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">CGRAExpandFabricOpsPass</span>
+<span class="w">        </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">PassWrapper</span><span class="o">&lt;</span><span class="n">CGRAExpandFabricOpsPass</span><span class="p">,</span><span class="w"> </span><span class="n">OperationPass</span><span class="o">&lt;</span><span class="n">ModuleOp</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+<span class="w">    </span><span class="n">MLIR_DEFINE_EXPLICIT_INTERNAL_INLINE_TYPE_ID</span><span class="p">(</span><span class="n">CGRAExpandFabricOpsPass</span><span class="p">)</span>
+
+<span class="w">    </span><span class="n">StringRef</span><span class="w"> </span><span class="n">getArgument</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">final</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="s">"expand-fabric-ops"</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="n">StringRef</span><span class="w"> </span><span class="n">getDescription</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">final</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="s">"Expand power-of-two divide/remainder and math integer "</span>
+<span class="w">               </span><span class="s">"intrinsics "</span>
+<span class="w">               </span><span class="s">"into fabric-native ALU sequences"</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="n">getDependentDialects</span><span class="p">(</span><span class="n">DialectRegistry</span><span class="w"> </span><span class="o">&amp;</span><span class="n">registry</span><span class="p">)</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">override</span>
+<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="n">registry</span><span class="p">.</span><span class="n">insert</span><span class="o">&lt;</span><span class="n">arith</span><span class="o">::</span><span class="n">ArithDialect</span><span class="p">,</span><span class="w"> </span><span class="n">math</span><span class="o">::</span><span class="n">MathDialect</span><span class="o">&gt;</span><span class="p">();</span><span class="w"> </span><span class="p">}</span>
+
+<span class="w">    </span><span class="c1">// arith.shrsi -&gt; logical shift + sign correction.</span>
+<span class="w">    </span><span class="c1">//</span>
+<span class="w">    </span><span class="c1">// The fabric has NO arithmetic right shift: FU_data_superpolyvalent.sv</span>
+<span class="w">    </span><span class="c1">// declares `din_1_i` UNSIGNED, so opcode 5 (`&gt;&gt;&gt;`) and opcode 4 (`&gt;&gt;`) are</span>
+<span class="w">    </span><span class="c1">// the same instruction. The identity is `x &gt;&gt;s n == ((x &gt;&gt;u n) ^ sb) - sb`</span>
+<span class="w">    </span><span class="c1">// with `sb = 1 &lt;&lt; (31 - n)`; with a RUNTIME amount `sb` must be computed</span>
+<span class="w">    </span><span class="c1">// too.</span>
+<span class="w">    </span><span class="c1">//</span>
+<span class="w">    </span><span class="c1">// This belongs HERE, with the other "the ALU cannot do this, emit a</span>
+<span class="w">    </span><span class="c1">// sequence that can" rewrites, and not in --export-loop-dfg where it used</span>
+<span class="w">    </span><span class="c1">// to live. Doing it in the exporter meant the SAME cost was restated in</span>
+<span class="w">    </span><span class="c1">// three places — the exporter synthesised the nodes, --partition-cgra-dfg</span>
+<span class="w">    </span><span class="c1">// re-declared them as 3 (or 5) FUs, and the deadlock analysis weighted</span>
+<span class="w">    </span><span class="c1">// depth by a third copy — and they drifted: the analysis counted MLIR ops,</span>
+<span class="w">    </span><span class="c1">// so a depth-3 skew looked like depth 1 and it missed the very</span>
+<span class="w">    </span><span class="c1">// configurations it was written for. Expanding in the IR makes the exporter</span>
+<span class="w">    </span><span class="c1">// a 1:1 translation, deletes both cost restatements, and brings the rewrite</span>
+<span class="w">    </span><span class="c1">// under src/tests/fabric_equiv/run.sh, which compares before/after over ~4M</span>
+<span class="w">    </span><span class="c1">// inputs.</span>
+<span class="w">    </span><span class="n">Value</span><span class="w"> </span><span class="n">expandShrSI</span><span class="p">(</span><span class="n">Operation</span><span class="o">*</span><span class="w"> </span><span class="n">op</span><span class="p">)</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="k">auto</span><span class="w"> </span><span class="n">sr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dyn_cast</span><span class="o">&lt;</span><span class="n">arith</span><span class="o">::</span><span class="n">ShRSIOp</span><span class="o">&gt;</span><span class="p">(</span><span class="n">op</span><span class="p">);</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">sr</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="p">{};</span>
+<span class="w">        </span><span class="n">Emitter</span><span class="w"> </span><span class="nf">e</span><span class="p">(</span><span class="n">sr</span><span class="p">);</span>
+<span class="w">        </span><span class="n">Value</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sr</span><span class="p">.</span><span class="n">getLhs</span><span class="p">(),</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sr</span><span class="p">.</span><span class="n">getRhs</span><span class="p">();</span>
+<span class="w">        </span><span class="n">APInt</span><span class="w"> </span><span class="n">c</span><span class="p">;</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">matchPattern</span><span class="p">(</span><span class="n">n</span><span class="p">,</span><span class="w"> </span><span class="n">m_ConstantInt</span><span class="p">(</span><span class="o">&amp;</span><span class="n">c</span><span class="p">)))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="kt">int64_t</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">c</span><span class="p">.</span><span class="n">getSExtValue</span><span class="p">();</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">v</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">32</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="p">{};</span><span class="w"> </span><span class="c1">// 0 and out-of-range: leave alone</span>
+<span class="w">            </span><span class="kt">int64_t</span><span class="w"> </span><span class="n">sb</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kt">int64_t</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="p">(</span><span class="mi">31</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">v</span><span class="p">);</span>
+<span class="w">            </span><span class="n">Value</span><span class="w"> </span><span class="n">t</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">e</span><span class="p">.</span><span class="n">shru</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">v</span><span class="p">);</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="n">e</span><span class="p">.</span><span class="n">sub</span><span class="p">(</span><span class="n">e</span><span class="p">.</span><span class="n">xori</span><span class="p">(</span><span class="n">t</span><span class="p">,</span><span class="w"> </span><span class="n">e</span><span class="p">.</span><span class="n">k</span><span class="p">(</span><span class="n">sb</span><span class="p">)),</span><span class="w"> </span><span class="n">e</span><span class="p">.</span><span class="n">k</span><span class="p">(</span><span class="n">sb</span><span class="p">));</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="c1">// Runtime amount: sb = 1 &lt;&lt; (31 - n).</span>
+<span class="w">        </span><span class="n">Value</span><span class="w"> </span><span class="n">t</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">arith</span><span class="o">::</span><span class="n">ShRUIOp</span><span class="o">::</span><span class="n">create</span><span class="p">(</span><span class="n">e</span><span class="p">.</span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="n">e</span><span class="p">.</span><span class="n">loc</span><span class="p">,</span><span class="w"> </span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">n</span><span class="p">);</span>
+<span class="w">        </span><span class="n">Value</span><span class="w"> </span><span class="n">m</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">arith</span><span class="o">::</span><span class="n">SubIOp</span><span class="o">::</span><span class="n">create</span><span class="p">(</span><span class="n">e</span><span class="p">.</span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="n">e</span><span class="p">.</span><span class="n">loc</span><span class="p">,</span><span class="w"> </span><span class="n">e</span><span class="p">.</span><span class="n">k</span><span class="p">(</span><span class="mi">31</span><span class="p">),</span><span class="w"> </span><span class="n">n</span><span class="p">);</span>
+<span class="w">        </span><span class="n">Value</span><span class="w"> </span><span class="n">sb</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">arith</span><span class="o">::</span><span class="n">ShLIOp</span><span class="o">::</span><span class="n">create</span><span class="p">(</span><span class="n">e</span><span class="p">.</span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="n">e</span><span class="p">.</span><span class="n">loc</span><span class="p">,</span><span class="w"> </span><span class="n">e</span><span class="p">.</span><span class="n">k</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span><span class="w"> </span><span class="n">m</span><span class="p">);</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">e</span><span class="p">.</span><span class="n">sub</span><span class="p">(</span><span class="n">e</span><span class="p">.</span><span class="n">xori</span><span class="p">(</span><span class="n">t</span><span class="p">,</span><span class="w"> </span><span class="n">sb</span><span class="p">),</span><span class="w"> </span><span class="n">sb</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="n">runOnOperation</span><span class="p">()</span><span class="w"> </span><span class="k">override</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="c1">// To FIXPOINT, not one pass: the div/rem and math expansions themselves</span>
+<span class="w">        </span><span class="c1">// emit arith.shrsi (the `shrs` helper builds one for a sign spill), so</span>
+<span class="w">        </span><span class="c1">// a single collect-then-rewrite leaves those behind — and since the</span>
+<span class="w">        </span><span class="c1">// fabric shift FU is logical, an un-expanded one would silently</span>
+<span class="w">        </span><span class="c1">// zero-fill for negative values. The exporter now hard-errors on a</span>
+<span class="w">        </span><span class="c1">// surviving shrsi, which is what caught this. Terminates: shrsi expands</span>
+<span class="w">        </span><span class="c1">// to shru/xori/subi, none of which is expandable.</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">unsigned</span><span class="w"> </span><span class="n">round</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">round</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">8</span><span class="p">;</span><span class="w"> </span><span class="o">++</span><span class="n">round</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">SmallVector</span><span class="o">&lt;</span><span class="n">Operation</span><span class="o">*&gt;</span><span class="w"> </span><span class="n">work</span><span class="p">;</span>
+<span class="w">            </span><span class="n">getOperation</span><span class="p">().</span><span class="n">walk</span><span class="p">([</span><span class="o">&amp;</span><span class="p">](</span><span class="n">Operation</span><span class="o">*</span><span class="w"> </span><span class="n">op</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">cgra</span><span class="o">::</span><span class="n">fabricPow2Divisor</span><span class="p">(</span><span class="n">op</span><span class="p">)</span>
+<span class="w">                    </span><span class="o">||</span><span class="w"> </span><span class="n">cgra</span><span class="o">::</span><span class="n">isFabricExpandableMathOp</span><span class="p">(</span><span class="n">op</span><span class="p">)</span>
+<span class="w">                    </span><span class="o">||</span><span class="w"> </span><span class="n">isa</span><span class="o">&lt;</span><span class="n">arith</span><span class="o">::</span><span class="n">ShRSIOp</span><span class="o">&gt;</span><span class="p">(</span><span class="n">op</span><span class="p">))</span>
+<span class="w">                    </span><span class="n">work</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">op</span><span class="p">);</span>
+<span class="w">            </span><span class="p">});</span>
+<span class="w">            </span><span class="kt">bool</span><span class="w"> </span><span class="n">changed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="w">            </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">Operation</span><span class="o">*</span><span class="w"> </span><span class="n">op</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">work</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">Value</span><span class="w"> </span><span class="n">rep</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">expandDivRem</span><span class="p">(</span><span class="n">op</span><span class="p">);</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">rep</span><span class="p">)</span><span class="w"> </span><span class="n">rep</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">expandMath</span><span class="p">(</span><span class="n">op</span><span class="p">);</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">rep</span><span class="p">)</span><span class="w"> </span><span class="n">rep</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">expandShrSI</span><span class="p">(</span><span class="n">op</span><span class="p">);</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">rep</span><span class="p">)</span><span class="w"> </span><span class="k">continue</span><span class="p">;</span>
+<span class="w">                </span><span class="n">op</span><span class="o">-&gt;</span><span class="n">getResult</span><span class="p">(</span><span class="mi">0</span><span class="p">).</span><span class="n">replaceAllUsesWith</span><span class="p">(</span><span class="n">rep</span><span class="p">);</span>
+<span class="w">                </span><span class="n">op</span><span class="o">-&gt;</span><span class="n">erase</span><span class="p">();</span>
+<span class="w">                </span><span class="n">changed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">changed</span><span class="p">)</span><span class="w"> </span><span class="k">break</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">};</span>
+
+<span class="p">}</span><span class="w"> </span><span class="c1">// namespace</span>
+
+<span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">mlir</span><span class="o">::</span><span class="n">Pass</span><span class="o">&gt;</span><span class="w"> </span><span class="n">cgra</span><span class="o">::</span><span class="n">createCGRAExpandFabricOpsPass</span><span class="p">()</span>
+<span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">make_unique</span><span class="o">&lt;</span><span class="n">CGRAExpandFabricOpsPass</span><span class="o">&gt;</span><span class="p">();</span><span class="w"> </span><span class="p">}</span>
+</pre></div>
+</div>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

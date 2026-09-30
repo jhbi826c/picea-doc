@@ -1,0 +1,3748 @@
+
+.. _program_listing_file_lib_Dialect_CGRA_Transforms_GenerateDriver.cpp:
+
+Program Listing for File GenerateDriver.cpp
+===========================================
+
+|exhale_lsh| :ref:`Return to documentation for file <file_lib_Dialect_CGRA_Transforms_GenerateDriver.cpp>` (``lib/Dialect/CGRA/Transforms/GenerateDriver.cpp``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. code-block:: cpp
+
+   
+   
+   //===- GenerateDriver.cpp - C driver for a CGRA kernel --------------------===//
+   //
+   // Emits a GR-HEEP / X-HEEP STRELA application (main.c + dataset.h), picking one
+   // of two emitters from the IR:
+   //   * streams are function arguments -> single-deploy: declare the arrays, call
+   //   the
+   //     outlined <base>_init/_post, program and start the fabric, wait on the
+   //     interrupt.
+   //   * streams are module-level memref.global -> multi-config: one configuration
+   //   per
+   //     deploy, run consecutively and in place.
+   // Either way the streams and dispatch metadata come from the IR, and the result
+   // is checked against a reference transliterated from the deploy loops.
+   //
+   // Options: output, iomap, iomap-prefix, bitstream-sym, bitstream-header, name,
+   // sim, hoist-descriptors, watch-buffers, ck-only, no-deployed-metric,
+   // x86-golden, max-dispatch, interleaved-kb, progress-every, no-reference.
+   // Behaviour of each: docs/guides/cgra.md s.6.
+   //
+   //===----------------------------------------------------------------------===//
+   
+   #include "mlir/Dialect/Affine/IR/AffineOps.h"
+   #include "mlir/Dialect/Arith/IR/Arith.h"
+   #include "mlir/Dialect/Func/IR/FuncOps.h"
+   #include "mlir/Dialect/MemRef/IR/MemRef.h"
+   #include "mlir/IR/BuiltinAttributes.h"
+   #include "mlir/IR/BuiltinOps.h"
+   #include "mlir/IR/BuiltinTypes.h"
+   #include "mlir/IR/Matchers.h"
+   #include "mlir/Pass/Pass.h"
+   #include "picea-mlir/Dialect/CGRA/IR/CGRA.h"
+   #include "picea-mlir/Dialect/CGRA/Transforms/CGRAAnalysisUtils.h"
+   #include "picea-mlir/Dialect/CGRA/Transforms/Passes.h"
+   
+   #include "llvm/ADT/DenseMap.h"
+   #include "llvm/ADT/STLExtras.h"
+   #include "llvm/ADT/StringExtras.h"
+   #include "llvm/ADT/StringSwitch.h"
+   #include "llvm/Support/Format.h"
+   #include "llvm/Support/JSON.h"
+   #include "llvm/Support/MemoryBuffer.h"
+   #include "llvm/Support/Path.h"
+   #include "llvm/Support/raw_ostream.h"
+   
+   #include <map>
+   #include <regex>
+   #include <set>
+   #include <string>
+   #include <vector>
+   
+   using namespace mlir;
+   
+   namespace {
+   
+   // ─── C type / element-size maps ─────────────────────────────────────────────
+   // CGRA streams are integers of at most 32 bits (--legalize-to-i32 widens the
+   // narrower ones; there are no i64 or floating-point streams). i32 is the norm.
+   static StringRef cType(StringRef elem)
+   {
+       return llvm::StringSwitch<StringRef>(elem)
+           .Case("i8", "int8_t")
+           .Case("i16", "int16_t")
+           .Default("int32_t");
+   }
+   static int elemBytes(StringRef elem)
+   {
+       return llvm::StringSwitch<int>(elem).Case("i8", 1).Case("i16", 2).Default(
+           4);
+   }
+   
+   // Name of a stream element type as it prints in a memref (i8, i16, i32).
+   static std::string elemName(Type t)
+   {
+       if (auto it = dyn_cast<IntegerType>(t))
+           return ("i" + llvm::Twine(it.getWidth())).str();
+       return "i32";
+   }
+   
+   // STRELA register-offset macro names (the GR-HEEP driver programs them by
+   // name).
+   static std::string imnAddr(int ch)
+   { return "STRELA_IMN_" + std::to_string(ch) + "_ADDR_REG_OFFSET"; }
+   static std::string imnParam(int ch)
+   { return "STRELA_IMN_" + std::to_string(ch) + "_PARAM_REG_OFFSET"; }
+   static std::string omnAddr(int ch)
+   { return "STRELA_OMN_" + std::to_string(ch) + "_ADDR_REG_OFFSET"; }
+   static std::string omnSize(int ch)
+   { return "STRELA_OMN_" + std::to_string(ch) + "_SIZE_REG_OFFSET"; }
+   
+   // True if @p expr mentions the identifier @p id as a whole token (so "o1" does
+   // not match inside "o10"). Used to find the loop depth a descriptor value
+   // depends on.
+   static bool refsIdent(StringRef expr, StringRef id)
+   {
+       auto part = [](char c) { return isalnum((unsigned char)c) || c == '_'; };
+       for (size_t p = expr.find(id); p != StringRef::npos;
+            p = expr.find(id, p + 1)) {
+           size_t e = p + id.size();
+           if ((p == 0 || !part(expr[p - 1]))
+               && (e >= expr.size() || !part(expr[e])))
+               return true;
+       }
+       return false;
+   }
+   
+   // The UTF-8 em dash used verbatim in the generated comments.
+   static constexpr const char* EMDASH = "\xe2\x80\x94";
+   
+   static std::string join(ArrayRef<std::string> xs, StringRef sep)
+   {
+       std::string out;
+       for (size_t i = 0; i < xs.size(); ++i) {
+           if (i) out += sep;
+           out += xs[i];
+       }
+       return out;
+   }
+   static std::string hex(uint64_t v)
+   { return "0x" + llvm::utohexstr(v, /*LowerCase=*/true); }
+   
+   // ─── Extracted kernel description ────────────────────────────────────────────
+   struct KernelInfo {
+       std::string base;
+       SmallVector<std::pair<std::string, std::string>>
+           streams;                            // (flat size, elem)
+       SmallVector<SmallVector<int64_t>> dims; // per-stream shape
+       int64_t dispatch = 1;
+       SmallVector<std::string> parts; // init/kernel*/…/post
+       SmallVector<int> inputs, outputs, inouts;
+       func::FuncOp kernelFn; // @<base>_kernel
+   };
+   
+   // Whether @p name is one of <base>_(init|kernel[0-9]*|stage[0-9]*|post).
+   static bool isPart(StringRef name, StringRef base)
+   {
+       std::string prefix = base.str() + "_";
+       if (!name.starts_with(prefix)) return false;
+       StringRef s = name.drop_front(prefix.size());
+       if (s == "init" || s == "post") return true;
+       auto numTail = [&](StringRef pfx) {
+           if (!s.starts_with(pfx)) return false;
+           StringRef r = s.drop_front(pfx.size());
+           return r.empty()
+                  || llvm::all_of(r, [](char c) { return llvm::isDigit(c); });
+       };
+       return numTail("kernel") || numTail("stage");
+   }
+   
+   // First cgra.deploy op in @p root, or null.
+   static Operation* firstDeploy(Operation* root)
+   {
+       Operation* found = nullptr;
+       root->walk([&](Operation* op) {
+           if (!found && op->getName().getStringRef() == "cgra.deploy") {
+               found = op;
+               return WalkResult::interrupt();
+           }
+           return WalkResult::advance();
+       });
+       return found;
+   }
+   
+   // Read a DenseI32ArrayAttr @p name from @p op into @p out.
+   static void
+   readI32Array(Operation* op, StringRef name, SmallVectorImpl<int> &out)
+   {
+       if (!op) return;
+       if (auto a = op->getAttrOfType<DenseI32ArrayAttr>(name))
+           for (int32_t v : a.asArrayRef()) out.push_back(v);
+   }
+   
+   // Gather base name, streams, dispatch, parts and dispatch-I/O from the module.
+   static LogicalResult analyze(ModuleOp module, KernelInfo &ki)
+   {
+       for (auto fn : module.getOps<func::FuncOp>()) {
+           StringRef n = fn.getName();
+           if (n.ends_with("_kernel")) {
+               ki.base = n.drop_back(7).str();
+               ki.kernelFn = fn;
+               break;
+           }
+       }
+       if (ki.base.empty())
+           return module.emitError(
+               "generate-cgra-driver: no @<base>_kernel function "
+               "(run --outline-cgra-deploy=drop-host=1 first)");
+   
+       Operation* deploy = firstDeploy(module);
+       if (deploy)
+           if (auto d = deploy->getAttrOfType<IntegerAttr>("dispatch_size"))
+               ki.dispatch = d.getInt();
+   
+       for (Type t : ki.kernelFn.getArgumentTypes()) {
+           auto mrt = dyn_cast<MemRefType>(t);
+           if (!mrt) continue;
+           SmallVector<int64_t> ds;
+           int64_t total = 1;
+           for (int64_t d : mrt.getShape()) {
+               int64_t v = (d == ShapedType::kDynamic) ? ki.dispatch : d;
+               ds.push_back(v);
+               total *= v;
+           }
+           ki.streams.push_back(
+               {std::to_string(total), elemName(mrt.getElementType())});
+           ki.dims.push_back(std::move(ds));
+       }
+       if (ki.streams.empty())
+           return ki.kernelFn.emitError("generate-cgra-driver: @")
+                  << ki.base << "_kernel has no ranked memref streams";
+   
+       for (auto fn : module.getOps<func::FuncOp>())
+           if (isPart(fn.getName(), ki.base))
+               ki.parts.push_back(fn.getName().str());
+   
+       readI32Array(deploy, "input_args", ki.inputs);
+       readI32Array(deploy, "output_args", ki.outputs);
+       readI32Array(deploy, "inout_args", ki.inouts);
+       return success();
+   }
+   
+   // Parse io_map.json into per-index input/output channel lists (mapper output).
+   static LogicalResult loadIoMap(
+       StringRef path,
+       SmallVectorImpl<int> &inCh,
+       SmallVectorImpl<int> &outCh,
+       ModuleOp module)
+   {
+       auto buf = llvm::MemoryBuffer::getFile(path);
+       if (!buf)
+           return module.emitError("generate-cgra-driver: cannot open iomap '")
+                  << path << "'";
+       auto json = llvm::json::parse((*buf)->getBuffer());
+       if (!json)
+           return module.emitError("generate-cgra-driver: invalid iomap JSON");
+       auto* root = json->getAsObject();
+       if (!root)
+           return module.emitError("generate-cgra-driver: iomap is not an object");
+   
+       auto channels = [&](StringRef section, SmallVectorImpl<int> &out) {
+           auto* sec = root->getObject(section);
+           if (!sec) return;
+           for (auto &kv : *sec) {
+               StringRef name = kv.first;
+               size_t p = 0;
+               while (p < name.size() && !llvm::isDigit(name[p])) ++p;
+               int idx = 0;
+               name.drop_front(p).getAsInteger(10, idx);
+               auto* entry = kv.second.getAsObject();
+               int ch =
+                   entry ? (int)entry->getInteger("channel").value_or(-1) : -1;
+               while ((int)out.size() <= idx) out.push_back(-1);
+               out[idx] = ch;
+           }
+       };
+       channels("inputs", inCh);
+       channels("outputs", outCh);
+       return success();
+   }
+   
+   // ─── Software-reference transliterator (mmio=gr-heep) ────────────────────────
+   // Walks @<base>_kernel's cgra.deploy affine loop and emits an equivalent scalar
+   // C reference (the same shape src/outline_driver.py produced from text).
+   struct Transliterator {
+       const KernelInfo &ki;
+       DenseMap<Value, std::string> arrName;
+       DenseMap<Value, SmallVector<int64_t>> arrDims;
+       DenseMap<Value, std::string> env;     // SSA value → C expression
+       DenseMap<Value, std::string> loopVar; // induction var → C name
+       SmallVector<std::string> names;       // v0, v1, …
+       std::vector<std::string> out;
+       bool failed = false;
+   
+       Transliterator(const KernelInfo &ki, ArrayRef<std::string> names)
+               : ki(ki),
+                 names(names.begin(), names.end())
+       {}
+   
+       static StringRef binOp(StringRef opName)
+       {
+           return llvm::StringSwitch<StringRef>(opName)
+               .Case("arith.addi", "+")
+               .Case("arith.subi", "-")
+               .Case("arith.muli", "*")
+               .Case("arith.divsi", "/")
+               .Case("arith.divui", "/")
+               .Case("arith.remsi", "%")
+               .Case("arith.remui", "%")
+               .Case("arith.andi", "&")
+               .Case("arith.ori", "|")
+               .Case("arith.xori", "^")
+               .Case("arith.shli", "<<")
+               .Case("arith.shrsi", ">>")
+               .Case("arith.shrui", ">>")
+               .Default("");
+       }
+   
+       // Render one affine index result to C (no outer parens; caller wraps once).
+       std::string renderExpr(AffineExpr e, ValueRange operands)
+       {
+           if (auto c = dyn_cast<AffineConstantExpr>(e))
+               return std::to_string(c.getValue());
+           if (auto d = dyn_cast<AffineDimExpr>(e)) {
+               Value v = operands[d.getPosition()];
+               auto it = loopVar.find(v);
+               if (it == loopVar.end()) {
+                   failed = true;
+                   return "?";
+               }
+               return it->second;
+           }
+           if (auto b = dyn_cast<AffineBinaryOpExpr>(e)) {
+               StringRef op;
+               switch (b.getKind()) {
+               case AffineExprKind::Add: op = " + "; break;
+               case AffineExprKind::Mul: op = " * "; break;
+               case AffineExprKind::FloorDiv: op = " / "; break;
+               case AffineExprKind::Mod: op = " % "; break;
+               default: failed = true; return "?";
+               }
+               return renderExpr(b.getLHS(), operands) + op.str()
+                      + renderExpr(b.getRHS(), operands);
+           }
+           failed = true;
+           return "?";
+       }
+   
+       // Row-major flat index string, e.g. "(i0)" or "((i0) * 4 + (i1))".
+       std::string
+       flatIndex(AffineMap map, ValueRange operands, ArrayRef<int64_t> shape)
+       {
+           SmallVector<std::string> parts;
+           for (AffineExpr r : map.getResults())
+               parts.push_back("(" + renderExpr(r, operands) + ")");
+           std::string f = parts[0];
+           for (size_t k = 1; k < parts.size(); ++k)
+               f = "(" + f + " * " + std::to_string(shape[k]) + " + " + parts[k]
+                   + ")";
+           return f;
+       }
+   
+       void emitBlock(Block &block, int depth)
+       {
+           std::string pad(2 * (depth + 1), ' ');
+           for (Operation &op : block) {
+               if (op.hasTrait<OpTrait::IsTerminator>()) continue;
+   
+               if (auto forOp = dyn_cast<affine::AffineForOp>(op)) {
+                   if (!forOp.hasConstantLowerBound()
+                       || !forOp.hasConstantUpperBound()) {
+                       failed = true;
+                       return;
+                   }
+                   std::string cv = "i" + std::to_string(loopVar.size());
+                   out.push_back(
+                       pad + "for (int " + cv + " = "
+                       + std::to_string(forOp.getConstantLowerBound()) + "; " + cv
+                       + " < " + std::to_string(forOp.getConstantUpperBound())
+                       + "; " + cv + " += " + std::to_string(forOp.getStepAsInt())
+                       + ") {");
+                   loopVar[forOp.getInductionVar()] = cv;
+                   emitBlock(*forOp.getBody(), depth + 1);
+                   loopVar.erase(forOp.getInductionVar());
+                   out.push_back(pad + "}");
+                   continue;
+               }
+               if (auto load = dyn_cast<affine::AffineLoadOp>(op)) {
+                   Value m = load.getMemRef();
+                   env[load.getResult()] = arrName[m] + "["
+                                           + flatIndex(
+                                               load.getAffineMap(),
+                                               load.getMapOperands(),
+                                               arrDims[m])
+                                           + "]";
+                   continue;
+               }
+               if (auto store = dyn_cast<affine::AffineStoreOp>(op)) {
+                   Value m = store.getMemRef();
+                   out.push_back(
+                       pad + arrName[m] + "["
+                       + flatIndex(
+                           store.getAffineMap(),
+                           store.getMapOperands(),
+                           arrDims[m])
+                       + "] = " + env[store.getValueToStore()] + ";");
+                   continue;
+               }
+               APInt cst;
+               if (op.getNumResults() == 1
+                   && matchPattern(op.getResult(0), m_ConstantInt(&cst))) {
+                   env[op.getResult(0)] = std::to_string(cst.getSExtValue());
+                   continue;
+               }
+               StringRef sym = binOp(op.getName().getStringRef());
+               if (!sym.empty() && op.getNumOperands() == 2
+                   && op.getNumResults() == 1) {
+                   env[op.getResult(0)] = "(" + env[op.getOperand(0)] + " "
+                                          + sym.str() + " " + env[op.getOperand(1)]
+                                          + ")";
+                   continue;
+               }
+               failed = true;
+               return;
+           }
+       }
+   
+       // Returns the reference body, or std::nullopt on any unsupported op.
+       std::optional<std::string> run()
+       {
+           func::FuncOp fn =
+               ki.kernelFn; // value handle; walk() needs a non-const op
+           Operation* deploy = firstDeploy(fn);
+           if (!deploy) return std::nullopt;
+   
+           // Seed constants defined anywhere in the kernel function.
+           fn.walk([&](Operation* op) {
+               APInt c;
+               if (op->getNumResults() == 1
+                   && matchPattern(op->getResult(0), m_ConstantInt(&c)))
+                   env[op->getResult(0)] = std::to_string(c.getSExtValue());
+           });
+   
+           // Map each deploy block argument to its stream C name / shape.
+           Block &blk = deploy->getRegion(0).front();
+           for (unsigned i = 0; i < blk.getNumArguments(); ++i) {
+               unsigned streamIdx = i;
+               if (auto ba = dyn_cast<BlockArgument>(deploy->getOperand(i)))
+                   streamIdx = ba.getArgNumber();
+               if (streamIdx >= names.size()) return std::nullopt;
+               arrName[blk.getArgument(i)] = names[streamIdx];
+               arrDims[blk.getArgument(i)] = ki.dims[streamIdx];
+           }
+   
+           emitBlock(blk, 0);
+           if (failed) return std::nullopt;
+           return join(out, "\n");
+       }
+   };
+   
+   // Returns {main.c, dataset.h}.
+   // ─── Simulation variant ──────────────────────────────────────────────────────
+   // The GR-HEEP testbench does not reliably deliver STRELA's completion
+   // interrupt, so under Verilator the driver has to POLL the status register
+   // instead of sleeping on it. That single difference drags three others along,
+   // and getting any of them wrong changes the measured cycles rather than failing
+   // outright:
+   //
+   //   * printf must be routed to the UART model (PRINTF_IN_SIM),
+   //   * INTR_EN must come OUT of the MODE write — leaving it set makes STRELA
+   //   raise
+   //     intr_o as well, so the core pays an ISR entry/exit ON TOP of the poll and
+   //     every dispatch is over-counted by ~18 cycles,
+   //   * a liveness marker at start-up, so an app that dies early is
+   //   distinguishable
+   //     from one that produced no output.
+   //
+   // These used to be applied by src/simpatch.py, a regex pass over the generated
+   // C. They belong here: the emitter knows exactly where it writes MODE and where
+   // it waits, so it can emit the right form directly instead of matching text
+   // after the fact. `sim=0` (the default) still emits the interrupt-driven driver
+   // for real hardware, which is the artifact that must not be perturbed.
+   static bool gSim = false;
+   // Mirrors the `hoist-descriptors` option for the free emit functions below, the
+   // same way gSim mirrors `sim`.
+   static bool gHoistDesc = false;
+   // Sim diagnostics: restrict per-buffer checksums to these buffers
+   // (comma-separated). Instrumenting all of them on a large kernel is enough code
+   // to push the image past the RISC-V gp-relative window and the app stops
+   // linking.
+   static std::string gCkOnly;
+   // Mirrors the `watch-buffers` option for the free emit functions below.
+   static bool gWatchBuffers = true;
+   static std::string gGoldenHdr;
+   // Drop deployed_cpu(): it is a SECOND full transliteration of every offloaded
+   // nest, emitted only to produce the `deployed cycles` pair. That pair is the
+   // deployment-dependent metric (it rises as the compiler offloads less), so
+   // `whole` is the one to quote anyway — and on a large network the duplicate
+   // costs more than it is worth: residual_small's 54 configurations overflowed
+   // ram0 (96 KB of .text + .rodata) by 564 bytes with it in. Off by default so
+   // every existing driver is unchanged; `no-deployed-metric=1` buys back ~500
+   // lines of generated C.
+   static bool gNoDeployedMetric = false;
+   // Cap on the ELEMENTS one fabric dispatch may stream (0 = unlimited, the
+   // default, so every existing driver is byte-identical).
+   //
+   // A configuration whose graph reconverges unevenly can DEADLOCK once enough
+   // tokens are in flight: `fork_sender` is a lazy fork (ready = AND of consumers)
+   // and each link has a 2-slot elastic buffer, so a stalled fork starves the
+   // chain another fork is waiting on and the backpressure closes into a cycle. It
+   // is length-dependent, and the evidence is direct — lenet's configurations 3
+   // and 33 have BYTE-IDENTICAL DFGs and byte-identical mappings (same placement,
+   // same ports, objective 17.007, 20 routes); cfg 3 issues 784 dispatches of 6
+   // elements and runs, cfg 33 issues one of 120 and wedges. Splitting a long
+   // dispatch into short ones costs dispatch overhead but NO memory, unlike
+   // splitting the configuration itself (max-outs=1 cost lenet 31 KB it did not
+   // have).
+   static unsigned gMaxDispatch = 0;
+   
+   // Emit a progress marker every N nests of the offloaded region (0 = off). See
+   // the `progress-every` Option for why this exists and why it is off by default.
+   static unsigned gProgressEvery = 0;
+   
+   // Skip reference() — diagnostic only. See its use for why and what it
+   // invalidates.
+   static bool gNoReference = false;
+   
+   static LogicalResult checkNodeFields(
+       ModuleOp module,
+       size_t cfg,
+       const char* kind,
+       const std::string &ch,
+       int64_t sizeBytes,
+       int64_t strideBytes,
+       const std::string &global)
+   {
+       if (sizeBytes <= 0xFFFF && strideBytes <= 0xFFFF) return success();
+       return module.emitError()
+              << "generate-cgra-driver: configuration " << cfg << " programs "
+              << kind << ch << " with size=" << sizeBytes
+              << " B, stride=" << strideBytes << " B over `" << global
+              << "`, but a STRELA memory node's size and stride registers are 16 "
+                 "bits "
+                 "(max 65535). Packed as `stride << 16 | size` this truncates to "
+                 "size="
+              << (sizeBytes & 0xFFFF) << ", stride=" << (strideBytes & 0xFFFF)
+              << (((sizeBytes & 0xFFFF) == 0)
+                      ? " — a ZERO-SIZE stream, which never raises EXEC_DONE and "
+                        "hangs "
+                        "the dispatch"
+                      : " — silently streaming the wrong data")
+              << ". This stream re-reads its buffer, so it must be lowered as "
+                 "repeated "
+                 "dispatches (one per reuse), not one oversized stream.";
+   }
+   
+   // Bounded status poll, the sim's stand-in for wait_for_interrupt().
+   //
+   // The bound must be REPORTED when it is hit. A dispatch that never raises
+   // exec_done used to fall out of this loop silently and the driver carried on to
+   // the next configuration, so a fabric that produced nothing looked exactly like
+   // a fabric that produced a wrong answer — residual_small's
+   // `im2col_buf_unpacked` came back all-zero and there was nothing in the log to
+   // say the config had not finished. `_to_n` counts the give-ups and `_to_first`
+   // remembers which configuration hit it first; the driver prints both at the end
+   // of the run.
+   static std::string waitForDone(unsigned indent, int cfgIdx = -1)
+   {
+       std::string ind(indent, ' ');
+       if (!gSim) return ind + "wait_for_interrupt();\n";
+       // Only the multi-config emitter declares the counters, and only it has a
+       // configuration index to attribute a stall to. Without this guard the
+       // legacy (single-config) driver referenced _to_n/_to_cfg[-1], which it
+       // never declares — it would not compile at all.
+       std::string tally = cfgIdx < 0
+                               ? std::string()
+                               : "if(sp>=20000){ if(_to_first<0)_to_first="
+                                     + std::to_string(cfgIdx) + "; _to_cfg["
+                                     + std::to_string(cfgIdx) + "]++; _to_n++; } ";
+       return ind + "{ uint32_t st=0; int sp=0; for(;sp<20000;sp++){"
+                  "st=mmio_region_read32(strela,(ptrdiff_t)STRELA_STATUS_REG_OFFSET); "
+                  "if(st&(1<<STRELA_STATUS_EXEC_DONE_BIT))break;} " + tally + "}\n";
+   }
+   
+   // MODE bits for a dispatch: the sim polls, so it must not also enable the
+   // interrupt (see above).
+   static std::string modeBits()
+   {
+       return gSim ? "1 << STRELA_MODE_PERF_CTR_EN_BIT"
+                   : "1 << STRELA_MODE_PERF_CTR_EN_BIT | 1 << "
+                     "STRELA_MODE_INTR_EN_BIT";
+   }
+   
+   static std::pair<std::string, std::string> emitGRHeep(
+       const KernelInfo &ki,
+       ArrayRef<std::string> names,
+       ArrayRef<int> inCh,
+       ArrayRef<int> outCh,
+       StringRef bsym,
+       StringRef header,
+       StringRef refBody)
+   {
+       StringRef elem = ki.streams[0].second;
+       StringRef ctype = cType(elem);
+       int eb = elemBytes(elem);
+       bool hasInit = llvm::is_contained(ki.parts, ki.base + "_init");
+       bool hasPost = llvm::is_contained(ki.parts, ki.base + "_post");
+   
+       // dataset.h — zeroed interleaved-section arrays (filled by the linked
+       // init).
+       std::string ds = std::string("// dataset.h ") + EMDASH +
+         " generated by the generate-cgra-driver pass (mmio=gr-heep).\n"
+         "// Stream buffers live in .xheep_data_interleaved so the STRELA fabric\n"
+         "// can read/write them over the external bus.\n#include <stdint.h>\n\n";
+       for (size_t i = 0; i < names.size(); ++i)
+           ds +=
+               "volatile " + cType(ki.streams[i].second).str() + " " + names[i]
+               + "[" + ki.streams[i].first
+               + "] __attribute__((section(\".xheep_data_interleaved\"))) = "
+                 "{0};\n";
+   
+       // main.c
+       std::string proto;
+       for (size_t i = 0; i < names.size(); ++i)
+           proto += (i ? ", " : "") + (ctype + " *" + names[i]).str();
+       std::string ref = "static void " + ki.base + "_reference(" + proto + ") {\n"
+                         + refBody.str() + "\n}";
+   
+       SmallVector<std::string> hostExterns;
+       if (hasInit)
+           hostExterns.push_back(
+               "extern void " + ki.base + "_init(" + proto
+               + ");   // prepare inputs (from " + ki.base + ".ll)");
+       if (hasPost)
+           hostExterns.push_back(
+               "extern void " + ki.base + "_post(" + proto
+               + ");   // consume outputs (from " + ki.base + ".ll)");
+       std::string callArgs;
+       for (size_t i = 0; i < names.size(); ++i)
+           callArgs += (i ? ", " : "") + ("(" + ctype + " *)" + names[i]).str();
+       std::string initCall =
+           hasInit ? "  " + ki.base + "_init(" + callArgs + ");" : "";
+       std::string postCall =
+           hasPost ? "  " + ki.base + "_post(" + callArgs + ");" : "";
+   
+       int sizeBytes = ki.dispatch * eb;
+       unsigned param = ((unsigned)eb << 16) | (unsigned)sizeBytes;
+       SmallVector<std::string> cfg;
+       cfg.push_back(
+           "  mmio_region_write32(strela, (ptrdiff_t) STRELA_CTRL_REG_OFFSET, 1 "
+           "<< STRELA_CTRL_CLR_BIT);");
+       cfg.push_back(
+           "  mmio_region_write32(strela, (ptrdiff_t) STRELA_MODE_REG_OFFSET, "
+           + modeBits() + ");");
+       cfg.push_back(
+           "  mmio_region_write32(strela, (ptrdiff_t) "
+           "STRELA_CONF_ADDR_REG_OFFSET, (uintptr_t) "
+           + bsym.str() + ");");
+       SmallVector<int> insThenInouts(ki.inputs.begin(), ki.inputs.end());
+       insThenInouts.append(ki.inouts.begin(), ki.inouts.end());
+       for (size_t si = 0; si < insThenInouts.size(); ++si) {
+           int arg = insThenInouts[si];
+           int ch = si < inCh.size() ? inCh[si] : (int)si;
+           cfg.push_back(
+               "  mmio_region_write32(strela, (ptrdiff_t) " + imnAddr(ch)
+               + ", (uintptr_t) " + names[arg] + ");");
+           cfg.push_back(
+               "  mmio_region_write32(strela, (ptrdiff_t) " + imnParam(ch) + ", "
+               + hex(param) + ");   // (stride " + std::to_string(eb)
+               + " << 16) | " + std::to_string(sizeBytes) + " bytes");
+       }
+       SmallVector<int> outsThenInouts(ki.outputs.begin(), ki.outputs.end());
+       outsThenInouts.append(ki.inouts.begin(), ki.inouts.end());
+       for (size_t si = 0; si < outsThenInouts.size(); ++si) {
+           int arg = outsThenInouts[si];
+           int ch = si < outCh.size() ? outCh[si] : (int)si;
+           cfg.push_back(
+               "  mmio_region_write32(strela, (ptrdiff_t) " + omnAddr(ch)
+               + ", (uintptr_t) " + names[arg] + ");");
+           cfg.push_back(
+               "  mmio_region_write32(strela, (ptrdiff_t) " + omnSize(ch) + ", "
+               + std::to_string(sizeBytes) + ");");
+       }
+       cfg.push_back(
+           "  mmio_region_write32(strela, (ptrdiff_t) STRELA_CTRL_REG_OFFSET, 1 "
+           "<< STRELA_CTRL_START_BIT);");
+   
+       // golden buffers for the pure outputs; reference called with the real
+       // inputs.
+       SmallVector<int> outArgs(ki.outputs.begin(), ki.outputs.end());
+       outArgs.append(ki.inouts.begin(), ki.inouts.end());
+       SmallVector<std::string> goldenDecls, checks, refCall;
+       for (int a : outArgs)
+           goldenDecls.push_back(
+               ctype.str() + " golden" + std::to_string(a) + "["
+               + ki.streams[a].first + "];");
+       for (size_t i = 0; i < names.size(); ++i)
+           refCall.push_back(
+               llvm::is_contained(outArgs, (int)i) ? "golden" + std::to_string(i)
+                                                   : names[i]);
+       for (int a : outArgs)
+           checks.push_back(
+               "  for (int i = 0; i < " + ki.streams[a].first + "; i++) if ("
+               + names[a] + "[i] != golden" + std::to_string(a)
+               + "[i]) { errors++; }");
+   
+       std::string mainC = (gSim ? "#define PRINTF_IN_SIM 1\n" : "") +
+         std::string("// main.c ") + EMDASH +
+         " GR-HEEP / STRELA app generated by the generate-cgra-driver pass (mmio=gr-heep).\n"
+         "// Runs @" + ki.base + "_kernel on the real STRELA CGRA and checks the fabric output\n"
+         "// against a software reference transliterated from the cgra.deploy loop.\n"
+         "// Follows the GR-HEEP STRELA driver convention (interrupt-driven, no foucinho):\n"
+         "// after START the CPU sleeps on wait_for_interrupt() until STRELA raises its\n"
+         "// completion interrupt on the external-peripheral fast line.\n"
+         "#include <stdio.h>\n#include <stdint.h>\n#include <stddef.h>\n"
+         "#include \"core_v_mini_mcu.h\"\n#include \"x-heep.h\"\n#include \"hart.h\"\n"
+         "#include \"handler.h\"\n#include \"fast_intr_ctrl.h\"\n#include \"fast_intr_ctrl_regs.h\"\n"
+         "#include \"mmio.h\"\n#include \"csr.h\"\n#include \"csr_registers.h\"\n"
+         "#include \"gr_heep.h\"\n#include \"strela.h\"\n#include \"strela_regs.h\"\n"
+         "#include \"kernels.h\"    // NPE / CONFIG_SIZE used by the bitstream header\n"
+         "#include \"" + header.str() + "\"   // bitstream: " + bsym.str() + "[]\n"
+         "#include \"dataset.h\"\n\n"
+         "// Host prepare/consume code, linked from " + ki.base + ".ll (clang-compiled):\n" +
+         join(hostExterns, "\n") + "\n\n" +
+         ref + "\n\n"
+         "int main(void) {\n"
+         "  // Enable machine-level fast interrupts and the STRELA (ext-peripheral) line.\n"
+         "  enable_all_fast_interrupts(true);\n"
+         "  CSR_SET_BITS(CSR_REG_MSTATUS, 0x8);\n"
+         "  const uint32_t mask = 1 << 31;\n"
+         "  CSR_SET_BITS(CSR_REG_MIE, mask);\n"
+         "  CSR_CLEAR_BITS(CSR_REG_MCOUNTINHIBIT, 0x1);   // enable the mcycle counter\n"
+         "  uint32_t _cpu0, _cpu1, _cgra0, _cgra1;\n\n"
+         "  mmio_region_t strela = mmio_region_from_addr(STRELA_PERIPH_START_ADDRESS);\n" +
+         std::string(gSim ? "  printf(\"app start\\n\");\n" : "") + "\n"
+         "  // ---- prepare inputs on the CPU (linked " + ki.base + "_init from " + ki.base + ".ll) ----\n" +
+         initCall + "\n\n"
+         "  // ---- program + run the STRELA CGRA (channels from the mapper io_map) ----\n"
+         "  CSR_READ(CSR_REG_MCYCLE, &_cgra0);\n" +
+         join(cfg, "\n") + "\n\n"
+         "  // ---- wait for the fabric to finish ----\n" +
+         waitForDone(2) +
+         "  CSR_READ(CSR_REG_MCYCLE, &_cgra1);\n"
+         "  mmio_region_write32(strela, (ptrdiff_t) STRELA_MODE_REG_OFFSET, 0);\n"
+         "  mmio_region_write32(strela, (ptrdiff_t) STRELA_CTRL_REG_OFFSET, 1 << STRELA_CTRL_CLR_BIT);\n\n"
+         "  // ---- software reference (the same kernel on the RISC-V) + compare ----\n"
+         "  " + join(goldenDecls, "\n  ") + "\n"
+         "  CSR_READ(CSR_REG_MCYCLE, &_cpu0);\n"
+         "  " + ki.base + "_reference(" + join(refCall, ", ") + ");\n"
+         "  CSR_READ(CSR_REG_MCYCLE, &_cpu1);\n\n"
+         "  int errors = 0;\n" +
+         join(checks, "\n") + "\n\n"
+         "  // ---- consume outputs on the CPU (linked " + ki.base + "_post from " + ki.base + ".ll) ----\n" +
+         postCall + "\n\n"
+         "  { uint32_t _cpu = _cpu1 - _cpu0, _cg = _cgra1 - _cgra0;\n"
+         "    printf(\"[" + ki.base + "] deployed cycles: cpu=%u cgra=%u  accel(x100)=%u\\n\",\n"
+         "           (unsigned)_cpu, (unsigned)_cg, (unsigned)(_cpu * 100u / (_cg ? _cg : 1u))); }\n"
+         "  if (errors == 0) printf(\"\\nSUCCESS: STRELA output matches software reference\\n\");\n"
+         "  else             printf(\"\\nFAIL: %d mismatch(es) vs software reference\\n\", errors);\n"
+         "  return errors;\n}\n";
+       return {mainC, ds};
+   }
+   
+   // ─── Globals-based / multi-config emitter (folds in generate-multiconfig) ────
+   // Emits a driver that runs one STRELA configuration per cgra.deploy over
+   // module-level globals, consecutively and in place. Kept in its own namespace
+   // so its helpers do not collide with the argument-stream emitter above.
+   namespace mc {
+   
+   static constexpr int ELEM_BYTES = 4; // CGRA streams 32-bit integers.
+   
+   // C name of a loop induction var (i0, i1, …), by the order it was entered.
+   using IVNames = DenseMap<Value, std::string>;
+   
+   // The backing memref of a stream. Inside a cgra.deploy the memref is the
+   // region's block argument, so trace it back through the deploy's stream
+   // operand; at host level (the scalar tail) it is the memref directly. The
+   // backing value is the stable identity of a stream — the same memref.global /
+   // memref.alloc / function argument across every kernel that reads or writes it,
+   // so a driver buffer name can be assigned to it once.
+   static Value backingMemref(Value memref)
+   {
+       if (auto ba = dyn_cast<BlockArgument>(memref))
+           if (auto dep = dyn_cast<cgra::DeployOp>(ba.getOwner()->getParentOp()))
+               if (ba.getArgNumber() < dep.getStreams().size())
+                   return backingMemref(dep.getStreams()[ba.getArgNumber()]);
+       return memref;
+   }
+   
+   // The backing global symbol of a stream memref, or "" if it is not a global
+   // (an alloc intermediate or a function argument).
+   static std::string globalOf(Value memref)
+   {
+       Value b = backingMemref(memref);
+       if (auto g = b.getDefiningOp<memref::GetGlobalOp>())
+           return g.getName().str();
+       return "";
+   }
+   
+   // Flatten an affine expr into per-dim coefficients + constant. Returns false on
+   // anything non-affine in the dims (mod/floordiv/symbol/dim*dim).
+   static bool
+   affineCoeffs(AffineExpr e, DenseMap<unsigned, int64_t> &coeff, int64_t &cst)
+   {
+       if (auto c = dyn_cast<AffineConstantExpr>(e)) {
+           cst += c.getValue();
+           return true;
+       }
+       if (auto d = dyn_cast<AffineDimExpr>(e)) {
+           coeff[d.getPosition()] += 1;
+           return true;
+       }
+       auto bin = dyn_cast<AffineBinaryOpExpr>(e);
+       if (!bin) return false;
+       if (bin.getKind() == AffineExprKind::Add)
+           return affineCoeffs(bin.getLHS(), coeff, cst)
+                  && affineCoeffs(bin.getRHS(), coeff, cst);
+       if (bin.getKind() == AffineExprKind::Mul) {
+           auto cl = dyn_cast<AffineConstantExpr>(bin.getLHS());
+           auto cr = dyn_cast<AffineConstantExpr>(bin.getRHS());
+           if (cl) {
+               DenseMap<unsigned, int64_t> c2;
+               int64_t k2 = 0;
+               if (!affineCoeffs(bin.getRHS(), c2, k2)) return false;
+               for (auto &kv : c2) coeff[kv.first] += cl.getValue() * kv.second;
+               cst += cl.getValue() * k2;
+               return true;
+           }
+           if (cr) {
+               DenseMap<unsigned, int64_t> c2;
+               int64_t k2 = 0;
+               if (!affineCoeffs(bin.getLHS(), c2, k2)) return false;
+               for (auto &kv : c2) coeff[kv.first] += cr.getValue() * kv.second;
+               cst += cr.getValue() * k2;
+               return true;
+           }
+           return false;
+       }
+       return false;
+   }
+   
+   // Render `coeff·IV + cst` as a C expression using @p names for the dim
+   // operands.
+   static std::string renderOffset(
+       const DenseMap<unsigned, int64_t> &coeff,
+       int64_t cst,
+       ValueRange operands,
+       const IVNames &names)
+   {
+       std::string s;
+       for (auto &kv : coeff) {
+           Value v = operands[kv.first];
+           auto it = names.find(v);
+           std::string var = it != names.end() ? it->second : "0";
+           if (kv.second == 0) continue;
+           if (!s.empty()) s += " + ";
+           s += (kv.second == 1) ? var : (var + "*" + std::to_string(kv.second));
+       }
+       if (cst != 0 || s.empty()) {
+           if (!s.empty()) s += (cst < 0 ? " - " : " + ");
+           s += std::to_string(s.empty() ? cst : std::abs(cst));
+       }
+       return s;
+   }
+   
+   struct Stream {
+       std::string global;   // backing global symbol
+       std::string baseExpr; // element offset at the inner lower bound (constant)
+       int64_t strideBytes;  // inner-IV stride, in bytes
+       int64_t sizeElems;    // flattened trip count (product of the nest's counts)
+   };
+   // A CPU-orchestration loop over one OUTER (non-reduction) induction variable of
+   // a reduction nest. The driver nests these and, per iteration, re-programs the
+   // CGRA streams (whose base is an affine expression in these loop variables) and
+   // fires one fabric run — one dot product per output element (the old strela
+   // matmul driver's scheme). Empty for a plain streamable nest.
+   struct OuterLoop {
+       std::string name; // C loop variable, e.g. "o0"
+       int64_t lo, hi;   // [lo, hi)
+   };
+   struct ConfigPass {
+       affine::AffineForOp nest; // the compute nest this step runs
+       bool onFabric = true;     // fabric config, or CPU code (conv/reduction)
+       bool isReduction = false; // fabric REDUCTION: inner loop accumulates on the
+                                 // FU; `outer` loops are orchestrated on the CPU
+       SmallVector<Stream>
+           inputs; // affine.loads (fabric only). For a reduction the
+       SmallVector<Stream>
+           outputs; // affine.stores. baseExpr may reference `outer` vars.
+       SmallVector<OuterLoop>
+           outer; // reduction: CPU loops (outer->inner); else empty
+   };
+   
+   // Rewrite a pure pointwise interleaved map to CONTIGUOUS per-channel windows.
+   // A loop unrolled by N to fill N CGRA channels reads/writes INTERLEAVED lanes
+   // (channel L touches element L, L+N, L+2N, … — stride N*ELEM_BYTES). The output
+   // memory node has NO stride register (unlike the input node) and always
+   // advances by ELEM_BYTES, so it cannot write an interleaved lane. But for an
+   // elementwise map out[p]=f(in[p]) the result array is independent of how the
+   // elements are partitioned across channels, so we can instead give
+   // channel-for-lane L the CONTIGUOUS block [L*Q, (L+1)*Q) with stride ELEM_BYTES
+   // on BOTH its input and output — which the strideless OMN can write. Applied
+   // only when the config is a balanced pointwise map: N inputs + N outputs, every
+   // stream stride == N*elem, same trip count Q, and distinct constant lane bases
+   // {0,…,N-1}. No-op otherwise (contiguous streams, stencils, reductions), so
+   // non-pointwise kernels are safe.
+   static void repartitionPointwiseMap(ConfigPass &cp)
+   {
+       unsigned n = cp.inputs.size();
+       if (n < 2 || n >= 64 || cp.outputs.size() != n) return;
+       int64_t stride = cp.inputs.front().strideBytes;
+       int64_t Q = cp.inputs.front().sizeElems;
+       if (stride <= ELEM_BYTES || stride != (int64_t)n * ELEM_BYTES) return;
+       auto parseConst = [](const std::string &e, int64_t &out) -> bool {
+           if (e.empty()) return false;
+           int64_t v = 0;
+           for (char c : e) {
+               if (c < '0' || c > '9') return false;
+               v = v * 10 + (c - '0');
+           }
+           out = v;
+           return true;
+       };
+       auto laneOf = [&](const Stream &s) -> int64_t {
+           int64_t v;
+           if (s.strideBytes != stride || s.sizeElems != Q
+               || !parseConst(s.baseExpr, v))
+               return -1;
+           return v < (int64_t)n ? v : -1;
+       };
+       auto lanesOk = [&](ArrayRef<Stream> ss) -> bool {
+           uint64_t seen = 0;
+           for (const Stream &s : ss) {
+               int64_t L = laneOf(s);
+               if (L < 0 || (seen >> L & 1)) return false;
+               seen |= 1ull << L;
+           }
+           return seen == ((1ull << n) - 1); // exactly lanes 0..n-1, once each
+       };
+       if (!lanesOk(cp.inputs) || !lanesOk(cp.outputs)) return;
+       auto rewrite = [&](Stream &s) {
+           s.baseExpr = std::to_string(laneOf(s) * Q); // contiguous block base
+           s.strideBytes = ELEM_BYTES;                 // dense within the block
+       };
+       for (Stream &s : cp.inputs) rewrite(s);
+       for (Stream &s : cp.outputs) rewrite(s);
+   }
+   // One driver-visible C array backing a stream: a name, its flattened element
+   // count, its initial data (globals only), and whether any kernel writes it.
+   struct Buffer {
+       std::string name;
+       int64_t size;
+       ElementsAttr data;
+       bool isOutput;
+   };
+   
+   // Maps each stream's backing memref to a Buffer. A memref.global keeps its
+   // symbol name and initial data; an alloc intermediate or a function argument
+   // gets a synthesized name (buf0, buf1, …) and is zero-initialized. The same
+   // backing value across kernels resolves to the same buffer, so intermediates
+   // thread from one config to the next through the same array.
+   struct BufferRegistry {
+       std::map<std::string, Buffer> buffers; // name -> info (deterministic)
+       DenseMap<Value, std::string> nameOf;   // backing value -> name
+       DenseMap<StringRef, ElementsAttr>
+           globalData; // global symbol -> initial data
+       int nextId = 0;
+   
+       // Register (or look up) the buffer for a stream memref; returns its C name.
+       std::string intern(Value memref)
+       {
+           Value b = backingMemref(memref);
+           if (auto it = nameOf.find(b); it != nameOf.end()) return it->second;
+           int64_t size = 1;
+           if (auto mrt = dyn_cast<MemRefType>(b.getType()))
+               for (int64_t d : mrt.getShape()) size *= d;
+           std::string nm;
+           ElementsAttr data;
+           if (auto g = b.getDefiningOp<memref::GetGlobalOp>()) {
+               nm = g.getName().str();
+               data = globalData.lookup(g.getName());
+           } else if (auto ba = dyn_cast<BlockArgument>(b)) {
+               // An ARGUMENT of an outlined function. Its backing global is
+               // recorded positionally in the parent's `cgra.arg_globals`; without
+               // consulting it every occurrence gets a fresh synthesized `bufN`,
+               // so ONE buffer becomes several. tiny_kws allocated four separate
+               // 72 000-element copies of `im2col_buf` that way — 1.1 MB of
+               // duplicate scratch on a 928 KB machine.
+               if (auto fn = dyn_cast_or_null<func::FuncOp>(
+                       ba.getOwner()->getParentOp())) {
+                   if (auto ga = fn->getAttrOfType<ArrayAttr>("cgra.arg_globals"))
+                       if (ba.getArgNumber() < ga.size()) {
+                           StringRef g =
+                               cast<StringAttr>(ga[ba.getArgNumber()]).getValue();
+                           if (!g.empty()) {
+                               nm = g.str();
+                               data = globalData.lookup(g);
+                           }
+                       }
+               }
+               if (nm.empty()) nm = "buf" + std::to_string(nextId++);
+           } else {
+               nm = "buf" + std::to_string(nextId++);
+           }
+           nameOf[b] = nm;
+           if (!buffers.count(nm)) buffers[nm] = {nm, size, data, false};
+           return nm;
+       }
+       // Name of an already-registered buffer, or "" if the memref was never a
+       // stream.
+       std::string lookup(Value memref) const
+       {
+           auto it = nameOf.find(backingMemref(memref));
+           return it != nameOf.end() ? it->second : std::string();
+       }
+       void markOutput(Value memref) { buffers[intern(memref)].isOutput = true; }
+   };
+   
+   // The streamed (innermost) loop of a nest, and the enclosing loops above it.
+   static affine::AffineForOp
+   innermost(affine::AffineForOp nest, SmallVectorImpl<affine::AffineForOp> &outer)
+   {
+       affine::AffineForOp cur = nest;
+       while (true) {
+           affine::AffineForOp child;
+           for (Operation &op : cur.getBody()->without_terminator())
+               if (auto f = dyn_cast<affine::AffineForOp>(&op)) {
+                   child = f;
+                   break;
+               }
+           if (!child) return cur;
+           outer.push_back(cur);
+           cur = child;
+       }
+   }
+   
+   // Analyze one affine.load/store into a single flattened stream: the whole nest
+   // collapses onto ONE STRELA config (like the hand-written strela_mm). Base =
+   // the address with every IV pinned to its lower bound (a constant tap), stride
+   // = the innermost IV's element stride, length = the product of the trip counts.
+   // Row-major element strides of a (possibly multi-dimensional) memref.
+   static SmallVector<int64_t> rowMajorStrides(MemRefType mrt)
+   {
+       int64_t rank = mrt.getRank();
+       SmallVector<int64_t> s(rank, 1);
+       for (int64_t d = rank - 2; d >= 0; --d)
+           s[d] = s[d + 1] * mrt.getShape()[d + 1];
+       return s;
+   }
+   
+   static bool analyzeAccess(
+       Value memref,
+       AffineMap map,
+       ValueRange operands,
+       Value innerIV,
+       const DenseMap<Value, int64_t> &ivLower,
+       int64_t dispatchSize,
+       StringRef bufferName,
+       Stream &out)
+   {
+       auto mrt = dyn_cast<MemRefType>(memref.getType());
+       if (bufferName.empty() || !mrt
+           || (int64_t)map.getNumResults() != mrt.getRank())
+           return false;
+       // Flatten the (possibly multi-dimensional) access to one linear element
+       // offset row-major, so an N-d contiguous stream (e.g. an elementwise op
+       // over a 4-d NN tensor) becomes a single strided STRELA stream. Rank-1 is
+       // unchanged.
+       SmallVector<int64_t> rmStride = rowMajorStrides(mrt);
+       DenseMap<unsigned, int64_t> coeff;
+       int64_t cst = 0;
+       for (int64_t d = 0; d < mrt.getRank(); ++d) {
+           DenseMap<unsigned, int64_t> c2;
+           int64_t k2 = 0;
+           if (!affineCoeffs(map.getResult(d), c2, k2)) return false;
+           for (auto &kv : c2) coeff[kv.first] += rmStride[d] * kv.second;
+           cst += rmStride[d] * k2;
+       }
+   
+       int64_t innerCoeff = 0, baseElem = cst;
+       for (auto &kv : coeff) {
+           Value v = operands[kv.first];
+           if (v == innerIV) innerCoeff = kv.second;
+           auto it = ivLower.find(v);
+           if (it != ivLower.end()) baseElem += kv.second * it->second;
+       }
+       out.global = bufferName.str();
+       out.baseExpr = std::to_string(baseElem);
+       out.strideBytes = innerCoeff * ELEM_BYTES;
+       out.sizeElems = dispatchSize;
+       return true;
+   }
+   
+   // Reduction variant of analyzeAccess. The innermost IV is the reduction
+   // dimension: for a LOAD it sets the stream stride (its coefficient) and size =
+   // its trip count K; a STORE emits the single reduction result (size 1). Every
+   // OUTER induction variable stays SYMBOLIC — its contribution becomes a `+
+   // coeff*name` term in baseExpr — so the driver recomputes the stream base each
+   // CPU-orchestrated iteration (one dot product per output element). `outerName`
+   // maps an outer IV to its C loop variable; any other IV is pinned to its lower
+   // bound.
+   static bool analyzeReductionAccess(
+       Value memref,
+       AffineMap map,
+       ValueRange operands,
+       Value innerIV,
+       int64_t innerTrip,
+       const DenseMap<Value, std::string> &outerName,
+       const DenseMap<Value, int64_t> &ivLower,
+       StringRef bufferName,
+       bool reductionResult,
+       Stream &out)
+   {
+       auto mrt = dyn_cast<MemRefType>(memref.getType());
+       if (bufferName.empty() || !mrt
+           || (int64_t)map.getNumResults() != mrt.getRank())
+           return false;
+       SmallVector<int64_t> rmStride = rowMajorStrides(mrt);
+       DenseMap<unsigned, int64_t> coeff;
+       int64_t cst = 0;
+       for (int64_t d = 0; d < mrt.getRank(); ++d) {
+           DenseMap<unsigned, int64_t> c2;
+           int64_t k2 = 0;
+           if (!affineCoeffs(map.getResult(d), c2, k2)) return false;
+           for (auto &kv : c2) coeff[kv.first] += rmStride[d] * kv.second;
+           cst += rmStride[d] * k2;
+       }
+       int64_t innerCoeff = 0, baseConst = cst;
+       std::string expr;
+       for (auto &kv : coeff) {
+           Value v = operands[kv.first];
+           int64_t c = kv.second;
+           if (v == innerIV) {
+               innerCoeff = c;
+               // The stream starts at the inner loop's LOWER BOUND, so fold that
+               // offset into the base (0 for a 0-based reduction; e.g. +1 for a
+               // conv's `1..N-1` loop).
+               if (auto itl = ivLower.find(v); itl != ivLower.end())
+                   baseConst += c * itl->second;
+               continue;
+           }
+           auto itn = outerName.find(v);
+           if (itn != outerName.end()) {
+               if (c) expr += " + " + std::to_string(c) + "*" + itn->second;
+           } else if (auto itl = ivLower.find(v); itl != ivLower.end()) {
+               baseConst += c * itl->second;
+           }
+       }
+       out.global = bufferName.str();
+       out.baseExpr = std::to_string(baseConst) + expr; // e.g. "0 + 60*o0 + 1*o1"
+       // A reduction RESULT is a single accumulated value per outer iteration;
+       // every other stream (loads, and elementwise stores) walks the inner loop:
+       // `innerTrip` elements at the inner-IV stride.
+       out.strideBytes = reductionResult ? ELEM_BYTES : innerCoeff * ELEM_BYTES;
+       out.sizeElems = reductionResult ? 1 : innerTrip;
+       return true;
+   }
+   
+   // Is the store's flattened access a DENSE contiguous tiling over the nest? True
+   // when, ordering loops innermost→outer, each loop's index coefficient equals
+   // the running product of inner trip counts (row-major dense). A 2-D interior
+   // (e.g. a conv writing `out[i*W + j]` with j spanning only W-2 of the W
+   // columns) is NOT dense — a single 1-D stream would overwrite the skipped
+   // boundary columns, so such a nest must be CPU-orchestrated per outer iteration
+   // instead.
+   static bool storeIsDense(
+       affine::AffineStoreOp st,
+       ArrayRef<affine::AffineForOp> innerToOuter)
+   {
+       auto mrt = dyn_cast<MemRefType>(st.getMemRef().getType());
+       if (!mrt || (int64_t)st.getAffineMap().getNumResults() != mrt.getRank())
+           return false;
+       SmallVector<int64_t> rmStride = rowMajorStrides(mrt);
+       DenseMap<Value, int64_t> coeff;
+       ValueRange ops = st.getMapOperands();
+       for (int64_t d = 0; d < mrt.getRank(); ++d) {
+           DenseMap<unsigned, int64_t> c2;
+           int64_t k2 = 0;
+           if (!affineCoeffs(st.getAffineMap().getResult(d), c2, k2)) return false;
+           for (auto &kv : c2) coeff[ops[kv.first]] += rmStride[d] * kv.second;
+       }
+       int64_t expected = 1;
+       for (affine::AffineForOp L : innerToOuter) {
+           auto it = coeff.find(L.getInductionVar());
+           int64_t c = (it != coeff.end()) ? it->second : 0;
+           if (c != expected) return false;
+           expected *= L.getConstantUpperBound() - L.getConstantLowerBound();
+       }
+       return true;
+   }
+   
+   // Parse a mapper io_map.json into per-index input/output channel lists. Returns
+   // false if the file is absent/unreadable; the caller falls back to sequential.
+   static bool loadIoMap(
+       StringRef path,
+       SmallVectorImpl<int> &inCh,
+       SmallVectorImpl<int> &outCh)
+   {
+       auto buf = llvm::MemoryBuffer::getFile(path);
+       if (!buf) return false;
+       auto json = llvm::json::parse((*buf)->getBuffer());
+       if (!json) return false;
+       auto* root = json->getAsObject();
+       if (!root) return false;
+       auto channels = [&](StringRef section, SmallVectorImpl<int> &out) {
+           auto* sec = root->getObject(section);
+           if (!sec) return;
+           for (auto &kv : *sec) {
+               StringRef name = kv.first;
+               size_t p = 0;
+               while (p < name.size() && !llvm::isDigit(name[p])) ++p;
+               int idx = 0;
+               name.drop_front(p).getAsInteger(10, idx);
+               auto* e = kv.second.getAsObject();
+               int ch = e ? (int)e->getInteger("channel").value_or(-1) : -1;
+               while ((int)out.size() <= idx) out.push_back(-1);
+               out[idx] = ch;
+           }
+       };
+       channels("inputs", inCh);
+       channels("outputs", outCh);
+       return true;
+   }
+   
+   // Render an affine index (all IVs) to a flat C subscript for the reference. An
+   // N-d access is flattened row-major (sum_d stride[d]*result[d]); rank-1 reduces
+   // to the single result unchanged.
+   static std::string flatSubscript(
+       Value memref,
+       AffineMap map,
+       ValueRange operands,
+       const IVNames &names,
+       bool &failed)
+   {
+       auto mrt = dyn_cast<MemRefType>(memref.getType());
+       if (!mrt || (int64_t)map.getNumResults() != mrt.getRank()) {
+           failed = true;
+           return "0";
+       }
+       SmallVector<int64_t> rmStride = rowMajorStrides(mrt);
+       DenseMap<unsigned, int64_t> coeff;
+       int64_t cst = 0;
+       for (int64_t d = 0; d < mrt.getRank(); ++d) {
+           DenseMap<unsigned, int64_t> c2;
+           int64_t k2 = 0;
+           if (!affineCoeffs(map.getResult(d), c2, k2)) {
+               failed = true;
+               return "0";
+           }
+           for (auto &kv : c2) coeff[kv.first] += rmStride[d] * kv.second;
+           cst += rmStride[d] * k2;
+       }
+       return renderOffset(coeff, cst, operands, names);
+   }
+   
+   // Transliterate one op / a block to the C reference. A stream memref resolves
+   // to its buffer name via @p reg; a written buffer listed in @p golden is
+   // read/written as golden_<name> (so the reference chains through golden
+   // copies), otherwise the real array name.
+   // @p seq is a monotonic counter that makes each reduction's C accumulator name
+   // unique, so two reduction loops emitted at the SAME lexical scope (e.g. an x-
+   // and a w-remainder loop, both host-level = depth 0) don't redeclare `acc0_0`.
+   static void emitStmt(
+       Operation* op,
+       int depth,
+       IVNames &names,
+       DenseMap<Value, std::string> &env,
+       const BufferRegistry &reg,
+       const std::map<std::string, bool> &golden,
+       std::string &out,
+       bool &failed,
+       int &seq);
+   
+   static void emitBlock(
+       Block &blk,
+       int depth,
+       IVNames &names,
+       DenseMap<Value, std::string> &env,
+       const BufferRegistry &reg,
+       const std::map<std::string, bool> &golden,
+       std::string &out,
+       bool &failed,
+       int &seq)
+   {
+       for (Operation &op : blk)
+           if (!op.hasTrait<OpTrait::IsTerminator>())
+               emitStmt(&op, depth, names, env, reg, golden, out, failed, seq);
+   }
+   
+   static void emitStmt(
+       Operation* op,
+       int depth,
+       IVNames &names,
+       DenseMap<Value, std::string> &env,
+       const BufferRegistry &reg,
+       const std::map<std::string, bool> &golden,
+       std::string &out,
+       bool &failed,
+       int &seq)
+   {
+       std::string pad(2 * (depth + 1), ' ');
+       auto arr = [&](Value m) {
+           std::string nm = reg.lookup(m);
+           auto it = golden.find(nm);
+           return (it != golden.end() && it->second) ? "golden_" + nm : nm;
+       };
+       if (auto f = dyn_cast<affine::AffineForOp>(op)) {
+           if (!f.hasConstantLowerBound() || !f.hasConstantUpperBound()) {
+               failed = true;
+               return;
+           }
+           std::string cv = "i" + std::to_string(names.size());
+           // A loop that carries iter_args is a REDUCTION: each iter_arg becomes a
+           // C accumulator variable, initialised from the loop's init operand,
+           // updated from the affine.yield each iteration (emitBlock skips the
+           // terminator), and its final value bound to the loop RESULT so the
+           // enclosing store reads it.
+           unsigned nIter = f.getNumRegionIterArgs();
+           SmallVector<std::string> accVars;
+           if (nIter) {
+               int myId = seq++;
+               ValueRange inits = f.getInits();
+               for (unsigned k = 0; k < nIter; ++k) {
+                   std::string av =
+                       "acc" + std::to_string(myId) + "_" + std::to_string(k);
+                   accVars.push_back(av);
+                   auto it = env.find(inits[k]);
+                   out += pad + "int32_t " + av + " = "
+                          + (it != env.end() ? it->second : std::string("0"))
+                          + ";\n";
+                   env[f.getRegionIterArgs()[k]] = av;
+               }
+           }
+           out += pad + "for (int " + cv + " = "
+                  + std::to_string(f.getConstantLowerBound()) + "; " + cv + " < "
+                  + std::to_string(f.getConstantUpperBound()) + "; " + cv
+                  + " += " + std::to_string(f.getStepAsInt()) + ") {\n";
+           names[f.getInductionVar()] = cv;
+           emitBlock(
+               *f.getBody(),
+               depth + 1,
+               names,
+               env,
+               reg,
+               golden,
+               out,
+               failed,
+               seq);
+           if (nIter) {
+               auto yield =
+                   cast<affine::AffineYieldOp>(f.getBody()->getTerminator());
+               std::string pad2(2 * (depth + 2), ' ');
+               for (unsigned k = 0; k < nIter; ++k)
+                   out += pad2 + accVars[k] + " = " + env[yield.getOperand(k)]
+                          + ";\n";
+           }
+           names.erase(f.getInductionVar());
+           out += pad + "}\n";
+           for (unsigned k = 0; k < nIter; ++k) env[f.getResult(k)] = accVars[k];
+           return;
+       }
+       if (auto ld = dyn_cast<affine::AffineLoadOp>(op)) {
+           env[ld.getResult()] = arr(ld.getMemRef()) + "["
+                                 + flatSubscript(
+                                     ld.getMemRef(),
+                                     ld.getAffineMap(),
+                                     ld.getMapOperands(),
+                                     names,
+                                     failed)
+                                 + "]";
+           return;
+       }
+       if (auto st = dyn_cast<affine::AffineStoreOp>(op)) {
+           out += pad + arr(st.getMemRef()) + "["
+                  + flatSubscript(
+                      st.getMemRef(),
+                      st.getAffineMap(),
+                      st.getMapOperands(),
+                      names,
+                      failed)
+                  + "] = " + env[st.getValueToStore()] + ";\n";
+           return;
+       }
+       // memref.get_global only materialises an address: `arr()` resolves a buffer
+       // from its Value through the registry, so there is no C statement to emit.
+       // Outlined host stages re-materialise every global they touch at the top of
+       // their body, so without this the whole stage is untransliterable.
+       if (isa<memref::GetGlobalOp>(op)) return;
+       // memref.copy is a whole-buffer assignment — bufferization emits one
+       // wherever a tensor result aliases a buffer that is still live (the
+       // networks imported by src/tflite2linalg.py get them around their
+       // reshapes). Both operands are statically shaped and identically sized, so
+       // a flat element loop is exact.
+       if (auto cp = dyn_cast<mlir::memref::CopyOp>(op)) {
+           auto srcTy = dyn_cast<MemRefType>(cp.getSource().getType());
+           auto dstTy = dyn_cast<MemRefType>(cp.getTarget().getType());
+           if (!srcTy || !dstTy || !srcTy.hasStaticShape()
+               || !dstTy.hasStaticShape()
+               || srcTy.getNumElements() != dstTy.getNumElements()) {
+               op->emitWarning(
+                   "generate-cgra-driver: memref.copy with non-static or "
+                   "mismatched shapes has no C transliteration");
+               failed = true;
+               return;
+           }
+           std::string cv = "c" + std::to_string(seq++);
+           out += pad + "for (int " + cv + " = 0; " + cv + " < "
+                  + std::to_string(srcTy.getNumElements()) + "; " + cv + "++) "
+                  + arr(cp.getTarget()) + "[" + cv + "] = " + arr(cp.getSource())
+                  + "[" + cv + "];\n";
+           return;
+       }
+       APInt cst;
+       if (op->getNumResults() == 1
+           && matchPattern(op->getResult(0), m_ConstantInt(&cst))) {
+           env[op->getResult(0)] = std::to_string(cst.getSExtValue());
+           return;
+       }
+       if (auto sel = dyn_cast<mlir::arith::SelectOp>(op)) {
+           env[sel.getResult()] = "(" + env[sel.getCondition()] + " ? "
+                                  + env[sel.getTrueValue()] + " : "
+                                  + env[sel.getFalseValue()] + ")";
+           return;
+       }
+       if (auto cmp = dyn_cast<mlir::arith::CmpIOp>(op)) {
+           const char* o = "==";
+           switch (cmp.getPredicate()) {
+           case mlir::arith::CmpIPredicate::slt:
+           case mlir::arith::CmpIPredicate::ult: o = "<"; break;
+           case mlir::arith::CmpIPredicate::sle:
+           case mlir::arith::CmpIPredicate::ule: o = "<="; break;
+           case mlir::arith::CmpIPredicate::sgt:
+           case mlir::arith::CmpIPredicate::ugt: o = ">"; break;
+           case mlir::arith::CmpIPredicate::sge:
+           case mlir::arith::CmpIPredicate::uge: o = ">="; break;
+           case mlir::arith::CmpIPredicate::ne: o = "!="; break;
+           case mlir::arith::CmpIPredicate::eq: o = "=="; break;
+           }
+           env[cmp.getResult()] =
+               "(" + env[cmp.getLhs()] + " " + o + " " + env[cmp.getRhs()] + ")";
+           return;
+       }
+       // arith.extui widens an i1 (a compare result, already 0/1 in C) or a byte
+       // to i32 — identity in the int32_t value model.
+       if (auto ext = dyn_cast<mlir::arith::ExtUIOp>(op)) {
+           env[ext.getResult()] = env[ext.getIn()];
+           return;
+       }
+       // arith.index_cast on a loop IV (index -> i32) is that loop's C variable;
+       // on any other value it's an identity in the int32_t model. Lets input-init
+       // loops that fill arrays from `i*N + j` (the PolyBench init_array) be
+       // transliterated.
+       if (isa<mlir::arith::IndexCastOp, mlir::arith::IndexCastUIOp>(op)) {
+           mlir::Value in = op->getOperand(0);
+           auto it = names.find(in);
+           env[op->getResult(0)] = (it != names.end()) ? it->second : env[in];
+           return;
+       }
+       // arith.shrui is a *logical* shift — cast to unsigned so the sign bit does
+       // not propagate (the value model is int32_t). The rest map to plain C
+       // operators.
+       if (auto shru = dyn_cast<mlir::arith::ShRUIOp>(op)) {
+           env[shru.getResult()] = "((int32_t)((uint32_t)" + env[shru.getLhs()]
+                                   + " >> " + env[shru.getRhs()] + "))";
+           return;
+       }
+       StringRef nm = op->getName().getStringRef();
+       const char* bo = llvm::StringSwitch<const char*>(nm)
+                            .Case("arith.muli", "*")
+                            .Case("arith.addi", "+")
+                            .Case("arith.subi", "-")
+                            .Case("arith.andi", "&")
+                            .Case("arith.ori", "|")
+                            .Case("arith.xori", "^")
+                            .Case("arith.shli", "<<")
+                            .Case("arith.shrsi", ">>")
+                            .Case("arith.divsi", "/")
+                            .Case("arith.remsi", "%")
+                            .Default(nullptr);
+       if (bo && op->getNumOperands() == 2 && op->getNumResults() == 1) {
+           env[op->getResult(0)] = "(" + env[op->getOperand(0)] + " " + bo + " "
+                                   + env[op->getOperand(1)] + ")";
+           return;
+       }
+       // Name the op: the module-level "cannot transliterate reference" error
+       // alone says nothing about WHICH host op the software reference tripped
+       // over.
+       op->emitWarning(
+           "generate-cgra-driver: no C transliteration for '" + nm.str()
+           + "' in the host reference");
+       failed = true;
+   }
+   
+   // Emit {main.c, dataset.h} for a globals-based kernel. Returns failure (after
+   // emitting a diagnostic on @p module) on an unsupported access or op.
+   static LogicalResult emit(
+       ModuleOp module,
+       StringRef kernelName,
+       StringRef iomapPrefix,
+       std::string &mainOut,
+       std::string &dsOut,
+       unsigned interleavedKB)
+   {
+       std::string K = kernelName.str();
+   
+       // One compute nest per cgra.deploy, in program order (module-walk order,
+       // which follows the deploys' order in the host function). If the loops were
+       // not wrapped (raw pre-annotate IR), fall back to the top-level compute
+       // nests.
+       SmallVector<affine::AffineForOp> nests;
+       module.walk([&](cgra::DeployOp dep) {
+           for (Operation &op : dep.getBody().front().without_terminator())
+               if (auto f = dyn_cast<affine::AffineForOp>(&op)) {
+                   nests.push_back(f);
+                   break;
+               }
+       });
+       if (nests.empty()) {
+           auto isComputeNest = [](affine::AffineForOp f) {
+               bool load = false, store = false;
+               f.walk([&](affine::AffineLoadOp) { load = true; });
+               f.walk([&](affine::AffineStoreOp) { store = true; });
+               return load && store;
+           };
+           module.walk([&](affine::AffineForOp f) {
+               if (!f->getParentOfType<affine::AffineForOp>() && isComputeNest(f))
+                   nests.push_back(f);
+           });
+       }
+       if (nests.empty())
+           return module.emitError(
+               "generate-cgra-driver: no compute loop-nests found");
+   
+       // Buffer registry: every stream — weight globals, alloc intermediates, and
+       // the input argument — gets a driver-visible C array. Pre-fill each
+       // global's initial data, then intern every load/store memref (nests first,
+       // in program order, for stable buf0/buf1/… names) and mark the written ones
+       // as outputs.
+       BufferRegistry reg;
+       module.walk([&](memref::GlobalOp g) {
+           if (auto v = g.getInitialValue())
+               reg.globalData[g.getSymName()] = dyn_cast<ElementsAttr>(*v);
+       });
+       auto registerStreams = [&](Operation* root) {
+           root->walk([&](Operation* op) {
+               if (auto ld = dyn_cast<affine::AffineLoadOp>(op))
+                   reg.intern(ld.getMemRef());
+               else if (auto st = dyn_cast<affine::AffineStoreOp>(op))
+                   reg.markOutput(st.getMemRef());
+           });
+       };
+       for (affine::AffineForOp n : nests) registerStreams(n);
+       // A buffer is a FINAL output if no later nest reads it: those are the
+       // network's results, and the only ones worth snapshotting for the
+       // comparison. An intermediate is read by the nest after it, so it is
+       // excluded — an error in one still surfaces, because it propagates into
+       // whatever is computed from it.
+       DenseMap<StringRef, int> lastWrite, lastRead;
+       for (auto [ni, n] : llvm::enumerate(nests))
+           n.getOperation()->walk([&, ni = ni](Operation* op) {
+               if (auto ld = dyn_cast<affine::AffineLoadOp>(op)) {
+                   std::string nm = reg.lookup(ld.getMemRef());
+                   if (!nm.empty()) lastRead[reg.buffers[nm].name] = (int)ni;
+               } else if (auto st = dyn_cast<affine::AffineStoreOp>(op)) {
+                   std::string nm = reg.lookup(st.getMemRef());
+                   if (!nm.empty()) lastWrite[reg.buffers[nm].name] = (int)ni;
+               }
+           });
+       // A slot --pack-cgra-buffers created holds several unrelated intermediates
+       // over the run, so its final contents are whatever the last occupant left
+       // behind — never a result, however the ordering rule below reads. Without
+       // this a pooled slot classifies as a final output (a pool IS written last,
+       // since it is written and read cyclically), and tiny_kws mirrored 78.5 KB
+       // of scratch into .bss: golden___cgra_shared13 (streamed in 16 times, out
+       // 12) and golden___cgra_shared16 (a padded conv input), while the network's
+       // actual 12-element result got no golden at all.
+       DenseSet<StringRef> pooled;
+       module.walk([&](memref::GlobalOp g) {
+           if (g->hasAttr("cgra.pooled")) pooled.insert(g.getSymName());
+       });
+       std::set<std::string> finalOuts;
+       for (auto &kv : reg.buffers)
+           if (kv.second.isOutput && !pooled.contains(kv.first)) {
+               auto w = lastWrite.find(kv.first), r = lastRead.find(kv.first);
+               if (w != lastWrite.end()
+                   && (r == lastRead.end() || r->second <= w->second))
+                   finalOuts.insert(kv.first);
+           }
+       // Degenerate case (everything is read again, or every candidate was
+       // pooled): snapshot the LAST-written buffer rather than checking nothing —
+       // and rather than the former "snapshot them all", which reintroduces
+       // exactly the .bss blow-up this classification exists to avoid.
+       if (finalOuts.empty()) {
+           StringRef best;
+           int bestIdx = -1;
+           for (auto &kv : lastWrite)
+               if (kv.second > bestIdx && !pooled.contains(kv.first)
+                   && reg.buffers.count(kv.first.str())
+                   && reg.buffers[kv.first.str()].isOutput) {
+                   bestIdx = kv.second;
+                   best = kv.first;
+               }
+           if (!best.empty()) finalOuts.insert(best.str());
+       }
+       registerStreams(module); // any host-level (scalar tail) buffers too
+       // The software reference used to chain through a golden_<name> copy of
+       // EVERY written buffer, which kept it independent of the fabric but
+       // duplicated the whole intermediate set: 730 KB of .bss for residual,
+       // against 416 KB of ram1. It now runs on the REAL buffers, and only the
+       // network's FINAL outputs are snapshotted for the comparison. Independence
+       // is preserved by restoring the buffers to their initial (zero) state
+       // between the reference and the fabric — which is exactly the state they
+       // start in, since every intermediate is declared
+       // `= {0}` — so the fabric recomputes from the same inputs rather than
+       // reading anything the reference left behind.
+       std::map<std::string, bool> golden;
+       for (auto &kv : reg.buffers) golden[kv.first] = false;
+   
+       // Per-nest config analysis (all IVs pinned to lower bound → constant base).
+       SmallVector<ConfigPass, 0> passes; // 0 inline: ConfigPass is large (>256 B)
+       for (affine::AffineForOp n : nests) {
+           SmallVector<affine::AffineForOp> outer;
+           affine::AffineForOp inner = innermost(n, outer);
+           DenseMap<Value, int64_t> ivLower;
+           int64_t dispatchSize = 1;
+           auto addLoop = [&](affine::AffineForOp o) -> bool {
+               if (!o.hasConstantLowerBound() || !o.hasConstantUpperBound())
+                   return false;
+               ivLower[o.getInductionVar()] = o.getConstantLowerBound();
+               dispatchSize *=
+                   o.getConstantUpperBound() - o.getConstantLowerBound();
+               return true;
+           };
+           for (auto o : outer) addLoop(o);
+           addLoop(inner);
+   
+           ConfigPass cp;
+           cp.nest = n;
+           // Fabric vs CPU: the shared predicate --export-loop-dfg also uses, so
+           // the DFG indices line up with the fabric config indices. A
+           // reduction/conv → CPU.
+           cp.onFabric = cgra::isFabricStreamable(n);
+   
+           if (cp.onFabric) {
+               Value innerIV = inner.getInductionVar();
+               // Orchestration descends to the innermost contiguous run, so a
+               // quantized im2col gather dispatches 2 elements at a time (qconv:
+               // 144 dispatches, 78.6% of its CGRA region). Should stop at the
+               // work-per-dispatch threshold instead — docs/TODO.md C5 item 2. The
+               // nest is CPU-ORCHESTRATED (one fabric run per outer-loop
+               // iteration) when either (a) it is a REDUCTION — the inner IV never
+               // indexes a store, so the inner loop accumulates on the FU — or (b)
+               // its store is not a dense contiguous tiling (a 2-D interior with
+               // skipped boundary columns), which a single 1-D stream cannot
+               // address. Otherwise one flat stream covers the nest.
+               bool innerInStore = false;
+               n.walk([&](affine::AffineStoreOp st) {
+                   for (Value o : st.getMapOperands())
+                       if (o == innerIV) innerInStore = true;
+               });
+               cp.isReduction = !innerInStore && !outer.empty();
+   
+               bool dense = true;
+               if (!cp.isReduction && !outer.empty()) {
+                   SmallVector<affine::AffineForOp> innerToOuter;
+                   innerToOuter.push_back(inner);
+                   for (affine::AffineForOp o : llvm::reverse(outer))
+                       innerToOuter.push_back(o);
+                   n.walk([&](affine::AffineStoreOp st) {
+                       if (!storeIsDense(st, innerToOuter)) dense = false;
+                   });
+               }
+               bool needsOrch = cp.isReduction || (!outer.empty() && !dense);
+   
+               // …and also when an INPUT is shorter than the flat dispatch. The
+               // decision above looks only at the store, so a dense-output nest
+               // took the single-dispatch path no matter what it read. But the
+               // descriptor is 1-D and `input_memory_node.sv` STOPS at
+               // input_size_i — it does not wrap — so the driver sized such a
+               // stream to the whole dispatch and the node read straight past the
+               // array: a per-channel bias of 8 values was streamed as 3200 bytes,
+               // feeding the fabric whatever sat next in memory. Walking the outer
+               // loops on the CPU and re-arming per iteration sizes it to the
+               // inner trip instead, which is exactly why the same shape works in
+               // gemver.
+               //
+               // The comparison must be in BYTES OF ADDRESS SPAN, not in elements.
+               // The node advances its offset by `strideBytes` per element, so
+               // what it actually walks is `sizeElems * strideBytes`; an
+               // element-count test passes a stream that reads every 64th word of
+               // a 4096-word array and therefore runs 64x past its end. That is
+               // exactly what ten tiny_kws configurations did — a convolution
+               // re-reading its whole weight tile once per output position, 1 MiB
+               // of reads from a 16 KB array — and since a node that walks off the
+               // end never raises EXEC_DONE, each one hung its dispatch.
+               if (!needsOrch && !outer.empty()) {
+                   int64_t flat = inner.getConstantUpperBound()
+                                  - inner.getConstantLowerBound();
+                   for (affine::AffineForOp o : outer)
+                       flat *=
+                           o.getConstantUpperBound() - o.getConstantLowerBound();
+                   n.walk([&](affine::AffineLoadOp ld) {
+                       auto mrt = dyn_cast<MemRefType>(ld.getMemRef().getType());
+                       if (!mrt || !mrt.hasStaticShape()) return;
+                       int64_t e = 1;
+                       for (int64_t d : mrt.getShape()) e *= d;
+                       Stream probe;
+                       if (!analyzeAccess(
+                               ld.getMemRef(),
+                               ld.getAffineMap(),
+                               ld.getMapOperands(),
+                               innerIV,
+                               ivLower,
+                               flat,
+                               reg.lookup(ld.getMemRef()),
+                               probe))
+                           return;
+                       int64_t span = probe.sizeElems * probe.strideBytes;
+                       // ...and a span the 16-bit size/stride registers cannot
+                       // hold has to be orchestrated too, however well it fits its
+                       // array: one dispatch can only address 65535 bytes from its
+                       // base (see checkNodeFields).
+                       if (span > e * ELEM_BYTES || span > 0xFFFF
+                           || probe.strideBytes > 0xFFFF)
+                           needsOrch = true;
+                   });
+               }
+   
+               if (needsOrch) {
+                   int64_t K = inner.getConstantUpperBound()
+                               - inner.getConstantLowerBound();
+                   DenseMap<Value, std::string> outerName;
+                   for (auto [idx, o] : llvm::enumerate(outer)) {
+                       std::string nm = "o" + std::to_string(idx);
+                       outerName[o.getInductionVar()] = nm;
+                       cp.outer.push_back(
+                           {nm,
+                            o.getConstantLowerBound(),
+                            o.getConstantUpperBound()});
+                   }
+                   // Loads walk the inner loop (K elements at the inner-IV
+                   // stride).
+                   for (Operation &op : inner.getBody()->without_terminator())
+                       if (auto ld = dyn_cast<affine::AffineLoadOp>(&op)) {
+                           Stream s;
+                           if (!analyzeReductionAccess(
+                                   ld.getMemRef(),
+                                   ld.getAffineMap(),
+                                   ld.getMapOperands(),
+                                   innerIV,
+                                   K,
+                                   outerName,
+                                   ivLower,
+                                   reg.lookup(ld.getMemRef()),
+                                   /*reductionResult=*/false,
+                                   s))
+                               return ld.emitError(
+                                   "generate-cgra-driver: orchestrated nest has "
+                                   "an "
+                                   "unsupported load access");
+                           cp.inputs.push_back(s);
+                       }
+                   // A reduction store is 1 result per outer iteration; an
+                   // elementwise store walks the inner loop like a load.
+                   SmallVector<affine::AffineStoreOp> stores;
+                   n.walk([&](affine::AffineStoreOp st) { stores.push_back(st); });
+                   for (auto st : stores) {
+                       Stream s;
+                       if (!analyzeReductionAccess(
+                               st.getMemRef(),
+                               st.getAffineMap(),
+                               st.getMapOperands(),
+                               innerIV,
+                               K,
+                               outerName,
+                               ivLower,
+                               reg.lookup(st.getMemRef()),
+                               /*reductionResult=*/cp.isReduction,
+                               s))
+                           return st.emitError(
+                               "generate-cgra-driver: orchestrated nest has an "
+                               "unsupported store access");
+                       cp.outputs.push_back(s);
+                   }
+               } else {
+                   for (Operation &op : inner.getBody()->without_terminator()) {
+                       Stream s;
+                       if (auto ld = dyn_cast<affine::AffineLoadOp>(&op)) {
+                           if (!analyzeAccess(
+                                   ld.getMemRef(),
+                                   ld.getAffineMap(),
+                                   ld.getMapOperands(),
+                                   innerIV,
+                                   ivLower,
+                                   dispatchSize,
+                                   reg.lookup(ld.getMemRef()),
+                                   s))
+                               return ld.emitError(
+                                   "generate-cgra-driver: streamable nest has an "
+                                   "unsupported load access");
+                           cp.inputs.push_back(s);
+                       } else if (auto st = dyn_cast<affine::AffineStoreOp>(&op)) {
+                           if (!analyzeAccess(
+                                   st.getMemRef(),
+                                   st.getAffineMap(),
+                                   st.getMapOperands(),
+                                   innerIV,
+                                   ivLower,
+                                   dispatchSize,
+                                   reg.lookup(st.getMemRef()),
+                                   s))
+                               return st.emitError(
+                                   "generate-cgra-driver: streamable nest has an "
+                                   "unsupported store access");
+                           cp.outputs.push_back(s);
+                       }
+                   }
+               }
+           }
+           passes.push_back(std::move(cp));
+       }
+   
+       // The outlined host segments (main_init/_stage/_post) are CALLED with
+       // global pointers, so every global they take must be DECLARED in dataset.h
+       // — even one the fabric never streams. That case is real: after
+       // --conv-to-im2col the gather stays on the CPU, so `in`/`wgt` are host-only
+       // and were never interned, and the emitted call referenced undeclared
+       // symbols. Register them here, BEFORE the dataset text is assembled below
+       // (interning later would be too late).
+       if (!nests.empty())
+           if (auto hostFn =
+                   nests.front().getOperation()->getParentOfType<func::FuncOp>())
+               for (Operation &op : hostFn.getBody().front())
+                   if (auto call = dyn_cast<func::CallOp>(&op))
+                       for (Value v : call.getArgOperands())
+                           // EVERY memref a host segment is called with, not only
+                           // the global-backed ones: the software reference may
+                           // have to CALL that segment (when its body has no C
+                           // rendering), and then every argument needs a declared
+                           // buffer. Interning it later — while building the
+                           // reference — is too late, because dataset.h has
+                           // already been emitted and the driver ends up referring
+                           // to an array that was never declared.
+                           if (isa<MemRefType>(v.getType())) reg.intern(v);
+       // …and with `--outline-cgra-deploy=drop-host=1` there IS no host function
+       // left to scan: it was erased and the driver supplies main() itself. The
+       // segment calls are then reconstructed from each outlined function's
+       // `cgra.arg_globals` attribute, so a global named ONLY there (the last
+       // dense layer's weights, a host-only bias) never got interned and main.c
+       // referenced an undeclared symbol. Register every name those attributes
+       // mention.
+       {
+           DenseMap<StringRef, memref::GlobalOp> byName;
+           module.walk([&](memref::GlobalOp g) { byName[g.getSymName()] = g; });
+           module.walk([&](func::FuncOp f) {
+               auto ga = f->getAttrOfType<ArrayAttr>("cgra.arg_globals");
+               if (!ga) return;
+               for (Attribute a : ga) {
+                   StringRef nm = cast<StringAttr>(a).getValue();
+                   if (nm.empty() || reg.buffers.count(nm.str())) continue;
+                   auto it = byName.find(nm);
+                   if (it == byName.end()) continue;
+                   auto mrt = dyn_cast<MemRefType>(it->second.getType());
+                   if (!mrt || !mrt.hasStaticShape()) continue;
+                   int64_t size = 1;
+                   for (int64_t d : mrt.getShape()) size *= d;
+                   ElementsAttr data;
+                   if (auto v = it->second.getInitialValue())
+                       data = dyn_cast<ElementsAttr>(*v);
+                   reg.buffers[nm.str()] = {nm.str(), size, data, false};
+               }
+           });
+       }
+   
+       // dataset.h — every buffer (globals seeded with data, alloc intermediates
+       // and the input arg zeroed) + a golden buffer for each written one.
+       // --- int8 constant storage
+       // ------------------------------------------------ A quantized weight table
+       // is int8 DATA that --widen-storage-to-i32 stored one value per 32-bit
+       // word, so three of every four bytes in dataset.h are sign padding. Over a
+       // whole network that is most of the image: tiny_kws' constants are 94.7 KB
+       // of which ~71 KB is padding, and it misses the 928 KB budget by 67.
+       //
+       // Keep such a table as `int8_t` and UNPACK it into one shared i32 arena
+       // right before the config that streams it. The fabric memory node reads
+       // 32-bit words, so it cannot walk the packed form — but only ONE config's
+       // worth has to exist expanded at a time, and the arena is sized for the
+       // worst config. Read-only buffers only (an output would have to be packed
+       // back), and only when every value really fits in a byte. A buffer any
+       // OUTLINED HOST STAGE touches must stay 32-bit. The stage is compiled from
+       // the IR, where the parameter is a `memref<...xi32>`, and it is called
+       // through a bare pointer — so handing it a packed int8 array makes it index
+       // 4x past the end. `im2col_buf` is exactly that trap: it carries a splat
+       // zero initialiser and no store from any NEST (the gather lives in a
+       // stage), so it looked like a read-only constant and got packed, and
+       // main_stage22's zero-fill then wrote 288 KB into a 72 KB array. Only a
+       // buffer the fabric alone streams can be packed, because only that one is
+       // expanded into the arena before its dispatch.
+       DenseSet<StringRef> stageTouched;
+       module.walk([&](func::FuncOp f) {
+           if (auto ga = f->getAttrOfType<ArrayAttr>("cgra.arg_globals"))
+               for (Attribute a : ga)
+                   stageTouched.insert(cast<StringAttr>(a).getValue());
+       });
+       std::set<std::string> packedI8;
+       std::map<std::string, int64_t> bufSize;
+       for (auto &kv : reg.buffers) {
+           Buffer &b = kv.second;
+           bufSize[b.name] = b.size;
+           if (!b.data || b.isOutput || stageTouched.contains(b.name)) continue;
+           bool fits = true;
+           for (APInt v : b.data.getValues<APInt>()) {
+               int64_t x = v.getSExtValue();
+               if (x < -128 || x > 127) {
+                   fits = false;
+                   break;
+               }
+           }
+           if (fits) packedI8.insert(b.name);
+       }
+       // Arena = the worst config's total packed input elements. Each such input
+       // is expanded at its own offset, so a config streaming two packed tables
+       // works.
+       int64_t arenaElems = 0;
+       for (ConfigPass &cp : passes) {
+           if (!cp.onFabric) continue;
+           int64_t need = 0;
+           for (Stream &st : cp.inputs)
+               if (packedI8.count(st.global)) need += bufSize[st.global];
+           arenaElems = std::max(arenaElems, need);
+       }
+       // Only pay for this when it matters. The unpack is real CPU work before
+       // every config that streams a table, so a kernel whose data already fits
+       // should not carry it: pack only once the i32 dataset would overflow the
+       // interleaved bank (the point at which buffers start spilling to .bss and
+       // the link gets tight).
+       int64_t datasetBytes = 0;
+       for (auto &kv : reg.buffers) datasetBytes += kv.second.size * 4;
+       if (arenaElems == 0 || datasetBytes <= (int64_t)interleavedKB * 1024) {
+           packedI8.clear(); // nothing to gain; keep the plain i32 arrays
+           arenaElems = 0;
+       }
+   
+       std::string ds = std::string("// dataset.h ") + EMDASH +
+         " generated by the generate-cgra-driver pass (globals / multi-config).\n"
+         "#include <stdint.h>\n\n";
+       // `.xheep_data_interleaved` maps to ram2 (512 KB in link.ld). The section
+       // is a BANDWIDTH placement — X-HEEP's interleaved banks — not an
+       // addressability requirement: ram0/ram1/ram2 are one flat address space and
+       // STRELA takes raw pointers, so a buffer in ordinary .bss is still
+       // streamable, just without the bank parallelism. A whole quantized network
+       // does not fit 512 KB (residual asks 769 KB), so fill the interleaved bank
+       // up to a budget and let the rest land in .bss. Biggest buffers first,
+       // since those are the ones whose bandwidth matters. Two things share
+       // .data_interleaved with the stream buffers and must be charged to the same
+       // budget, or the section overruns ram2 by exactly their size: the unpack
+       // arena, and — the one that is easy to miss — EVERY BITSTREAM.
+       // map2bitstream emits each `<K>_<N>_kernel[CONFIG_SIZE]` into that section,
+       // and CONFIG_SIZE is NPE*5 words = 320 B on the deployed 4x4 fabric, so a
+       // 125-config network quietly spends 39 KB there before a single buffer
+       // lands.
+       int64_t bitstreamBytes = 0;
+       for (ConfigPass &cp : passes)
+           if (cp.onFabric) bitstreamBytes += 320;
+       int64_t interleavedLeft =
+           (int64_t)interleavedKB * 1024 - arenaElems * 4 - bitstreamBytes;
+       SmallVector<Buffer*> bySize;
+       for (auto &kv : reg.buffers) bySize.push_back(&kv.second);
+       llvm::stable_sort(bySize, [](Buffer* a, Buffer* b) {
+           return a->size > b->size;
+       });
+       DenseSet<StringRef> interleaved;
+       for (Buffer* b : bySize) {
+           int64_t bytes = b->size * 4;
+           if (bytes <= interleavedLeft) {
+               interleaved.insert(b->name);
+               interleavedLeft -= bytes;
+           }
+       }
+   
+       for (auto &kv : reg.buffers) {
+           Buffer &b = kv.second;
+           // A packed table keeps its C symbol (so the software reference still
+           // reads `name[i]` and gets the same value — int8_t promotes to int) but
+           // occupies a quarter of the space. It is never interleaved: the fabric
+           // reads the arena, not this array.
+           bool packed = packedI8.count(b.name) != 0;
+           if (packed) {
+               // NOT `const`: link.ld maps .rodata into ram0, which is only 96 KB
+               // and shared with .text, whereas the space this packing frees is in
+               // ram1.
+               ds += "static int8_t " + b.name + "[" + std::to_string(b.size)
+                     + "] = {";
+           } else
+               ds +=
+                   "volatile int32_t " + b.name + "[" + std::to_string(b.size)
+                   + "]"
+                   + (interleaved.contains(b.name) ? " __attribute__((section(\"."
+                                                     "xheep_data_interleaved\")))"
+                                                   : "")
+                   + " = {";
+           if (b.data) {
+               bool first = true;
+               for (APInt v : b.data.getValues<APInt>()) {
+                   if (!first) ds += ", ";
+                   ds += std::to_string(v.getSExtValue());
+                   first = false;
+               }
+           } else
+               ds += "0";
+           ds += "};\n";
+       }
+       if (arenaElems)
+           ds +=
+               "// scratch the packed int8 tables are expanded into, one config "
+               "at a time\n"
+               "volatile int32_t __cgra_unpack["
+               + std::to_string(arenaElems)
+               + "] __attribute__((section(\".xheep_data_interleaved\")));\n";
+       for (auto &kv : reg.buffers)
+           if (finalOuts.count(kv.first))
+               ds += "int32_t golden_" + kv.first + "["
+                     + std::to_string(kv.second.size) + "];\n";
+       ds += "\n";
+   
+       // Constants are hoisted above the nests; seed them module-wide so the
+       // transliterators (reference and any CPU-run nest) can resolve their
+       // operands.
+       DenseMap<Value, std::string> constEnv;
+       module.walk([&](Operation* op) {
+           APInt c;
+           if (op->getNumResults() == 1
+               && matchPattern(op->getResult(0), m_ConstantInt(&c)))
+               constEnv[op->getResult(0)] = std::to_string(c.getSExtValue());
+       });
+   
+       // Software reference (every nest + any scalar tail over golden_<g>) and the
+       // same tail over the REAL globals (run on the CPU — the unroll leftover the
+       // fabric cannot stream). The tail = straight-line compute at the host top
+       // level.
+       std::string refBody, tailReal, initCode, refExterns;
+       bool refBad = false;
+       std::string ckSave, ckCmp, ckMid;
+       {
+           bool failed = false;
+           int refSeq = 0, tailSeq = 0, initSeq = 0;
+           func::FuncOp host =
+               nests.empty()
+                   ? func::FuncOp()
+                   : nests.front().getOperation()->getParentOfType<func::FuncOp>();
+           std::map<std::string, bool> noGolden;
+   
+           // Transliterate a called host segment's COMPUTE (main_stageK /
+           // main_post unroll-remainders) into the golden reference, in place. The
+           // callee takes the globals by argument, so alias its block-args to the
+           // global names for the transliteration, then clear them. Prints
+           // (llvm.*) and the return are skipped. Emit a host segment into the
+           // reference. Transliteration is tried FIRST, so kernels that already
+           // work are byte-for-byte unaffected; if the segment contains an op with
+           // no C rendering (residual's pad is a memref.subview) the partial
+           // output is discarded and the segment is CALLED instead. Calling is
+           // correct here because the reference computes on the REAL buffers, so
+           // the compiled segment does exactly the right thing.
+           auto callSegment = [&](func::CallOp c, func::FuncOp callee) {
+               SmallVector<std::string> proto, args;
+               bool ok = true;
+               for (Value v : c.getArgOperands()) {
+                   std::string ct = "int32_t";
+                   if (auto mrt = dyn_cast<MemRefType>(v.getType())) {
+                       std::string ets;
+                       llvm::raw_string_ostream(ets) << mrt.getElementType();
+                       ct = cType(ets).str();
+                   }
+                   proto.push_back(ct + " *");
+                   std::string nm = globalOf(v);
+                   if (nm.empty()) nm = reg.lookup(v);
+                   if (nm.empty())
+                       nm = reg.intern(
+                           v); // a host-local buffer the driver declares
+                   if (nm.empty()) ok = false;
+                   args.push_back(nm);
+               }
+               if (!ok) {
+                   c.emitError(
+                       "generate-cgra-driver: cannot name every argument of @")
+                       << callee.getName() << " for the software reference";
+                   refBad = true;
+                   return;
+               }
+               refExterns += "extern void " + callee.getName().str() + "("
+                             + join(proto, ", ") + ");\n";
+               refBody +=
+                   "  " + callee.getName().str() + "(" + join(args, ", ") + ");\n";
+           };
+   
+           auto emitCallee = [&](func::CallOp c) {
+               auto callee = dyn_cast_or_null<func::FuncOp>(
+                   SymbolTable::lookupNearestSymbolFrom(
+                       c.getOperation(),
+                       c.getCalleeAttr()));
+               if (!callee || callee.getBody().empty()) return;
+               SmallVector<Value> aliased;
+               for (auto [arg, opnd] :
+                    llvm::zip(callee.getArguments(), c.getArgOperands())) {
+                   std::string nm =
+                       globalOf(opnd); // resolves any get_global by symbol,
+                   if (nm.empty())
+                       nm = reg.lookup(
+                           opnd); // incl. hoisted copies the reg hasn't interned
+                   if (!nm.empty()) {
+                       reg.nameOf[arg] = nm;
+                       aliased.push_back(arg);
+                   }
+               }
+               IVNames names;
+               DenseMap<Value, std::string> env = constEnv;
+               std::string attempt;
+               bool attemptFailed = false;
+               for (Operation &op : callee.getBody().front()) {
+                   if (isa<func::ReturnOp>(op)
+                       || op.getName().getStringRef().starts_with("llvm."))
+                       continue;
+                   // Skip a RESULT-PRINT loop (an affine.for whose body calls
+                   // printf) — only the segment's COMPUTE (remainder reductions)
+                   // belongs in the golden.
+                   bool hasPrint = false;
+                   op.walk([&](Operation* o) {
+                       if (o->getName().getStringRef() == "llvm.call")
+                           hasPrint = true;
+                   });
+                   if (hasPrint) continue;
+                   emitStmt(
+                       &op,
+                       0,
+                       names,
+                       env,
+                       reg,
+                       golden,
+                       attempt,
+                       attemptFailed,
+                       refSeq);
+               }
+               for (Value a : aliased) reg.nameOf.erase(a);
+               // ALWAYS call the compiled segment rather than use the
+               // transliteration, even when the transliteration "succeeded".
+               // Transliterating is a second, independent implementation of the
+               // same code and it can be quietly wrong: residual_small's reference
+               // inlined one gather (main_stage37) instead of calling it and ended
+               // the run with a DIFFERENT im2col_buf from the fabric path, so the
+               // golden itself was wrong. The reference computes on the real
+               // buffers, so the compiled segment does exactly the right thing and
+               // there is nothing to gain from re-deriving it.
+               (void)attempt;
+               (void)attemptFailed;
+               callSegment(c, callee);
+           };
+   
+           // Walk the host body in PROGRAM ORDER so the golden runs the same
+           // sequence the driver does: each deploy's nest, and each inter-deploy
+           // host segment's compute at its true position (a matmul remainder must
+           // precede the nest that reads it). Same fallback as for the calls: with
+           // every deploy outlined into its own function there is no host body to
+           // walk, so the reference would consist of the FIRST nest only — a
+           // baseline that computes almost nothing, which is exactly how a
+           // 40-config network reported `whole cpu` LOWER than `deployed cpu` and
+           // then mismatched on everything downstream. Walk the module's functions
+           // instead, whose order is the program order.
+           size_t nestI = 0;
+           bool outlinedPerDeploy = true;
+           if (host)
+               for (Operation &op : host.getBody().front())
+                   if (isa<cgra::DeployOp>(op) && nests.size() > 1) {
+                       // more than one deploy in the host body => the classic
+                       // single-function shape
+                       unsigned c = 0;
+                       for (Operation &o2 : host.getBody().front())
+                           if (isa<cgra::DeployOp>(o2)) ++c;
+                       outlinedPerDeploy = (c < nests.size());
+                       break;
+                   }
+           if (host && outlinedPerDeploy && nests.size() > 1) {
+               // CALL the host segment rather than transliterating it. Now that
+               // the reference computes on the REAL buffers, the segment's
+               // compiled form does exactly the right thing — and it sidesteps the
+               // transliterator's limits (these segments contain the pad/crop as a
+               // memref.subview, which has no C rendering). The extern
+               // declarations are collected so they can be placed ahead of
+               // reference()'s definition.
+               auto emitFn = [&](func::FuncOp f) {
+                   bool unknown = false;
+                   auto ga = f->getAttrOfType<ArrayAttr>("cgra.arg_globals");
+                   SmallVector<std::string> proto, args;
+                   for (auto [i, t] : llvm::enumerate(f.getArgumentTypes())) {
+                       std::string ct = "int32_t";
+                       if (auto mrt = dyn_cast<MemRefType>(t)) {
+                           std::string ets;
+                           llvm::raw_string_ostream(ets) << mrt.getElementType();
+                           ct = cType(ets).str();
+                       }
+                       proto.push_back(ct + " *");
+                       std::string nm;
+                       if (ga && i < ga.size())
+                           nm = cast<StringAttr>(ga[i]).getValue().str();
+                       // NEVER paper over an unresolved argument with a null
+                       // pointer: the segment dereferences it and the core faults,
+                       // which presents as a run that prints its start-up banner
+                       // and then nothing at all — impossible to tell from "slow".
+                       // The usual cause is a STALE <K>_annotated.mlir made before
+                       // the outliner recorded cgra.arg_globals; a rebuilt
+                       // picea-opt does not invalidate that make rule.
+                       if (nm.empty()) {
+                           // A symbol-less argument is only fatal if the callee
+                           // actually reads or writes through it; re-materialising
+                           // the globals leaves many of these dead, and a dead
+                           // pointer may safely be null.
+                           if (!f.getArgument(i).use_empty()) unknown = true;
+                           nm = "0";
+                       }
+                       args.push_back(nm);
+                   }
+                   if (unknown) {
+                       f.emitError(
+                           "generate-cgra-driver: cannot synthesise a call to @")
+                           << f.getName()
+                           << ": missing cgra.arg_globals for some argument "
+                           << "(re-generate " << K
+                           << "_annotated.mlir with the current picea-opt)";
+                       refBad = true;
+                       return;
+                   }
+                   refExterns += "extern void " + f.getName().str() + "("
+                                 + join(proto, ", ") + ");\n";
+                   refBody +=
+                       "  " + f.getName().str() + "(" + join(args, ", ") + ");\n";
+               };
+               for (auto f : module.getOps<func::FuncOp>()) {
+                   if (f.isExternal()) continue;
+                   StringRef n = f.getName();
+                   if (n.ends_with("_init"))
+                       continue; // the driver calls it for real; the reference
+                                 // starts after it
+                   if (n.contains("_kernel")) {
+                       if (nestI < nests.size()) {
+                           IVNames names;
+                           DenseMap<Value, std::string> env = constEnv;
+                           emitStmt(
+                               nests[nestI].getOperation(),
+                               0,
+                               names,
+                               env,
+                               reg,
+                               golden,
+                               refBody,
+                               failed,
+                               refSeq);
+                       }
+                       ++nestI;
+                   } else if (n.contains("_stage") || n.ends_with("_post"))
+                       emitFn(f);
+               }
+           } else if (host) {
+               // A top-level scalar sequence (load, arith, store) is a BLOCK, not
+               // a statement: the loads and arith register their expressions and
+               // the store consumes them. These envs persist across the walk so a
+               // store can see operands produced by earlier top-level ops —
+               // building a fresh env per statement printed `a[8] = ;`.
+               DenseMap<Value, std::string> envRef = constEnv, envReal = constEnv;
+               for (Operation &op : host.getBody().front()) {
+                   if (isa<cgra::DeployOp>(op)) {
+                       if (nestI < nests.size()) {
+                           IVNames names;
+                           DenseMap<Value, std::string> env = constEnv;
+                           emitStmt(
+                               nests[nestI].getOperation(),
+                               0,
+                               names,
+                               env,
+                               reg,
+                               golden,
+                               refBody,
+                               failed,
+                               refSeq);
+                       }
+                       ++nestI;
+                   } else if (auto c = dyn_cast<func::CallOp>(&op)) {
+                       StringRef cal = c.getCallee();
+                       if (cal.contains("_stage") || cal.ends_with("_post"))
+                           emitCallee(c); // _init: golden is copied AFTER it runs,
+                                          // so skip
+                   } else if (
+                       isa<affine::AffineLoadOp, arith::ConstantOp>(&op)
+                       || op.getDialect()
+                              == op.getContext()->getLoadedDialect("arith")) {
+                       // Expression-producing op: register its value in BOTH envs,
+                       // emit nothing.
+                       IVNames n1, n2;
+                       std::string sink;
+                       emitStmt(
+                           &op,
+                           0,
+                           n1,
+                           envRef,
+                           reg,
+                           golden,
+                           sink,
+                           failed,
+                           refSeq);
+                       emitStmt(
+                           &op,
+                           0,
+                           n2,
+                           envReal,
+                           reg,
+                           noGolden,
+                           sink,
+                           failed,
+                           tailSeq);
+                   } else if (isa<affine::AffineStoreOp>(&op)) {
+                       // A statement OUTSIDE any loop — a scalar epilogue such as
+                       // `a[8] = a[8]*2`, or a scalar seed before the first
+                       // config. This branch used to be missing entirely: the walk
+                       // handled deploys, calls and affine.for and silently
+                       // ignored everything else, so such a statement vanished
+                       // from the generated driver — absent from reference() AND
+                       // from the CPU path — and the driver computed something the
+                       // source does not. The store is the statement; its operand
+                       // loads and arith are printed as its expression, exactly as
+                       // inside a nest.
+                       if (nestI == 0) {
+                           // Before any config: seeds the REAL globals, like an
+                           // input-init loop, so the reference must not repeat it.
+                           IVNames ni;
+                           emitStmt(
+                               &op,
+                               0,
+                               ni,
+                               envReal,
+                               reg,
+                               noGolden,
+                               initCode,
+                               failed,
+                               initSeq);
+                       } else {
+                           // After a config: host work the device also performs,
+                           // so it belongs in BOTH the reference and the
+                           // real-buffer tail the driver runs.
+                           IVNames n1;
+                           emitStmt(
+                               &op,
+                               0,
+                               n1,
+                               envRef,
+                               reg,
+                               golden,
+                               refBody,
+                               failed,
+                               refSeq);
+                           IVNames n2;
+                           emitStmt(
+                               &op,
+                               0,
+                               n2,
+                               envReal,
+                               reg,
+                               noGolden,
+                               tailReal,
+                               failed,
+                               tailSeq);
+                       }
+                   } else if (auto f = dyn_cast<affine::AffineForOp>(&op)) {
+                       // Inline (non-outlined) host loop: an iter_args remainder →
+                       // golden AND the real-globals tail (the driver runs it); a
+                       // pre-deploy plain loop → input-init on the real globals
+                       // (matmul data would otherwise stay 0).
+                       if (f.getNumRegionIterArgs() > 0) {
+                           IVNames n1;
+                           DenseMap<Value, std::string> e1 = constEnv;
+                           emitStmt(
+                               &op,
+                               0,
+                               n1,
+                               e1,
+                               reg,
+                               golden,
+                               refBody,
+                               failed,
+                               refSeq);
+                           IVNames n2;
+                           DenseMap<Value, std::string> e2 = constEnv;
+                           emitStmt(
+                               &op,
+                               0,
+                               n2,
+                               e2,
+                               reg,
+                               noGolden,
+                               tailReal,
+                               failed,
+                               tailSeq);
+                       } else {
+                           bool hasCall = false;
+                           f.walk([&](Operation* o) {
+                               if (o->getName().getStringRef() == "llvm.call")
+                                   hasCall = true;
+                           });
+                           if (!hasCall) {
+                               if (nestI == 0) {
+                                   // BEFORE any config: an input-init loop. It
+                                   // seeds the REAL globals, and since the
+                                   // reference computes on those too, it must not
+                                   // be repeated inside the reference itself.
+                                   IVNames ni;
+                                   DenseMap<Value, std::string> ei = constEnv;
+                                   emitStmt(
+                                       &op,
+                                       0,
+                                       ni,
+                                       ei,
+                                       reg,
+                                       noGolden,
+                                       initCode,
+                                       failed,
+                                       initSeq);
+                               } else {
+                                   // BETWEEN configs: a host nest the fabric does
+                                   // not run — a pure data movement such as the
+                                   // im2col gather (`--conv-to-im2col` leaves the
+                                   // gather on the CPU because it has no
+                                   // arithmetic). The DEVICE executes it as a CPU
+                                   // pass, so the reference MUST execute it too,
+                                   // at this exact position. Dropping it (the old
+                                   // `nestI == 0` gate emitted nothing here) left
+                                   // every depthwise convolution reading a stale
+                                   // im2col buffer, and the whole golden was wrong
+                                   // while looking perfectly plausible — tiny_kws'
+                                   // 12 logits came out -69, 7, -5 … instead of
+                                   // -15, -22, -55 …
+                                   IVNames ni;
+                                   DenseMap<Value, std::string> ei = constEnv;
+                                   emitStmt(
+                                       &op,
+                                       0,
+                                       ni,
+                                       ei,
+                                       reg,
+                                       golden,
+                                       refBody,
+                                       failed,
+                                       refSeq);
+                               }
+                           }
+                       }
+                   }
+               }
+           }
+           if (failed)
+               return module.emitError(
+                   "generate-cgra-driver: cannot transliterate reference");
+       }
+   
+       // The DEPLOYED work on the CPU: ONLY the fabric-offloaded nests,
+       // transliterated, so the cycle comparison isolates what actually runs on
+       // the fabric (vs its CGRA config cost) — excluding init, CPU-only nests,
+       // and remainders that run on the CPU in both versions. Operates on the
+       // golden copies (re-seeded before the real reference() runs), so it never
+       // disturbs the real fabric inputs.
+       std::string deployedBody;
+       {
+           bool f = false;
+           int s = 0;
+           for (ConfigPass &cp : passes)
+               if (cp.onFabric) {
+                   IVNames nm;
+                   DenseMap<Value, std::string> env = constEnv;
+                   emitStmt(
+                       cp.nest.getOperation(),
+                       0,
+                       nm,
+                       env,
+                       reg,
+                       golden,
+                       deployedBody,
+                       f,
+                       s);
+               }
+           if (f)
+               deployedBody.clear(); // fall back to no deployed-only timing if it
+                                     // can't map
+       }
+   
+       // main.c
+       std::string m;
+       m += (gSim ? "#define PRINTF_IN_SIM 1\n" : "");
+       if (!gGoldenHdr.empty())
+           m += "#include \"" + gGoldenHdr
+                + "\"   // x86 result of the untransformed kernel\n";
+       m += "// main.c - GR-HEEP / STRELA app generated by the "
+            "generate-cgra-driver pass.\n"
+            "// Runs one CGRA config per compute loop-nest, consecutively, in "
+            "place.\n"
+            "#include <stdio.h>\n#include <stdint.h>\n#include <stddef.h>\n"
+            "#include \"core_v_mini_mcu.h\"\n#include \"x-heep.h\"\n#include "
+            "\"hart.h\"\n"
+            "#include \"handler.h\"\n#include \"fast_intr_ctrl.h\"\n#include "
+            "\"fast_intr_ctrl_regs.h\"\n"
+            "#include \"mmio.h\"\n#include \"csr.h\"\n#include "
+            "\"csr_registers.h\"\n"
+            "#include \"gr_heep.h\"\n#include \"strela.h\"\n#include "
+            "\"strela_regs.h\"\n"
+            "#include \"kernels.h\"\n#include \"dataset.h\"\n\n";
+       size_t numFabric = 0;
+       for (ConfigPass &cp : passes)
+           if (cp.onFabric) ++numFabric;
+       for (size_t i = 0; i < numFabric; ++i)
+           m += "#include \"" + K + "_" + std::to_string(i) + "_kernel.h\"\n";
+       m += "\n";
+       if (refBad) return failure();
+       // Buffers the fabric must never modify: those no cgra.deploy writes. If one
+       // of them changes mid-sequence, a descriptor is pointing somewhere it
+       // should not.
+       std::set<std::string> fabricWritten;
+       for (auto &cpv : passes)
+           for (auto &o : cpv.outputs)
+               if (!o.global.empty()) fabricWritten.insert(o.global);
+       std::set<std::string> watched;
+       // Narrowed to the gather buffers: watching all 25 fabric-untouched buffers
+       // means 1000 checksum loops in the fabric phase, which dominates the
+       // simulation. These are the ones observed to be emptied. The per-config
+       // watch and the after-restore probe are left OFF: they did their job (they
+       // showed the gather buffers intact through all 40 configs, which is what
+       // pointed at the descriptor hoisting), and the statics they need push the
+       // image past the RISC-V gp-relative addressing window — the app then fails
+       // to link with "relocation truncated to fit: R_RISCV_GPREL_I". Re-enable by
+       // dropping the `false &&` when a similar question comes up. Watch every
+       // buffer small enough that the extra statics still fit the RISC-V
+       // gp-relative window. On a tiny kernel this says WHICH configuration first
+       // makes a buffer wrong — the difference between "config 0 computes badly"
+       // and "a later config clobbers it".
+       //
+       // `watch-buffers=0` turns this off. It is a DEBUGGING aid that costs
+       // measurable time in the timed region: the loops sit inside the
+       // `_cgra0.._cgra1` window
+       // ("whole cycles") but outside the per-config `_t0.._t1` windows
+       // ("deployed"), so they inflate the whole-kernel figure while leaving the
+       // fabric one clean. On tfm_mm_n16 (3 buffers x 256 elements x 2 configs)
+       // that is ~38k cycles: `whole` reads 46920 instead of 8887 for an unchanged
+       // kernel. A measurement build must not carry it, which is why MEASURE=1
+       // disables it in src/Makefile.
+       if (gSim && gWatchBuffers) {
+           int64_t tot = 0;
+           for (auto &kv : reg.buffers) tot += kv.second.size;
+           if (tot <= 4096)
+               for (auto &kv : reg.buffers)
+                   if (kv.second.size > 1) watched.insert(kv.first);
+       }
+       // The per-buffer checksum slots (sim only). Declared HERE, at file scope,
+       // and not where ckSave/ckCmp are built further down: that is after this
+       // point in the output, so a declaration written there never reached the
+       // file and every sim driver with a buffer failed to compile on an
+       // undeclared `_ck`. The count is just reg.buffers, which is already final.
+       {
+           int64_t tot = 0;
+           for (auto &kv : reg.buffers) tot += kv.second.size;
+           if (gSim && tot <= 65536)
+               // Forced out of the small-data section: gp-relative addressing
+               // reaches only
+               // +/-2 KB, and adding this array there pushes unrelated libc
+               // symbols out of range ("relocation truncated to fit:
+               // R_RISCV_GPREL_I").
+               m += "static uint32_t _ck["
+                    + std::to_string(reg.buffers.empty() ? 1 : reg.buffers.size())
+                    + "] __attribute__((section(\".data\")));\n";
+       }
+       if (gSim)
+           for (const std::string &nm : watched)
+               m += "static uint32_t _w_" + nm + ";\n";
+       m += refExterns + "static void reference(void) {\n" + refBody + "}\n\n";
+       if (!deployedBody.empty() && !gNoDeployedMetric)
+           m += "static void deployed_cpu(void) {\n" + deployedBody + "}\n\n";
+   
+       // LLVM-lowered host init/post to CALL (outline-cgra-deploy host-only): the
+       // input fill (`main_init`) and result print/consume (`main_post`) are
+       // compiled from <K>.ll and linked, NOT transliterated — so they run EXACTLY
+       // the source's host code on the CPU. Their bare-pointer args are the shared
+       // globals, in the call's operand order (each a memref.get_global the driver
+       // knows by name).
+       std::string initCall, postCall;
+       // Stage segments (main_stageK) are inter-deploy host code (e.g. a
+       // matmul-remainder reduction whose result the NEXT nest reads);
+       // stageBefore[i] is called just before config i. Dropping a stage silently
+       // corrupts downstream results.
+       SmallVector<std::string> stageBefore(passes.size());
+       {
+           auto declAndCall = [&](func::CallOp c,
+                                  const char* role) -> std::string {
+               SmallVector<std::string> proto, args;
+               for (Value v : c.getArgOperands()) {
+                   std::string ct = "int32_t";
+                   if (auto mrt = dyn_cast<MemRefType>(v.getType())) {
+                       std::string ets;
+                       llvm::raw_string_ostream(ets) << mrt.getElementType();
+                       ct = cType(ets).str();
+                   }
+                   proto.push_back(ct + " *");
+                   std::string nm =
+                       globalOf(v); // resolves any get_global by symbol,
+                   if (nm.empty())
+                       nm = reg.lookup(v); // incl. outline-hoisted copies
+                   args.push_back(nm);
+               }
+               m += "extern void " + c.getCallee().str() + "(" + join(proto, ", ")
+                    + ");   // host " + role + " from " + K + ".ll\n";
+               return "  " + c.getCallee().str() + "(" + join(args, ", ") + ");\n";
+           };
+           // Walk the host body in program order so init/stage/post land at their
+           // true positions relative to the deploys (a stage seen after
+           // `deployIdx` deploys runs just before config `deployIdx`).
+           func::FuncOp host =
+               nests.empty()
+                   ? func::FuncOp()
+                   : nests.front().getOperation()->getParentOfType<func::FuncOp>();
+           bool any = false;
+           if (host) {
+               int deployIdx = 0;
+               for (Operation &op : host.getBody().front()) {
+                   if (auto c = dyn_cast<func::CallOp>(&op)) {
+                       StringRef cal = c.getCallee();
+                       if (cal.ends_with("_init")) {
+                           initCall = declAndCall(c, "init");
+                           any = true;
+                       } else if (cal.ends_with("_post")) {
+                           postCall = declAndCall(c, "post");
+                           any = true;
+                       } else if (
+                           cal.contains("_stage")
+                           && deployIdx < (int)passes.size()) {
+                           stageBefore[deployIdx] += declAndCall(c, "stage");
+                           any = true;
+                       }
+                   } else if (isa<cgra::DeployOp>(op)) {
+                       ++deployIdx;
+                   }
+               }
+           }
+           // FALLBACK for the fully-outlined case. With drop-host=1 and one deploy
+           // per function there IS no host body left to walk: `host` resolves to
+           // the first main_kernelN, which holds a single deploy and no calls, so
+           // the walk above finds nothing and main_init / main_stageK / main_post
+           // are never called. For a network that silently drops the im2col
+           // gathers — the convolutions then stream zeros. The module's FUNCTION
+           // ORDER is the program order (outlining appends as it goes), so recover
+           // the sequence from it, using the cgra.arg_globals attribute the
+           // outliner records to synthesise each call.
+           if (!any) {
+               bool bad = false;
+               auto callOf = [&](func::FuncOp f, const char* role) -> std::string {
+                   auto ga = f->getAttrOfType<ArrayAttr>("cgra.arg_globals");
+                   SmallVector<std::string> proto, args;
+                   for (auto [i, t] : llvm::enumerate(f.getArgumentTypes())) {
+                       std::string ct = "int32_t";
+                       if (auto mrt = dyn_cast<MemRefType>(t)) {
+                           std::string ets;
+                           llvm::raw_string_ostream(ets) << mrt.getElementType();
+                           ct = cType(ets).str();
+                       }
+                       proto.push_back(ct + " *");
+                       std::string nm;
+                       if (ga && i < ga.size())
+                           nm = cast<StringAttr>(ga[i]).getValue().str();
+                       // An argument with no backing global used to be passed as a
+                       // literal 0. On bare metal that does NOT fault — the stage
+                       // reads address 0 and silently computes from the boot
+                       // vectors — so a whole network's result could be garbage
+                       // with nothing to show for it. Refuse instead: the fix is
+                       // to give the buffer static storage
+                       // (--promote-alloca-to-global).
+                       if (nm.empty()) {
+                           f.emitError("generate-cgra-driver: outlined stage '")
+                               << f.getName() << "' takes argument #" << i
+                               << " from a buffer with no backing memref.global, "
+                                  "so the driver "
+                                  "would pass NULL. Promote it to a global before "
+                                  "outlining";
+                           bad = true;
+                       }
+                       args.push_back(nm.empty() ? "0" : nm);
+                   }
+                   m += "extern void " + f.getName().str() + "("
+                        + join(proto, ", ") + ");   // host " + role + " from " + K
+                        + ".ll\n";
+                   return "  " + f.getName().str() + "(" + join(args, ", ")
+                          + ");\n";
+               };
+               int deployIdx = 0;
+               for (auto f : module.getOps<func::FuncOp>()) {
+                   if (f.isExternal()) continue;
+                   StringRef n = f.getName();
+                   if (n.ends_with("_init"))
+                       initCall = callOf(f, "init");
+                   else if (n.ends_with("_post"))
+                       postCall = callOf(f, "post");
+                   else if (n.contains("_stage")) {
+                       if (deployIdx < (int)passes.size())
+                           stageBefore[deployIdx] += callOf(f, "stage");
+                   } else if (n.contains("_kernel"))
+                       ++deployIdx;
+               }
+               if (bad) return failure();
+               any = !initCall.empty() || !postCall.empty();
+           }
+           if (any) m += "\n";
+       }
+   
+       m += "int main(void) {\n"
+          "  enable_all_fast_interrupts(true);\n"
+          "  CSR_SET_BITS(CSR_REG_MSTATUS, 0x8);\n"
+          "  CSR_SET_BITS(CSR_REG_MIE, 1 << 31);\n"
+          "  CSR_CLEAR_BITS(CSR_REG_MCOUNTINHIBIT, 0x1);   // enable the mcycle counter\n"
+          "  mmio_region_t strela = mmio_region_from_addr(STRELA_PERIPH_START_ADDRESS);\n"
+          "  int _to_n = 0, _to_first = -1;   // dispatches whose exec_done never came\n"
+          "  static uint16_t _to_cfg[" + std::to_string(passes.size()) + "];   // ...per configuration\n"
+          // Name-stamped liveness banner: the UART must show THIS kernel's name, so a
+          // stale main.hex (from a previous app whose build succeeded) can't be mistaken
+          // for a pass. (simpatch sees "app start" here and won't add a duplicate.)
+          "  printf(\"[" + K + "] app start\\n\");\n\n";
+       // Prepare inputs: call the LLVM-lowered host init if present, else the
+       // inline-C transliteration fallback (a kernel whose host code wasn't
+       // outlined).
+       if (!initCall.empty())
+           m += "  // ---- prepare inputs on the CPU (linked host init from " + K
+                + ".ll) ----\n" + initCall + "\n";
+       else if (!initCode.empty())
+           m += "  // ---- initialise inputs on the real globals (PolyBench "
+                "init_array) ----\n"
+                + initCode + "\n";
+       // Snapshot of the final results, taken AFTER the reference has produced
+       // them.
+       std::string goldenCopy;
+       for (auto &kv : reg.buffers)
+           if (finalOuts.count(kv.first))
+               goldenCopy += "  for (int i = 0; i < "
+                             + std::to_string(kv.second.size) + "; i++) golden_"
+                             + kv.first + "[i] = " + kv.first + "[i];\n";
+       // Restores the state the next phase must start from. Zeroing the computed
+       // buffers is not enough on its own: some of them are filled by the HOST
+       // init (the im2col gather is a pure copy, so --annotate-to-cgra leaves it
+       // there), and wiping those makes the next phase compute from zeros — which
+       // is exactly what made a 40-config residual report `whole cpu` LOWER than
+       // `deployed cpu` and then mismatch. So zero, then re-run the host init,
+       // which is deterministic in the input constants and reproduces precisely
+       // the pre-compute state.
+       std::string reZero;
+       for (auto &kv : reg.buffers)
+           if (kv.second.isOutput)
+               reZero += "  for (int i = 0; i < " + std::to_string(kv.second.size)
+                         + "; i++) " + kv.first + "[i] = 0;\n";
+       if (!initCall.empty())
+           reZero += initCall + "\n";
+       else if (!initCode.empty())
+           reZero += initCode + "\n";
+       m += "  uint32_t _cpu0, _cpu1, _dep0=0, _dep1=0, _cgra0, _cgra1, _cgd=0, "
+            "_t0, _t1;\n";
+       // (a) DEPLOYED part on the CPU: only the fabric nests (on golden). Re-seed
+       // golden
+       //     afterwards since deployed_cpu() overwrites it.
+       // Phase markers (sim only). Without them a run that stops produces exactly
+       // the start-up banner and nothing else, which says nothing about WHERE it
+       // stopped — and on a 40-config network that is the difference between
+       // "slow" and "hung".
+       auto watchAfterConfig = [&](size_t p) -> std::string {
+           if (!gSim || watched.empty()) return "";
+           std::string r;
+           for (const std::string &nm : watched) {
+               auto it = reg.buffers.find(nm);
+               if (it == reg.buffers.end()) continue;
+               r += "  { uint32_t s = 0; for (int i = 0; i < "
+                    + std::to_string(it->second.size)
+                    + "; i++) s = s * 31u + (uint32_t)" + nm + "[i]; if (s != _w_"
+                    + nm + ") { printf(\"[" + K + "] WATCH " + nm
+                    + " changed at config " + std::to_string(p) + "\\n\"); _w_"
+                    + nm + " = s; } }\n";
+           }
+           return r;
+       };
+       auto mark = [&](const char* what) {
+           return gSim ? std::string("  printf(\"[") + K + "] phase: " + what
+                             + "\\n\");\n"
+                       : std::string();
+       };
+       if (!deployedBody.empty() && !gNoDeployedMetric)
+           m += "  CSR_READ(CSR_REG_MCYCLE, &_dep0);\n  deployed_cpu();\n"
+                "  CSR_READ(CSR_REG_MCYCLE, &_dep1);\n"
+                + mark("deployed_cpu done") + reZero + mark("restore done");
+       // (b) Whole kernel on the CPU (reference()), for context.
+       //
+       // `no-reference` skips it. It is a DIAGNOSTIC-ONLY switch: on a whole model
+       // the reference is a full inference on the core and costs ~103M cycles —
+       // over two hours of Verilator, before the fabric region even starts — which
+       // is pure overhead when the question being asked is about fabric behaviour
+       // (which configs wedge). It makes the golden, the `whole` metric and the
+       // SUCCESS/FAIL verdict MEANINGLESS, so the driver says so loudly on the
+       // UART rather than letting a later reader mistake the verdict for a real
+       // one.
+       m += "  CSR_READ(CSR_REG_MCYCLE, &_cpu0);\n";
+       if (gNoReference)
+           m += gSim ? "  printf(\"[" + K +
+                       "] reference SKIPPED (no-reference): the golden, the cycle "
+                       "metrics and the SUCCESS/FAIL verdict below are MEANINGLESS; "
+                       "only the wedge tally is\\n\");\n"
+                 : std::string();
+       else
+           m += "  reference();\n";
+       m += "  CSR_READ(CSR_REG_MCYCLE, &_cpu1);\n";
+       // Sim-only localisation aid: a 32-bit checksum of EVERY buffer, taken after
+       // the reference and again after the fabric. Comparing only the final
+       // outputs cannot say WHERE a 40-config chain first goes wrong — an error in
+       // an intermediate stays invisible until it surfaces downstream — and a
+       // golden copy of every buffer is exactly what the memory budget could not
+       // afford. One word per buffer can. Diagnostics are gated on total buffer
+       // size: on a big kernel the extra code and statics push the image past the
+       // RISC-V gp-relative window and the app fails to link with "relocation
+       // truncated to fit". Small reproducers keep them.
+       int64_t ckTot = 0;
+       for (auto &kv : reg.buffers) ckTot += kv.second.size;
+       // On a large kernel, instrument only a few buffers: 60 checksum loops of
+       // code is enough to push the image past the RISC-V gp-relative window.
+       // `ck-only` names the buffers to watch (comma-separated); empty means all,
+       // subject to the size gate.
+       if (gSim && (ckTot <= 65536)) {
+           unsigned nb = 0;
+           for (auto &kv : reg.buffers) {
+               if (!gCkOnly.empty()
+                   && ("," + gCkOnly + ",").find("," + kv.first + ",")
+                          == std::string::npos) {
+                   ++nb;
+                   continue;
+               }
+               std::string c = "  { uint32_t s = 0; for (int i = 0; i < "
+                               + std::to_string(kv.second.size)
+                               + "; i++) s = s * 31u + (uint32_t)" + kv.first
+                               + "[i];";
+               ckSave += c + " _ck[" + std::to_string(nb) + "] = s; }\n";
+               ckCmp += c + " if (s != _ck[" + std::to_string(nb) + "]) { printf(\"[" + K +
+                  "] chk " + kv.first + ": ref=%u fab=%u\\n\", (unsigned)_ck[" +
+                  std::to_string(nb) + "], (unsigned)s);"
+                  // First few actual values: the SHAPE of the corruption (zeros? shifted?
+                  // stale?) says more than any checksum.
+                  " for (int i = 0; i < 6 && i < " + std::to_string(kv.second.size) +
+                  "; i++) printf(\"[" + K + "]   " + kv.first +
+                  "[%d] fab=%d\\n\", i, (int)" + kv.first + "[i]); } }\n";
+               ++nb;
+           }
+           // Targeted probe: the gather buffers, checked right after the
+           // pre-fabric restore. Empty THERE means the host segment never wrote
+           // the driver's array; filled-then-empty means something later clears
+           // them.
+           for (auto &kv : reg.buffers)
+               if (false && kv.first.find("im2col") != std::string::npos)
+                   ckMid += "  { uint32_t s = 0; for (int i = 0; i < "
+                            + std::to_string(kv.second.size)
+                            + "; i++) s = s * 31u + (uint32_t)" + kv.first
+                            + "[i]; printf(\"[" + K + "] after-restore " + kv.first
+                            + "=%u\\n\", (unsigned)s); }\n";
+       }
+       m += mark("reference done");
+       m += "  // ---- keep the reference's results, then restore the pristine "
+            "state ----\n"
+            + goldenCopy + ckSave + reZero + ckMid;
+       if (gSim)
+           for (const std::string &nm : watched) {
+               auto it = reg.buffers.find(nm);
+               if (it == reg.buffers.end()) continue;
+               m += "  { uint32_t s = 0; for (int i = 0; i < "
+                    + std::to_string(it->second.size)
+                    + "; i++) s = s * 31u + (uint32_t)" + nm + "[i]; _w_" + nm
+                    + " = s; }\n";
+           }
+       m += mark("snapshot done") + "\n";
+   
+       // Emit each nest in program order: a fabric-streamable one as a STRELA
+       // config (consuming a bitstream/io_map index), a non-streamable one (conv /
+       // reduction) as CPU code run in place on the real buffers.
+       std::map<std::string, bool> noGolden; // CPU path writes the real arrays
+       size_t fabricIdx = 0;
+       size_t lastMarkerFabric = 0; // fabric index at the previous progress marker
+   
+       // Cross-config MMIO dedup. STRELA's CTRL=CLR (issued between configs)
+       // clears the DATAPATH — the memory-node FSMs and the CGRA core — but NOT
+       // the MMIO parameter registers, which persist. A truly-sticky control
+       // register (MODE) whose value is unchanged need not be re-written each
+       // pass.
+       //
+       // The MEMORY-NODE registers (IMN_*/OMN_*) are the exception and MUST be
+       // written every config that uses the node: the register WRITE is what
+       // re-ARMS the node (re-loads its address counter to start a fresh stream).
+       // A node reused across configs whose PARAM/SIZE happens to be identical
+       // would otherwise be skipped by a value-based dedup, leave the node in the
+       // "done" state from the previous config, and feed the fabric no data on
+       // that channel -> EXEC_DONE never fires (deadlock). Verified on a 2-config
+       // kernel: skipping the reused IMN's PARAM write hangs config 1; restoring
+       // it makes it run. So only MODE is deduped.
+       std::map<std::string, std::string> lastReg;
+       auto writeReg = [&](const std::string &off, const std::string &val) {
+           bool memNode = off.find("IMN_") != std::string::npos
+                          || off.find("OMN_") != std::string::npos;
+           if (!memNode) {
+               auto it = lastReg.find(off);
+               if (it != lastReg.end() && it->second == val)
+                   return; // sticky control register already holds this value —
+                           // skip
+               lastReg[off] = val;
+           }
+           m += "  mmio_region_write32(strela, (ptrdiff_t) " + off + ", " + val
+                + ");\n";
+       };
+   
+       m += "  CSR_READ(CSR_REG_MCYCLE, &_cgra0);   // start of the "
+            "CGRA-offloaded region\n";
+       for (size_t passI = 0; passI < passes.size(); ++passI) {
+           ConfigPass &cp = passes[passI];
+           // Progress marker (opt-in). Placed at the TOP of the nest, before the
+           // host stage, so "cfg i" means "everything below i is done and i is now
+           // running": the last marker printed then names the nest a timed-out run
+           // died in, which is the whole point. The cycle counter goes with it so
+           // the rate — and hence a viable SIM_TIMEOUT — can be extrapolated from
+           // a partial log. The RUNNING timeout tally goes out with it. `_to_n` is
+           // otherwise only printed in the end-of-run HANG line, which a killed
+           // run never reaches — and that is precisely the run where you need it:
+           // a config whose fabric never raises exec_done still costs the full
+           // 20000-iteration poll, and a CPU-orchestrated nest issues one dispatch
+           // PER OUTER ITERATION (tiny_kws pass 19 is a 1x25x5 loop = 125
+           // dispatches), so a wedged nest burns hundreds of millions of cycles
+           // looking exactly like slow-but-working compute. With the tally inline,
+           // a rising _to_n between two markers says "wedged" and a flat one says
+           // "genuinely slow".
+           if (gSim && gProgressEvery && (passI % gProgressEvery) == 0) {
+               m += "  { uint32_t _pg; CSR_READ(CSR_REG_MCYCLE, &_pg);\n"
+                    "    printf(\"["
+                    + K + "] cfg " + std::to_string(passI) + "/"
+                    + std::to_string(passes.size())
+                    + " @ %u to=%d\\n\", _pg, _to_n); }\n";
+               // ...and WHICH configurations wedged in the window just finished.
+               // The tally alone says "128 dispatches gave up" but not whether
+               // that is one CPU-orchestrated nest failing wholesale or every
+               // config in the window failing alike — and those point at
+               // completely different causes. The end-of-run line does break it
+               // down per configuration, but a run long enough to wedge is a run
+               // that gets killed before reaching it. Bounded by the window, so
+               // this is one loop, not one call site per configuration.
+               if (fabricIdx > lastMarkerFabric)
+                   m += "  for (int _i = " + std::to_string(lastMarkerFabric)
+                        + "; _i < " + std::to_string(fabricIdx)
+                        + "; _i++) if (_to_cfg[_i]) printf(\"[" + K
+                        + "]   wedged cfg %d x%d\\n\", _i, _to_cfg[_i]);\n";
+               lastMarkerFabric = fabricIdx;
+           }
+           // Inter-deploy host segment (LLVM-lowered main_stageK) runs before this
+           // config.
+           if (!stageBefore[passI].empty())
+               m += "  // ---- host stage (from " + K + ".ll) ----\n"
+                    + stageBefore[passI];
+           if (!cp.onFabric) {
+               m += "  // ---- CPU compute (not fabric-streamable: conv / "
+                    "reduction) ----\n";
+               IVNames nm;
+               DenseMap<Value, std::string> env = constEnv;
+               bool f = false;
+               int cpuSeq = 0;
+               emitStmt(
+                   cp.nest.getOperation(),
+                   0,
+                   nm,
+                   env,
+                   reg,
+                   noGolden,
+                   m,
+                   f,
+                   cpuSeq);
+               if (f)
+                   return module.emitError(
+                       "generate-cgra-driver: cannot emit CPU fallback "
+                       "for a non-streamable nest");
+               m += "\n";
+               continue;
+           }
+           size_t p = fabricIdx++;
+           m += "  CSR_READ(CSR_REG_MCYCLE, &_t0);   // deployed-config timing "
+                "(start)\n";
+           // Interleaved pointwise maps can't write their output (the OMN has no
+           // stride); re-lay them as contiguous per-channel blocks, which the OMN
+           // can write. (CPU-orchestrated nests already stream per outer iteration
+           // — skip.)
+           if (cp.outer.empty()) repartitionPointwiseMap(cp);
+           std::string conf = K + "_" + std::to_string(p) + "_kernel";
+           SmallVector<int> inCh, outCh;
+           if (!iomapPrefix.empty())
+               loadIoMap(
+                   iomapPrefix.str() + std::to_string(p) + "_io_map.json",
+                   inCh,
+                   outCh);
+           auto chOf = [](ArrayRef<int> chs, size_t i) {
+               return (i < chs.size() && chs[i] >= 0) ? std::to_string(chs[i])
+                                                      : std::to_string(i);
+           };
+           m +=
+               "  // ---- CGRA pass " + std::to_string(p)
+               + (cp.outer.empty() ? " "
+                  : cp.isReduction
+                      ? " (reduction: one dot product per output element) "
+                      : " (CPU-orchestrated: one fabric run per outer iteration) ")
+               + "----\n";
+           // CLR + MODE + CONF once; the dot-product config and MODE persist
+           // across the per-output STARTs (the FU accumulator self-resets each
+           // `delay` firings).
+           m += "  mmio_region_write32(strela, (ptrdiff_t) "
+                "STRELA_CTRL_REG_OFFSET, 1 << STRELA_CTRL_CLR_BIT);\n";
+           // CTRL.CLR zeroes mode.intr_en and mode.perf_ctr_en
+           // (mmio_interface.sv), so the sticky-register dedup must not carry a
+           // MODE write across it: without this the second and later passes would
+           // run with interrupts disabled and hang in wait_for_interrupt() on real
+           // hardware (under sim=1 the emitter writes a bounded STATUS poll
+           // instead).
+           lastReg.erase("STRELA_MODE_REG_OFFSET");
+           writeReg("STRELA_MODE_REG_OFFSET", modeBits());
+           writeReg("STRELA_CONF_ADDR_REG_OFFSET", "(uintptr_t) " + conf);
+   
+           // Reduction: nest CPU loops over the OUTER induction variables; each
+           // iteration re-programs the 1-D strided streams (base is an affine expr
+           // in the loop vars) and fires one dot product — the old strela matmul
+           // driver's per-output scheme. Descriptor writes, each emitted at the
+           // OUTERMOST loop level where its value is still correct. A descriptor
+           // whose base expression does not mention an inner orchestration
+           // variable does not change across that loop, and the registers persist:
+           // only CTRL.CLR_PARAM clears them (mmio_interface.sv) and nothing in
+           // the body writes it, while START only restarts the node's addr_offset.
+           // Sizes/strides are compile-time constants, so they leave the nest
+           // entirely. This is the bulk of the per-dispatch MMIO cost — for
+           // tfm_mm64 the inner loop drops from 16 register writes to 5.
+           struct RegWrite {
+               std::string reg, val;
+               unsigned level;
+           };
+           SmallVector<RegWrite> writes;
+           auto levelOf = [&](StringRef v) {
+               unsigned lv = 0;
+               for (size_t k = 0; k < cp.outer.size(); ++k)
+                   if (refsIdent(v, cp.outer[k].name)) lv = k + 1;
+               return lv;
+           };
+           auto addWrite = [&](std::string reg, std::string val) {
+               unsigned lv = levelOf(val);
+               // A MEMORY-NODE register must be re-written for EVERY dispatch,
+               // even when its value is unchanged: the write is what re-ARMS the
+               // node (it reloads the address counter to start a fresh stream).
+               // Placing it at the level its value happens to depend on hoists it
+               // out of the dispatch loop, and every dispatch after the first then
+               // continues from wherever the counter stopped. residual's first
+               // convolution is exactly this shape — the im2col patch address does
+               // not depend on the filter loop, so one arming served 8 dispatches
+               // and 7 of them read past the patch. Hoisting stays available for
+               // the sticky control registers (MODE/CONF), which is where it was
+               // measured to pay.
+               //
+               // `hoist-descriptors` re-enables the hoisting: the RTL re-arms
+               // every memory node in hardware when a dispatch finishes
+               // (`control_unit.sv: clr_mn_o = (state == S_MAIN_DONE)`, wired into
+               // each node's `clr_i` in strela_top.sv, which is what resets
+               // `addr_offset` and returns the node FSM to S_IDLE), so a write is
+               // only needed where the VALUE changes. See the option's
+               // declaration.
+               if (!gHoistDesc
+                   && (reg.find("IMN_") != std::string::npos
+                       || reg.find("OMN_") != std::string::npos))
+                   lv = cp.outer.size();
+               writes.push_back({std::move(reg), std::move(val), lv});
+           };
+           // A memory node only starts when its size register is non-zero
+           // (input_memory_node.sv: `exec_i & input_size_i != 0`). Emitting a
+           // zero-length stream therefore produces a configuration that NEVER
+           // completes: that node never raises `done`, `mn_done` never fills, the
+           // FSM never leaves EXEC and the driver spins until its STATUS poll
+           // times out. Refuse to generate it.
+           //
+           // The shape that hits this is a reduction whose accumulator stays in
+           // memory — `C[i][j] += A[i][k]*B[k][j]` keeps `C[i][j]` invariant in
+           // the k loop, so its stride (and hence size) is 0. Kernels that work
+           // (mm, tfm_gemm) instead carry the accumulator in `iter_args`, so it is
+           // not a stream at all. Fixing the kernel means promoting that memref
+           // accumulator into `iter_args` before offloading (and proving the seed
+           // is zero, since the fabric FU accumulates from zero) — see
+           // docs/TODO.md.
+           for (Stream &s : cp.inputs)
+               if (s.sizeElems == 0 || s.strideBytes == 0)
+                   return module.emitError(
+                              "generate-cgra-driver: input stream on '")
+                          << s.global << "' has zero "
+                          << (s.sizeElems == 0 ? "length" : "stride")
+                          << " — it is loop-invariant in the reduction loop (an "
+                             "in-memory "
+                             "accumulator). The fabric would never signal done; "
+                             "promote the "
+                             "accumulator to iter_args before offloading";
+   
+           // Expand any packed int8 table this config streams into the shared
+           // arena first; the memory node then walks 32-bit words as usual.
+           // Offsets are assigned per config, so two packed inputs coexist.
+           std::map<std::string, int64_t> unpackOff;
+           {
+               int64_t off = 0;
+               for (Stream &st : cp.inputs) {
+                   if (!packedI8.count(st.global) || unpackOff.count(st.global))
+                       continue;
+                   int64_t n = bufSize[st.global];
+                   m += "  for (int _u = 0; _u < " + std::to_string(n) + "; _u++) "
+                "__cgra_unpack[" + std::to_string(off) + " + _u] = " + st.global + "[_u];\n";
+                   unpackOff[st.global] = off;
+                   off += n;
+               }
+           }
+           // A memory-node channel carries ONE stream per configuration. `chOf`
+           // falls back to the stream index when the mapper's io_map has no entry
+           // for it, so if the driver has found more streams than the mapped DFG
+           // has channels, two different buffers get programmed onto the same
+           // node: the second ADDR write silently clobbers the first, that stream
+           // never arrives, and the fabric waits for it forever. On tiny_kws this
+           // hit 75 of 188 configurations (pass 10: the io_map declares 2 inputs
+           // and 1 output, the driver programs 4 IMN and 2 OMN) and was invisible
+           // in the generated C unless you happened to read two ADDR writes to the
+           // same node. Detect it here rather than let it become another dead run.
+           std::map<std::string, std::string> chanOwner;
+           auto claim = [&](const char* kind,
+                            const std::string &ch,
+                            const std::string &global) -> LogicalResult {
+               std::string key = std::string(kind) + ch;
+               auto it = chanOwner.find(key);
+               if (it != chanOwner.end() && it->second != global)
+                   return module.emitError()
+                          << "generate-cgra-driver: configuration " << p
+                          << " programs " << kind << ch << " with both `"
+                          << it->second << "` and `" << global
+                          << "`. A memory-node channel carries one stream per "
+                             "configuration, "
+                             "so the second write clobbers the first and the "
+                             "fabric never "
+                             "receives that stream (EXEC_DONE never fires). The "
+                             "channel "
+                             "fell back to the stream index because the io_map "
+                             "has no entry "
+                             "for it, which means the MAPPER mapped fewer I/O "
+                             "nodes than the "
+                             "DFG has: compare the input*/output* nodes in the "
+                             "exported .dot "
+                             "against input_ports/output_ports in the solution "
+                             "json. The "
+                             "bitstream is then wrong too, not just the channel "
+                             "assignment. "
+                             "io_map: "
+                          << iomapPrefix << p << "_io_map.json";
+               chanOwner[key] = global;
+               return success();
+           };
+           for (size_t i = 0; i < cp.inputs.size(); ++i) {
+               Stream &s = cp.inputs[i];
+               std::string ch = chOf(inCh, i);
+               if (failed(claim("IMN", ch, s.global))) return failure();
+               auto up = unpackOff.find(s.global);
+               addWrite(
+                   "STRELA_IMN_" + ch + "_ADDR_REG_OFFSET",
+                   up != unpackOff.end()
+                       ? "(uintptr_t) &__cgra_unpack[" + std::to_string(up->second)
+                             + " + " + s.baseExpr + "]"
+                       : "(uintptr_t) &" + s.global + "[" + s.baseExpr + "]");
+               // IMN size is the BYTE EXTENT the node walks: it advances addr by
+               // `strideBytes` each element until the offset reaches `size`, so to
+               // read `sizeElems` elements the size must be sizeElems*strideBytes.
+               if (failed(checkNodeFields(
+                       module,
+                       p,
+                       "IMN",
+                       ch,
+                       s.sizeElems * s.strideBytes,
+                       s.strideBytes,
+                       s.global)))
+                   return failure();
+               addWrite(
+                   "STRELA_IMN_" + ch + "_PARAM_REG_OFFSET",
+                   "(" + std::to_string(s.strideBytes) + " << 16) | ("
+                       + std::to_string(s.sizeElems * s.strideBytes) + ")");
+           }
+           for (size_t i = 0; i < cp.outputs.size(); ++i) {
+               Stream &s = cp.outputs[i];
+               std::string ch = chOf(outCh, i);
+               if (failed(claim("OMN", ch, s.global))) return failure();
+               addWrite(
+                   "STRELA_OMN_" + ch + "_ADDR_REG_OFFSET",
+                   "(uintptr_t) &" + s.global + "[" + s.baseExpr + "]");
+               if (failed(checkNodeFields(
+                       module,
+                       p,
+                       "OMN",
+                       ch,
+                       s.sizeElems * ELEM_BYTES,
+                       ELEM_BYTES,
+                       s.global)))
+                   return failure();
+               addWrite(
+                   "STRELA_OMN_" + ch + "_SIZE_REG_OFFSET",
+                   std::to_string(s.sizeElems * ELEM_BYTES));
+           }
+   
+           // `held` drops a write whose register already holds that exact
+           // expression at this point in the pass (same value re-programmed for
+           // another lane, or a constant already hoisted out) — the descriptors
+           // survive until the next CLR, which only happens at the start of the
+           // next pass.
+           std::map<std::string, std::string> held;
+           auto emitLevel = [&](unsigned lv, unsigned indent) {
+               for (RegWrite &w : writes) {
+                   if (w.level != lv) continue;
+                   auto it = held.find(w.reg);
+                   if (it != held.end() && it->second == w.val) continue;
+                   held[w.reg] = w.val;
+                   m += std::string(indent, ' ')
+                        + "mmio_region_write32(strela, (ptrdiff_t) " + w.reg + ", "
+                        + w.val + ");\n";
+               }
+           };
+           // ---- optional chunking of a long FLAT dispatch (see gMaxDispatch)
+           // ---- Only when: the config is already a single flat dispatch (no
+           // orchestration), it carries no cross-element state (a reduction's
+           // accumulator would be reset per chunk), the length divides evenly, and
+           // EVERY descriptor matches the simple
+           // `&name[0]` / literal-size form this rewrite understands. Anything
+           // else is left exactly as it was — a stream whose address expression we
+           // cannot re-base must not be silently mis-offset. AUTOMATIC: a
+           // configuration whose dataflow can close a backpressure cycle is capped
+           // whether or not anyone asked, because the alternative is a silent
+           // hang. Detection is structural (cgra::hasBackpressureCycle), so a NEW
+           // kernel with the same shape is handled without anyone first observing
+           // a wedge and hand-editing a per-kernel setting. An explicit
+           // max-dispatch= still wins if it is smaller. NOT automatic.
+           // `cgra::hasBackpressureCycle` identifies configurations that CAN
+           // deadlock, and capping their dispatch length fixes lenet's — but
+           // chunking is not free of risk in the other direction: residual_small's
+           // configuration 19 is elementwise (no feedback, no delay_value), ran
+           // correctly as ONE 800-element dispatch, and hung on all 160 of its
+           // 5-element chunks when the cap was applied automatically. Short
+           // dispatches are not universally safer than long ones, so a blanket cap
+           // trades one kernel's hang for another's. Until the mechanism is
+           // understood in BOTH directions the cap stays explicit:
+           // `max-dispatch=N`, set per kernel where it has been measured to help.
+           unsigned cap = gMaxDispatch;
+           unsigned chunkElems = 0;
+           if (cap && cp.outer.empty() && !cp.isReduction) {
+               int64_t elems = 0;
+               bool simple = true;
+               for (RegWrite &w : writes) {
+                   if (w.reg.find("_ADDR_REG") != std::string::npos) {
+                       if (!std::regex_match(
+                               w.val,
+                               std::regex(R"(\(uintptr_t\) &\w+\[0\])")))
+                           simple = false;
+                   } else if (w.reg.find("_SIZE_REG") != std::string::npos) {
+                       if (!std::regex_match(w.val, std::regex(R"(\d+)")))
+                           simple = false;
+                       else
+                           elems = std::max<int64_t>(
+                               elems,
+                               std::stoll(w.val) / ELEM_BYTES);
+                   } else if (w.reg.find("_PARAM_REG") != std::string::npos) {
+                       std::smatch mm;
+                       if (!std::regex_match(
+                               w.val,
+                               mm,
+                               std::regex(R"(\((\d+) << 16\) \| \((\d+)\))")))
+                           simple = false;
+                       else if (std::stoll(mm[1]) != ELEM_BYTES)
+                           simple = false; // non-unit stride
+                   }
+               }
+               if (simple && elems > (int64_t)cap) {
+                   for (unsigned c = cap; c >= 1; --c)
+                       if (elems % c == 0) {
+                           chunkElems = c;
+                           break;
+                       }
+                   if (chunkElems == (unsigned)elems)
+                       chunkElems = 0; // nothing to gain
+               }
+               if (simple && chunkElems) {
+                   int64_t nchunk = elems / chunkElems;
+                   int64_t cb = (int64_t)chunkElems * ELEM_BYTES;
+                   m += "  // ---- dispatch chunked " + std::to_string(nchunk)
+                        + "x" + std::to_string(chunkElems)
+                        + " elements (max-dispatch) ----\n";
+                   m += "  for (int ck = 0; ck < " + std::to_string(nchunk)
+                        + "; ck++) {\n";
+                   for (RegWrite &w : writes) {
+                       std::string v = w.val;
+                       if (w.reg.find("_ADDR_REG") != std::string::npos)
+                           v = std::regex_replace(
+                               v,
+                               std::regex(R"(\[0\])"),
+                               "[" + std::to_string(chunkElems) + "*ck]");
+                       else if (w.reg.find("_SIZE_REG") != std::string::npos)
+                           v = std::to_string(cb);
+                       else if (w.reg.find("_PARAM_REG") != std::string::npos)
+                           v = "(" + std::to_string(ELEM_BYTES) + " << 16) | ("
+                               + std::to_string(cb) + ")";
+                       m += "    mmio_region_write32(strela, (ptrdiff_t) " + w.reg
+                            + ", " + v + ");\n";
+                   }
+                   m += "    mmio_region_write32(strela, (ptrdiff_t) "
+                        "STRELA_CTRL_REG_OFFSET, 1 "
+                        "<< STRELA_CTRL_START_BIT);\n";
+                   m += waitForDone(4, (int)p);
+                   m += "  }\n";
+               }
+           }
+           if (chunkElems) { /* descriptors already emitted inside the chunk loop
+                              */
+           } else {
+               emitLevel(0, 2);
+               unsigned ind = 2;
+               for (size_t k = 0; k < cp.outer.size(); ++k) {
+                   OuterLoop &ol = cp.outer[k];
+                   m += std::string(ind, ' ') + "for (int " + ol.name + " = "
+                        + std::to_string(ol.lo) + "; " + ol.name + " < "
+                        + std::to_string(ol.hi) + "; " + ol.name + "++) {\n";
+                   ind += 2;
+                   emitLevel(k + 1, ind);
+               }
+               m += std::string(ind, ' ') +
+            "mmio_region_write32(strela, (ptrdiff_t) STRELA_CTRL_REG_OFFSET, 1 << STRELA_CTRL_START_BIT);\n";
+               // Attribute the stall to the FABRIC configuration index `p`, not
+               // the nest index `passI`. They diverge by however many CPU nests
+               // precede (a whole model has plenty), so the tally used to name a
+               // configuration whose bitstream and io_map were somebody else's —
+               // sending you to debug the wrong one.
+               m += waitForDone(ind, (int)p);
+               while (ind > 2) {
+                   ind -= 2;
+                   m += std::string(ind, ' ') + "}\n";
+               }
+           }
+           m += "  CSR_READ(CSR_REG_MCYCLE, &_t1); _cgd += _t1 - _t0;   // "
+                "deployed-config timing (end)\n";
+           // Per-configuration watch (sim only): report the first configuration
+           // that changes a buffer it is not supposed to touch. Per-PHASE
+           // checksums proved the gather buffers are full going into the fabric
+           // and empty coming out, but not WHICH of 40 configurations clears them.
+           m += watchAfterConfig(p);
+           m += "\n";
+       }
+   
+       m += "  CSR_READ(CSR_REG_MCYCLE, &_cgra1);   // end of the CGRA-offloaded "
+            "region\n";
+       // Report cycles here (before the potentially long result print) so the
+       // ratio is captured even if the UART print of the full output does not
+       // finish in the sim. DEPLOYED = only the fabric nests (their CPU cost vs
+       // their CGRA config cost, the fairest offload comparison); WHOLE = the
+       // entire kernel (incl. CPU-only work). A cycle pair is a MEASUREMENT only
+       // if every dispatch actually completed. A wedged one does not stop the
+       // program — the status poll is bounded, so the driver gives up, tallies it
+       // and carries on — and the counters keep running, so the run still prints a
+       // plausible-looking ratio that is mostly the cost of the give-up loops.
+       // residual_small printed cpu=3 428 937 vs cgra=113 435 168
+       // ("0.03x") from 512 give-ups: 512 x 20000 polls x ~10 cycles is ~104M of
+       // that 113M, i.e. ~92% pure polling, and the run answered 640 values
+       // wrongly anyway. Numbers like that get copied out of a log months later
+       // with no idea they timed a failure, so the line refuses to present itself
+       // as a result unless it is one. Same for `no-reference`, where the CPU side
+       // of the ratio was never computed.
+       m += "  { uint32_t _dep = _dep1 - _dep0, _cpu = _cpu1 - _cpu0, _cg = "
+            "_cgra1 - _cgra0;\n";
+       if (gNoReference)
+           m += "    const char *_valid = \" INVALID(no-reference: cpu side not "
+                "measured)\";\n";
+       else
+           m += "    const char *_valid = _to_n ? \" INVALID(dispatches gave up; "
+                "this "
+                "times a FAILURE, not work)\" : \"\";\n";
+       m += "    printf(\"[" + K + "] deployed cycles: cpu=%u cgra=%u  accel(x100)=%u%s\\n\",\n"
+          "           (unsigned)_dep, (unsigned)_cgd, (unsigned)(_dep * 100u / (_cgd ? _cgd : 1u)), _valid);\n"
+          "    printf(\"[" + K + "] whole    cycles: cpu=%u cgra=%u  accel(x100)=%u%s\\n\",\n"
+          "           (unsigned)_cpu, (unsigned)_cg, (unsigned)(_cpu * 100u / (_cg ? _cg : 1u)), _valid); }\n";
+       m += "  mmio_region_write32(strela, (ptrdiff_t) STRELA_MODE_REG_OFFSET, "
+            "0);\n\n";
+       if (!tailReal.empty())
+           m += "  // ---- host remainder (scalar tail) on the CPU ----\n"
+                + tailReal + "\n";
+       // Consume outputs: the LLVM-lowered host post (result prints) runs on the
+       // CPU exactly as the source does — so the sim's UART reproduces the program
+       // output.
+       if (!postCall.empty())
+           m += "  // ---- consume outputs on the CPU (linked host post from " + K
+                + ".ll) ----\n" + postCall + "\n";
+       m += mark("fabric done") + ckCmp;
+   
+       m += "  int errors = 0;\n";
+       // Check against the x86 golden as well as the internal reference.
+       if (!gGoldenHdr.empty()) {
+           m += "#ifdef " + K + "_X86_GOLDEN_N\n  { int xe = 0, n = " + K
+                + "_X86_GOLDEN_N;\n";
+           for (auto &kv : reg.buffers)
+               if (finalOuts.count(kv.first))
+                   m += "    if (n == " + std::to_string(kv.second.size)
+                        + ") { for (int i = 0; i < n; i++) if ((int)" + kv.first
+                        + "[i] != " + K
+                        + "_x86_golden[i]) { if (xe < 3) printf(\"[" + K + "] x86 "
+                        + kv.first + "[%d] want=%d got=%d\\n\", i, " + K
+                        + "_x86_golden[i], (int)" + kv.first + "[i]); xe++; } }\n";
+           m += "    if (xe) printf(\"[" + K + "] X86-MISMATCH: %d\\n\", xe);\n"
+            "    else    printf(\"[" + K + "] x86 golden: MATCH\\n\");\n"
+            "    errors += xe; }\n#endif\n";
+       }
+       // Per-buffer counts, not just a total: with a 40-configuration network a
+       // bare "3713 mismatches" says nothing about WHICH result is wrong, and the
+       // compared set includes scratch whose residue after the run need not agree.
+       for (auto &kv : reg.buffers)
+           if (finalOuts.count(kv.first)) {
+               // Print the first few DIFFERING elements, not just a count: the
+               // shape of the discrepancy (off by 256? shifted index? zero?) is
+               // what identifies the bug, and a handful of printfs is small enough
+               // not to disturb the image layout.
+               m += "  { int e = 0; for (int i = 0; i < " + std::to_string(kv.second.size) +
+              "; i++) if (" + kv.first + "[i] != golden_" + kv.first + "[i]) {\n"
+              "      if (e < 4) printf(\"[" + K + "]   " + kv.first +
+              "[%d] want=%d got=%d\\n\", i, (int)golden_" + kv.first + "[i], (int)" +
+              kv.first + "[i]);\n"
+              "      e++; }\n"
+              "    if (e) printf(\"[" + K + "] " + kv.first + ": %d/" +
+              std::to_string(kv.second.size) + " differ\\n\", e);\n"
+              "    errors += e; }\n";
+           }
+       // Leading '\n': the source's result-print (main_post) may leave a dangling
+       // line with no trailing newline, which would otherwise concatenate the
+       // status onto it and defeat the '^[K] SUCCESS' Makefile guard. A dispatch
+       // that never signalled completion is NOT a mismatch and must not be
+       // reported as one: the configuration did not run, so whatever the
+       // comparison says about its output buffer is meaningless. Say so first, and
+       // fail the run even if the numbers happen to agree.
+       m += "  if (_to_n) { printf(\"\\n[" + K + "] HANG: %d dispatch(es) never raised exec_done"
+          " (first: config %d)\\n\", _to_n, _to_first);\n"
+          "    printf(\"[" + K + "] HANG configs:\");\n"
+          "    for (int _i = 0; _i < " + std::to_string(passes.size()) + "; _i++)"
+          " if (_to_cfg[_i]) printf(\" %d(x%d)\", _i, _to_cfg[_i]);\n"
+          "    printf(\"\\n\"); }\n"
+          "  if (errors == 0 && _to_n == 0) printf(\"\\n[" + K + "] SUCCESS: STRELA output matches software reference\\n\");\n"
+          "  else if (errors == 0) printf(\"\\n[" + K + "] FAIL: fabric did not complete\\n\");\n"
+          "  else             printf(\"\\n[" + K + "] FAIL: %d mismatch(es)\\n\", errors);\n"
+          "  return errors + _to_n;\n}\n";
+   
+       mainOut = std::move(m);
+       dsOut = std::move(ds);
+       return success();
+   }
+   
+   } // namespace mc
+   
+   // True when the module is a globals-based kernel: its streams are module-level
+   // memref.global data (the from-.mlir tfm / MYRTUS path) rather than function
+   // arguments. Such kernels take the multi-config emitter; argument-stream
+   // kernels (linalg) have no globals and take the emitGRHeep emitter. Any-rank
+   // memref.global is the signal — it is the data the fabric streams (flattened
+   // row-major) and the driver seeds into dataset.h. ONE emitter for every kernel.
+   // There used to be two — a single-configuration "deploy" emitter and this
+   // multi-configuration one — and a kernel was routed by whether it had a
+   // memref.global. They disagreed: the same DFG was correct through one and wrong
+   // through the other, and the single-config path rendered its reference with
+   // unsigned C types, so it AGREED with a miscompiled fabric and reported
+   // SUCCESS. That is how a wrong shift lowering survived. A single configuration
+   // is just the N=1 case, so it takes the same path as every other.
+   static bool isGlobalsBased(ModuleOp module)
+   {
+       // The merged emitter reads INLINE deploys and the host's own call sequence,
+       // which is what --outline-cgra-deploy leaves when every stream is
+       // statically shaped. A kernel whose streams are pointer-derived
+       // (`memref<?x…>` out of Polygeist: dbl, mac, myrtus_pp, scale) still has
+       // its deploys outlined and its host dropped, and for those there is no call
+       // sequence and no buffer identity to read — they keep the legacy
+       // single-configuration emitter until the outliner can staticize them in
+       // place. Discriminate on the SHAPE that actually matters: did a deploy
+       // survive outside an outlined kernel function?
+       bool inlineDeploy = false;
+       module.walk([&](cgra::DeployOp d) {
+           if (auto f = d->getParentOfType<func::FuncOp>())
+               if (!f.getName().contains("_kernel")) inlineDeploy = true;
+       });
+       return inlineDeploy;
+   }
+   
+   // ─── Pass ────────────────────────────────────────────────────────────────────
+   class CGRAGenerateDriverPass
+           : public PassWrapper<CGRAGenerateDriverPass, OperationPass<ModuleOp>> {
+   public:
+       MLIR_DEFINE_EXPLICIT_INTERNAL_INLINE_TYPE_ID(CGRAGenerateDriverPass)
+   
+       CGRAGenerateDriverPass() = default;
+       CGRAGenerateDriverPass(const CGRAGenerateDriverPass &other)
+               : CGRAGenerateDriverPass()
+       { copyOptionValuesFrom(&other); }
+   
+       StringRef getArgument() const final { return "generate-cgra-driver"; }
+       StringRef getDescription() const final
+       {
+           return "Generate the C driver (and GR-HEEP dataset.h) for an outlined "
+                  "CGRA kernel";
+       }
+   
+       // Emit the Verilator variant: poll STATUS instead of sleeping on the
+       // completion interrupt (the GR-HEEP testbench does not deliver it
+       // reliably), route printf to the UART model, and leave INTR_EN out of MODE
+       // so the poll is not double-counted by an ISR. Default off, so the shipped
+       // driver stays the hardware artifact.
+       Option<bool> simOpt{
+           *this,
+           "sim",
+           llvm::cl::desc("emit the Verilator (poll-based) driver variant"),
+           llvm::cl::init(false)};
+   
+       // Hoist loop-invariant memory-node descriptors out of the dispatch loop.
+       //
+       // The descriptors are forced to the innermost level (see addWrite) on the
+       // premise that the register write is what re-ARMS a node. The RTL says
+       // otherwise: a node's address counter and FSM are reset by `clr_i`, and
+       // `control_unit.sv` drives `clr_mn_o = (state == S_MAIN_DONE)` into every
+       // node's `clr_i` (strela_top.sv), so the HARDWARE re-arms all of them when
+       // a dispatch completes. A write is therefore not needed for arming, only
+       // for changing a value — which is the classic condition for hoisting.
+       //
+       // Off by default: the forced form is what every kernel is currently
+       // verified against, and this is the cheaper claim to be wrong about. Turn
+       // it on to recover the 10-30% it costs (measured across the tfm_* size
+       // sweep), and re-run `-origcheck` on every kernel before trusting it.
+       Option<bool> hoistDescOpt{
+           *this,
+           "hoist-descriptors",
+           llvm::cl::desc(
+               "hoist loop-invariant IMN/OMN descriptor writes out of the "
+               "dispatch loop (the hardware re-arms nodes on dispatch "
+               "completion, so the write is only needed when the value "
+               "changes)"),
+           llvm::cl::init(false)};
+   
+       // How much of `.xheep_data_interleaved` (ram2, 512 KB) to fill before
+       // letting buffers fall back to ordinary .bss. Slightly under the bank so
+       // the linker has room for anything else placed there. Sim diagnostics:
+       // restrict the per-buffer checksums to these buffers. On a large kernel
+       // instrumenting all of them is enough code to push the image past the
+       // RISC-V gp-relative window and the app stops linking.
+       // Header holding the x86 result of the UNTRANSFORMED kernel. Checking
+       // against it is what makes the verification honest: the internal reference
+       // is derived from the TRANSFORMED IR, so a transformation bug appears on
+       // both sides and passes. Both checks are emitted — agreement of fabric with
+       // the reference but not with x86 points at the compiler, disagreement with
+       // both points at the fabric.
+       Option<std::string> goldenHdr{
+           *this,
+           "x86-golden",
+           llvm::cl::desc("header with the x86 golden array"),
+           llvm::cl::init("")};
+   
+       // Per-configuration buffer WATCH checksums (sim only). A debugging aid: it
+       // says WHICH configuration first makes a buffer wrong. Default on, matching
+       // the behaviour everything is currently debugged against — but it costs
+       // time inside the whole-kernel timing window, so a timing build should turn
+       // it off.
+       Option<bool> watchBuffersOpt{
+           *this,
+           "watch-buffers",
+           llvm::cl::desc(
+               "emit the per-config buffer WATCH checksums (sim builds; "
+               "distorts `whole cycles`, so a measurement build should "
+               "disable it)"),
+           llvm::cl::init(true)};
+   
+       Option<std::string> ckOnly{
+           *this,
+           "ck-only",
+           llvm::cl::desc("comma-separated buffers to checksum"),
+           llvm::cl::init("")};
+   
+       Option<unsigned> maxDispatch{
+           *this,
+           "max-dispatch",
+           llvm::cl::desc(
+               "cap on elements per fabric dispatch (0 = unlimited); chunks a "
+               "long flat dispatch to avoid the elastic-buffer deadlock"),
+           llvm::cl::init(0)};
+   
+       Option<bool> noDeployedMetric{
+           *this,
+           "no-deployed-metric",
+           llvm::cl::desc(
+               "omit deployed_cpu() (a second copy of every offloaded nest); "
+               "keeps the `whole` cycle pair, drops `deployed`"),
+           llvm::cl::init(false)};
+   
+       Option<unsigned> interleavedKBOpt{
+           *this,
+           "interleaved-kb",
+           llvm::cl::desc(
+               "KB of .xheep_data_interleaved to use for stream buffers"),
+           llvm::cl::init(480)};
+   
+       Option<unsigned> progressEveryOpt{
+           *this,
+           "progress-every",
+           llvm::cl::desc(
+               "print a progress marker every N nests of the offloaded "
+               "region (0 = off)"),
+           llvm::cl::init(0)};
+   
+       Option<bool> noReferenceOpt{
+           *this,
+           "no-reference",
+           llvm::cl::desc(
+               "skip the CPU reference pass (diagnostic runs only: makes "
+               "the golden, the cycle metrics and SUCCESS/FAIL meaningless)"),
+           llvm::cl::init(false)};
+   
+       Option<std::string> outputPath{
+           *this,
+           "output",
+           llvm::cl::desc("Output C driver file path")};
+       Option<std::string> iomapPath{
+           *this,
+           "iomap",
+           llvm::cl::desc("io_map.json for the mapper channel assignment"),
+           llvm::cl::init("")};
+       Option<std::string> bsymOpt{
+           *this,
+           "bitstream-sym",
+           llvm::cl::desc("CONF bitstream array symbol"),
+           llvm::cl::init("")};
+       Option<std::string> headerOpt{
+           *this,
+           "bitstream-header",
+           llvm::cl::desc("bitstream header to #include"),
+           llvm::cl::init("")};
+       Option<std::string> nameOpt{
+           *this,
+           "name",
+           llvm::cl::desc(
+               "Kernel name for the <K>_<N>_kernel CONF "
+               "symbols (globals-based / multi-config path)"),
+           llvm::cl::init("kernel")};
+       Option<std::string> iomapPrefixOpt{
+           *this,
+           "iomap-prefix",
+           llvm::cl::desc(
+               "Prefix for per-pass mapper io_maps "
+               "<prefix><N>_io_map.json (globals-based / multi-config path)"),
+           llvm::cl::init("")};
+   
+       // Write @p mainText to --output and @p dsText to dataset.h beside it.
+       LogicalResult
+       writeFiles(ModuleOp module, StringRef mainText, StringRef dsText)
+       {
+           std::error_code ec;
+           llvm::raw_fd_ostream os(outputPath.getValue(), ec);
+           if (ec)
+               return module.emitError("generate-cgra-driver: cannot write '")
+                      << outputPath.getValue() << "': " << ec.message();
+           os << mainText;
+           SmallString<128> dsPath(outputPath.getValue());
+           llvm::sys::path::remove_filename(dsPath);
+           llvm::sys::path::append(dsPath, "dataset.h");
+           std::error_code dec;
+           llvm::raw_fd_ostream dos(dsPath, dec);
+           if (dec)
+               return module.emitError("generate-cgra-driver: cannot write '")
+                      << dsPath << "': " << dec.message();
+           dos << dsText;
+           return success();
+       }
+   
+       void runOnOperation() override
+       {
+           ModuleOp module = getOperation();
+           gSim = simOpt;
+           gHoistDesc = hoistDescOpt;
+           gCkOnly = ckOnly;
+           gWatchBuffers = watchBuffersOpt;
+           gGoldenHdr = goldenHdr;
+           gNoDeployedMetric = noDeployedMetric;
+           gMaxDispatch = maxDispatch;
+           gProgressEvery = progressEveryOpt;
+           gNoReference = noReferenceOpt;
+           if (outputPath.empty()) {
+               module.emitError(
+                   "generate-cgra-driver: --output=<path> is required");
+               return signalPassFailure();
+           }
+   
+           // Globals-based kernels (from-.mlir tfm path): one config per
+           // cgra.deploy.
+           if (isGlobalsBased(module)) {
+               std::string mainText, dsText;
+               if (failed(
+                       mc::emit(
+                           module,
+                           nameOpt.getValue(),
+                           iomapPrefixOpt.getValue(),
+                           mainText,
+                           dsText,
+                           interleavedKBOpt)))
+                   return signalPassFailure();
+               if (failed(writeFiles(module, mainText, dsText)))
+                   return signalPassFailure();
+               return;
+           }
+   
+           KernelInfo ki;
+           if (failed(analyze(module, ki))) return signalPassFailure();
+   
+           SmallVector<std::string> names;
+           for (size_t i = 0; i < ki.streams.size(); ++i)
+               names.push_back("v" + std::to_string(i));
+   
+           SmallVector<int> inCh, outCh;
+           if (!iomapPath.empty()
+               && failed(loadIoMap(iomapPath, inCh, outCh, module)))
+               return signalPassFailure();
+   
+           std::string bsym =
+               bsymOpt.empty() ? ki.base + "_kernel" : bsymOpt.getValue();
+           std::string header =
+               headerOpt.empty() ? bsym + ".h" : headerOpt.getValue();
+   
+           // The GR-HEEP STRELA app: keeps the MMIO dispatch in C, links the
+           // outlined host init/post, and checks the fabric against a
+           // transliterated reference.
+           Transliterator t(ki, names);
+           auto refBody = t.run();
+           if (!refBody) {
+               module.emitError(
+                   "generate-cgra-driver: cannot build software reference "
+                   "from @"
+                   + ki.base + "_kernel");
+               return signalPassFailure();
+           }
+           std::string mainText, datasetText;
+           std::tie(mainText, datasetText) =
+               emitGRHeep(ki, names, inCh, outCh, bsym, header, *refBody);
+   
+           if (failed(writeFiles(module, mainText, datasetText)))
+               return signalPassFailure();
+       }
+   };
+   
+   } // namespace
+   
+   std::unique_ptr<mlir::Pass> cgra::createCGRAGenerateDriverPass()
+   { return std::make_unique<CGRAGenerateDriverPass>(); }

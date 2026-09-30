@@ -1,0 +1,35 @@
+
+.. _program_listing_file_include_picea-mlir_Conversion_DFGToEmitHLS_DFGToEmitHLS.h:
+
+Program Listing for File DFGToEmitHLS.h
+=======================================
+
+|exhale_lsh| :ref:`Return to documentation for file <file_include_picea-mlir_Conversion_DFGToEmitHLS_DFGToEmitHLS.h>` (``include/picea-mlir/Conversion/DFGToEmitHLS/DFGToEmitHLS.h``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. code-block:: cpp
+
+   
+   
+   #pragma once
+   
+   #include "mlir/Pass/Pass.h"
+   #include "mlir/Transforms/DialectConversion.h"
+   
+   namespace mlir {
+   
+   //===- Generated includes -------------------------------------------------===//
+   
+   #define GEN_PASS_DECL_CONVERTDFGTOEMITHLS
+   #include "picea-mlir/Conversion/Passes.h.inc"
+   
+   //===----------------------------------------------------------------------===//
+   
+   void populateDFGToEmitHLSConversionPatterns(
+       TypeConverter &typeConverter,
+       RewritePatternSet &patterns);
+   
+   std::unique_ptr<Pass> createConvertDFGToEmitHLSPass();
+   
+   } // namespace mlir

@@ -1,0 +1,343 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DFGOps &mdash; picea 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/collapsible-lists/css/tree_view.css?v=a885cde7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js?v=73120307"></script>
+      <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js?v=660e4f45"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            picea
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Installation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../README.html">About the project</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#guides">Guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#related-projects">Related projects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#development-environment-nix">Development Environment (Nix)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#build-on-ubuntu-24-04-no-nix">Build on Ubuntu 24.04 (no Nix)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#gurobi-license">Gurobi license</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#installing">Installing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#run-the-tests">Run the tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#build-the-documentation">Build the documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#compiling-a-design">Compiling a design</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#running-a-design-on-the-board">Running a design on the board</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#exporting-a-profiled-application-to-mocasin">Exporting a profiled application to Mocasin</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Guides</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../guides/laksa.html">The FPGA Variant using LAKSA backend</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/cgra.html">The CGRA Variant</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">MLIR Dialects</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/Base2Ops.html">‘base2’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/CGRAOps.html">‘cgra’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/DFGOps.html">‘dfg’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/EmitHLSOps.html">‘emithls’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/FilterOps.html">‘filter’ Dialect</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Passes</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/PICEAConversionPasses.html">PICEA Conversion Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/CGRAPasses.html">CGRA Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/DFGPasses.html">DFG Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/EmitHLSPasses.html">Emit HLS Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/FuncExtPasses.html">Func Ext Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/LinalgExtPasses.html">Linalg Ext Passes</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">C++ API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="library_root.html">C++ API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">picea</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">DFGOps</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/page_md_build_2include_2picea-mlir_2Dialect_2DFG_2IR_2DFGOps.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="dfgops">
+<span id="page-md-build-2include-2picea-mlir-2dialect-2dfg-2ir-2dfgops"></span><h1>DFGOps<a class="headerlink" href="#dfgops" title="Link to this heading"></a></h1>
+<dl>
+<dt class="sig sig-object cpp">
+<span class="target" id="md_build_2include_2picea-mlir_2Dialect_2DFG_2IR_2DFGOps"></span><em><span class="pre">page</span></em> <span class="sig-name descname"><span class="pre">DFGOps</span></span></dt>
+<dd><section id="md_build_2include_2picea-mlir_2Dialect_2DFG_2IR_2DFGOps_1autotoc_md111">
+<h2>‘dfg’ Dialect<a class="headerlink" href="#md_build_2include_2picea-mlir_2Dialect_2DFG_2IR_2DFGOps_1autotoc_md111" title="Link to this heading"></a></h2>
+<p id="md_build_2include_2picea-mlir_2Dialect_2DFG_2IR_2DFGOps_1autotoc_md111">The <code class="docutils literal notranslate"><span class="pre">dfg</span></code> dialect groups together a set of types, operations and transformations that are useful to implement a structured abstraction on dataflow graphs. These abstractions are useful for constructing KPN/SDF-like dataflow graphs, which include definitions of nodes, edges and their connections.</p>
+<section id="md_build_2include_2picea-mlir_2Dialect_2DFG_2IR_2DFGOps_1autotoc_md112">
+<h3>Operations<a class="headerlink" href="#md_build_2include_2picea-mlir_2Dialect_2DFG_2IR_2DFGOps_1autotoc_md112" title="Link to this heading"></a></h3>
+<section id="md_build_2include_2picea-mlir_2Dialect_2DFG_2IR_2DFGOps_1autotoc_md113">
+<span id="md_build_2include_2picea-mlir_2Dialect_2DFG_2IR_2DFGOps_1autotoc_md112"></span><h4>&lt;tt&gt;dfg.channel&lt;/tt&gt; (dfg::ChannelOp)<a class="headerlink" href="#md_build_2include_2picea-mlir_2Dialect_2DFG_2IR_2DFGOps_1autotoc_md113" title="Link to this heading"></a></h4>
+<p id="md_build_2include_2picea-mlir_2Dialect_2DFG_2IR_2DFGOps_1autotoc_md113"><em>Defines a channel with one input and one output port</em></p>
+<p>The <code class="docutils literal notranslate"><span class="pre">channel</span></code> operation produces a typed channel (i.e. an edge in the dataflow graph) that links two nodes (i.e. process or operator) in the dataflow graph. The input of a channel will be connected to an output port of a node, which means its type is dfg::InputType, same for output port.</p>
+<p>A channel can also be sized manually with a 32-bit integer, otherwise, it indicates an unbounded FIFO channel. The token flows in the channel can also be of memref/tensor type, which implicitly enables multiple read/write as in KPN MoC.</p>
+<p>Examples: <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>%input, %output = dfg.channel() : type
+$input, %output = dfg.channel(size) : shape x type
+</pre></div>
+</div>
+</p>
+<p>Interfaces: <code class="docutils literal notranslate"><span class="pre">DFG_EdgeInterface</span></code>, <code class="docutils literal notranslate"><span class="pre">MemoryEffectsOpInterface</span></code>, <code class="docutils literal notranslate"><span class="pre">OpAsmOpInterface</span></code></p>
+</section>
+<section id="md_build_2include_2picea-mlir_2Dialect_2DFG_2IR_2DFGOps_1autotoc_md116">
+<h4>&lt;tt&gt;dfg.embed&lt;/tt&gt; (dfg::EmbedOp)<a class="headerlink" href="#md_build_2include_2picea-mlir_2Dialect_2DFG_2IR_2DFGOps_1autotoc_md116" title="Link to this heading"></a></h4>
+<p id="md_build_2include_2picea-mlir_2Dialect_2DFG_2IR_2DFGOps_1autotoc_md116"><em>Embed a region as a subgraph in another.</em></p>
+<p>The <code class="docutils literal notranslate"><span class="pre">embed</span></code> operation embed a region into another region. The syntax and usage of this operation is similar to <code class="docutils literal notranslate"><span class="pre">instantiate</span></code> operation.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">dfg</span><span class="o">.</span><span class="n">region</span> <span class="nd">@child</span> <span class="n">inputs</span><span class="p">(</span><span class="o">...</span><span class="p">)</span> <span class="n">outputs</span><span class="p">(</span><span class="o">...</span><span class="p">)</span> <span class="p">{</span><span class="o">...</span><span class="p">}</span>
+<span class="n">dfg</span><span class="o">.</span><span class="n">region</span> <span class="nd">@parent</span> <span class="n">inputs</span><span class="p">(</span><span class="o">...</span><span class="p">)</span> <span class="n">outputs</span><span class="p">(</span><span class="o">...</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">dfg</span><span class="o">.</span><span class="n">embed</span> <span class="nd">@child</span> <span class="n">inputs</span><span class="p">(</span><span class="o">...</span><span class="p">)</span> <span class="n">outputs</span><span class="p">(</span><span class="o">...</span><span class="p">)</span> <span class="p">:</span> <span class="p">(</span><span class="o">...</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="o">...</span><span class="p">)</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Traits: <code class="docutils literal notranslate"><span class="pre">AttrSizedOperandSegments</span></code></p>
+<p>Interfaces: <code class="docutils literal notranslate"><span class="pre">DFG_GraphInterface</span></code>, <code class="docutils literal notranslate"><span class="pre">DFG_NodeInterface</span></code></p>
+</section>
+<section id="md_build_2include_2picea-mlir_2Dialect_2DFG_2IR_2DFGOps_1autotoc_md119">
+<h4>&lt;tt&gt;dfg.instantiate&lt;/tt&gt; (dfg::InstantiateOp)<a class="headerlink" href="#md_build_2include_2picea-mlir_2Dialect_2DFG_2IR_2DFGOps_1autotoc_md119" title="Link to this heading"></a></h4>
+<p id="md_build_2include_2picea-mlir_2Dialect_2DFG_2IR_2DFGOps_1autotoc_md119"><em>Instantiates an DFG node.</em></p>
+<p>The <code class="docutils literal notranslate"><span class="pre">instantiate</span></code> operation instantiate an operator or process in a region with a set of inputs and outputs. InstantiateOp creates a DFG node with a set of input and output values.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">dfg</span><span class="o">.</span><span class="n">operator</span> <span class="nd">@operator</span> <span class="n">inputs</span><span class="p">(</span><span class="o">...</span><span class="p">)</span> <span class="n">outputs</span><span class="p">(</span><span class="o">...</span><span class="p">)</span> <span class="p">{</span><span class="o">...</span><span class="p">}</span>
+<span class="n">dfg</span><span class="o">.</span><span class="n">process</span> <span class="nd">@process</span> <span class="n">inputs</span><span class="p">(</span><span class="o">...</span><span class="p">)</span> <span class="n">outputs</span><span class="p">(</span><span class="o">...</span><span class="p">)</span> <span class="p">{</span><span class="o">...</span><span class="p">}</span>
+<span class="n">dfg</span><span class="o">.</span><span class="n">region</span> <span class="nd">@graph</span> <span class="n">inputs</span><span class="p">(</span><span class="o">...</span><span class="p">)</span> <span class="n">outputs</span><span class="p">(</span><span class="o">...</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">dfg</span><span class="o">.</span><span class="n">instantiate</span> <span class="nd">@operator</span> <span class="n">inputs</span><span class="p">(</span><span class="o">...</span><span class="p">)</span> <span class="n">outputs</span><span class="p">(</span><span class="o">...</span><span class="p">)</span> <span class="p">:</span> <span class="p">(</span><span class="o">...</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="o">...</span><span class="p">)</span>
+    <span class="n">dfg</span><span class="o">.</span><span class="n">instantiate</span> <span class="nd">@process</span> <span class="n">inputs</span><span class="p">(</span><span class="o">...</span><span class="p">)</span> <span class="n">outputs</span><span class="p">(</span><span class="o">...</span><span class="p">)</span> <span class="p">:</span> <span class="p">(</span><span class="o">...</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="o">...</span><span class="p">)</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Traits: <code class="docutils literal notranslate"><span class="pre">AttrSizedOperandSegments</span></code></p>
+<p>Interfaces: <code class="docutils literal notranslate"><span class="pre">DFG_NodeInterface</span></code></p>
+</section>
+<section id="md_build_2include_2picea-mlir_2Dialect_2DFG_2IR_2DFGOps_1autotoc_md122">
+<h4>&lt;tt&gt;dfg.loop&lt;/tt&gt; (dfg::LoopOp)<a class="headerlink" href="#md_build_2include_2picea-mlir_2Dialect_2DFG_2IR_2DFGOps_1autotoc_md122" title="Link to this heading"></a></h4>
+<p id="md_build_2include_2picea-mlir_2Dialect_2DFG_2IR_2DFGOps_1autotoc_md122"><em>Defines the repeatedly executed body of a process.</em></p>
+<p>The <code class="docutils literal notranslate"><span class="pre">loop</span></code> operation defines the repeatedly executed body of a process. During each iteration, operations in the body can pull tokens from the process input ports, perform computations, and push tokens to the process output ports.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">inputs</span></code> and <code class="docutils literal notranslate"><span class="pre">outputs</span></code> lists identify the process ports that are monitored for stream termination. A port is closed when no further tokens will be transferred through it. When closure is observed on the listed input ports, the process loop terminates and closure propagates through its listed output ports. This allows downstream processes, and eventually the whole dataflow graph, to shut down.</p>
+<p>Example: <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>dfg.process @add inputs(%a: !dfg.output&lt;type&gt;) outputs(%b: !dfg.input&lt;type&gt;)
+{
+    dfg.loop inputs(%a: !dfg.output&lt;type&gt;) outputs(%b: !dfg.input&lt;type&gt;) {
+        ops ...
+    }
+}
+</pre></div>
+</div>
+</p>
+<p>Traits: <code class="docutils literal notranslate"><span class="pre">AttrSizedOperandSegments</span></code>, <code class="docutils literal notranslate"><span class="pre">AutomaticAllocationScope</span></code>, <code class="docutils literal notranslate"><span class="pre">HasParent&lt;ProcessOp&gt;</span></code>, <code class="docutils literal notranslate"><span class="pre">NoTerminator</span></code>, <code class="docutils literal notranslate"><span class="pre">RecursiveMemoryEffects</span></code></p>
+</section>
+<section id="md_build_2include_2picea-mlir_2Dialect_2DFG_2IR_2DFGOps_1autotoc_md124">
+<h4>&lt;tt&gt;dfg.operator&lt;/tt&gt; (dfg::OperatorOp)<a class="headerlink" href="#md_build_2include_2picea-mlir_2Dialect_2DFG_2IR_2DFGOps_1autotoc_md124" title="Link to this heading"></a></h4>
+<p id="md_build_2include_2picea-mlir_2Dialect_2DFG_2IR_2DFGOps_1autotoc_md124"><em>Defines an DFG node in SDF MoC</em></p>
+<p>The <code class="docutils literal notranslate"><span class="pre">operator</span></code> operation defines one node (actor) in the SDF dataflow model. An operator is a special case of <code class="docutils literal notranslate"><span class="pre">process</span></code>, which only write values into output ports once at the end.</p>
+<p>Example: <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">dfg</span><span class="o">.</span><span class="n">operator</span> <span class="nd">@node</span> <span class="n">inputs</span><span class="p">(</span><span class="o">%</span><span class="n">in0</span><span class="p">:</span> <span class="n">i32</span><span class="p">,</span> <span class="o">%</span><span class="n">in1</span><span class="p">:</span> <span class="n">i32</span><span class="p">)</span> <span class="n">outputs</span><span class="p">(</span><span class="o">%</span><span class="n">out0</span><span class="p">:</span> <span class="n">i32</span><span class="p">,</span> <span class="o">%</span><span class="n">out1</span><span class="p">:</span> <span class="n">i32</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">ops</span> <span class="o">...</span>
+    <span class="n">dfg</span><span class="o">.</span><span class="n">output</span> <span class="o">...</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</p>
+<p>Traits: <code class="docutils literal notranslate"><span class="pre">AffineScope</span></code>, <code class="docutils literal notranslate"><span class="pre">AutomaticAllocationScope</span></code>, <code class="docutils literal notranslate"><span class="pre">HasParent&lt;ModuleOp&gt;</span></code>, <code class="docutils literal notranslate"><span class="pre">IsolatedFromAbove</span></code>, <code class="docutils literal notranslate"><span class="pre">SingleBlockImplicitTerminator&lt;OutputOp&gt;</span></code>, <code class="docutils literal notranslate"><span class="pre">SingleBlock</span></code></p>
+<p>Interfaces: <code class="docutils literal notranslate"><span class="pre">DFG_NodeInterface</span></code>, <code class="docutils literal notranslate"><span class="pre">OpAsmOpInterface</span></code></p>
+</section>
+<section id="md_build_2include_2picea-mlir_2Dialect_2DFG_2IR_2DFGOps_1autotoc_md126">
+<h4>&lt;tt&gt;dfg.output&lt;/tt&gt; (dfg::OutputOp)<a class="headerlink" href="#md_build_2include_2picea-mlir_2Dialect_2DFG_2IR_2DFGOps_1autotoc_md126" title="Link to this heading"></a></h4>
+<p id="md_build_2include_2picea-mlir_2Dialect_2DFG_2IR_2DFGOps_1autotoc_md126"><em>Terminator for an OperatorOp</em></p>
+<p>Syntax:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>operation ::= `dfg.output` attr-dict ($operands^ `:` type($operands))?
+</pre></div>
+</div>
+<p>Traits: <code class="docutils literal notranslate"><span class="pre">HasParent&lt;OperatorOp&gt;</span></code>, <code class="docutils literal notranslate"><span class="pre">Terminator</span></code></p>
+</section>
+<section id="md_build_2include_2picea-mlir_2Dialect_2DFG_2IR_2DFGOps_1autotoc_md128">
+<h4>&lt;tt&gt;dfg.process&lt;/tt&gt; (dfg::ProcessOp)<a class="headerlink" href="#md_build_2include_2picea-mlir_2Dialect_2DFG_2IR_2DFGOps_1autotoc_md128" title="Link to this heading"></a></h4>
+<p id="md_build_2include_2picea-mlir_2Dialect_2DFG_2IR_2DFGOps_1autotoc_md128"><em>Defines a process in the KPN MoC</em></p>
+<p>The <code class="docutils literal notranslate"><span class="pre">process</span></code> operation defines one node (actor) in the KPN dataflow model. A process is a symbol at module scope and can be connected to other processes through its input and output ports.</p>
+<p>The port interface is described by <code class="docutils literal notranslate"><span class="pre">function_type</span></code>:<ul class="simple">
+<li><p>function inputs represent incoming channel ends</p></li>
+<li><p>function results represent outgoing channel ends</p></li>
+</ul>
+</p>
+<p>A <code class="docutils literal notranslate"><span class="pre">process</span></code> can have one region with other IRs inside or none with a link to a library call.</p>
+<p>Example: <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>dfg.process @node inputs(%in0: !dfg.output&lt;type&gt;, %in1: !dfg.output&lt;type&gt;)
+                  outputs(%out0: !dfg.input&lt;type&gt;, %out1: !dfg.input&lt;type&gt;)
+{
+    ops ...
+}
+</pre></div>
+</div>
+</p>
+<p>Traits: <code class="docutils literal notranslate"><span class="pre">AffineScope</span></code>, <code class="docutils literal notranslate"><span class="pre">AutomaticAllocationScope</span></code>, <code class="docutils literal notranslate"><span class="pre">HasParent&lt;ModuleOp&gt;</span></code>, <code class="docutils literal notranslate"><span class="pre">IsolatedFromAbove</span></code>, <code class="docutils literal notranslate"><span class="pre">NoTerminator</span></code></p>
+<p>Interfaces: <code class="docutils literal notranslate"><span class="pre">DFG_NodeInterface</span></code>, <code class="docutils literal notranslate"><span class="pre">OpAsmOpInterface</span></code></p>
+</section>
+<section id="md_build_2include_2picea-mlir_2Dialect_2DFG_2IR_2DFGOps_1autotoc_md130">
+<h4>&lt;tt&gt;dfg.pull&lt;/tt&gt; (dfg::PullOp)<a class="headerlink" href="#md_build_2include_2picea-mlir_2Dialect_2DFG_2IR_2DFGOps_1autotoc_md130" title="Link to this heading"></a></h4>
+<p id="md_build_2include_2picea-mlir_2Dialect_2DFG_2IR_2DFGOps_1autotoc_md130"><em>Pulls a token from an input port of a node.</em></p>
+<p>The <code class="docutils literal notranslate"><span class="pre">pull</span></code> operation reads a token out from an input port of a node, which is connected via a channel to an output port of another node. An optional set of indices must be used if the read port has a shape, indicating a set of ports to be chosen from.</p>
+<p>Example: <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>dfg.process @pull inputs(%in0: !dfg.output&lt;type&gt;, %in1: !dfg.output&lt;shapextype&gt;)
+{
+    %0 = arith.constant ... : index
+    %token0 = dfg.pull %in0 : !dfg.output&lt;type&gt;
+    %token1 = dfg.pull %in1[%0] : !dfg.output&lt;shapextype&gt;
+}
+</pre></div>
+</div>
+</p>
+<p>Interfaces: <code class="docutils literal notranslate"><span class="pre">OpAsmOpInterface</span></code></p>
+</section>
+<section id="md_build_2include_2picea-mlir_2Dialect_2DFG_2IR_2DFGOps_1autotoc_md133">
+<h4>&lt;tt&gt;dfg.pull_as_memref&lt;/tt&gt; (dfg::PullAsMemRefOp)<a class="headerlink" href="#md_build_2include_2picea-mlir_2Dialect_2DFG_2IR_2DFGOps_1autotoc_md133" title="Link to this heading"></a></h4>
+<p id="md_build_2include_2picea-mlir_2Dialect_2DFG_2IR_2DFGOps_1autotoc_md133"><em>Pulls as a memref from a shaped input port of a node.</em></p>
+<p>Interfaces: <code class="docutils literal notranslate"><span class="pre">OpAsmOpInterface</span></code></p>
+</section>
+<section id="md_build_2include_2picea-mlir_2Dialect_2DFG_2IR_2DFGOps_1autotoc_md136">
+<h4>&lt;tt&gt;dfg.pull_as_tensor&lt;/tt&gt; (dfg::PullAsTensorOp)<a class="headerlink" href="#md_build_2include_2picea-mlir_2Dialect_2DFG_2IR_2DFGOps_1autotoc_md136" title="Link to this heading"></a></h4>
+<p id="md_build_2include_2picea-mlir_2Dialect_2DFG_2IR_2DFGOps_1autotoc_md136"><em>Pulls as a tensor from a shaped input port of a node.</em></p>
+<p>Interfaces: <code class="docutils literal notranslate"><span class="pre">OpAsmOpInterface</span></code></p>
+</section>
+<section id="md_build_2include_2picea-mlir_2Dialect_2DFG_2IR_2DFGOps_1autotoc_md139">
+<h4>&lt;tt&gt;dfg.push&lt;/tt&gt; (dfg::PushOp)<a class="headerlink" href="#md_build_2include_2picea-mlir_2Dialect_2DFG_2IR_2DFGOps_1autotoc_md139" title="Link to this heading"></a></h4>
+<p id="md_build_2include_2picea-mlir_2Dialect_2DFG_2IR_2DFGOps_1autotoc_md139"><em>Pushes a token to an output port of a node.</em></p>
+<p>The <code class="docutils literal notranslate"><span class="pre">push</span></code> operation writes a token to an output port of a node, which is connected via a channel to an input port of another node. An optional set of indices must be used if the port has a shape.</p>
+<p>Example: <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>dfg.process @push outputs(%out0: !dfg.input&lt;type&gt;, %out1: !dfg.input&lt;shapextype&gt;)
+{
+    %0 = arith.constant ... : index
+    %1 = arith.constant ... : type
+    %token0 = dfg.push %1 to %out0 : !dfg.input&lt;type&gt;
+    %token1 = dfg.push %1 to %out1[%0] : !dfg.input&lt;shapextype&gt;
+}
+</pre></div>
+</div>
+</p>
+</section>
+<section id="md_build_2include_2picea-mlir_2Dialect_2DFG_2IR_2DFGOps_1autotoc_md141">
+<h4>&lt;tt&gt;dfg.push_memref&lt;/tt&gt; (dfg::PushMemRefOp)<a class="headerlink" href="#md_build_2include_2picea-mlir_2Dialect_2DFG_2IR_2DFGOps_1autotoc_md141" title="Link to this heading"></a></h4>
+<p id="md_build_2include_2picea-mlir_2Dialect_2DFG_2IR_2DFGOps_1autotoc_md141"><em>Pushes a memref to a shaped output port of a node.</em></p>
+</section>
+<section id="md_build_2include_2picea-mlir_2Dialect_2DFG_2IR_2DFGOps_1autotoc_md143">
+<h4>&lt;tt&gt;dfg.push_tensor&lt;/tt&gt; (dfg::PushTensorOp)<a class="headerlink" href="#md_build_2include_2picea-mlir_2Dialect_2DFG_2IR_2DFGOps_1autotoc_md143" title="Link to this heading"></a></h4>
+<p id="md_build_2include_2picea-mlir_2Dialect_2DFG_2IR_2DFGOps_1autotoc_md143"><em>Pushes a tensor to a shaped output port of a node.</em></p>
+</section>
+<section id="md_build_2include_2picea-mlir_2Dialect_2DFG_2IR_2DFGOps_1autotoc_md145">
+<h4>&lt;tt&gt;dfg.region&lt;/tt&gt; (dfg::RegionOp)<a class="headerlink" href="#md_build_2include_2picea-mlir_2Dialect_2DFG_2IR_2DFGOps_1autotoc_md145" title="Link to this heading"></a></h4>
+<p id="md_build_2include_2picea-mlir_2Dialect_2DFG_2IR_2DFGOps_1autotoc_md145"><em>Defines a region(subgraph) in the DFG.</em></p>
+<p>The <code class="docutils literal notranslate"><span class="pre">region</span></code> operation defines one node(subgraph) or the entire graph in the dataflow graph model. A region can be embedded into another region as subgraph, which content can only be an instantiation of a node(processes/operators/regions) and their connections(channels). A region’s input/output ports must be connected/used.</p>
+<p>Example: <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>dfg.region @node inputs(%in0: !dfg.output&lt;type&gt;, %in1: !dfg.output&lt;type&gt;)
+                 outputs(%out0: !dfg.input&lt;type&gt;, %out1: !dfg.input&lt;type&gt;)
+{
+    %0:2 = dfg.channel ...
+    dfg.instantiate @process ...
+    dfg.instantiate @operator ...
+    dfg.embed @region ...
+}
+</pre></div>
+</div>
+</p>
+<p>Traits: <code class="docutils literal notranslate"><span class="pre">IsolatedFromAbove</span></code>, <code class="docutils literal notranslate"><span class="pre">NoTerminator</span></code></p>
+<p>Interfaces: <code class="docutils literal notranslate"><span class="pre">DFG_GraphInterface</span></code>, <code class="docutils literal notranslate"><span class="pre">DFG_NodeInterface</span></code>, <code class="docutils literal notranslate"><span class="pre">OpAsmOpInterface</span></code></p>
+</section>
+</section>
+<section id="md_build_2include_2picea-mlir_2Dialect_2DFG_2IR_2DFGOps_1autotoc_md147">
+<h3>Types<a class="headerlink" href="#md_build_2include_2picea-mlir_2Dialect_2DFG_2IR_2DFGOps_1autotoc_md147" title="Link to this heading"></a></h3>
+<section id="md_build_2include_2picea-mlir_2Dialect_2DFG_2IR_2DFGOps_1autotoc_md148">
+<span id="md_build_2include_2picea-mlir_2Dialect_2DFG_2IR_2DFGOps_1autotoc_md147"></span><h4>InputType<a class="headerlink" href="#md_build_2include_2picea-mlir_2Dialect_2DFG_2IR_2DFGOps_1autotoc_md148" title="Link to this heading"></a></h4>
+<p id="md_build_2include_2picea-mlir_2Dialect_2DFG_2IR_2DFGOps_1autotoc_md148"><em>Sending channel end type</em></p>
+<p>The <code class="docutils literal notranslate"><span class="pre">input</span></code> type represents the sending end of a dataflow edge in a dataflow graph. This type takes an optional shape and a scalar MLIR type as element type, such as: <code class="docutils literal notranslate"><span class="pre">!dfg.input&lt;i32&gt;</span></code>, <code class="docutils literal notranslate"><span class="pre">!dfg.input&lt;2xi32&gt;</span></code>, <code class="docutils literal notranslate"><span class="pre">!dfg.input&lt;2x2xi32&gt;</span></code></p>
+</section>
+<section id="md_build_2include_2picea-mlir_2Dialect_2DFG_2IR_2DFGOps_1autotoc_md150">
+<h4>OutputType<a class="headerlink" href="#md_build_2include_2picea-mlir_2Dialect_2DFG_2IR_2DFGOps_1autotoc_md150" title="Link to this heading"></a></h4>
+<p id="md_build_2include_2picea-mlir_2Dialect_2DFG_2IR_2DFGOps_1autotoc_md150"><em>Receiving channel end type</em></p>
+<p>The <code class="docutils literal notranslate"><span class="pre">output</span></code> type represents the receiving end of a dataflow edge in a dataflow graph. Details are similar to dfg::InputType.</p>
+</section>
+</section>
+<section id="md_build_2include_2picea-mlir_2Dialect_2DFG_2IR_2DFGOps_1autotoc_md152">
+<h3>Enums<a class="headerlink" href="#md_build_2include_2picea-mlir_2Dialect_2DFG_2IR_2DFGOps_1autotoc_md152" title="Link to this heading"></a></h3>
+<section id="md_build_2include_2picea-mlir_2Dialect_2DFG_2IR_2DFGOps_1autotoc_md153">
+<span id="md_build_2include_2picea-mlir_2Dialect_2DFG_2IR_2DFGOps_1autotoc_md152"></span><h4>OffloadHardware<a class="headerlink" href="#md_build_2include_2picea-mlir_2Dialect_2DFG_2IR_2DFGOps_1autotoc_md153" title="Link to this heading"></a></h4>
+<p id="md_build_2include_2picea-mlir_2Dialect_2DFG_2IR_2DFGOps_1autotoc_md153"><em>The hardware back to be offloaded to</em></p>
+</section>
+</section>
+</section>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

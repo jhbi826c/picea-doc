@@ -1,0 +1,178 @@
+# The FPGA Variant using LAKSA backend
+
+With this backend, `picea` lowers a given input graph, for instance, the bottleneck part of a CNN or DSP application, to an optimized HLS C++ code, that is compatible directly with the Xilinx Vivado Suite.
+The lowering is **template-free and annotation-free**: every implementation decision — where a line buffer goes, how wide each stream is, which loop is unrolled by how much, which pragma lands where — is inferred from the `linalg` indexing maps and from two numbers describing the board, not from a library of pre-written operator templates or from user-supplied directives.
+
+[LAKSA](https://github.com/tud-ccc/laksa) (**L**inear **A**lgebra **K**ernel **S**treaming **A**rchitecture) is described in the CASES'26 paper of the same name; this page is the narrative reference for its implementation here.
+The exhaustive per-pass option lists and operation definitions are generated from the tablegen sources and live in the Passes and MLIR Dialects sections of this documentation.
+
+## 1. What the backend produces
+
+The input is a `linalg`-on-tensors graph, typically emitted by IREE from an ONNX / TensorFlow / PyTorch model, or a `filter` dialect kernel for DSP workloads.
+The output is a **streaming dataflow architecture**: one HLS C++ function per graph node, connected by `hls::stream` FIFOs, wrapped in a top function carrying `DATAFLOW`, with all resource pragmas already in place.
+
+Three properties drive the whole design, and they are what separates LAKSA from a generic HLS lowering:
+
+- **Line buffers instead of intermediate tensors.** A node never materializes its full input.
+  For a sliding-window kernel only the rows still needed by a later window are kept, so on-chip memory stays flat as the input grows rather than scaling with it.
+  This is what keeps a 224×224 convolution inside the BRAM budget of an edge device.
+- **A single ILP that bounds BRAM *and* DSP.** Loop unroll factors, pipeline placement and array partitioning are not independent knobs: unrolling a loop multiplies both the DSPs its body needs and the partitioning its arrays need.
+  `--emithls-pragma-dse` solves for all of them at once against the real device limits.
+- **FIFO depths derived from the same solution.** The per-node cycle estimates the ILP already computed are reused to size each channel, so a fast branch of a diamond (e.g. a residual block) cannot deadlock against a slow one.
+
+## 2. Kernel classification and the line buffer
+
+Everything downstream hangs off one analysis, performed by `--convert-linalg-to-picea-loops` on each `linalg.generic`.
+A kernel is one of three types, decided purely from its indexing maps:
+
+| Type | Recognized by | Example |
+|---|---|---|
+| **PP** — pure parallel | every iterator is `parallel` | elementwise, ReLU |
+| **SW** — sliding window | some map result is a compound expression `s*d_parallel + δ*d_reduction` | Conv2D, Pool2D |
+| **RR** — regular reduction | a reduction iterator, but no compound expression | MatMul, fully connected |
+
+The compound expression is the whole trick: `s` is the stride (how far the window moves per output) and `δ` the dilation (spacing inside the window), and both fall out of the affine expression without anyone naming the operator "convolution".
+`analyzeSlidingWindow` returns exactly that triple.
+
+For an SW kernel the pass then splits the iteration space into three groups — **read** loops that scan the input in raster order, **write** loops over the output-only parallel dims (e.g. output channels), and **reduce** loops that walk inside the window — and builds:
+
+- an `emithls.helper.linebuf` of `(K-1)·δ` rows, one slot per input stream, each row as wide as the input.
+  The bottom row is consumed as it streams in and is never stored;
+- an `emithls.helper.window` reading the full dilated receptive field out of it;
+- an `affine.if` guarding the computation with the *warm-up* condition `d_i ≥ (K-1)·δ` and, when `s > 1`, the *stride* condition `(d_i − (K-1)·δ) mod s == 0`.
+  That single `IntegerSet` is what makes strided and dilated convolutions fall out of the same code path;
+- an `emithls.helper.accumulate` for the reduction, tagged with `accu_at` so the later passes know which axes may be written in parallel.
+
+An RR kernel takes the same path with the buffer degenerating to one slot per stream, and a PP kernel just becomes a plain affine loop nest.
+Fill and broadcast generics are not lowered at all — their constant is folded onto the output buffer as a `fill_with` attribute and consumed later.
+
+## 3. The `convert-to-emithls` pipeline
+
+Declared in [ConvertToEmitHLS](include/picea-mlir/Conversion/ConvertToEmitHLS/ConvertToEmitHLS.h).
+It takes two options, both defaulting to the AMD KV260:
+
+| Option | Default | Meaning |
+|---|---|---|
+| `available-bram` | 288 | BRAM18K blocks the design may use |
+| `available-dsp` | 1248 | DSP48 slices the design may use |
+
+```bash
+picea-opt --convert-to-emithls="available-bram=288 available-dsp=1248" model.mlir
+```
+
+The pipeline runs in five phases.
+Canonicalization and CSE run between them and are omitted from the tables below.
+
+### 3.1 Normalize the graph
+
+| Pass | Role |
+|---|---|
+| `--convert-filter-to-linalg` | Expands `filter.fir` and friends into `linalg` generics, so DSP kernels join the same path as ML ones. |
+| `--linalg-soft-transpose` | Transposes constant tensors at compile time instead of emitting a runtime transpose. |
+| `--linalg-generalize-named-ops` | Upstream: named ops (`linalg.conv_2d_nhwc_hwcf`, …) become `linalg.generic`, so only one form has to be analyzed. |
+| `--linalg-scalarize-splat-dense` | A splat tensor operand becomes a scalar, removing a buffer that would otherwise be allocated. |
+| `--linalg-inline-scalar-operands` | Upstream: folds rank-0 operands into the body. |
+
+After this phase the graph is a flat sequence of `linalg.generic` ops, which is the only shape the kernel analysis knows.
+
+### 3.2 Build the dataflow graph
+
+| Pass | Role |
+|---|---|
+| `--func-outline-computation-leaf` | Splits the model function into one leaf function per computation, leaving a caller that is just a sequence of calls — the graph. |
+| `--convert-func-to-dfg` | A leaf (no calls) becomes a `dfg.operator`; the caller becomes a `dfg.region`; each `func.call` becomes a `dfg.instantiate` plus the `dfg.channel`s wiring its results onward. |
+| `--dfg-channel-fanout-expansion` | A channel read by more than one consumer is cloned per consumer, because a FIFO cannot be read twice. |
+| `--dfg-operator-to-process` | Turns the SDF operator into a KPN `dfg.process`: an explicit pull/compute/push body. |
+
+The `dfg` dialect is where the streaming semantics live; from here on, "a node" means a process and "an edge" means a channel.
+
+### 3.3 Lower the bodies
+
+| Pass | Role |
+|---|---|
+| `--one-shot-bufferize` | Tensors become memrefs. Everything after this point is memory, which is what the line-buffer analysis needs. |
+| `--linalg-map-to-generic` | `linalg.map` normalized to `linalg.generic`. |
+| `--convert-linalg-to-picea-loops` | **The core pass**: classification, line buffer, compute window, warm-up/stride guard, accumulate helper. |
+| `--dfg-io-normalization` | Normalizes port shapes and the pull/push ops against what the bodies actually consume and produce. |
+| `--convert-memref-pad-to-picea-loops` | Recognizes the "subview into a larger alloc" padding idiom and rewrites it as a streaming loop that emits the `fill_with` constant outside the real region — no padded copy is ever stored. |
+| `--convert-affine-to-emithls`, `--convert-arith-to-emithls`, `--convert-base2-to-emithls` | Loops, arithmetic and fixed-point ops become their `emithls` equivalents. |
+| `--dfg-collapse-unit-dims` | Drops statically size-1 axes from port shapes, which otherwise survive as `for (i = 0; i < 1; ++i)` in the generated C++. |
+| `--convert-dfg-to-emithls` | Processes and regions become `emithls.func`, channels become `hls::stream` variables, instantiations become calls, pulls/pushes become `emithls.stream.read`/`write`. |
+| `--reconcile-unrealized-casts` | Cleans up the casts the partial conversions left behind. |
+
+### 3.4 Clean up the emitted C++
+
+At this point the IR is already C++-shaped, and the passes are about the quality of the code a human would read in `main.cpp`.
+
+| Pass | Role |
+|---|---|
+| `--emithls-resolve-helpers` | Turns the `helper.linebuf` / `helper.window` / `helper.accumulate` placeholders into real arrays, shift loops and accumulation code. This is where the abstract line-buffer description becomes real storage. |
+| `--emithls-loop-fusion` | Merges adjacent `emithls.for` loops when every shared resource is touched at corresponding indices, and forwards a store immediately read back at the same address. |
+| `--emithls-fuse-operator` | `a = a + b` becomes `a += b`. |
+| `--emithls-fold-expression` | Folds an expression's content, e.g. pushing a negation through a comparison instead of emitting it. |
+| `--emithls-add-io-functions` | Rewrites the top function's interface to word-wide pointer arguments and generates the pack/unpack functions between those words and the internal streams. |
+
+### 3.5 Design space exploration and pragmas
+
+| Pass | Role |
+|---|---|
+| `--emithls-pragma-dse` | Builds the ILP and solves it. Writes the solution back as `dse.*` attributes; changes no code. |
+| `--emithls-pragma-insertion` | Consumes those attributes: strip-mines each loop into its outer/inner pair, rewrites port widths, and materializes the actual `emithls.pragma.*` ops. |
+| `--emithls-insert-includes` | Adds the `#include`s the generated code turned out to need. |
+
+Splitting solve from rewrite is deliberate.
+The solver runs on normalized IR where every loop still has its original trip count, which is what the cycle and resource formulas are written against; and the decisions survive as plain attributes, so the IR can be dumped, inspected or hand-edited between the two.
+
+## 4. The ILP model
+
+`--emithls-pragma-dse` builds a Gurobi model over the whole dataflow graph — a Gurobi license is therefore required to run this pipeline.
+It abstracts the IR into nodes (a call plus its callee) and edges (a stream variable connecting one producer port to one consumer port), then:
+
+- **Variables.** Each candidate loop gets a split factor chosen from the divisors of its trip count, plus a binary "pipelined" decision.
+  A loop whose factor is dictated by the port it feeds is tied to that port instead of choosing freely.
+- **Pipelining implies unrolling.** A pipelined loop's body must be one combinational block, so every candidate nested inside it is forced to full unroll.
+  A loop reducing into a single accumulator only pipelines usefully once fully duplicated, so pipelining pins its own factor to its trip count.
+- **BRAM.** Each local array's cost is a static baseline from its unpartitioned dimensions times the product of the factors of the loops that drive its partitioned ones — 18,432 bits per BRAM18K.
+  Const tables and shift-register-style self-updating arrays are recognized as register-backed and cost nothing.
+  The sum over every node must fit `available-bram`.
+- **DSP.** Each multiplication is charged by its *pre-cast* operand width (the datapath upcasts to i32 before multiplying, so the declared width would overcount), times the number of parallel hardware copies of the loop it sits in.
+  The sum must fit `available-dsp`.
+- **Objective.** Not the sum of all node cycles but the graph's **critical path**: the longest producer-to-consumer chain, maxed over every sink.
+  For a straight chain the two coincide; they differ exactly when the graph forks and merges.
+
+Both resource models are deliberate over-estimates — actual HLS binding is far more subtle — so the constraint is an upper bound, and a design that satisfies it fits.
+The paper quantifies the gap against post-PnR numbers.
+
+**FIFO sizing** reuses the solved per-token cycle counts: each edge is sized so its producer never stalls, and at a merge every incoming edge is padded by the gap between its own producer's latency and the slowest one's.
+That padding is what keeps a residual block from deadlocking.
+
+## 5. Getting the artifacts out
+
+`emithls` is a C++-shaped dialect, so the translations are direct emitters.
+`resin --hls` runs the pipeline and all of them in one step.
+It also lowers the same input a second time through `convert-to-picea-emitc`, into a scalar reference that the board run is checked against:
+
+```bash
+resin --hls -o out/ model.mlir
+```
+
+| File | Translation | Purpose |
+|---|---|---|
+| `hls.mlir` | — | The lowered IR, kept for inspection |
+| `ref.mlir` | — | The same input lowered to `emitc` instead |
+| `hw/main.cpp` | `emithls-to-cpp` | Vitis HLS input |
+| `hw/run_hls.tcl` | `emithls-to-hls-tcl` | Synthesis script |
+| `hw/run_vivado.tcl` | `emithls-to-vivado-tcl` | Block design, implementation and bitstream |
+| `hw/build.sh` | `emithls-to-hls-build-script` | Runs both scripts and extracts the bitstream |
+| `app/app.h` | `emithls-to-laksa-header` | Board-side driver API |
+| `app/app.c` | `emithls-to-laksa-app` | Userspace program driving the design |
+| `app/app.dtsi` | `emithls-to-kria-dtsi` | Device tree overlay |
+| `app/ref.h` | `mlir-to-cpp` (from `ref.mlir`) | Scalar reference |
+| `app/ref.c` | `emitc-to-laksa-ref` (from `ref.mlir`) | Compares the board's output against `ref.h` |
+| `app/run.sh` | `emithls-to-laksa-run-script` | Loads the design, runs it and checks it |
+
+The `app/` artifacts target [`laksa-hls-kria-driver`](https://github.com/tud-ccc/laksa-hls-kria-dirver), which exposes `/dev/laksa` so a userspace program can drive the generated kernel over AXI Lite without recompiling the kernel module per design.
+The file names are not free-form — `run_hls.tcl` feeds `main.cpp` to `add_files`, and `app.c` includes `app.h`.
+`--num-bram` and `--num-dsp` override the resource budget the pragma DSE works with.
+
+Each stage can also be run on its own with `picea-opt` and `picea-translate`; `resin -v` (repeatable) prints the exact command lines it dispatches, which is the quickest way to reproduce one stage by hand.

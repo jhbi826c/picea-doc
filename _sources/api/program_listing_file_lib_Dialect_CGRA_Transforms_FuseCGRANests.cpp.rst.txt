@@ -1,0 +1,272 @@
+
+.. _program_listing_file_lib_Dialect_CGRA_Transforms_FuseCGRANests.cpp:
+
+Program Listing for File FuseCGRANests.cpp
+==========================================
+
+|exhale_lsh| :ref:`Return to documentation for file <file_lib_Dialect_CGRA_Transforms_FuseCGRANests.cpp>` (``lib/Dialect/CGRA/Transforms/FuseCGRANests.cpp``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. code-block:: cpp
+
+   
+   
+   #include "mlir/Dialect/Affine/IR/AffineOps.h"
+   #include "mlir/Dialect/Func/IR/FuncOps.h"
+   #include "mlir/IR/IRMapping.h"
+   #include "mlir/Pass/Pass.h"
+   #include "picea-mlir/Dialect/CGRA/Transforms/Passes.h"
+   
+   #include "llvm/ADT/DenseSet.h"
+   #include "llvm/ADT/SetVector.h"
+   
+   using namespace mlir;
+   
+   namespace {
+   
+   // The STRELA fabric's stream budget (strela_pkg.sv: INPUT_NODES/OUTPUT_NODES).
+   static constexpr unsigned kInputNodes = 4;
+   static constexpr unsigned kOutputNodes = 4;
+   
+   // The loops of a perfect nest, outermost first.
+   static SmallVector<affine::AffineForOp> nestOf(affine::AffineForOp top)
+   {
+       SmallVector<affine::AffineForOp> loops{top};
+       while (true) {
+           auto &body = loops.back().getBody()->getOperations();
+           // Perfect nest: exactly one op (the inner for) plus the terminator.
+           if (std::distance(body.begin(), body.end()) != 2) break;
+           auto inner = dyn_cast<affine::AffineForOp>(&body.front());
+           if (!inner) break;
+           loops.push_back(inner);
+       }
+       return loops;
+   }
+   
+   static bool
+   sameShape(ArrayRef<affine::AffineForOp> a, ArrayRef<affine::AffineForOp> b)
+   {
+       if (a.size() != b.size()) return false;
+       for (size_t i = 0; i < a.size(); ++i) {
+           affine::AffineForOp x = a[i], y = b[i];
+           if (!x.hasConstantLowerBound() || !x.hasConstantUpperBound()
+               || !y.hasConstantLowerBound() || !y.hasConstantUpperBound())
+               return false;
+           if (x.getConstantLowerBound() != y.getConstantLowerBound()
+               || x.getConstantUpperBound() != y.getConstantUpperBound()
+               || x.getStepAsInt() != y.getStepAsInt())
+               return false;
+       }
+       return true;
+   }
+   
+   // A (memref, index-map, index-operands) access, compared after mapping the
+   // consumer's induction variables onto the producer's.
+   struct Access {
+       Value memref;
+       AffineMap map;
+       SmallVector<Value> operands;
+       bool operator==(const Access &o) const
+       {
+           return memref == o.memref && map == o.map
+                  && ArrayRef<Value>(operands) == ArrayRef<Value>(o.operands);
+       }
+   };
+   struct AccessInfo : llvm::DenseMapInfo<void*> {
+       static Access getEmptyKey() { return {Value(), AffineMap(), {}}; }
+       static Access getTombstoneKey()
+       { return {Value(), AffineMap(), {Value()}}; }
+       static unsigned getHashValue(const Access &a)
+       {
+           return llvm::hash_combine(
+               a.memref.getAsOpaquePointer(),
+               a.map.getAsOpaquePointer(),
+               a.operands.size());
+       }
+       static bool isEqual(const Access &l, const Access &r) { return l == r; }
+   };
+   
+   struct CGRAFuseNestsPass
+           : public PassWrapper<CGRAFuseNestsPass, OperationPass<func::FuncOp>> {
+   
+       MLIR_DEFINE_EXPLICIT_INTERNAL_INLINE_TYPE_ID(CGRAFuseNestsPass)
+   
+       StringRef getArgument() const final { return "fuse-cgra-nests"; }
+       StringRef getDescription() const final
+       {
+           return "Fuse an adjacent producer->consumer affine nest pair into one "
+                  "nest "
+                  "(one CGRA configuration instead of two)";
+       }
+   
+       // Fuse `p` (producer) into `c` (consumer) when every condition holds:
+       //  * both are perfect nests with the SAME constant bounds and steps;
+       //  * the producer has exactly one store, to `MA` at index map `SA`;
+       //  * the consumer reads `MA` only at that same `SA` (so the value can be
+       //    forwarded in SSA instead of going through memory) and also STORES to
+       //    `MA` at `SA`, which makes the producer's store dead;
+       //  * the producer writes nothing else, and reads nothing the consumer
+       //  writes
+       //    (so the only cross-nest dependence is the loop-independent one we
+       //    forward — fusing cannot reorder any other dependence);
+       //  * the fused body stays within the fabric's stream budget.
+       // On success the producer's body is prepended to the consumer's, its store
+       // is dropped, and the producer nest is erased.
+       bool tryFuse(affine::AffineForOp p, affine::AffineForOp c)
+       {
+           SmallVector<affine::AffineForOp> pn = nestOf(p), cn = nestOf(c);
+           if (!sameShape(pn, cn)) return false;
+           Block *pb = pn.back().getBody(), *cb = cn.back().getBody();
+   
+           // Producer: exactly one store, and no nested control flow.
+           affine::AffineStoreOp pStore;
+           for (Operation &op : pb->without_terminator()) {
+               if (auto s = dyn_cast<affine::AffineStoreOp>(op)) {
+                   if (pStore) return false;
+                   pStore = s;
+                   continue;
+               }
+               if (op.getNumRegions()) return false;
+           }
+           if (!pStore) return false;
+   
+           // Map the consumer's IVs onto the producer's so accesses are
+           // comparable.
+           IRMapping c2p;
+           for (size_t i = 0; i < pn.size(); ++i)
+               c2p.map(cn[i].getInductionVar(), pn[i].getInductionVar());
+           auto mapped = [&](ValueRange vs) {
+               SmallVector<Value> r;
+               for (Value v : vs) r.push_back(c2p.lookupOrDefault(v));
+               return r;
+           };
+           Access prod{
+               pStore.getMemRef(),
+               pStore.getAffineMap(),
+               SmallVector<Value>(pStore.getMapOperands())};
+   
+           // Consumer: must read the produced location, must overwrite it, and
+           // must not touch that buffer at any other index.
+           bool readsProduced = false, overwrites = false;
+           for (Operation &op : cb->without_terminator()) {
+               if (op.getNumRegions()) return false;
+               if (auto l = dyn_cast<affine::AffineLoadOp>(op)) {
+                   if (l.getMemRef() != prod.memref) continue;
+                   Access a{
+                       l.getMemRef(),
+                       l.getAffineMap(),
+                       mapped(l.getMapOperands())};
+                   if (!(a == prod))
+                       return false; // reads a different element of the produced
+                                     // buffer
+                   readsProduced = true;
+               } else if (auto s = dyn_cast<affine::AffineStoreOp>(op)) {
+                   if (s.getMemRef() != prod.memref) continue;
+                   Access a{
+                       s.getMemRef(),
+                       s.getAffineMap(),
+                       mapped(s.getMapOperands())};
+                   if (!(a == prod)) return false;
+                   overwrites = true;
+               }
+           }
+           if (!readsProduced || !overwrites) return false;
+   
+           // The producer must not read anything the consumer writes
+           // (anti-dependence that fusion would reorder), other than the forwarded
+           // buffer itself.
+           DenseSet<void*> cStored;
+           for (Operation &op : cb->without_terminator())
+               if (auto s = dyn_cast<affine::AffineStoreOp>(op))
+                   cStored.insert(s.getMemRef().getAsOpaquePointer());
+           for (Operation &op : pb->without_terminator())
+               if (auto l = dyn_cast<affine::AffineLoadOp>(op))
+                   if (l.getMemRef() != prod.memref
+                       && cStored.contains(l.getMemRef().getAsOpaquePointer()))
+                       return false;
+   
+           // Stream budget of the fused body: distinct load accesses (minus the
+           // ones forwarded in SSA) and distinct store accesses.
+           llvm::SmallDenseSet<Access, 8, AccessInfo> ins, outs;
+           for (Operation &op : pb->without_terminator())
+               if (auto l = dyn_cast<affine::AffineLoadOp>(op))
+                   ins.insert(
+                       {l.getMemRef(),
+                        l.getAffineMap(),
+                        SmallVector<Value>(l.getMapOperands())});
+           for (Operation &op : cb->without_terminator()) {
+               if (auto l = dyn_cast<affine::AffineLoadOp>(op)) {
+                   Access a{
+                       l.getMemRef(),
+                       l.getAffineMap(),
+                       mapped(l.getMapOperands())};
+                   if (!(a == prod)) ins.insert(a);
+               } else if (auto s = dyn_cast<affine::AffineStoreOp>(op)) {
+                   outs.insert(
+                       {s.getMemRef(),
+                        s.getAffineMap(),
+                        mapped(s.getMapOperands())});
+               }
+           }
+           if (ins.size() > kInputNodes || outs.size() > kOutputNodes)
+               return false;
+   
+           // --- rewrite: prepend the producer's body to the consumer's ---
+           IRMapping p2c;
+           for (size_t i = 0; i < pn.size(); ++i)
+               p2c.map(pn[i].getInductionVar(), cn[i].getInductionVar());
+           OpBuilder b(cb, cb->begin());
+           Value produced;
+           for (Operation &op : pb->without_terminator()) {
+               if (&op == pStore.getOperation()) {
+                   produced = p2c.lookupOrDefault(pStore.getValueToStore());
+                   continue; // dead: the consumer overwrites this location
+               }
+               b.clone(op, p2c);
+           }
+           // Forward the produced value to every consumer load of it.
+           for (Operation &op : llvm::make_early_inc_range(*cb)) {
+               auto l = dyn_cast<affine::AffineLoadOp>(&op);
+               if (!l || l.getMemRef() != prod.memref) continue;
+               Access a{
+                   l.getMemRef(),
+                   l.getAffineMap(),
+                   mapped(l.getMapOperands())};
+               if (a == prod) {
+                   l.getResult().replaceAllUsesWith(produced);
+                   l.erase();
+               }
+           }
+           p.erase();
+           return true;
+       }
+   
+       void runOnOperation() override
+       {
+           func::FuncOp fn = getOperation();
+           bool changed = true;
+           while (changed) {
+               changed = false;
+               SmallVector<affine::AffineForOp> tops;
+               for (Block &blk : fn.getBody())
+                   for (Operation &op : blk)
+                       if (auto f = dyn_cast<affine::AffineForOp>(&op))
+                           tops.push_back(f);
+               for (size_t i = 0; i + 1 < tops.size(); ++i) {
+                   // Only fuse IMMEDIATELY adjacent nests (nothing in between that
+                   // could observe the producer's buffer).
+                   if (tops[i]->getNextNode() != tops[i + 1].getOperation())
+                       continue;
+                   if (tryFuse(tops[i], tops[i + 1])) {
+                       changed = true;
+                       break;
+                   }
+               }
+           }
+       }
+   };
+   } // namespace
+   
+   std::unique_ptr<mlir::Pass> mlir::cgra::createCGRAFuseNestsPass()
+   { return std::make_unique<CGRAFuseNestsPass>(); }

@@ -1,0 +1,203 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>File EmitHLS.h &mdash; picea 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/collapsible-lists/css/tree_view.css?v=a885cde7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js?v=73120307"></script>
+      <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js?v=660e4f45"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            picea
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Installation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../README.html">About the project</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#guides">Guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#related-projects">Related projects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#development-environment-nix">Development Environment (Nix)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#build-on-ubuntu-24-04-no-nix">Build on Ubuntu 24.04 (no Nix)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#gurobi-license">Gurobi license</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#installing">Installing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#run-the-tests">Run the tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#build-the-documentation">Build the documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#compiling-a-design">Compiling a design</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#running-a-design-on-the-board">Running a design on the board</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#exporting-a-profiled-application-to-mocasin">Exporting a profiled application to Mocasin</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Guides</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../guides/laksa.html">The FPGA Variant using LAKSA backend</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/cgra.html">The CGRA Variant</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">MLIR Dialects</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/Base2Ops.html">‘base2’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/CGRAOps.html">‘cgra’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/DFGOps.html">‘dfg’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/EmitHLSOps.html">‘emithls’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/FilterOps.html">‘filter’ Dialect</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Passes</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/PICEAConversionPasses.html">PICEA Conversion Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/CGRAPasses.html">CGRA Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/DFGPasses.html">DFG Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/EmitHLSPasses.html">Emit HLS Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/FuncExtPasses.html">Func Ext Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/LinalgExtPasses.html">Linalg Ext Passes</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">C++ API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="library_root.html">C++ API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">picea</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">File EmitHLS.h</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/file_include_picea-mlir-c_Dialect_EmitHLS.h.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="file-emithls-h">
+<span id="file-include-picea-mlir-c-dialect-emithls-h"></span><h1>File EmitHLS.h<a class="headerlink" href="#file-emithls-h" title="Link to this heading"></a></h1>
+<p>↰ <a class="reference internal" href="dir_include_picea-mlir-c_Dialect.html#dir-include-picea-mlir-c-dialect"><span class="std std-ref">Parent directory</span></a> (<code class="docutils literal notranslate"><span class="pre">include/picea-mlir-c/Dialect</span></code>)</p>
+<nav class="contents local" id="contents">
+<p class="topic-title">Contents</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#definition-include-picea-mlir-c-dialect-emithls-h" id="id1">Definition (<code class="docutils literal notranslate"><span class="pre">include/picea-mlir-c/Dialect/EmitHLS.h</span></code>)</a></p></li>
+<li><p><a class="reference internal" href="#includes" id="id2">Includes</a></p></li>
+<li><p><a class="reference internal" href="#functions" id="id3">Functions</a></p></li>
+</ul>
+</nav>
+<section id="definition-include-picea-mlir-c-dialect-emithls-h">
+<h2>Definition (<code class="docutils literal notranslate"><span class="pre">include/picea-mlir-c/Dialect/EmitHLS.h</span></code>)<a class="headerlink" href="#definition-include-picea-mlir-c-dialect-emithls-h" title="Link to this heading"></a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="program_listing_file_include_picea-mlir-c_Dialect_EmitHLS.h.html">Program Listing for File EmitHLS.h</a></li>
+</ul>
+</div>
+</section>
+<section id="includes">
+<h2>Includes<a class="headerlink" href="#includes" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">mlir-c/IR.h</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">mlir-c/Support.h</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">picea-mlir/Dialect/EmitHLS/Transforms/Passes.capi.h.inc</span></code></p></li>
+</ul>
+</section>
+<section id="functions">
+<h2>Functions<a class="headerlink" href="#functions" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="function_picea-mlir-c_2Dialect_2EmitHLS_8h_1a46da290e46ed4173c9ec548c0c2d88a2.html#exhale-function-picea-mlir-c-2dialect-2emithls-8h-1a46da290e46ed4173c9ec548c0c2d88a2"><span class="std std-ref">Function mlirAttributeIsAEmitHLSDenseFixedAttr</span></a></p></li>
+<li><p><a class="reference internal" href="function_picea-mlir-c_2Dialect_2EmitHLS_8h_1ad7dd0ac62e1126729933c974c01c717f.html#exhale-function-picea-mlir-c-2dialect-2emithls-8h-1ad7dd0ac62e1126729933c974c01c717f"><span class="std std-ref">Function mlirAttributeIsAEmitHLSFixedAttr</span></a></p></li>
+<li><p><a class="reference internal" href="function_picea-mlir-c_2Dialect_2EmitHLS_8h_1a737f436b8c8701f81a5a6ed5b574fa7e.html#exhale-function-picea-mlir-c-2dialect-2emithls-8h-1a737f436b8c8701f81a5a6ed5b574fa7e"><span class="std std-ref">Function mlirCreateEmitHLSEmitHLSPragmaDSEWithOptions</span></a></p></li>
+<li><p><a class="reference internal" href="function_picea-mlir-c_2Dialect_2EmitHLS_8h_1a846be68cd6e40f2f50bcaf1eecfbccd2.html#exhale-function-picea-mlir-c-2dialect-2emithls-8h-1a846be68cd6e40f2f50bcaf1eecfbccd2"><span class="std std-ref">Function mlirEmitHLSArrayTypeGet</span></a></p></li>
+<li><p><a class="reference internal" href="function_picea-mlir-c_2Dialect_2EmitHLS_8h_1a7877d76e09f74507c4d16477db8bf7d5.html#exhale-function-picea-mlir-c-2dialect-2emithls-8h-1a7877d76e09f74507c4d16477db8bf7d5"><span class="std std-ref">Function mlirEmitHLSArrayTypeGetDimSize</span></a></p></li>
+<li><p><a class="reference internal" href="function_picea-mlir-c_2Dialect_2EmitHLS_8h_1aaa5660732671e7f9fc16d7627eb2de15.html#exhale-function-picea-mlir-c-2dialect-2emithls-8h-1aaa5660732671e7f9fc16d7627eb2de15"><span class="std std-ref">Function mlirEmitHLSArrayTypeGetElementType</span></a></p></li>
+<li><p><a class="reference internal" href="function_picea-mlir-c_2Dialect_2EmitHLS_8h_1a9c8a9e290f8a473eb48d311975a077e9.html#exhale-function-picea-mlir-c-2dialect-2emithls-8h-1a9c8a9e290f8a473eb48d311975a077e9"><span class="std std-ref">Function mlirEmitHLSArrayTypeGetRank</span></a></p></li>
+<li><p><a class="reference internal" href="function_picea-mlir-c_2Dialect_2EmitHLS_8h_1a8a747eb82231522eeae05e6e4709e656.html#exhale-function-picea-mlir-c-2dialect-2emithls-8h-1a8a747eb82231522eeae05e6e4709e656"><span class="std std-ref">Function mlirEmitHLSDenseFixedAttrGet</span></a></p></li>
+<li><p><a class="reference internal" href="function_picea-mlir-c_2Dialect_2EmitHLS_8h_1ab6389cb8b62e61c1ee596cf3f93e6470.html#exhale-function-picea-mlir-c-2dialect-2emithls-8h-1ab6389cb8b62e61c1ee596cf3f93e6470"><span class="std std-ref">Function mlirEmitHLSDenseFixedAttrGetData</span></a></p></li>
+<li><p><a class="reference internal" href="function_picea-mlir-c_2Dialect_2EmitHLS_8h_1a8410ba7f222e6de00bd495ae21ae2529.html#exhale-function-picea-mlir-c-2dialect-2emithls-8h-1a8410ba7f222e6de00bd495ae21ae2529"><span class="std std-ref">Function mlirEmitHLSFixedAttrGet</span></a></p></li>
+<li><p><a class="reference internal" href="function_picea-mlir-c_2Dialect_2EmitHLS_8h_1a596cf05c5ab56920b5164fedd104482e.html#exhale-function-picea-mlir-c-2dialect-2emithls-8h-1a596cf05c5ab56920b5164fedd104482e"><span class="std std-ref">Function mlirEmitHLSFixedAttrGetValue</span></a></p></li>
+<li><p><a class="reference internal" href="function_picea-mlir-c_2Dialect_2EmitHLS_8h_1a7a30dbc0f216c35cc9af0731304302a8.html#exhale-function-picea-mlir-c-2dialect-2emithls-8h-1a7a30dbc0f216c35cc9af0731304302a8"><span class="std std-ref">Function mlirEmitHLSFixedTypeGet</span></a></p></li>
+<li><p><a class="reference internal" href="function_picea-mlir-c_2Dialect_2EmitHLS_8h_1a9bed77d6051b73c49d7aa0b2d14a4b1c.html#exhale-function-picea-mlir-c-2dialect-2emithls-8h-1a9bed77d6051b73c49d7aa0b2d14a4b1c"><span class="std std-ref">Function mlirEmitHLSFixedTypeGetFracBits</span></a></p></li>
+<li><p><a class="reference internal" href="function_picea-mlir-c_2Dialect_2EmitHLS_8h_1aaba1aaeff0b36c1af55cad271cf444f8.html#exhale-function-picea-mlir-c-2dialect-2emithls-8h-1aaba1aaeff0b36c1af55cad271cf444f8"><span class="std std-ref">Function mlirEmitHLSFixedTypeGetIntBits</span></a></p></li>
+<li><p><a class="reference internal" href="function_picea-mlir-c_2Dialect_2EmitHLS_8h_1af2b0ea21503a6eb226c0ffef4b6bafc5.html#exhale-function-picea-mlir-c-2dialect-2emithls-8h-1af2b0ea21503a6eb226c0ffef4b6bafc5"><span class="std std-ref">Function mlirEmitHLSFixedTypeGetTotalBits</span></a></p></li>
+<li><p><a class="reference internal" href="function_picea-mlir-c_2Dialect_2EmitHLS_8h_1a00cb8bf69cd70dc00659f41bac9612ee.html#exhale-function-picea-mlir-c-2dialect-2emithls-8h-1a00cb8bf69cd70dc00659f41bac9612ee"><span class="std std-ref">Function mlirEmitHLSPointerTypeGet</span></a></p></li>
+<li><p><a class="reference internal" href="function_picea-mlir-c_2Dialect_2EmitHLS_8h_1ab8a17bfd4e313efdf922d9e7a0ae994d.html#exhale-function-picea-mlir-c-2dialect-2emithls-8h-1ab8a17bfd4e313efdf922d9e7a0ae994d"><span class="std std-ref">Function mlirEmitHLSPointerTypeGetElementType</span></a></p></li>
+<li><p><a class="reference internal" href="function_picea-mlir-c_2Dialect_2EmitHLS_8h_1aba311981954c96888c19a6a42f8f191a.html#exhale-function-picea-mlir-c-2dialect-2emithls-8h-1aba311981954c96888c19a6a42f8f191a"><span class="std std-ref">Function mlirEmitHLSStreamTypeGet</span></a></p></li>
+<li><p><a class="reference internal" href="function_picea-mlir-c_2Dialect_2EmitHLS_8h_1a72ccdb741a41310a6f12f73d792b5c83.html#exhale-function-picea-mlir-c-2dialect-2emithls-8h-1a72ccdb741a41310a6f12f73d792b5c83"><span class="std std-ref">Function mlirEmitHLSStreamTypeGetElementType</span></a></p></li>
+<li><p><a class="reference internal" href="function_picea-mlir-c_2Dialect_2EmitHLS_8h_1acfd765e736afcfa8a00c68365fb09f12.html#exhale-function-picea-mlir-c-2dialect-2emithls-8h-1acfd765e736afcfa8a00c68365fb09f12"><span class="std std-ref">Function mlirTranslateEmitHLSToCpp</span></a></p></li>
+<li><p><a class="reference internal" href="function_picea-mlir-c_2Dialect_2EmitHLS_8h_1a33fcede1b81b7ad8d96d0fe931b8a31d.html#exhale-function-picea-mlir-c-2dialect-2emithls-8h-1a33fcede1b81b7ad8d96d0fe931b8a31d"><span class="std std-ref">Function mlirTranslateEmitHLSToHLSTcl</span></a></p></li>
+<li><p><a class="reference internal" href="function_picea-mlir-c_2Dialect_2EmitHLS_8h_1a9582d6f36cfe2723c025f9f7453dc4ae.html#exhale-function-picea-mlir-c-2dialect-2emithls-8h-1a9582d6f36cfe2723c025f9f7453dc4ae"><span class="std std-ref">Function mlirTranslateEmitHLSToKriaDtsi</span></a></p></li>
+<li><p><a class="reference internal" href="function_picea-mlir-c_2Dialect_2EmitHLS_8h_1a6e1ab2794c8a26aec396af077101979d.html#exhale-function-picea-mlir-c-2dialect-2emithls-8h-1a6e1ab2794c8a26aec396af077101979d"><span class="std std-ref">Function mlirTranslateEmitHLSToLaksaApp</span></a></p></li>
+<li><p><a class="reference internal" href="function_picea-mlir-c_2Dialect_2EmitHLS_8h_1a7d8cfd994ab921c7f13286e5dc0ae1ac.html#exhale-function-picea-mlir-c-2dialect-2emithls-8h-1a7d8cfd994ab921c7f13286e5dc0ae1ac"><span class="std std-ref">Function mlirTranslateEmitHLSToLaksaHeader</span></a></p></li>
+<li><p><a class="reference internal" href="function_picea-mlir-c_2Dialect_2EmitHLS_8h_1aeae5ba32d403945a20c41ebfeb85ef2d.html#exhale-function-picea-mlir-c-2dialect-2emithls-8h-1aeae5ba32d403945a20c41ebfeb85ef2d"><span class="std std-ref">Function mlirTranslateEmitHLSToVivadoTcl</span></a></p></li>
+<li><p><a class="reference internal" href="function_picea-mlir-c_2Dialect_2EmitHLS_8h_1a9a684d072e6185b4b06d49e44f7009c7.html#exhale-function-picea-mlir-c-2dialect-2emithls-8h-1a9a684d072e6185b4b06d49e44f7009c7"><span class="std std-ref">Function mlirTypeIsAEmitHLSArrayType</span></a></p></li>
+<li><p><a class="reference internal" href="function_picea-mlir-c_2Dialect_2EmitHLS_8h_1ab910c084158741ed0fcc439de2d6870f.html#exhale-function-picea-mlir-c-2dialect-2emithls-8h-1ab910c084158741ed0fcc439de2d6870f"><span class="std std-ref">Function mlirTypeIsAEmitHLSFixedType</span></a></p></li>
+<li><p><a class="reference internal" href="function_picea-mlir-c_2Dialect_2EmitHLS_8h_1acaaf01644af96e934aa66cc2a74b5ce3.html#exhale-function-picea-mlir-c-2dialect-2emithls-8h-1acaaf01644af96e934aa66cc2a74b5ce3"><span class="std std-ref">Function mlirTypeIsAEmitHLSPointerType</span></a></p></li>
+<li><p><a class="reference internal" href="function_picea-mlir-c_2Dialect_2EmitHLS_8h_1a15e859e3579451bc64e2887546cfe56e.html#exhale-function-picea-mlir-c-2dialect-2emithls-8h-1a15e859e3579451bc64e2887546cfe56e"><span class="std std-ref">Function mlirTypeIsAEmitHLSStreamType</span></a></p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,515 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Program Listing for File MemRefPadToPICEALoops.cpp &mdash; picea 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/collapsible-lists/css/tree_view.css?v=a885cde7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js?v=73120307"></script>
+      <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js?v=660e4f45"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            picea
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Installation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../README.html">About the project</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#guides">Guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#related-projects">Related projects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#development-environment-nix">Development Environment (Nix)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#build-on-ubuntu-24-04-no-nix">Build on Ubuntu 24.04 (no Nix)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#gurobi-license">Gurobi license</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#installing">Installing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#run-the-tests">Run the tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#build-the-documentation">Build the documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#compiling-a-design">Compiling a design</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#running-a-design-on-the-board">Running a design on the board</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#exporting-a-profiled-application-to-mocasin">Exporting a profiled application to Mocasin</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Guides</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../guides/laksa.html">The FPGA Variant using LAKSA backend</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/cgra.html">The CGRA Variant</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">MLIR Dialects</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/Base2Ops.html">‘base2’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/CGRAOps.html">‘cgra’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/DFGOps.html">‘dfg’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/EmitHLSOps.html">‘emithls’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/FilterOps.html">‘filter’ Dialect</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Passes</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/PICEAConversionPasses.html">PICEA Conversion Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/CGRAPasses.html">CGRA Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/DFGPasses.html">DFG Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/EmitHLSPasses.html">Emit HLS Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/FuncExtPasses.html">Func Ext Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/LinalgExtPasses.html">Linalg Ext Passes</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">C++ API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="library_root.html">C++ API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">picea</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Program Listing for File MemRefPadToPICEALoops.cpp</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/program_listing_file_lib_Conversion_MemRefPadToPICEALoops_MemRefPadToPICEALoops.cpp.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="program-listing-for-file-memrefpadtopicealoops-cpp">
+<span id="program-listing-file-lib-conversion-memrefpadtopicealoops-memrefpadtopicealoops-cpp"></span><h1>Program Listing for File MemRefPadToPICEALoops.cpp<a class="headerlink" href="#program-listing-for-file-memrefpadtopicealoops-cpp" title="Link to this heading"></a></h1>
+<p>↰ <a class="reference internal" href="file_lib_Conversion_MemRefPadToPICEALoops_MemRefPadToPICEALoops.cpp.html#file-lib-conversion-memrefpadtopicealoops-memrefpadtopicealoops-cpp"><span class="std std-ref">Return to documentation for file</span></a> (<code class="docutils literal notranslate"><span class="pre">lib/Conversion/MemRefPadToPICEALoops/MemRefPadToPICEALoops.cpp</span></code>)</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">"picea-mlir/Conversion/MemRefPadToPICEALoops/MemRefPadToPICEALoops.h"</span>
+
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"mlir/Dialect/Affine/IR/AffineOps.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"mlir/Dialect/Arith/IR/Arith.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"mlir/Dialect/MemRef/IR/MemRef.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"mlir/IR/PatternMatch.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"picea-mlir/Dialect/Base2/IR/Base2Ops.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"picea-mlir/Dialect/DFG/IR/DFG.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"picea-mlir/Dialect/EmitHLS/IR/EmitHLS.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"picea-mlir/Dialect/EmitHLS/IR/EmitHLSOps.h"</span>
+
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;llvm/ADT/STLExtras.h&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;llvm/ADT/SmallVector.h&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;llvm/Support/Debug.h&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;llvm/Support/LogicalResult.h&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;mlir/IR/BuiltinAttributes.h&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;mlir/IR/IRMapping.h&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;mlir/IR/IntegerSet.h&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;mlir/IR/Location.h&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;mlir/IR/MLIRContext.h&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;mlir/IR/ValueRange.h&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;mlir/Transforms/DialectConversion.h&gt;</span>
+
+<span class="cp">#define DEBUG_TYPE "memref-pad-to-picea-loops"</span>
+<span class="cp">#define PICEA_DEBUG(X)                                                         \</span>
+<span class="cp">    LLVM_DEBUG(                                                                \</span>
+<span class="cp">        llvm::dbgs() &lt;&lt; "[memref-pad-to-picea-loops] "; X;                     \</span>
+<span class="cp">        llvm::dbgs() &lt;&lt; "\n")</span>
+
+<span class="k">namespace</span><span class="w"> </span><span class="nn">mlir</span><span class="w"> </span><span class="p">{</span>
+<span class="cp">#define GEN_PASS_DEF_CONVERTMEMREFPADTOPICEALOOPS</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"picea-mlir/Conversion/Passes.h.inc"</span>
+<span class="p">}</span><span class="w"> </span><span class="c1">// namespace mlir</span>
+
+<span class="k">using</span><span class="w"> </span><span class="k">namespace</span><span class="w"> </span><span class="nn">mlir</span><span class="p">;</span>
+<span class="k">using</span><span class="w"> </span><span class="k">namespace</span><span class="w"> </span><span class="nn">mlir</span><span class="o">::</span><span class="nn">affine</span><span class="p">;</span>
+<span class="k">using</span><span class="w"> </span><span class="k">namespace</span><span class="w"> </span><span class="nn">mlir</span><span class="o">::</span><span class="nn">emithls</span><span class="p">;</span>
+
+<span class="k">namespace</span><span class="w"> </span><span class="p">{</span>
+
+<span class="c1">// One alloc dim that the subview crops: [offset, offset+size) is real data, the</span>
+<span class="c1">// rest of [0, allocSize) is padding to be filled with `fill_with`.</span>
+<span class="k">struct</span><span class="w"> </span><span class="nc">PadDim</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kt">unsigned</span><span class="w"> </span><span class="n">dim</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">int64_t</span><span class="w"> </span><span class="n">offset</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">int64_t</span><span class="w"> </span><span class="n">size</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">int64_t</span><span class="w"> </span><span class="n">allocSize</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="c1">// Rewrite information collection</span>
+<span class="k">struct</span><span class="w"> </span><span class="nc">PadStreamMatch</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">Operation</span><span class="o">*</span><span class="w"> </span><span class="n">pullOp</span><span class="p">;</span><span class="w">                 </span><span class="c1">// a dfg.pull or dfg.pull_as_memref</span>
+<span class="w">    </span><span class="n">UnrealizedConversionCastOp</span><span class="w"> </span><span class="n">castIn</span><span class="p">;</span><span class="w"> </span><span class="c1">// port shape -&gt; real (unpadded) shape</span>
+<span class="w">    </span><span class="n">memref</span><span class="o">::</span><span class="n">AllocOp</span><span class="w"> </span><span class="n">allocOp</span><span class="p">;</span><span class="w">           </span><span class="c1">// padded shape, has `fill_with` attr</span>
+<span class="w">    </span><span class="n">memref</span><span class="o">::</span><span class="n">SubViewOp</span><span class="w"> </span><span class="n">subviewOp</span><span class="p">;</span><span class="w">       </span><span class="c1">// real-data window into allocOp</span>
+<span class="w">    </span><span class="n">memref</span><span class="o">::</span><span class="n">CopyOp</span><span class="w"> </span><span class="n">copyOp</span><span class="p">;</span>
+<span class="w">    </span><span class="n">UnrealizedConversionCastOp</span><span class="w"> </span><span class="n">castOut</span><span class="p">;</span><span class="w"> </span><span class="c1">// padded shape -&gt; port shape</span>
+<span class="w">    </span><span class="n">Operation</span><span class="o">*</span><span class="w"> </span><span class="n">pushOp</span><span class="p">;</span><span class="w">                  </span><span class="c1">// a dfg.push or dfg.push_memref</span>
+<span class="w">    </span><span class="n">Type</span><span class="w"> </span><span class="n">tokenType</span><span class="p">;</span><span class="w"> </span><span class="c1">// type of the value pulled/pushed per port firing</span>
+<span class="w">    </span><span class="n">SmallVector</span><span class="o">&lt;</span><span class="n">PadDim</span><span class="o">&gt;</span><span class="w"> </span><span class="n">padDims</span><span class="p">;</span><span class="w"> </span><span class="c1">// alloc dims where subview &lt; alloc size</span>
+<span class="p">};</span>
+
+<span class="c1">// Recognizes the pad idiom anchored at `subviewOp` and checks every structural</span>
+<span class="c1">// precondition the rewrite below relies on.</span>
+<span class="k">static</span><span class="w"> </span><span class="n">FailureOr</span><span class="o">&lt;</span><span class="n">PadStreamMatch</span><span class="o">&gt;</span>
+<span class="n">matchPadStreamPattern</span><span class="p">(</span><span class="n">memref</span><span class="o">::</span><span class="n">SubViewOp</span><span class="w"> </span><span class="n">subviewOp</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">PadStreamMatch</span><span class="w"> </span><span class="n">match</span><span class="p">;</span>
+<span class="w">    </span><span class="n">match</span><span class="p">.</span><span class="n">subviewOp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">subviewOp</span><span class="p">;</span>
+
+<span class="w">    </span><span class="n">match</span><span class="p">.</span><span class="n">allocOp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">subviewOp</span><span class="p">.</span><span class="n">getSource</span><span class="p">().</span><span class="n">getDefiningOp</span><span class="o">&lt;</span><span class="n">memref</span><span class="o">::</span><span class="n">AllocOp</span><span class="o">&gt;</span><span class="p">();</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">match</span><span class="p">.</span><span class="n">allocOp</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="o">!</span><span class="n">match</span><span class="p">.</span><span class="n">allocOp</span><span class="o">-&gt;</span><span class="n">hasAttr</span><span class="p">(</span><span class="s">"fill_with"</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">subviewOp</span><span class="p">.</span><span class="n">emitError</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"expected subview source to be a "</span>
+<span class="w">                                 </span><span class="s">"memref.alloc with a 'fill_with' attribute"</span><span class="p">;</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">failure</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">subviewOp</span><span class="o">-&gt;</span><span class="n">hasOneUse</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">subviewOp</span><span class="p">.</span><span class="n">emitError</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"expected subview to have exactly one use"</span><span class="p">;</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">failure</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="n">match</span><span class="p">.</span><span class="n">copyOp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dyn_cast</span><span class="o">&lt;</span><span class="n">memref</span><span class="o">::</span><span class="n">CopyOp</span><span class="o">&gt;</span><span class="p">(</span><span class="o">*</span><span class="n">subviewOp</span><span class="o">-&gt;</span><span class="n">getUsers</span><span class="p">().</span><span class="n">begin</span><span class="p">());</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">match</span><span class="p">.</span><span class="n">copyOp</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">match</span><span class="p">.</span><span class="n">copyOp</span><span class="p">.</span><span class="n">getTarget</span><span class="p">()</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">subviewOp</span><span class="p">.</span><span class="n">getResult</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">subviewOp</span><span class="p">.</span><span class="n">emitError</span><span class="p">()</span>
+<span class="w">            </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"expected subview's only use to be a memref.copy into it"</span><span class="p">;</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">failure</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="n">match</span><span class="p">.</span><span class="n">castIn</span><span class="w"> </span><span class="o">=</span>
+<span class="w">        </span><span class="n">match</span><span class="p">.</span><span class="n">copyOp</span><span class="p">.</span><span class="n">getSource</span><span class="p">().</span><span class="n">getDefiningOp</span><span class="o">&lt;</span><span class="n">UnrealizedConversionCastOp</span><span class="o">&gt;</span><span class="p">();</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">match</span><span class="p">.</span><span class="n">castIn</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">match</span><span class="p">.</span><span class="n">castIn</span><span class="p">.</span><span class="n">getInputs</span><span class="p">().</span><span class="n">size</span><span class="p">()</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">        </span><span class="o">||</span><span class="w"> </span><span class="n">match</span><span class="p">.</span><span class="n">castIn</span><span class="p">.</span><span class="n">getOutputs</span><span class="p">().</span><span class="n">size</span><span class="p">()</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">        </span><span class="o">||</span><span class="w"> </span><span class="o">!</span><span class="n">match</span><span class="p">.</span><span class="n">castIn</span><span class="o">-&gt;</span><span class="n">hasOneUse</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">subviewOp</span><span class="p">.</span><span class="n">emitError</span><span class="p">()</span>
+<span class="w">            </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"expected the copy source to be a single-input, "</span>
+<span class="w">               </span><span class="s">"single-result, single-use unrealized_conversion_cast"</span><span class="p">;</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">failure</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="n">Operation</span><span class="o">*</span><span class="w"> </span><span class="n">producer</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">match</span><span class="p">.</span><span class="n">castIn</span><span class="p">.</span><span class="n">getInputs</span><span class="p">()[</span><span class="mi">0</span><span class="p">].</span><span class="n">getDefiningOp</span><span class="p">();</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">producer</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="o">!</span><span class="n">isa</span><span class="o">&lt;</span><span class="n">dfg</span><span class="o">::</span><span class="n">PullOp</span><span class="p">,</span><span class="w"> </span><span class="n">dfg</span><span class="o">::</span><span class="n">PullAsMemRefOp</span><span class="o">&gt;</span><span class="p">(</span><span class="n">producer</span><span class="p">)</span>
+<span class="w">        </span><span class="o">||</span><span class="w"> </span><span class="o">!</span><span class="n">producer</span><span class="o">-&gt;</span><span class="n">hasOneUse</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">subviewOp</span><span class="p">.</span><span class="n">emitError</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"expected the cast input to come from a "</span>
+<span class="w">                                 </span><span class="s">"single-use dfg.pull or dfg.pull_as_memref"</span><span class="p">;</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">failure</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="n">match</span><span class="p">.</span><span class="n">pullOp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">producer</span><span class="p">;</span>
+
+<span class="w">    </span><span class="n">SmallVector</span><span class="o">&lt;</span><span class="n">Operation</span><span class="o">*&gt;</span><span class="w"> </span><span class="n">allocUsers</span><span class="p">(</span><span class="n">match</span><span class="p">.</span><span class="n">allocOp</span><span class="o">-&gt;</span><span class="n">getUsers</span><span class="p">());</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">allocUsers</span><span class="p">.</span><span class="n">size</span><span class="p">()</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">subviewOp</span><span class="p">.</span><span class="n">emitError</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"expected the padded alloc to have exactly "</span>
+<span class="w">                                 </span><span class="s">"two uses: this subview and a narrowing "</span>
+<span class="w">                                 </span><span class="s">"cast"</span><span class="p">;</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">failure</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="n">Operation</span><span class="o">*</span><span class="w"> </span><span class="n">other</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">allocUsers</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">subviewOp</span><span class="p">.</span><span class="n">getOperation</span><span class="p">()</span>
+<span class="w">                           </span><span class="o">?</span><span class="w"> </span><span class="n">allocUsers</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+<span class="w">                           </span><span class="o">:</span><span class="w"> </span><span class="n">allocUsers</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">allocUsers</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">subviewOp</span><span class="p">.</span><span class="n">getOperation</span><span class="p">()</span>
+<span class="w">        </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">allocUsers</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">subviewOp</span><span class="p">.</span><span class="n">getOperation</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">subviewOp</span><span class="p">.</span><span class="n">emitError</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"expected one of the padded alloc's two "</span>
+<span class="w">                                 </span><span class="s">"uses to be this subview"</span><span class="p">;</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">failure</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="n">match</span><span class="p">.</span><span class="n">castOut</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dyn_cast</span><span class="o">&lt;</span><span class="n">UnrealizedConversionCastOp</span><span class="o">&gt;</span><span class="p">(</span><span class="n">other</span><span class="p">);</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">match</span><span class="p">.</span><span class="n">castOut</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">match</span><span class="p">.</span><span class="n">castOut</span><span class="p">.</span><span class="n">getOutputs</span><span class="p">().</span><span class="n">size</span><span class="p">()</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">        </span><span class="o">||</span><span class="w"> </span><span class="o">!</span><span class="n">match</span><span class="p">.</span><span class="n">castOut</span><span class="o">-&gt;</span><span class="n">hasOneUse</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">subviewOp</span><span class="p">.</span><span class="n">emitError</span><span class="p">()</span>
+<span class="w">            </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"expected the alloc's other use to be a single-result, "</span>
+<span class="w">               </span><span class="s">"single-use unrealized_conversion_cast"</span><span class="p">;</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">failure</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="n">Operation</span><span class="o">*</span><span class="w"> </span><span class="n">consumer</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">*</span><span class="n">match</span><span class="p">.</span><span class="n">castOut</span><span class="o">-&gt;</span><span class="n">getUsers</span><span class="p">().</span><span class="n">begin</span><span class="p">();</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">isa</span><span class="o">&lt;</span><span class="n">dfg</span><span class="o">::</span><span class="n">PushOp</span><span class="p">,</span><span class="w"> </span><span class="n">dfg</span><span class="o">::</span><span class="n">PushMemRefOp</span><span class="o">&gt;</span><span class="p">(</span><span class="n">consumer</span><span class="p">)</span>
+<span class="w">        </span><span class="o">||</span><span class="w"> </span><span class="n">consumer</span><span class="o">-&gt;</span><span class="n">getOperand</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">match</span><span class="p">.</span><span class="n">castOut</span><span class="p">.</span><span class="n">getOutputs</span><span class="p">()[</span><span class="mi">0</span><span class="p">])</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">subviewOp</span><span class="p">.</span><span class="n">emitError</span><span class="p">()</span>
+<span class="w">            </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"expected the narrowing cast's only use to be a dfg.push or "</span>
+<span class="w">               </span><span class="s">"dfg.push_memref consuming its result"</span><span class="p">;</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">failure</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="n">match</span><span class="p">.</span><span class="n">pushOp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">consumer</span><span class="p">;</span>
+<span class="w">    </span><span class="n">match</span><span class="p">.</span><span class="n">tokenType</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">match</span><span class="p">.</span><span class="n">castOut</span><span class="p">.</span><span class="n">getOutputs</span><span class="p">()[</span><span class="mi">0</span><span class="p">].</span><span class="n">getType</span><span class="p">();</span>
+
+<span class="w">    </span><span class="n">Block</span><span class="o">*</span><span class="w"> </span><span class="n">block</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">subviewOp</span><span class="o">-&gt;</span><span class="n">getBlock</span><span class="p">();</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">Operation</span><span class="o">*</span><span class="w"> </span><span class="n">op</span><span class="w"> </span><span class="o">:</span>
+<span class="w">         </span><span class="p">{</span><span class="n">match</span><span class="p">.</span><span class="n">pullOp</span><span class="p">,</span>
+<span class="w">          </span><span class="n">match</span><span class="p">.</span><span class="n">castIn</span><span class="p">.</span><span class="n">getOperation</span><span class="p">(),</span>
+<span class="w">          </span><span class="n">match</span><span class="p">.</span><span class="n">allocOp</span><span class="p">.</span><span class="n">getOperation</span><span class="p">(),</span>
+<span class="w">          </span><span class="n">match</span><span class="p">.</span><span class="n">copyOp</span><span class="p">.</span><span class="n">getOperation</span><span class="p">(),</span>
+<span class="w">          </span><span class="n">match</span><span class="p">.</span><span class="n">castOut</span><span class="p">.</span><span class="n">getOperation</span><span class="p">(),</span>
+<span class="w">          </span><span class="n">match</span><span class="p">.</span><span class="n">pushOp</span><span class="p">})</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">op</span><span class="o">-&gt;</span><span class="n">getBlock</span><span class="p">()</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">block</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">subviewOp</span><span class="p">.</span><span class="n">emitError</span><span class="p">()</span>
+<span class="w">                </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"expected the whole pad idiom to live in the same block"</span><span class="p">;</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="n">failure</span><span class="p">();</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">isa</span><span class="o">&lt;</span><span class="n">dfg</span><span class="o">::</span><span class="n">LoopOp</span><span class="o">&gt;</span><span class="p">(</span><span class="n">block</span><span class="o">-&gt;</span><span class="n">getParentOp</span><span class="p">()))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">subviewOp</span><span class="p">.</span><span class="n">emitError</span><span class="p">()</span>
+<span class="w">            </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"expected the pad idiom to sit directly inside a dfg.loop "</span>
+<span class="w">               </span><span class="s">"body"</span><span class="p">;</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">failure</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">llvm</span><span class="o">::</span><span class="n">is_contained</span><span class="p">(</span><span class="n">subviewOp</span><span class="p">.</span><span class="n">getStaticOffsets</span><span class="p">(),</span><span class="w"> </span><span class="n">ShapedType</span><span class="o">::</span><span class="n">kDynamic</span><span class="p">)</span>
+<span class="w">        </span><span class="o">||</span><span class="w"> </span><span class="n">llvm</span><span class="o">::</span><span class="n">is_contained</span><span class="p">(</span>
+<span class="w">            </span><span class="n">subviewOp</span><span class="p">.</span><span class="n">getStaticSizes</span><span class="p">(),</span>
+<span class="w">            </span><span class="n">ShapedType</span><span class="o">::</span><span class="n">kDynamic</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">subviewOp</span><span class="p">.</span><span class="n">emitError</span><span class="p">()</span>
+<span class="w">            </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"dynamic subview offsets/sizes are not supported yet"</span><span class="p">;</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">failure</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="c1">// Figure out which alloc dims are actually padded</span>
+<span class="w">    </span><span class="n">ArrayRef</span><span class="o">&lt;</span><span class="kt">int64_t</span><span class="o">&gt;</span><span class="w"> </span><span class="n">allocShape</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">match</span><span class="p">.</span><span class="n">allocOp</span><span class="p">.</span><span class="n">getType</span><span class="p">().</span><span class="n">getShape</span><span class="p">();</span>
+<span class="w">    </span><span class="n">ArrayRef</span><span class="o">&lt;</span><span class="kt">int64_t</span><span class="o">&gt;</span><span class="w"> </span><span class="n">offsets</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">subviewOp</span><span class="p">.</span><span class="n">getStaticOffsets</span><span class="p">();</span>
+<span class="w">    </span><span class="n">ArrayRef</span><span class="o">&lt;</span><span class="kt">int64_t</span><span class="o">&gt;</span><span class="w"> </span><span class="n">sizes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">subviewOp</span><span class="p">.</span><span class="n">getStaticSizes</span><span class="p">();</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">sizes</span><span class="p">.</span><span class="n">size</span><span class="p">()</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">allocShape</span><span class="p">.</span><span class="n">size</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">subviewOp</span><span class="p">.</span><span class="n">emitError</span><span class="p">()</span>
+<span class="w">            </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"expected subview rank to match the padded alloc's rank"</span><span class="p">;</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">failure</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">unsigned</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">allocShape</span><span class="p">.</span><span class="n">size</span><span class="p">();</span><span class="w"> </span><span class="o">++</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">sizes</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">allocShape</span><span class="p">[</span><span class="n">i</span><span class="p">])</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">offsets</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">subviewOp</span><span class="p">.</span><span class="n">emitError</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"expected subview to span the full "</span>
+<span class="w">                                         </span><span class="s">"extent on non-padded dims"</span><span class="p">;</span>
+<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="n">failure</span><span class="p">();</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">continue</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="n">match</span><span class="p">.</span><span class="n">padDims</span><span class="p">.</span><span class="n">push_back</span><span class="p">({</span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="n">offsets</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="w"> </span><span class="n">sizes</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="w"> </span><span class="n">allocShape</span><span class="p">[</span><span class="n">i</span><span class="p">]});</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">match</span><span class="p">.</span><span class="n">padDims</span><span class="p">.</span><span class="n">empty</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">subviewOp</span><span class="p">.</span><span class="n">emitError</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"expected subview to actually crop at "</span>
+<span class="w">                                 </span><span class="s">"least one dim of the padded alloc"</span><span class="p">;</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">failure</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="c1">// A memref-shaped port token stashes `fill_with` on the filler alloc for</span>
+<span class="w">    </span><span class="c1">// some later pass to realize. A scalar one doesn't have a buffer to</span>
+<span class="w">    </span><span class="c1">// stash it on, so the attribute must already be directly usable as the</span>
+<span class="w">    </span><span class="c1">// pushed value.</span>
+<span class="w">    </span><span class="k">auto</span><span class="w"> </span><span class="n">fillAttr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cast</span><span class="o">&lt;</span><span class="n">TypedAttr</span><span class="o">&gt;</span><span class="p">(</span><span class="n">match</span><span class="p">.</span><span class="n">allocOp</span><span class="o">-&gt;</span><span class="n">getAttr</span><span class="p">(</span><span class="s">"fill_with"</span><span class="p">));</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">isa</span><span class="o">&lt;</span><span class="n">MemRefType</span><span class="o">&gt;</span><span class="p">(</span><span class="n">match</span><span class="p">.</span><span class="n">tokenType</span><span class="p">)</span>
+<span class="w">        </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">fillAttr</span><span class="p">.</span><span class="n">getType</span><span class="p">()</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">match</span><span class="p">.</span><span class="n">tokenType</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">subviewOp</span><span class="p">.</span><span class="n">emitError</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"expected the 'fill_with' attribute's type "</span>
+<span class="w">                                 </span><span class="s">"to match the scalar port token type"</span><span class="p">;</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">failure</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">match</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c1">// Turns a `fill_with` attribute into an actual constant op producing that</span>
+<span class="c1">// value with scalar-token ports.</span>
+<span class="k">static</span><span class="w"> </span><span class="n">Value</span>
+<span class="n">materializeFillValue</span><span class="p">(</span><span class="n">OpBuilder</span><span class="w"> </span><span class="o">&amp;</span><span class="n">builder</span><span class="p">,</span><span class="w"> </span><span class="n">Location</span><span class="w"> </span><span class="n">loc</span><span class="p">,</span><span class="w"> </span><span class="n">TypedAttr</span><span class="w"> </span><span class="n">fillAttr</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">isa</span><span class="o">&lt;</span><span class="n">IntegerAttr</span><span class="p">,</span><span class="w"> </span><span class="n">FloatAttr</span><span class="o">&gt;</span><span class="p">(</span><span class="n">fillAttr</span><span class="p">))</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">arith</span><span class="o">::</span><span class="n">ConstantOp</span><span class="o">::</span><span class="n">create</span><span class="p">(</span><span class="n">builder</span><span class="p">,</span><span class="w"> </span><span class="n">loc</span><span class="p">,</span><span class="w"> </span><span class="n">fillAttr</span><span class="p">);</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">base2</span><span class="o">::</span><span class="n">ConstantOp</span><span class="o">::</span><span class="n">create</span><span class="p">(</span><span class="n">builder</span><span class="p">,</span><span class="w"> </span><span class="n">loc</span><span class="p">,</span><span class="w"> </span><span class="n">fillAttr</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="k">struct</span><span class="w"> </span><span class="nc">RewritePadStreamAsLoop</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">OpConversionPattern</span><span class="o">&lt;</span><span class="n">memref</span><span class="o">::</span><span class="n">SubViewOp</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">using</span><span class="w"> </span><span class="n">OpConversionPattern</span><span class="o">::</span><span class="n">OpConversionPattern</span><span class="p">;</span>
+
+<span class="w">    </span><span class="n">LogicalResult</span><span class="w"> </span><span class="nf">matchAndRewrite</span><span class="p">(</span>
+<span class="w">        </span><span class="n">memref</span><span class="o">::</span><span class="n">SubViewOp</span><span class="w"> </span><span class="n">op</span><span class="p">,</span>
+<span class="w">        </span><span class="n">OpAdaptor</span><span class="p">,</span>
+<span class="w">        </span><span class="n">ConversionPatternRewriter</span><span class="w"> </span><span class="o">&amp;</span><span class="n">rewriter</span><span class="p">)</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">override</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="k">auto</span><span class="w"> </span><span class="n">matched</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">matchPadStreamPattern</span><span class="p">(</span><span class="n">op</span><span class="p">);</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">failed</span><span class="p">(</span><span class="n">matched</span><span class="p">))</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="n">rewriter</span><span class="p">.</span><span class="n">notifyMatchFailure</span><span class="p">(</span><span class="n">op</span><span class="p">,</span><span class="w"> </span><span class="s">"not a pad-stream idiom"</span><span class="p">);</span>
+<span class="w">        </span><span class="n">PadStreamMatch</span><span class="w"> </span><span class="n">m</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">*</span><span class="n">matched</span><span class="p">;</span>
+<span class="w">        </span><span class="k">auto</span><span class="w"> </span><span class="n">loc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">op</span><span class="p">.</span><span class="n">getLoc</span><span class="p">();</span>
+<span class="w">        </span><span class="n">PICEA_DEBUG</span><span class="p">(</span><span class="n">llvm</span><span class="o">::</span><span class="n">dbgs</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"Rewriting pad-stream idiom at "</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">loc</span><span class="p">);</span>
+
+<span class="w">        </span><span class="c1">// Filler value pushed for padding positions: a small `fill_with` buffer</span>
+<span class="w">        </span><span class="c1">// for a memref-shaped port, or the fill constant itself for a scalar</span>
+<span class="w">        </span><span class="c1">// one.</span>
+<span class="w">        </span><span class="n">rewriter</span><span class="p">.</span><span class="n">setInsertionPoint</span><span class="p">(</span><span class="n">m</span><span class="p">.</span><span class="n">pullOp</span><span class="p">);</span>
+<span class="w">        </span><span class="n">Value</span><span class="w"> </span><span class="n">fillerValue</span><span class="p">;</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="n">fillerType</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dyn_cast</span><span class="o">&lt;</span><span class="n">MemRefType</span><span class="o">&gt;</span><span class="p">(</span><span class="n">m</span><span class="p">.</span><span class="n">tokenType</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">auto</span><span class="w"> </span><span class="n">fillerAlloc</span><span class="w"> </span><span class="o">=</span>
+<span class="w">                </span><span class="n">memref</span><span class="o">::</span><span class="n">AllocOp</span><span class="o">::</span><span class="n">create</span><span class="p">(</span><span class="n">rewriter</span><span class="p">,</span><span class="w"> </span><span class="n">loc</span><span class="p">,</span><span class="w"> </span><span class="n">fillerType</span><span class="p">);</span>
+<span class="w">            </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">NamedAttribute</span><span class="w"> </span><span class="n">attr</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">m</span><span class="p">.</span><span class="n">allocOp</span><span class="o">-&gt;</span><span class="n">getAttrs</span><span class="p">())</span>
+<span class="w">                </span><span class="n">fillerAlloc</span><span class="o">-&gt;</span><span class="n">setAttr</span><span class="p">(</span><span class="n">attr</span><span class="p">.</span><span class="n">getName</span><span class="p">(),</span><span class="w"> </span><span class="n">attr</span><span class="p">.</span><span class="n">getValue</span><span class="p">());</span>
+<span class="w">            </span><span class="n">fillerValue</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">fillerAlloc</span><span class="p">.</span><span class="n">getMemref</span><span class="p">();</span>
+<span class="w">            </span><span class="n">PICEA_DEBUG</span><span class="p">(</span>
+<span class="w">                </span><span class="n">llvm</span><span class="o">::</span><span class="n">dbgs</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"  filler is a memref alloc: "</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">fillerValue</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">auto</span><span class="w"> </span><span class="n">fillAttr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cast</span><span class="o">&lt;</span><span class="n">TypedAttr</span><span class="o">&gt;</span><span class="p">(</span><span class="n">m</span><span class="p">.</span><span class="n">allocOp</span><span class="o">-&gt;</span><span class="n">getAttr</span><span class="p">(</span><span class="s">"fill_with"</span><span class="p">));</span>
+<span class="w">            </span><span class="n">fillerValue</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">materializeFillValue</span><span class="p">(</span><span class="n">rewriter</span><span class="p">,</span><span class="w"> </span><span class="n">loc</span><span class="p">,</span><span class="w"> </span><span class="n">fillAttr</span><span class="p">);</span>
+<span class="w">            </span><span class="n">PICEA_DEBUG</span><span class="p">(</span>
+<span class="w">                </span><span class="n">llvm</span><span class="o">::</span><span class="n">dbgs</span><span class="p">()</span>
+<span class="w">                </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"  filler is a scalar constant: "</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">fillerValue</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="c1">// Create the nested affine.for loop</span>
+<span class="w">        </span><span class="n">SmallVector</span><span class="o">&lt;</span><span class="n">Value</span><span class="o">&gt;</span><span class="w"> </span><span class="n">ivs</span><span class="p">;</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">PadDim</span><span class="w"> </span><span class="o">&amp;</span><span class="n">pd</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">m</span><span class="p">.</span><span class="n">padDims</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">auto</span><span class="w"> </span><span class="n">forOp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">AffineForOp</span><span class="o">::</span><span class="n">create</span><span class="p">(</span><span class="n">rewriter</span><span class="p">,</span><span class="w"> </span><span class="n">loc</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">pd</span><span class="p">.</span><span class="n">allocSize</span><span class="p">);</span>
+<span class="w">            </span><span class="n">ivs</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">forOp</span><span class="p">.</span><span class="n">getInductionVar</span><span class="p">());</span>
+<span class="w">            </span><span class="n">PICEA_DEBUG</span><span class="p">(</span>
+<span class="w">                </span><span class="n">llvm</span><span class="o">::</span><span class="n">dbgs</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"  affine.for over dim "</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">pd</span><span class="p">.</span><span class="n">dim</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">": [0, "</span>
+<span class="w">                             </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">pd</span><span class="p">.</span><span class="n">allocSize</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"), real window ["</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">pd</span><span class="p">.</span><span class="n">offset</span>
+<span class="w">                             </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">", "</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="p">(</span><span class="n">pd</span><span class="p">.</span><span class="n">offset</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">pd</span><span class="p">.</span><span class="n">size</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">")"</span><span class="p">);</span>
+<span class="w">            </span><span class="n">rewriter</span><span class="p">.</span><span class="n">setInsertionPointToStart</span><span class="p">(</span><span class="o">&amp;</span><span class="n">forOp</span><span class="p">.</span><span class="n">getRegion</span><span class="p">().</span><span class="n">front</span><span class="p">());</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="c1">// Create affine.if to control the output values</span>
+<span class="w">        </span><span class="n">SmallVector</span><span class="o">&lt;</span><span class="n">AffineExpr</span><span class="o">&gt;</span><span class="w"> </span><span class="n">constraints</span><span class="p">;</span>
+<span class="w">        </span><span class="n">SmallVector</span><span class="o">&lt;</span><span class="kt">bool</span><span class="o">&gt;</span><span class="w"> </span><span class="n">eqFlags</span><span class="p">;</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="n">pd</span><span class="p">]</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">llvm</span><span class="o">::</span><span class="n">enumerate</span><span class="p">(</span><span class="n">m</span><span class="p">.</span><span class="n">padDims</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">AffineExpr</span><span class="w"> </span><span class="n">d</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">getAffineDimExpr</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="n">rewriter</span><span class="p">.</span><span class="n">getContext</span><span class="p">());</span>
+<span class="w">            </span><span class="n">constraints</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">d</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">pd</span><span class="p">.</span><span class="n">offset</span><span class="p">);</span><span class="w"> </span><span class="c1">// &gt;= 0</span>
+<span class="w">            </span><span class="n">eqFlags</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="nb">false</span><span class="p">);</span>
+<span class="w">            </span><span class="n">constraints</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">pd</span><span class="p">.</span><span class="n">offset</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">pd</span><span class="p">.</span><span class="n">size</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">d</span><span class="p">);</span><span class="w"> </span><span class="c1">// &gt;= 0</span>
+<span class="w">            </span><span class="n">eqFlags</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="nb">false</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">auto</span><span class="w"> </span><span class="n">condSet</span><span class="w"> </span><span class="o">=</span>
+<span class="w">            </span><span class="n">IntegerSet</span><span class="o">::</span><span class="n">get</span><span class="p">(</span><span class="n">m</span><span class="p">.</span><span class="n">padDims</span><span class="p">.</span><span class="n">size</span><span class="p">(),</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">constraints</span><span class="p">,</span><span class="w"> </span><span class="n">eqFlags</span><span class="p">);</span>
+<span class="w">        </span><span class="k">auto</span><span class="w"> </span><span class="n">ifOp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">AffineIfOp</span><span class="o">::</span><span class="n">create</span><span class="p">(</span>
+<span class="w">            </span><span class="n">rewriter</span><span class="p">,</span>
+<span class="w">            </span><span class="n">loc</span><span class="p">,</span>
+<span class="w">            </span><span class="n">condSet</span><span class="p">,</span>
+<span class="w">            </span><span class="n">ivs</span><span class="p">,</span>
+<span class="w">            </span><span class="cm">/*withElseRegion=*/</span><span class="nb">true</span><span class="p">);</span>
+<span class="w">        </span><span class="n">PICEA_DEBUG</span><span class="p">({</span>
+<span class="w">            </span><span class="n">llvm</span><span class="o">::</span><span class="n">dbgs</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"  affine.if condition set: "</span><span class="p">;</span>
+<span class="w">            </span><span class="n">condSet</span><span class="p">.</span><span class="n">print</span><span class="p">(</span><span class="n">llvm</span><span class="o">::</span><span class="n">dbgs</span><span class="p">());</span>
+<span class="w">        </span><span class="p">});</span>
+
+<span class="w">        </span><span class="c1">// Clone the original pull/push with retargeting the pushed value</span>
+<span class="w">        </span><span class="n">rewriter</span><span class="p">.</span><span class="n">setInsertionPointToStart</span><span class="p">(</span><span class="n">ifOp</span><span class="p">.</span><span class="n">getThenBlock</span><span class="p">());</span>
+<span class="w">        </span><span class="n">Operation</span><span class="o">*</span><span class="w"> </span><span class="n">newPull</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">rewriter</span><span class="p">.</span><span class="n">clone</span><span class="p">(</span><span class="o">*</span><span class="n">m</span><span class="p">.</span><span class="n">pullOp</span><span class="p">);</span>
+<span class="w">        </span><span class="n">IRMapping</span><span class="w"> </span><span class="n">thenMap</span><span class="p">;</span>
+<span class="w">        </span><span class="n">thenMap</span><span class="p">.</span><span class="n">map</span><span class="p">(</span><span class="n">m</span><span class="p">.</span><span class="n">pushOp</span><span class="o">-&gt;</span><span class="n">getOperand</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span><span class="w"> </span><span class="n">newPull</span><span class="o">-&gt;</span><span class="n">getResult</span><span class="p">(</span><span class="mi">0</span><span class="p">));</span>
+<span class="w">        </span><span class="n">Operation</span><span class="o">*</span><span class="w"> </span><span class="n">newPush</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">rewriter</span><span class="p">.</span><span class="n">clone</span><span class="p">(</span><span class="o">*</span><span class="n">m</span><span class="p">.</span><span class="n">pushOp</span><span class="p">,</span><span class="w"> </span><span class="n">thenMap</span><span class="p">);</span>
+<span class="w">        </span><span class="n">PICEA_DEBUG</span><span class="p">(</span>
+<span class="w">            </span><span class="n">llvm</span><span class="o">::</span><span class="n">dbgs</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"  Cloned "</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="o">*</span><span class="n">newPull</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"  and  "</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="o">*</span><span class="n">newPush</span>
+<span class="w">                         </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">" into then region"</span><span class="p">);</span>
+
+<span class="w">        </span><span class="c1">// In else region, push the padded value/buffer</span>
+<span class="w">        </span><span class="n">rewriter</span><span class="p">.</span><span class="n">setInsertionPointToStart</span><span class="p">(</span><span class="n">ifOp</span><span class="p">.</span><span class="n">getElseBlock</span><span class="p">());</span>
+<span class="w">        </span><span class="n">IRMapping</span><span class="w"> </span><span class="n">elseMap</span><span class="p">;</span>
+<span class="w">        </span><span class="n">elseMap</span><span class="p">.</span><span class="n">map</span><span class="p">(</span><span class="n">m</span><span class="p">.</span><span class="n">pushOp</span><span class="o">-&gt;</span><span class="n">getOperand</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span><span class="w"> </span><span class="n">fillerValue</span><span class="p">);</span>
+<span class="w">        </span><span class="n">Operation</span><span class="o">*</span><span class="w"> </span><span class="n">fillerPush</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">rewriter</span><span class="p">.</span><span class="n">clone</span><span class="p">(</span><span class="o">*</span><span class="n">m</span><span class="p">.</span><span class="n">pushOp</span><span class="p">,</span><span class="w"> </span><span class="n">elseMap</span><span class="p">);</span>
+<span class="w">        </span><span class="n">PICEA_DEBUG</span><span class="p">(</span>
+<span class="w">            </span><span class="n">llvm</span><span class="o">::</span><span class="n">dbgs</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"  Cloned "</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="o">*</span><span class="n">fillerPush</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">" into else region"</span><span class="p">);</span>
+
+<span class="w">        </span><span class="c1">// Erase old operations in order</span>
+<span class="w">        </span><span class="n">rewriter</span><span class="p">.</span><span class="n">eraseOp</span><span class="p">(</span><span class="n">m</span><span class="p">.</span><span class="n">pushOp</span><span class="p">);</span>
+<span class="w">        </span><span class="n">rewriter</span><span class="p">.</span><span class="n">eraseOp</span><span class="p">(</span><span class="n">m</span><span class="p">.</span><span class="n">copyOp</span><span class="p">);</span>
+<span class="w">        </span><span class="n">rewriter</span><span class="p">.</span><span class="n">eraseOp</span><span class="p">(</span><span class="n">m</span><span class="p">.</span><span class="n">castOut</span><span class="p">);</span>
+<span class="w">        </span><span class="n">rewriter</span><span class="p">.</span><span class="n">eraseOp</span><span class="p">(</span><span class="n">m</span><span class="p">.</span><span class="n">subviewOp</span><span class="p">);</span>
+<span class="w">        </span><span class="n">rewriter</span><span class="p">.</span><span class="n">eraseOp</span><span class="p">(</span><span class="n">m</span><span class="p">.</span><span class="n">allocOp</span><span class="p">);</span>
+<span class="w">        </span><span class="n">rewriter</span><span class="p">.</span><span class="n">eraseOp</span><span class="p">(</span><span class="n">m</span><span class="p">.</span><span class="n">castIn</span><span class="p">);</span>
+<span class="w">        </span><span class="n">rewriter</span><span class="p">.</span><span class="n">eraseOp</span><span class="p">(</span><span class="n">m</span><span class="p">.</span><span class="n">pullOp</span><span class="p">);</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">success</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">};</span>
+
+<span class="p">}</span><span class="w"> </span><span class="c1">// namespace</span>
+
+<span class="kt">void</span><span class="w"> </span><span class="n">mlir</span><span class="o">::</span><span class="n">populateMemRefPadToPICEALoopsConversionPatterns</span><span class="p">(</span>
+<span class="w">    </span><span class="n">TypeConverter</span><span class="w"> </span><span class="o">&amp;</span><span class="n">typeConverter</span><span class="p">,</span>
+<span class="w">    </span><span class="n">RewritePatternSet</span><span class="w"> </span><span class="o">&amp;</span><span class="n">patterns</span><span class="p">)</span>
+<span class="p">{</span><span class="w"> </span><span class="n">patterns</span><span class="p">.</span><span class="n">add</span><span class="o">&lt;</span><span class="n">RewritePadStreamAsLoop</span><span class="o">&gt;</span><span class="p">(</span><span class="n">typeConverter</span><span class="p">,</span><span class="w"> </span><span class="n">patterns</span><span class="p">.</span><span class="n">getContext</span><span class="p">());</span><span class="w"> </span><span class="p">}</span>
+
+<span class="k">namespace</span><span class="w"> </span><span class="p">{</span>
+<span class="k">struct</span><span class="w"> </span><span class="nc">ConvertMemRefPadToPICEALoopsPass</span>
+<span class="w">        </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">impl</span><span class="o">::</span><span class="n">ConvertMemRefPadToPICEALoopsBase</span><span class="o">&lt;</span>
+<span class="w">              </span><span class="n">ConvertMemRefPadToPICEALoopsPass</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="nf">runOnOperation</span><span class="p">()</span><span class="w"> </span><span class="k">final</span><span class="p">;</span>
+<span class="p">};</span>
+<span class="p">}</span><span class="w"> </span><span class="c1">// namespace</span>
+
+<span class="kt">void</span><span class="w"> </span><span class="n">ConvertMemRefPadToPICEALoopsPass</span><span class="o">::</span><span class="n">runOnOperation</span><span class="p">()</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">ConversionTarget</span><span class="w"> </span><span class="nf">target</span><span class="p">(</span><span class="n">getContext</span><span class="p">());</span>
+<span class="w">    </span><span class="n">RewritePatternSet</span><span class="w"> </span><span class="nf">patterns</span><span class="p">(</span><span class="o">&amp;</span><span class="n">getContext</span><span class="p">());</span>
+
+<span class="w">    </span><span class="n">TypeConverter</span><span class="w"> </span><span class="n">converter</span><span class="p">;</span>
+<span class="w">    </span><span class="n">converter</span><span class="p">.</span><span class="n">addConversion</span><span class="p">([</span><span class="o">&amp;</span><span class="p">](</span><span class="n">Type</span><span class="w"> </span><span class="n">type</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">type</span><span class="p">;</span><span class="w"> </span><span class="p">});</span>
+
+<span class="w">    </span><span class="n">populateMemRefPadToPICEALoopsConversionPatterns</span><span class="p">(</span><span class="n">converter</span><span class="p">,</span><span class="w"> </span><span class="n">patterns</span><span class="p">);</span>
+
+<span class="w">    </span><span class="n">target</span><span class="p">.</span><span class="n">addLegalDialect</span><span class="o">&lt;</span>
+<span class="w">        </span><span class="n">EmitHLSDialect</span><span class="p">,</span>
+<span class="w">        </span><span class="n">dfg</span><span class="o">::</span><span class="n">DFGDialect</span><span class="p">,</span>
+<span class="w">        </span><span class="n">affine</span><span class="o">::</span><span class="n">AffineDialect</span><span class="o">&gt;</span><span class="p">();</span>
+<span class="w">    </span><span class="n">target</span><span class="p">.</span><span class="n">addLegalOp</span><span class="o">&lt;</span><span class="n">memref</span><span class="o">::</span><span class="n">AllocOp</span><span class="p">,</span><span class="w"> </span><span class="n">memref</span><span class="o">::</span><span class="n">GlobalOp</span><span class="p">,</span><span class="w"> </span><span class="n">memref</span><span class="o">::</span><span class="n">GetGlobalOp</span><span class="o">&gt;</span><span class="p">();</span>
+<span class="w">    </span><span class="n">target</span><span class="p">.</span><span class="n">addIllegalDialect</span><span class="o">&lt;</span><span class="n">memref</span><span class="o">::</span><span class="n">MemRefDialect</span><span class="o">&gt;</span><span class="p">();</span>
+<span class="w">    </span><span class="n">target</span><span class="p">.</span><span class="n">markUnknownOpDynamicallyLegal</span><span class="p">([](</span><span class="n">Operation</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span><span class="w"> </span><span class="p">});</span>
+
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">failed</span><span class="p">(</span><span class="n">applyPartialConversion</span><span class="p">(</span>
+<span class="w">            </span><span class="n">getOperation</span><span class="p">(),</span>
+<span class="w">            </span><span class="n">target</span><span class="p">,</span>
+<span class="w">            </span><span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">patterns</span><span class="p">))))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">signalPassFailure</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">Pass</span><span class="o">&gt;</span><span class="w"> </span><span class="n">mlir</span><span class="o">::</span><span class="n">createConvertMemRefPadToPICEALoopsPass</span><span class="p">()</span>
+<span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">make_unique</span><span class="o">&lt;</span><span class="n">ConvertMemRefPadToPICEALoopsPass</span><span class="o">&gt;</span><span class="p">();</span><span class="w"> </span><span class="p">}</span>
+</pre></div>
+</div>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

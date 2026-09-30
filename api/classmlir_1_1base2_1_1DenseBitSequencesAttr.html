@@ -1,0 +1,430 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Class DenseBitSequencesAttr &mdash; picea 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/collapsible-lists/css/tree_view.css?v=a885cde7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js?v=73120307"></script>
+      <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js?v=660e4f45"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Class FixedType" href="classmlir_1_1base2_1_1FixedType.html" />
+    <link rel="prev" title="Class DenseBitsAttr" href="classmlir_1_1base2_1_1DenseBitsAttr.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            picea
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Installation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../README.html">About the project</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#guides">Guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#related-projects">Related projects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#development-environment-nix">Development Environment (Nix)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#build-on-ubuntu-24-04-no-nix">Build on Ubuntu 24.04 (no Nix)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#gurobi-license">Gurobi license</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#installing">Installing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#run-the-tests">Run the tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#build-the-documentation">Build the documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#compiling-a-design">Compiling a design</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#running-a-design-on-the-board">Running a design on the board</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#exporting-a-profiled-application-to-mocasin">Exporting a profiled application to Mocasin</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Guides</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../guides/laksa.html">The FPGA Variant using LAKSA backend</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/cgra.html">The CGRA Variant</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">MLIR Dialects</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/Base2Ops.html">‘base2’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/CGRAOps.html">‘cgra’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/DFGOps.html">‘dfg’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/EmitHLSOps.html">‘emithls’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/FilterOps.html">‘filter’ Dialect</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Passes</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/PICEAConversionPasses.html">PICEA Conversion Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/CGRAPasses.html">CGRA Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/DFGPasses.html">DFG Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/EmitHLSPasses.html">Emit HLS Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/FuncExtPasses.html">Func Ext Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/LinalgExtPasses.html">Linalg Ext Passes</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">C++ API</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="library_root.html">C++ API Reference</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="library_root.html#picea">picea</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="library_root.html#page-hierarchy">Page Hierarchy</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="library_root.html#full-api">Full API</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="library_root.html#namespaces">Namespaces</a></li>
+<li class="toctree-l4 current"><a class="reference internal" href="library_root.html#classes-and-structs">Classes and Structs</a></li>
+<li class="toctree-l4"><a class="reference internal" href="library_root.html#enums">Enums</a></li>
+<li class="toctree-l4"><a class="reference internal" href="library_root.html#functions">Functions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="library_root.html#variables">Variables</a></li>
+<li class="toctree-l4"><a class="reference internal" href="library_root.html#defines">Defines</a></li>
+<li class="toctree-l4"><a class="reference internal" href="library_root.html#typedefs">Typedefs</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">picea</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="library_root.html">C++ API Reference</a></li>
+      <li class="breadcrumb-item active">Class DenseBitSequencesAttr</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/classmlir_1_1base2_1_1DenseBitSequencesAttr.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="class-densebitsequencesattr">
+<span id="exhale-class-classmlir-1-1base2-1-1densebitsequencesattr"></span><h1>Class DenseBitSequencesAttr<a class="headerlink" href="#class-densebitsequencesattr" title="Link to this heading"></a></h1>
+<ul class="simple">
+<li><p>Defined in <a class="reference internal" href="file_include_picea-mlir_Dialect_Base2_Interfaces_BitSequenceAttrInterface.h.html#file-include-picea-mlir-dialect-base2-interfaces-bitsequenceattrinterface-h"><span class="std std-ref">File BitSequenceAttrInterface.h</span></a></p></li>
+</ul>
+<section id="inheritance-relationships">
+<h2>Inheritance Relationships<a class="headerlink" href="#inheritance-relationships" title="Link to this heading"></a></h2>
+<section id="base-type">
+<h3>Base Type<a class="headerlink" href="#base-type" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">public</span> <span class="pre">ElementsAttr</span></code></p></li>
+</ul>
+</section>
+</section>
+<section id="class-documentation">
+<h2>Class Documentation<a class="headerlink" href="#class-documentation" title="Link to this heading"></a></h2>
+<dl class="cpp class">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir5base221DenseBitSequencesAttrE">
+<span id="_CPPv3N4mlir5base221DenseBitSequencesAttrE"></span><span id="_CPPv2N4mlir5base221DenseBitSequencesAttrE"></span><span id="mlir::base2::DenseBitSequencesAttr"></span><span class="target" id="classmlir_1_1base2_1_1DenseBitSequencesAttr"></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">DenseBitSequencesAttr</span></span></span><span class="w"> </span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="k"><span class="pre">public</span></span><span class="w"> </span><span class="n"><span class="pre">ElementsAttr</span></span><a class="headerlink" href="#_CPPv4N4mlir5base221DenseBitSequencesAttrE" title="Link to this definition"></a><br /></dt>
+<dd><p>Concept for an ElementsAttr that stores densely packed BitSequences. </p>
+<p>Satisfied by any ElementsAttr that:<ul class="simple">
+<li><p>has a <a class="reference internal" href="classmlir_1_1base2_1_1BitSequenceType.html#classmlir_1_1base2_1_1BitSequenceType"><span class="std std-ref">BitSequenceType</span></a> element type</p></li>
+<li><p>supports iteration as<ul>
+<li><p><a class="reference internal" href="classmlir_1_1base2_1_1BitSequence.html#classmlir_1_1base2_1_1BitSequence"><span class="std std-ref">BitSequence</span></a></p></li>
+<li><p>OR, if it has a FloatType element type, llvm::APFloat</p></li>
+<li><p>OR llvm::APInt </p></li>
+</ul>
+</p></li>
+</ul>
+</p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-types">Public Types</p>
+<dl class="cpp type">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir5base221DenseBitSequencesAttr9ValueTypeE">
+<span id="_CPPv3N4mlir5base221DenseBitSequencesAttr9ValueTypeE"></span><span id="_CPPv2N4mlir5base221DenseBitSequencesAttr9ValueTypeE"></span><span class="target" id="classmlir_1_1base2_1_1DenseBitSequencesAttr_1a59a4ca2ce6fb93707f3886be0368178c"></span><span class="k"><span class="pre">using</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ValueType</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><a class="reference internal" href="classmlir_1_1base2_1_1BitSequence.html#_CPPv4N4mlir5base211BitSequenceE" title="mlir::base2::BitSequence"><span class="n"><span class="pre">BitSequence</span></span></a><a class="headerlink" href="#_CPPv4N4mlir5base221DenseBitSequencesAttr9ValueTypeE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp type">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir5base221DenseBitSequencesAttr8iteratorE">
+<span id="_CPPv3N4mlir5base221DenseBitSequencesAttr8iteratorE"></span><span id="_CPPv2N4mlir5base221DenseBitSequencesAttr8iteratorE"></span><span class="target" id="classmlir_1_1base2_1_1DenseBitSequencesAttr_1a2579f93cf1a181fb8178f9162e4b7be4"></span><span class="k"><span class="pre">using</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">iterator</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">detail</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">ElementsAttrIterator</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4N4mlir5base221DenseBitSequencesAttr9ValueTypeE" title="mlir::base2::DenseBitSequencesAttr::ValueType"><span class="n"><span class="pre">ValueType</span></span></a><span class="p"><span class="pre">&gt;</span></span><a class="headerlink" href="#_CPPv4N4mlir5base221DenseBitSequencesAttr8iteratorE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp type">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir5base221DenseBitSequencesAttr5rangeE">
+<span id="_CPPv3N4mlir5base221DenseBitSequencesAttr5rangeE"></span><span id="_CPPv2N4mlir5base221DenseBitSequencesAttr5rangeE"></span><span class="target" id="classmlir_1_1base2_1_1DenseBitSequencesAttr_1ac7e86a485a7bcdd67c9b29201d901ad1"></span><span class="k"><span class="pre">using</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">range</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">detail</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">ElementsAttrRange</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4N4mlir5base221DenseBitSequencesAttr8iteratorE" title="mlir::base2::DenseBitSequencesAttr::iterator"><span class="n"><span class="pre">iterator</span></span></a><span class="p"><span class="pre">&gt;</span></span><a class="headerlink" href="#_CPPv4N4mlir5base221DenseBitSequencesAttr5rangeE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK4mlir5base221DenseBitSequencesAttr15bitCastElementsE15BitSequenceType">
+<span id="_CPPv3NK4mlir5base221DenseBitSequencesAttr15bitCastElementsE15BitSequenceType"></span><span id="_CPPv2NK4mlir5base221DenseBitSequencesAttr15bitCastElementsE15BitSequenceType"></span><span id="mlir::base2::DenseBitSequencesAttr::bitCastElements__BitSequenceTypeC"></span><span class="target" id="classmlir_1_1base2_1_1DenseBitSequencesAttr_1ae6adb932ee14192fb9c05b430cb0de20"></span><a class="reference internal" href="#_CPPv4N4mlir5base221DenseBitSequencesAttrE" title="mlir::base2::DenseBitSequencesAttr"><span class="n"><span class="pre">DenseBitSequencesAttr</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">bitCastElements</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="classmlir_1_1base2_1_1BitSequenceType.html#_CPPv4N4mlir5base215BitSequenceTypeE" title="mlir::base2::BitSequenceType"><span class="n"><span class="pre">BitSequenceType</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">elementTy</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK4mlir5base221DenseBitSequencesAttr15bitCastElementsE15BitSequenceType" title="Link to this definition"></a><br /></dt>
+<dd><p>Bit casts all elements. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Pre<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="docutils literal notranslate"><span class="pre">elementTy</span></code></p>
+</dd>
+<dt class="field-even">Pre<span class="colon">:</span></dt>
+<dd class="field-even"><p><code class="docutils literal notranslate"><a class="reference internal" href="#classmlir_1_1base2_1_1DenseBitSequencesAttr_1aa5262b772c3a6cf0ee21031a9795eed2"><span class="std std-ref"><span class="pre">getElementType()</span></span></a><span class="pre">.getBitWidth()</span> <span class="pre">==</span> <span class="pre">elementTy.getBitWidth()</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK4mlir5base221DenseBitSequencesAttr3mapE18UnaryBitSequenceFn15BitSequenceTypeb">
+<span id="_CPPv3NK4mlir5base221DenseBitSequencesAttr3mapE18UnaryBitSequenceFn15BitSequenceTypeb"></span><span id="_CPPv2NK4mlir5base221DenseBitSequencesAttr3mapE18UnaryBitSequenceFn15BitSequenceTypeb"></span><span id="mlir::base2::DenseBitSequencesAttr::map__UnaryBitSequenceFn.BitSequenceType.bC"></span><span class="target" id="classmlir_1_1base2_1_1DenseBitSequencesAttr_1a3450ea98869dee52396c4cdd4c41a42b"></span><a class="reference internal" href="#_CPPv4N4mlir5base221DenseBitSequencesAttrE" title="mlir::base2::DenseBitSequencesAttr"><span class="n"><span class="pre">DenseBitSequencesAttr</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">map</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="typedef_namespacemlir_1_1base2_1a6fb5e0d532cafca67454314d2b14a038.html#_CPPv4N4mlir5base218UnaryBitSequenceFnE" title="mlir::base2::UnaryBitSequenceFn"><span class="n"><span class="pre">UnaryBitSequenceFn</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">fn</span></span>, <a class="reference internal" href="classmlir_1_1base2_1_1BitSequenceType.html#_CPPv4N4mlir5base215BitSequenceTypeE" title="mlir::base2::BitSequenceType"><span class="n"><span class="pre">BitSequenceType</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">elementTy</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="p"><span class="pre">{</span></span><span class="p"><span class="pre">}</span></span>, <span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">allowSplat</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="k"><span class="pre">true</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK4mlir5base221DenseBitSequencesAttr3mapE18UnaryBitSequenceFn15BitSequenceTypeb" title="Link to this definition"></a><br /></dt>
+<dd><p>Applies <code class="docutils literal notranslate"><span class="pre">fn</span></code> to the contained values. </p>
+<p>If <code class="docutils literal notranslate"><span class="pre">elementTy</span></code> is nullptr, getType() is used.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Pre<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bit width of <code class="docutils literal notranslate"><span class="pre">elementTy</span></code> and <code class="docutils literal notranslate"><span class="pre">fn</span></code> result matches </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK4mlir5base221DenseBitSequencesAttr3zipE19BinaryBitSequenceFn21DenseBitSequencesAttr15BitSequenceTypeb">
+<span id="_CPPv3NK4mlir5base221DenseBitSequencesAttr3zipE19BinaryBitSequenceFn21DenseBitSequencesAttr15BitSequenceTypeb"></span><span id="_CPPv2NK4mlir5base221DenseBitSequencesAttr3zipE19BinaryBitSequenceFn21DenseBitSequencesAttr15BitSequenceTypeb"></span><span id="mlir::base2::DenseBitSequencesAttr::zip__BinaryBitSequenceFn.DenseBitSequencesAttr.BitSequenceType.bC"></span><span class="target" id="classmlir_1_1base2_1_1DenseBitSequencesAttr_1ab26deace81edb5763691cd124f29d637"></span><a class="reference internal" href="#_CPPv4N4mlir5base221DenseBitSequencesAttrE" title="mlir::base2::DenseBitSequencesAttr"><span class="n"><span class="pre">DenseBitSequencesAttr</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">zip</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="typedef_namespacemlir_1_1base2_1a0e6b33e09f5e607839bdfb5cdf4610c2.html#_CPPv4N4mlir5base219BinaryBitSequenceFnE" title="mlir::base2::BinaryBitSequenceFn"><span class="n"><span class="pre">BinaryBitSequenceFn</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">fn</span></span>, <a class="reference internal" href="#_CPPv4N4mlir5base221DenseBitSequencesAttrE" title="mlir::base2::DenseBitSequencesAttr"><span class="n"><span class="pre">DenseBitSequencesAttr</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">rhs</span></span>, <a class="reference internal" href="classmlir_1_1base2_1_1BitSequenceType.html#_CPPv4N4mlir5base215BitSequenceTypeE" title="mlir::base2::BitSequenceType"><span class="n"><span class="pre">BitSequenceType</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">elementTy</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="p"><span class="pre">{</span></span><span class="p"><span class="pre">}</span></span>, <span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">allowSplat</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="k"><span class="pre">true</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK4mlir5base221DenseBitSequencesAttr3zipE19BinaryBitSequenceFn21DenseBitSequencesAttr15BitSequenceTypeb" title="Link to this definition"></a><br /></dt>
+<dd><p>Combines the values contained in this and <code class="docutils literal notranslate"><span class="pre">rhs</span></code> using <code class="docutils literal notranslate"><span class="pre">fn</span></code> . </p>
+<p>If <code class="docutils literal notranslate"><span class="pre">elementTy</span></code> is nullptr, getType() is used.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Pre<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="docutils literal notranslate"><span class="pre">rhs</span></code></p>
+</dd>
+<dt class="field-even">Pre<span class="colon">:</span></dt>
+<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">rhs.getType().getShape().equals(getType().getShape())</span></code></p>
+</dd>
+<dt class="field-odd">Pre<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bit width of <code class="docutils literal notranslate"><span class="pre">elementTy</span></code> and <code class="docutils literal notranslate"><span class="pre">fn</span></code> result matches </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK4mlir5base221DenseBitSequencesAttr3zipE20TernaryBitSequenceFn21DenseBitSequencesAttr21DenseBitSequencesAttr15BitSequenceTypeb">
+<span id="_CPPv3NK4mlir5base221DenseBitSequencesAttr3zipE20TernaryBitSequenceFn21DenseBitSequencesAttr21DenseBitSequencesAttr15BitSequenceTypeb"></span><span id="_CPPv2NK4mlir5base221DenseBitSequencesAttr3zipE20TernaryBitSequenceFn21DenseBitSequencesAttr21DenseBitSequencesAttr15BitSequenceTypeb"></span><span id="mlir::base2::DenseBitSequencesAttr::zip__TernaryBitSequenceFn.DenseBitSequencesAttr.DenseBitSequencesAttr.BitSequenceType.bC"></span><span class="target" id="classmlir_1_1base2_1_1DenseBitSequencesAttr_1a3364c335359e5ed7d8390a3ca60cbb2a"></span><a class="reference internal" href="#_CPPv4N4mlir5base221DenseBitSequencesAttrE" title="mlir::base2::DenseBitSequencesAttr"><span class="n"><span class="pre">DenseBitSequencesAttr</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">zip</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="typedef_namespacemlir_1_1base2_1a1e549953e3c21a9adb7a2b66d7df6bb5.html#_CPPv4N4mlir5base220TernaryBitSequenceFnE" title="mlir::base2::TernaryBitSequenceFn"><span class="n"><span class="pre">TernaryBitSequenceFn</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">fn</span></span>, <a class="reference internal" href="#_CPPv4N4mlir5base221DenseBitSequencesAttrE" title="mlir::base2::DenseBitSequencesAttr"><span class="n"><span class="pre">DenseBitSequencesAttr</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">arg1</span></span>, <a class="reference internal" href="#_CPPv4N4mlir5base221DenseBitSequencesAttrE" title="mlir::base2::DenseBitSequencesAttr"><span class="n"><span class="pre">DenseBitSequencesAttr</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">arg2</span></span>, <a class="reference internal" href="classmlir_1_1base2_1_1BitSequenceType.html#_CPPv4N4mlir5base215BitSequenceTypeE" title="mlir::base2::BitSequenceType"><span class="n"><span class="pre">BitSequenceType</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">elementTy</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="p"><span class="pre">{</span></span><span class="p"><span class="pre">}</span></span>, <span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">allowSplat</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="k"><span class="pre">true</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK4mlir5base221DenseBitSequencesAttr3zipE20TernaryBitSequenceFn21DenseBitSequencesAttr21DenseBitSequencesAttr15BitSequenceTypeb" title="Link to this definition"></a><br /></dt>
+<dd><p>Combines the values contained in this, <code class="docutils literal notranslate"><span class="pre">arg1</span></code> and <code class="docutils literal notranslate"><span class="pre">arg2</span></code> using <code class="docutils literal notranslate"><span class="pre">fn</span></code> . </p>
+<p>If <code class="docutils literal notranslate"><span class="pre">elementTy</span></code> is nullptr, getType() is used.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Pre<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="docutils literal notranslate"><span class="pre">arg1</span> <span class="pre">&amp;&amp;</span> <span class="pre">arg2</span></code></p>
+</dd>
+<dt class="field-even">Pre<span class="colon">:</span></dt>
+<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">arg1.getType().getShape().equals(getType().getShape())</span></code></p>
+</dd>
+<dt class="field-odd">Pre<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="docutils literal notranslate"><span class="pre">arg2.getType().getShape().equals(getType().getShape())</span></code></p>
+</dd>
+<dt class="field-even">Pre<span class="colon">:</span></dt>
+<dd class="field-even"><p>bit width of <code class="docutils literal notranslate"><span class="pre">elementTy</span></code> and <code class="docutils literal notranslate"><span class="pre">fn</span></code> result matches </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK4mlir5base221DenseBitSequencesAttr14getElementTypeEv">
+<span id="_CPPv3NK4mlir5base221DenseBitSequencesAttr14getElementTypeEv"></span><span id="_CPPv2NK4mlir5base221DenseBitSequencesAttr14getElementTypeEv"></span><span id="mlir::base2::DenseBitSequencesAttr::getElementTypeC"></span><span class="target" id="classmlir_1_1base2_1_1DenseBitSequencesAttr_1aa5262b772c3a6cf0ee21031a9795eed2"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><a class="reference internal" href="classmlir_1_1base2_1_1BitSequenceType.html#_CPPv4N4mlir5base215BitSequenceTypeE" title="mlir::base2::BitSequenceType"><span class="n"><span class="pre">BitSequenceType</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">getElementType</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK4mlir5base221DenseBitSequencesAttr14getElementTypeEv" title="Link to this definition"></a><br /></dt>
+<dd><p>Gets the <a class="reference internal" href="classmlir_1_1base2_1_1BitSequenceType.html#classmlir_1_1base2_1_1BitSequenceType"><span class="std std-ref">BitSequenceType</span></a> element type. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK4mlir5base221DenseBitSequencesAttr9getValuesEv">
+<span id="_CPPv3NK4mlir5base221DenseBitSequencesAttr9getValuesEv"></span><span id="_CPPv2NK4mlir5base221DenseBitSequencesAttr9getValuesEv"></span><span id="mlir::base2::DenseBitSequencesAttr::getValuesC"></span><span class="target" id="classmlir_1_1base2_1_1DenseBitSequencesAttr_1a1ec800e46118a705c639b1587b4e0b76"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N4mlir5base221DenseBitSequencesAttr5rangeE" title="mlir::base2::DenseBitSequencesAttr::range"><span class="n"><span class="pre">range</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">getValues</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK4mlir5base221DenseBitSequencesAttr9getValuesEv" title="Link to this definition"></a><br /></dt>
+<dd><p>Gets the <a class="reference internal" href="classmlir_1_1base2_1_1BitSequence.html#classmlir_1_1base2_1_1BitSequence"><span class="std std-ref">BitSequence</span></a> values. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK4mlir5base221DenseBitSequencesAttr13getSplatValueEv">
+<span id="_CPPv3NK4mlir5base221DenseBitSequencesAttr13getSplatValueEv"></span><span id="_CPPv2NK4mlir5base221DenseBitSequencesAttr13getSplatValueEv"></span><span id="mlir::base2::DenseBitSequencesAttr::getSplatValueC"></span><span class="target" id="classmlir_1_1base2_1_1DenseBitSequencesAttr_1a6193ae4e9bd620b0028a841dcaf619f3"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><a class="reference internal" href="classmlir_1_1base2_1_1BitSequence.html#_CPPv4N4mlir5base211BitSequenceE" title="mlir::base2::BitSequence"><span class="n"><span class="pre">BitSequence</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">getSplatValue</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK4mlir5base221DenseBitSequencesAttr13getSplatValueEv" title="Link to this definition"></a><br /></dt>
+<dd><p>Gets the splat <a class="reference internal" href="classmlir_1_1base2_1_1BitSequence.html#classmlir_1_1base2_1_1BitSequence"><span class="std std-ref">BitSequence</span></a> value. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK4mlir5base221DenseBitSequencesAttr11value_beginEv">
+<span id="_CPPv3NK4mlir5base221DenseBitSequencesAttr11value_beginEv"></span><span id="_CPPv2NK4mlir5base221DenseBitSequencesAttr11value_beginEv"></span><span id="mlir::base2::DenseBitSequencesAttr::value_beginC"></span><span class="target" id="classmlir_1_1base2_1_1DenseBitSequencesAttr_1a1dfe864c6e25f4502ffaa8d73eeb7149"></span><a class="reference internal" href="#_CPPv4N4mlir5base221DenseBitSequencesAttr8iteratorE" title="mlir::base2::DenseBitSequencesAttr::iterator"><span class="n"><span class="pre">iterator</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">value_begin</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK4mlir5base221DenseBitSequencesAttr11value_beginEv" title="Link to this definition"></a><br /></dt>
+<dd><p>Gets the value begin iterator. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK4mlir5base221DenseBitSequencesAttr9value_endEv">
+<span id="_CPPv3NK4mlir5base221DenseBitSequencesAttr9value_endEv"></span><span id="_CPPv2NK4mlir5base221DenseBitSequencesAttr9value_endEv"></span><span id="mlir::base2::DenseBitSequencesAttr::value_endC"></span><span class="target" id="classmlir_1_1base2_1_1DenseBitSequencesAttr_1acfeddc10e99043316f7f3d3091835006"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N4mlir5base221DenseBitSequencesAttr8iteratorE" title="mlir::base2::DenseBitSequencesAttr::iterator"><span class="n"><span class="pre">iterator</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">value_end</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK4mlir5base221DenseBitSequencesAttr9value_endEv" title="Link to this definition"></a><br /></dt>
+<dd><p>Gets the value end iterator. </p>
+</dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-static-functions">Public Static Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir5base221DenseBitSequencesAttr7classofE12ElementsAttr">
+<span id="_CPPv3N4mlir5base221DenseBitSequencesAttr7classofE12ElementsAttr"></span><span id="_CPPv2N4mlir5base221DenseBitSequencesAttr7classofE12ElementsAttr"></span><span id="mlir::base2::DenseBitSequencesAttr::classof__ElementsAttr"></span><span class="target" id="classmlir_1_1base2_1_1DenseBitSequencesAttr_1a62d6f4822d27ba0d853941a7cbe17ded"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">classof</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">ElementsAttr</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">attr</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4mlir5base221DenseBitSequencesAttr7classofE12ElementsAttr" title="Link to this definition"></a><br /></dt>
+<dd><p>Determines whether <code class="docutils literal notranslate"><span class="pre">attr</span></code> is a <a class="reference internal" href="#classmlir_1_1base2_1_1DenseBitSequencesAttr"><span class="std std-ref">DenseBitSequencesAttr</span></a>.   </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir5base221DenseBitSequencesAttr7classofE9Attribute">
+<span id="_CPPv3N4mlir5base221DenseBitSequencesAttr7classofE9Attribute"></span><span id="_CPPv2N4mlir5base221DenseBitSequencesAttr7classofE9Attribute"></span><span id="mlir::base2::DenseBitSequencesAttr::classof__Attribute"></span><span class="target" id="classmlir_1_1base2_1_1DenseBitSequencesAttr_1afabe101b3197065a0a8b1d04320bef6b"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">classof</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">Attribute</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">attr</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4mlir5base221DenseBitSequencesAttr7classofE9Attribute" title="Link to this definition"></a><br /></dt>
+<dd><p>Determines whether <code class="docutils literal notranslate"><span class="pre">attr</span></code> is a <a class="reference internal" href="#classmlir_1_1base2_1_1DenseBitSequencesAttr"><span class="std std-ref">DenseBitSequencesAttr</span></a>. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir5base221DenseBitSequencesAttr7getDataE10ShapedType8ArrayRefI11BitSequenceE">
+<span id="_CPPv3N4mlir5base221DenseBitSequencesAttr7getDataE10ShapedType8ArrayRefI11BitSequenceE"></span><span id="_CPPv2N4mlir5base221DenseBitSequencesAttr7getDataE10ShapedType8ArrayRefI11BitSequenceE"></span><span id="mlir::base2::DenseBitSequencesAttr::getData__ShapedType.ArrayRef:BitSequence:"></span><span class="target" id="classmlir_1_1base2_1_1DenseBitSequencesAttr_1a11a3436931abca2f596c9edf54280061"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="n"><span class="pre">DenseTypedElementsAttr</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">getData</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">ShapedType</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">type</span></span>, <span class="n"><span class="pre">ArrayRef</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="classmlir_1_1base2_1_1BitSequence.html#_CPPv4N4mlir5base211BitSequenceE" title="mlir::base2::BitSequence"><span class="n"><span class="pre">BitSequence</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">values</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4mlir5base221DenseBitSequencesAttr7getDataE10ShapedType8ArrayRefI11BitSequenceE" title="Link to this definition"></a><br /></dt>
+<dd><p>Builds the canonical data attribute for <code class="docutils literal notranslate"><span class="pre">type</span></code> and <code class="docutils literal notranslate"><span class="pre">data</span></code> . </p>
+<dl class="field-list simple">
+<dt class="field-odd">Pre<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="docutils literal notranslate"><span class="pre">type</span></code></p>
+</dd>
+<dt class="field-even">Pre<span class="colon">:</span></dt>
+<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">type.hasStaticShape()</span></code></p>
+</dd>
+<dt class="field-odd">Pre<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="docutils literal notranslate"><span class="pre">type.getElementType().isa&lt;</span><a class="reference internal" href="classmlir_1_1base2_1_1BitSequenceType.html#classmlir_1_1base2_1_1BitSequenceType"><span class="std std-ref"><span class="pre">BitSequenceType</span></span></a><span class="pre">&gt;()</span></code></p>
+</dd>
+<dt class="field-even">Pre<span class="colon">:</span></dt>
+<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">values.size()</span> <span class="pre">==</span> <span class="pre">1</span> <span class="pre">||</span> <span class="pre">values.size()</span> <span class="pre">==</span> <span class="pre">type.getNumElements()</span></code></p>
+</dd>
+<dt class="field-odd">Pre<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="docutils literal notranslate"><span class="pre">value.size()</span> <span class="pre">==</span> <span class="pre">type.getBitWidth()</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir5base221DenseBitSequencesAttr3getE10ShapedType22DenseTypedElementsAttr">
+<span id="_CPPv3N4mlir5base221DenseBitSequencesAttr3getE10ShapedType22DenseTypedElementsAttr"></span><span id="_CPPv2N4mlir5base221DenseBitSequencesAttr3getE10ShapedType22DenseTypedElementsAttr"></span><span id="mlir::base2::DenseBitSequencesAttr::get__ShapedType.DenseTypedElementsAttr"></span><span class="target" id="classmlir_1_1base2_1_1DenseBitSequencesAttr_1af4a69a755c231158819363c3baddee09"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N4mlir5base221DenseBitSequencesAttrE" title="mlir::base2::DenseBitSequencesAttr"><span class="n"><span class="pre">DenseBitSequencesAttr</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">get</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">ShapedType</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">type</span></span>, <span class="n"><span class="pre">DenseTypedElementsAttr</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">data</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4mlir5base221DenseBitSequencesAttr3getE10ShapedType22DenseTypedElementsAttr" title="Link to this definition"></a><br /></dt>
+<dd><p>Builds the canonical <a class="reference internal" href="#classmlir_1_1base2_1_1DenseBitSequencesAttr"><span class="std std-ref">DenseBitSequencesAttr</span></a> for <code class="docutils literal notranslate"><span class="pre">type</span></code> using <code class="docutils literal notranslate"><span class="pre">data</span></code> . </p>
+<p>This function preserves the <code class="docutils literal notranslate"><span class="pre">data</span></code> attribute as the storage, performing at most bit casting when necessary.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Pre<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="docutils literal notranslate"><span class="pre">type</span></code></p>
+</dd>
+<dt class="field-even">Pre<span class="colon">:</span></dt>
+<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">data</span></code></p>
+</dd>
+<dt class="field-odd">Pre<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="docutils literal notranslate"><span class="pre">type.getShape().equals(data.getType().getShape())</span></code></p>
+</dd>
+<dt class="field-even">Pre<span class="colon">:</span></dt>
+<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">type.getElementType().isa&lt;</span><a class="reference internal" href="classmlir_1_1base2_1_1BitSequenceType.html#classmlir_1_1base2_1_1BitSequenceType"><span class="std std-ref"><span class="pre">BitSequenceType</span></span></a><span class="pre">&gt;()</span></code></p>
+</dd>
+<dt class="field-odd">Pre<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="docutils literal notranslate"><span class="pre">data.getElementBitWidth()</span> <span class="pre">==</span> <span class="pre">elementTy.getBitWidth()</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir5base221DenseBitSequencesAttr3getE10ShapedType8ArrayRefI11BitSequenceE">
+<span id="_CPPv3N4mlir5base221DenseBitSequencesAttr3getE10ShapedType8ArrayRefI11BitSequenceE"></span><span id="_CPPv2N4mlir5base221DenseBitSequencesAttr3getE10ShapedType8ArrayRefI11BitSequenceE"></span><span id="mlir::base2::DenseBitSequencesAttr::get__ShapedType.ArrayRef:BitSequence:"></span><span class="target" id="classmlir_1_1base2_1_1DenseBitSequencesAttr_1a620b5fb97d8a2b34bc559ab5c9af6cbc"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N4mlir5base221DenseBitSequencesAttrE" title="mlir::base2::DenseBitSequencesAttr"><span class="n"><span class="pre">DenseBitSequencesAttr</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">get</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">ShapedType</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">type</span></span>, <span class="n"><span class="pre">ArrayRef</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="classmlir_1_1base2_1_1BitSequence.html#_CPPv4N4mlir5base211BitSequenceE" title="mlir::base2::BitSequence"><span class="n"><span class="pre">BitSequence</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">values</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4mlir5base221DenseBitSequencesAttr3getE10ShapedType8ArrayRefI11BitSequenceE" title="Link to this definition"></a><br /></dt>
+<dd><p>Builds the canonical <a class="reference internal" href="#classmlir_1_1base2_1_1DenseBitSequencesAttr"><span class="std std-ref">DenseBitSequencesAttr</span></a> for <code class="docutils literal notranslate"><span class="pre">type</span></code> using <code class="docutils literal notranslate"><span class="pre">values</span></code> . </p>
+<p>When constructing a <a class="reference internal" href="classmlir_1_1base2_1_1BitSequenceAttr.html#classmlir_1_1base2_1_1BitSequenceAttr"><span class="std std-ref">BitSequenceAttr</span></a>, built-in attributes are prefered where possible. In all other scenarios, a <a class="reference internal" href="classmlir_1_1base2_1_1DenseBitsAttr.html#classmlir_1_1base2_1_1DenseBitsAttr"><span class="std std-ref">DenseBitsAttr</span></a> is returned.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Pre<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="docutils literal notranslate"><span class="pre">type</span></code></p>
+</dd>
+<dt class="field-even">Pre<span class="colon">:</span></dt>
+<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">type.hasStaticShape()</span></code></p>
+</dd>
+<dt class="field-odd">Pre<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="docutils literal notranslate"><span class="pre">type.getElementType().isa&lt;</span><a class="reference internal" href="classmlir_1_1base2_1_1BitSequenceType.html#classmlir_1_1base2_1_1BitSequenceType"><span class="std std-ref"><span class="pre">BitSequenceType</span></span></a><span class="pre">&gt;()</span></code></p>
+</dd>
+<dt class="field-even">Pre<span class="colon">:</span></dt>
+<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">values.size()</span> <span class="pre">==</span> <span class="pre">1</span> <span class="pre">||</span> <span class="pre">values.size()</span> <span class="pre">==</span> <span class="pre">type.getNumElements()</span></code></p>
+</dd>
+<dt class="field-odd">Pre<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="docutils literal notranslate"><span class="pre">value.size()</span> <span class="pre">==</span> <span class="pre">type.getBitWidth()</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir5base221DenseBitSequencesAttr3getE10ShapedTypeRK11BitSequence">
+<span id="_CPPv3N4mlir5base221DenseBitSequencesAttr3getE10ShapedTypeRK11BitSequence"></span><span id="_CPPv2N4mlir5base221DenseBitSequencesAttr3getE10ShapedTypeRK11BitSequence"></span><span id="mlir::base2::DenseBitSequencesAttr::get__ShapedType.BitSequenceCR"></span><span class="target" id="classmlir_1_1base2_1_1DenseBitSequencesAttr_1aefc7795f58d3b68e1ca791a6b38fab03"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N4mlir5base221DenseBitSequencesAttrE" title="mlir::base2::DenseBitSequencesAttr"><span class="n"><span class="pre">DenseBitSequencesAttr</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">get</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">ShapedType</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">type</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="classmlir_1_1base2_1_1BitSequence.html#_CPPv4N4mlir5base211BitSequenceE" title="mlir::base2::BitSequence"><span class="n"><span class="pre">BitSequence</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">splatValue</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4mlir5base221DenseBitSequencesAttr3getE10ShapedTypeRK11BitSequence" title="Link to this definition"></a><br /></dt>
+<dd><p>Builds the canonical <a class="reference internal" href="#classmlir_1_1base2_1_1DenseBitSequencesAttr"><span class="std std-ref">DenseBitSequencesAttr</span></a> using <code class="docutils literal notranslate"><span class="pre">splatValue</span></code> . </p>
+<dl class="field-list simple">
+<dt class="field-odd">Pre<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="docutils literal notranslate"><span class="pre">type</span></code></p>
+</dd>
+<dt class="field-even">Pre<span class="colon">:</span></dt>
+<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">type.hasStaticShape()</span></code></p>
+</dd>
+<dt class="field-odd">Pre<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="docutils literal notranslate"><span class="pre">type.getElementType().isa&lt;</span><a class="reference internal" href="classmlir_1_1base2_1_1BitSequenceType.html#classmlir_1_1base2_1_1BitSequenceType"><span class="std std-ref"><span class="pre">BitSequenceType</span></span></a><span class="pre">&gt;()</span></code></p>
+</dd>
+<dt class="field-even">Pre<span class="colon">:</span></dt>
+<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">splatValue.size()</span> <span class="pre">==</span> <span class="pre">type.getBitWidth()</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir5base221DenseBitSequencesAttr3getE21DenseBitSequencesAttr">
+<span id="_CPPv3N4mlir5base221DenseBitSequencesAttr3getE21DenseBitSequencesAttr"></span><span id="_CPPv2N4mlir5base221DenseBitSequencesAttr3getE21DenseBitSequencesAttr"></span><span id="mlir::base2::DenseBitSequencesAttr::get__DenseBitSequencesAttr"></span><span class="target" id="classmlir_1_1base2_1_1DenseBitSequencesAttr_1a4dc0ad006848f82cf4f0d5b25ab12a24"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N4mlir5base221DenseBitSequencesAttrE" title="mlir::base2::DenseBitSequencesAttr"><span class="n"><span class="pre">DenseBitSequencesAttr</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">get</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4N4mlir5base221DenseBitSequencesAttrE" title="mlir::base2::DenseBitSequencesAttr"><span class="n"><span class="pre">DenseBitSequencesAttr</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">attr</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4mlir5base221DenseBitSequencesAttr3getE21DenseBitSequencesAttr" title="Link to this definition"></a><br /></dt>
+<dd><p>Builds the canonical <a class="reference internal" href="#classmlir_1_1base2_1_1DenseBitSequencesAttr"><span class="std std-ref">DenseBitSequencesAttr</span></a> for <code class="docutils literal notranslate"><span class="pre">attr</span></code> . </p>
+<dl class="field-list simple">
+<dt class="field-odd">Pre<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="docutils literal notranslate"><span class="pre">attr</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="classmlir_1_1base2_1_1DenseBitsAttr.html" class="btn btn-neutral float-left" title="Class DenseBitsAttr" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="classmlir_1_1base2_1_1FixedType.html" class="btn btn-neutral float-right" title="Class FixedType" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,383 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Class HelperWindowOp &mdash; picea 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/collapsible-lists/css/tree_view.css?v=a885cde7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js?v=73120307"></script>
+      <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js?v=660e4f45"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Class HelperWindowOpAdaptor" href="classmlir_1_1emithls_1_1HelperWindowOpAdaptor.html" />
+    <link rel="prev" title="Template Class HelperLineBufferOpGenericAdaptor" href="classmlir_1_1emithls_1_1HelperLineBufferOpGenericAdaptor.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            picea
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Installation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../README.html">About the project</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#guides">Guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#related-projects">Related projects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#development-environment-nix">Development Environment (Nix)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#build-on-ubuntu-24-04-no-nix">Build on Ubuntu 24.04 (no Nix)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#gurobi-license">Gurobi license</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#installing">Installing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#run-the-tests">Run the tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#build-the-documentation">Build the documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#compiling-a-design">Compiling a design</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#running-a-design-on-the-board">Running a design on the board</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#exporting-a-profiled-application-to-mocasin">Exporting a profiled application to Mocasin</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Guides</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../guides/laksa.html">The FPGA Variant using LAKSA backend</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/cgra.html">The CGRA Variant</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">MLIR Dialects</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/Base2Ops.html">‘base2’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/CGRAOps.html">‘cgra’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/DFGOps.html">‘dfg’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/EmitHLSOps.html">‘emithls’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/FilterOps.html">‘filter’ Dialect</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Passes</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/PICEAConversionPasses.html">PICEA Conversion Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/CGRAPasses.html">CGRA Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/DFGPasses.html">DFG Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/EmitHLSPasses.html">Emit HLS Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/FuncExtPasses.html">Func Ext Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/LinalgExtPasses.html">Linalg Ext Passes</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">C++ API</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="library_root.html">C++ API Reference</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="library_root.html#picea">picea</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="library_root.html#page-hierarchy">Page Hierarchy</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="library_root.html#full-api">Full API</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="library_root.html#namespaces">Namespaces</a></li>
+<li class="toctree-l4 current"><a class="reference internal" href="library_root.html#classes-and-structs">Classes and Structs</a></li>
+<li class="toctree-l4"><a class="reference internal" href="library_root.html#enums">Enums</a></li>
+<li class="toctree-l4"><a class="reference internal" href="library_root.html#functions">Functions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="library_root.html#variables">Variables</a></li>
+<li class="toctree-l4"><a class="reference internal" href="library_root.html#defines">Defines</a></li>
+<li class="toctree-l4"><a class="reference internal" href="library_root.html#typedefs">Typedefs</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">picea</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="library_root.html">C++ API Reference</a></li>
+      <li class="breadcrumb-item active">Class HelperWindowOp</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/classmlir_1_1emithls_1_1HelperWindowOp.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="class-helperwindowop">
+<span id="exhale-class-classmlir-1-1emithls-1-1helperwindowop"></span><h1>Class HelperWindowOp<a class="headerlink" href="#class-helperwindowop" title="Link to this heading"></a></h1>
+<ul class="simple">
+<li><p>Defined in <a class="reference internal" href="file_build_include_picea-mlir_Dialect_EmitHLS_IR_EmitHLSOps.h.inc.html#file-build-include-picea-mlir-dialect-emithls-ir-emithlsops-h-inc"><span class="std std-ref">File EmitHLSOps.h.inc</span></a></p></li>
+</ul>
+<section id="inheritance-relationships">
+<h2>Inheritance Relationships<a class="headerlink" href="#inheritance-relationships" title="Link to this heading"></a></h2>
+<section id="base-type">
+<h3>Base Type<a class="headerlink" href="#base-type" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">public</span> <span class="pre">mlir::Op&lt;</span> <span class="pre">HelperWindowOp,</span> <span class="pre">::mlir::OpTrait::ZeroRegions,</span> <span class="pre">::mlir::OpTrait::OneResult,</span> <span class="pre">::mlir::OpTrait::OneTypedResult&lt;::mlir::Type</span> <span class="pre">&gt;::Impl,</span> <span class="pre">::mlir::OpTrait::ZeroSuccessors,</span> <span class="pre">::mlir::OpTrait::AtLeastNOperands&lt;</span> <span class="pre">1</span> <span class="pre">&gt;::Impl,</span> <span class="pre">::mlir::OpTrait::HasParent&lt;</span> <span class="pre">ForOp,</span> <span class="pre">affine::AffineForOp</span> <span class="pre">&gt;::Impl,</span> <span class="pre">::mlir::OpTrait::OpInvariants,</span> <span class="pre">::mlir::OpAsmOpInterface::Trait</span> <span class="pre">&gt;</span></code></p></li>
+</ul>
+</section>
+</section>
+<section id="class-documentation">
+<h2>Class Documentation<a class="headerlink" href="#class-documentation" title="Link to this heading"></a></h2>
+<dl class="cpp class">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir7emithls14HelperWindowOpE">
+<span id="_CPPv3N4mlir7emithls14HelperWindowOpE"></span><span id="_CPPv2N4mlir7emithls14HelperWindowOpE"></span><span id="mlir::emithls::HelperWindowOp"></span><span class="target" id="classmlir_1_1emithls_1_1HelperWindowOp"></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">HelperWindowOp</span></span></span><span class="w"> </span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="k"><span class="pre">public</span></span><span class="w"> </span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">Op</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4N4mlir7emithls14HelperWindowOpE" title="mlir::emithls::HelperWindowOp"><span class="n"><span class="pre">HelperWindowOp</span></span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">OpTrait</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">ZeroRegions</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">OpTrait</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">OneResult</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">OpTrait</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">OneTypedResult</span></span><span class="p"><span class="pre">&lt;</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">Type</span></span><span class="p"><span class="pre">&gt;</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">Impl</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">OpTrait</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">ZeroSuccessors</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">OpTrait</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">AtLeastNOperands</span></span><span class="p"><span class="pre">&lt;</span></span><span class="m"><span class="pre">1</span></span><span class="p"><span class="pre">&gt;</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">Impl</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">OpTrait</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">HasParent</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="classmlir_1_1emithls_1_1ForOp.html#_CPPv4N4mlir7emithls5ForOpE" title="mlir::emithls::ForOp"><span class="n"><span class="pre">ForOp</span></span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">affine</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">AffineForOp</span></span><span class="p"><span class="pre">&gt;</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">Impl</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">OpTrait</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">OpInvariants</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">OpAsmOpInterface</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">Trait</span></span><span class="p"><span class="pre">&gt;</span></span><a class="headerlink" href="#_CPPv4N4mlir7emithls14HelperWindowOpE" title="Link to this definition"></a><br /></dt>
+<dd><div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-types">Public Types</p>
+<dl class="cpp type">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir7emithls14HelperWindowOp7AdaptorE">
+<span id="_CPPv3N4mlir7emithls14HelperWindowOp7AdaptorE"></span><span id="_CPPv2N4mlir7emithls14HelperWindowOp7AdaptorE"></span><span class="target" id="classmlir_1_1emithls_1_1HelperWindowOp_1abb70ee276807cdf87f6fce0beb8bc6ff"></span><span class="k"><span class="pre">using</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Adaptor</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><a class="reference internal" href="classmlir_1_1emithls_1_1HelperWindowOpAdaptor.html#_CPPv4N4mlir7emithls21HelperWindowOpAdaptorE" title="mlir::emithls::HelperWindowOpAdaptor"><span class="n"><span class="pre">HelperWindowOpAdaptor</span></span></a><a class="headerlink" href="#_CPPv4N4mlir7emithls14HelperWindowOp7AdaptorE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp type">
+<dt class="sig sig-object cpp" id="_CPPv4I0EN4mlir7emithls14HelperWindowOp14GenericAdaptorE">
+<span id="_CPPv3I0EN4mlir7emithls14HelperWindowOp14GenericAdaptorE"></span><span id="_CPPv2I0EN4mlir7emithls14HelperWindowOp14GenericAdaptorE"></span><span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="k"><span class="pre">typename</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">RangeT</span></span></span><span class="p"><span class="pre">&gt;</span></span><br /><span class="target" id="classmlir_1_1emithls_1_1HelperWindowOp_1abdf5381ecd73b57ac07c04dfd3595c40"></span><span class="k"><span class="pre">using</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">GenericAdaptor</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><a class="reference internal" href="classmlir_1_1emithls_1_1HelperWindowOpGenericAdaptor.html#_CPPv4I0EN4mlir7emithls28HelperWindowOpGenericAdaptorE" title="mlir::emithls::HelperWindowOpGenericAdaptor"><span class="n"><span class="pre">HelperWindowOpGenericAdaptor</span></span></a><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4I0EN4mlir7emithls14HelperWindowOp14GenericAdaptorE" title="mlir::emithls::HelperWindowOp::GenericAdaptor::RangeT"><span class="n"><span class="pre">RangeT</span></span></a><span class="p"><span class="pre">&gt;</span></span><a class="headerlink" href="#_CPPv4I0EN4mlir7emithls14HelperWindowOp14GenericAdaptorE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp type">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir7emithls14HelperWindowOp11FoldAdaptorE">
+<span id="_CPPv3N4mlir7emithls14HelperWindowOp11FoldAdaptorE"></span><span id="_CPPv2N4mlir7emithls14HelperWindowOp11FoldAdaptorE"></span><span class="target" id="classmlir_1_1emithls_1_1HelperWindowOp_1a58ac69a3eb890c19773dfbd9476d8761"></span><span class="k"><span class="pre">using</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">FoldAdaptor</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4I0EN4mlir7emithls14HelperWindowOp14GenericAdaptorE" title="mlir::emithls::HelperWindowOp::GenericAdaptor"><span class="n"><span class="pre">GenericAdaptor</span></span></a><span class="p"><span class="pre">&lt;</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">llvm</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">ArrayRef</span></span><span class="p"><span class="pre">&lt;</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">Attribute</span></span><span class="p"><span class="pre">&gt;</span></span><span class="p"><span class="pre">&gt;</span></span><a class="headerlink" href="#_CPPv4N4mlir7emithls14HelperWindowOp11FoldAdaptorE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp type">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir7emithls14HelperWindowOp10PropertiesE">
+<span id="_CPPv3N4mlir7emithls14HelperWindowOp10PropertiesE"></span><span id="_CPPv2N4mlir7emithls14HelperWindowOp10PropertiesE"></span><span class="target" id="classmlir_1_1emithls_1_1HelperWindowOp_1ae11c164d00333ccaf4b394463590c7f9"></span><span class="k"><span class="pre">using</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Properties</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N4mlir7emithls14HelperWindowOp11FoldAdaptorE" title="mlir::emithls::HelperWindowOp::FoldAdaptor"><span class="n"><span class="pre">FoldAdaptor</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">Properties</span></span><a class="headerlink" href="#_CPPv4N4mlir7emithls14HelperWindowOp10PropertiesE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir7emithls14HelperWindowOp17getAttributeNamesEv">
+<span id="_CPPv3N4mlir7emithls14HelperWindowOp17getAttributeNamesEv"></span><span id="_CPPv2N4mlir7emithls14HelperWindowOp17getAttributeNamesEv"></span><span id="mlir::emithls::HelperWindowOp::getAttributeNames"></span><span class="target" id="classmlir_1_1emithls_1_1HelperWindowOp_1a98f64920700f87b2b3a2129ae887d3ad"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">llvm</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">ArrayRef</span></span><span class="p"><span class="pre">&lt;</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">llvm</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">StringRef</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">getAttributeNames</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4mlir7emithls14HelperWindowOp17getAttributeNamesEv" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir7emithls14HelperWindowOp27getODSOperandIndexAndLengthEj">
+<span id="_CPPv3N4mlir7emithls14HelperWindowOp27getODSOperandIndexAndLengthEj"></span><span id="_CPPv2N4mlir7emithls14HelperWindowOp27getODSOperandIndexAndLengthEj"></span><span id="mlir::emithls::HelperWindowOp::getODSOperandIndexAndLength__unsigned"></span><span class="target" id="classmlir_1_1emithls_1_1HelperWindowOp_1a25303d485b997a7fd6c3f5c2ed142a2f"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">pair</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">unsigned</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="kt"><span class="pre">unsigned</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">getODSOperandIndexAndLength</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">unsigned</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">index</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4mlir7emithls14HelperWindowOp27getODSOperandIndexAndLengthEj" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir7emithls14HelperWindowOp14getODSOperandsEj">
+<span id="_CPPv3N4mlir7emithls14HelperWindowOp14getODSOperandsEj"></span><span id="_CPPv2N4mlir7emithls14HelperWindowOp14getODSOperandsEj"></span><span id="mlir::emithls::HelperWindowOp::getODSOperands__unsigned"></span><span class="target" id="classmlir_1_1emithls_1_1HelperWindowOp_1a42ea4855b0fc00a079b79cca61951da9"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">Operation</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">operand_range</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">getODSOperands</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">unsigned</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">index</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4mlir7emithls14HelperWindowOp14getODSOperandsEj" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir7emithls14HelperWindowOp9getBufRefEv">
+<span id="_CPPv3N4mlir7emithls14HelperWindowOp9getBufRefEv"></span><span id="_CPPv2N4mlir7emithls14HelperWindowOp9getBufRefEv"></span><span id="mlir::emithls::HelperWindowOp::getBufRef"></span><span class="target" id="classmlir_1_1emithls_1_1HelperWindowOp_1aa135c810de125a4bf8958b950b673b6c"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">TypedValue</span></span><span class="p"><span class="pre">&lt;</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">Type</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">getBufRef</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4mlir7emithls14HelperWindowOp9getBufRefEv" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir7emithls14HelperWindowOp10getIndicesEv">
+<span id="_CPPv3N4mlir7emithls14HelperWindowOp10getIndicesEv"></span><span id="_CPPv2N4mlir7emithls14HelperWindowOp10getIndicesEv"></span><span id="mlir::emithls::HelperWindowOp::getIndices"></span><span class="target" id="classmlir_1_1emithls_1_1HelperWindowOp_1addd20ab176f966fb3446c5a4347e1638"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">Operation</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">operand_range</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">getIndices</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4mlir7emithls14HelperWindowOp10getIndicesEv" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir7emithls14HelperWindowOp16getBufRefMutableEv">
+<span id="_CPPv3N4mlir7emithls14HelperWindowOp16getBufRefMutableEv"></span><span id="_CPPv2N4mlir7emithls14HelperWindowOp16getBufRefMutableEv"></span><span id="mlir::emithls::HelperWindowOp::getBufRefMutable"></span><span class="target" id="classmlir_1_1emithls_1_1HelperWindowOp_1a3a55ea74ba0599398204a927498a03b5"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">OpOperand</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="sig-name descname"><span class="n"><span class="pre">getBufRefMutable</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4mlir7emithls14HelperWindowOp16getBufRefMutableEv" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir7emithls14HelperWindowOp17getIndicesMutableEv">
+<span id="_CPPv3N4mlir7emithls14HelperWindowOp17getIndicesMutableEv"></span><span id="_CPPv2N4mlir7emithls14HelperWindowOp17getIndicesMutableEv"></span><span id="mlir::emithls::HelperWindowOp::getIndicesMutable"></span><span class="target" id="classmlir_1_1emithls_1_1HelperWindowOp_1afe1d1828cda6900124beadeb50713cb0"></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">MutableOperandRange</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">getIndicesMutable</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4mlir7emithls14HelperWindowOp17getIndicesMutableEv" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir7emithls14HelperWindowOp26getODSResultIndexAndLengthEj">
+<span id="_CPPv3N4mlir7emithls14HelperWindowOp26getODSResultIndexAndLengthEj"></span><span id="_CPPv2N4mlir7emithls14HelperWindowOp26getODSResultIndexAndLengthEj"></span><span id="mlir::emithls::HelperWindowOp::getODSResultIndexAndLength__unsigned"></span><span class="target" id="classmlir_1_1emithls_1_1HelperWindowOp_1a370b70f00f8dfa9297e9329cd81bc291"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">pair</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">unsigned</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="kt"><span class="pre">unsigned</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">getODSResultIndexAndLength</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">unsigned</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">index</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4mlir7emithls14HelperWindowOp26getODSResultIndexAndLengthEj" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir7emithls14HelperWindowOp13getODSResultsEj">
+<span id="_CPPv3N4mlir7emithls14HelperWindowOp13getODSResultsEj"></span><span id="_CPPv2N4mlir7emithls14HelperWindowOp13getODSResultsEj"></span><span id="mlir::emithls::HelperWindowOp::getODSResults__unsigned"></span><span class="target" id="classmlir_1_1emithls_1_1HelperWindowOp_1a374e02c20fdea8a640ef213c62398074"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">Operation</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">result_range</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">getODSResults</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">unsigned</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">index</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4mlir7emithls14HelperWindowOp13getODSResultsEj" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir7emithls14HelperWindowOp9getWinRefEv">
+<span id="_CPPv3N4mlir7emithls14HelperWindowOp9getWinRefEv"></span><span id="_CPPv2N4mlir7emithls14HelperWindowOp9getWinRefEv"></span><span id="mlir::emithls::HelperWindowOp::getWinRef"></span><span class="target" id="classmlir_1_1emithls_1_1HelperWindowOp_1a1d8599fef9106b051ebd8c044cd6a5ed"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">TypedValue</span></span><span class="p"><span class="pre">&lt;</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">Type</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">getWinRef</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4mlir7emithls14HelperWindowOp9getWinRefEv" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir7emithls14HelperWindowOp5printERN4mlir12OpAsmPrinterE">
+<span id="_CPPv3N4mlir7emithls14HelperWindowOp5printERN4mlir12OpAsmPrinterE"></span><span id="_CPPv2N4mlir7emithls14HelperWindowOp5printERN4mlir12OpAsmPrinterE"></span><span id="mlir::emithls::HelperWindowOp::print__mlir::OpAsmPrinterR"></span><span class="target" id="classmlir_1_1emithls_1_1HelperWindowOp_1a73c82f900970011978d0f7cbc20a9121"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">print</span></span></span><span class="sig-paren">(</span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">OpAsmPrinter</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">p</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4mlir7emithls14HelperWindowOp5printERN4mlir12OpAsmPrinterE" title="Link to this definition"></a><br /></dt>
+<dd><p>Prints a <code class="docutils literal notranslate"><a class="reference internal" href="#classmlir_1_1emithls_1_1HelperWindowOp"><span class="std std-ref"><span class="pre">emithls::HelperWindowOp</span></span></a></code> in the custom assembly syntax consumed by <code class="docutils literal notranslate"><span class="pre">parse</span></code>. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir7emithls14HelperWindowOp20verifyInvariantsImplEv">
+<span id="_CPPv3N4mlir7emithls14HelperWindowOp20verifyInvariantsImplEv"></span><span id="_CPPv2N4mlir7emithls14HelperWindowOp20verifyInvariantsImplEv"></span><span id="mlir::emithls::HelperWindowOp::verifyInvariantsImpl"></span><span class="target" id="classmlir_1_1emithls_1_1HelperWindowOp_1aaa1f34f23244d0bf5314cb38e5666a36"></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">llvm</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">LogicalResult</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">verifyInvariantsImpl</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4mlir7emithls14HelperWindowOp20verifyInvariantsImplEv" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir7emithls14HelperWindowOp16verifyInvariantsEv">
+<span id="_CPPv3N4mlir7emithls14HelperWindowOp16verifyInvariantsEv"></span><span id="_CPPv2N4mlir7emithls14HelperWindowOp16verifyInvariantsEv"></span><span id="mlir::emithls::HelperWindowOp::verifyInvariants"></span><span class="target" id="classmlir_1_1emithls_1_1HelperWindowOp_1a31e438701a045481a82a4e185b855e7d"></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">llvm</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">LogicalResult</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">verifyInvariants</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4mlir7emithls14HelperWindowOp16verifyInvariantsEv" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir7emithls14HelperWindowOp17getAsmResultNamesEN4mlir19OpAsmSetValueNameFnE">
+<span id="_CPPv3N4mlir7emithls14HelperWindowOp17getAsmResultNamesEN4mlir19OpAsmSetValueNameFnE"></span><span id="_CPPv2N4mlir7emithls14HelperWindowOp17getAsmResultNamesEN4mlir19OpAsmSetValueNameFnE"></span><span id="mlir::emithls::HelperWindowOp::getAsmResultNames__mlir::OpAsmSetValueNameFn"></span><span class="target" id="classmlir_1_1emithls_1_1HelperWindowOp_1a371c468f8ff72fca7eebf39a4f47ff22"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">getAsmResultNames</span></span></span><span class="sig-paren">(</span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">OpAsmSetValueNameFn</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">setNameFn</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4mlir7emithls14HelperWindowOp17getAsmResultNamesEN4mlir19OpAsmSetValueNameFnE" title="Link to this definition"></a><br /></dt>
+<dd><p>Names the SSA result of a <code class="docutils literal notranslate"><a class="reference internal" href="#classmlir_1_1emithls_1_1HelperWindowOp"><span class="std std-ref"><span class="pre">emithls::HelperWindowOp</span></span></a></code>. </p>
+<p>Assigns a name of the form <code class="docutils literal notranslate"><span class="pre">window_&lt;N&gt;</span></code> where <code class="docutils literal notranslate"><span class="pre">N</span></code> is the zero-based index among all <code class="docutils literal notranslate"><a class="reference internal" href="#classmlir_1_1emithls_1_1HelperWindowOp"><span class="std std-ref"><span class="pre">HelperWindowOp</span></span></a></code>s that appear before this one in a pre-order walk of the nearest enclosing non-module ancestor. </p>
+</dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-static-functions">Public Static Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir7emithls14HelperWindowOp16getOperationNameEv">
+<span id="_CPPv3N4mlir7emithls14HelperWindowOp16getOperationNameEv"></span><span id="_CPPv2N4mlir7emithls14HelperWindowOp16getOperationNameEv"></span><span id="mlir::emithls::HelperWindowOp::getOperationNameCE"></span><span class="target" id="classmlir_1_1emithls_1_1HelperWindowOp_1a4328bee899b74f97d27940a79c9d1030"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="k"><span class="pre">constexpr</span></span><span class="w"> </span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">llvm</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">StringLiteral</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">getOperationName</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4mlir7emithls14HelperWindowOp16getOperationNameEv" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir7emithls14HelperWindowOp21setPropertiesFromAttrER10PropertiesN4mlir9AttributeEN4llvm12function_refIFN4mlir18InFlightDiagnosticEvEEE">
+<span id="_CPPv3N4mlir7emithls14HelperWindowOp21setPropertiesFromAttrER10PropertiesN4mlir9AttributeEN4llvm12function_refIFN4mlir18InFlightDiagnosticEvEEE"></span><span id="_CPPv2N4mlir7emithls14HelperWindowOp21setPropertiesFromAttrER10PropertiesN4mlir9AttributeEN4llvm12function_refIFN4mlir18InFlightDiagnosticEvEEE"></span><span class="target" id="classmlir_1_1emithls_1_1HelperWindowOp_1a2b49cae0b4555708df208e4af9a7b89f"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">llvm</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">LogicalResult</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">setPropertiesFromAttr</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4N4mlir7emithls14HelperWindowOp10PropertiesE" title="mlir::emithls::HelperWindowOp::Properties"><span class="n"><span class="pre">Properties</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">prop</span></span>, <span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">Attribute</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">attr</span></span>, <span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">llvm</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">function_ref</span></span><span class="p"><span class="pre">&lt;</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">InFlightDiagnostic</span></span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">emitError</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4mlir7emithls14HelperWindowOp21setPropertiesFromAttrER10PropertiesN4mlir9AttributeEN4llvm12function_refIFN4mlir18InFlightDiagnosticEvEEE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir7emithls14HelperWindowOp19getPropertiesAsAttrEPN4mlir11MLIRContextERK10Properties">
+<span id="_CPPv3N4mlir7emithls14HelperWindowOp19getPropertiesAsAttrEPN4mlir11MLIRContextERK10Properties"></span><span id="_CPPv2N4mlir7emithls14HelperWindowOp19getPropertiesAsAttrEPN4mlir11MLIRContextERK10Properties"></span><span id="mlir::emithls::HelperWindowOp::getPropertiesAsAttr__mlir::MLIRContextP.PropertiesCR"></span><span class="target" id="classmlir_1_1emithls_1_1HelperWindowOp_1abef1790aa1a0159a7277e57ab2588501"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">Attribute</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">getPropertiesAsAttr</span></span></span><span class="sig-paren">(</span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">MLIRContext</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">ctx</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N4mlir7emithls14HelperWindowOp10PropertiesE" title="mlir::emithls::HelperWindowOp::Properties"><span class="n"><span class="pre">Properties</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">prop</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4mlir7emithls14HelperWindowOp19getPropertiesAsAttrEPN4mlir11MLIRContextERK10Properties" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir7emithls14HelperWindowOp21computePropertiesHashERK10Properties">
+<span id="_CPPv3N4mlir7emithls14HelperWindowOp21computePropertiesHashERK10Properties"></span><span id="_CPPv2N4mlir7emithls14HelperWindowOp21computePropertiesHashERK10Properties"></span><span id="mlir::emithls::HelperWindowOp::computePropertiesHash__PropertiesCR"></span><span class="target" id="classmlir_1_1emithls_1_1HelperWindowOp_1acbe10f7b97a0abdb61af1cb77f0f9705"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="n"><span class="pre">llvm</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">hash_code</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">computePropertiesHash</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N4mlir7emithls14HelperWindowOp10PropertiesE" title="mlir::emithls::HelperWindowOp::Properties"><span class="n"><span class="pre">Properties</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">prop</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4mlir7emithls14HelperWindowOp21computePropertiesHashERK10Properties" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir7emithls14HelperWindowOp15getInherentAttrEPN4mlir11MLIRContextERK10PropertiesN4llvm9StringRefE">
+<span id="_CPPv3N4mlir7emithls14HelperWindowOp15getInherentAttrEPN4mlir11MLIRContextERK10PropertiesN4llvm9StringRefE"></span><span id="_CPPv2N4mlir7emithls14HelperWindowOp15getInherentAttrEPN4mlir11MLIRContextERK10PropertiesN4llvm9StringRefE"></span><span id="mlir::emithls::HelperWindowOp::getInherentAttr__mlir::MLIRContextP.PropertiesCR.llvm::StringRef"></span><span class="target" id="classmlir_1_1emithls_1_1HelperWindowOp_1a0fd921465f57a37e2598892c75a31425"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">optional</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">Attribute</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">getInherentAttr</span></span></span><span class="sig-paren">(</span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">MLIRContext</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">ctx</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N4mlir7emithls14HelperWindowOp10PropertiesE" title="mlir::emithls::HelperWindowOp::Properties"><span class="n"><span class="pre">Properties</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">prop</span></span>, <span class="n"><span class="pre">llvm</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">StringRef</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">name</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4mlir7emithls14HelperWindowOp15getInherentAttrEPN4mlir11MLIRContextERK10PropertiesN4llvm9StringRefE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir7emithls14HelperWindowOp15setInherentAttrER10PropertiesN4llvm9StringRefEN4mlir9AttributeE">
+<span id="_CPPv3N4mlir7emithls14HelperWindowOp15setInherentAttrER10PropertiesN4llvm9StringRefEN4mlir9AttributeE"></span><span id="_CPPv2N4mlir7emithls14HelperWindowOp15setInherentAttrER10PropertiesN4llvm9StringRefEN4mlir9AttributeE"></span><span id="mlir::emithls::HelperWindowOp::setInherentAttr__PropertiesR.llvm::StringRef.mlir::Attribute"></span><span class="target" id="classmlir_1_1emithls_1_1HelperWindowOp_1a2f63e646856cec74a7d08b7e0baaf379"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">setInherentAttr</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4N4mlir7emithls14HelperWindowOp10PropertiesE" title="mlir::emithls::HelperWindowOp::Properties"><span class="n"><span class="pre">Properties</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">prop</span></span>, <span class="n"><span class="pre">llvm</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">StringRef</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">name</span></span>, <span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">Attribute</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">value</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4mlir7emithls14HelperWindowOp15setInherentAttrER10PropertiesN4llvm9StringRefEN4mlir9AttributeE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir7emithls14HelperWindowOp21populateInherentAttrsEPN4mlir11MLIRContextERK10PropertiesRN4mlir13NamedAttrListE">
+<span id="_CPPv3N4mlir7emithls14HelperWindowOp21populateInherentAttrsEPN4mlir11MLIRContextERK10PropertiesRN4mlir13NamedAttrListE"></span><span id="_CPPv2N4mlir7emithls14HelperWindowOp21populateInherentAttrsEPN4mlir11MLIRContextERK10PropertiesRN4mlir13NamedAttrListE"></span><span id="mlir::emithls::HelperWindowOp::populateInherentAttrs__mlir::MLIRContextP.PropertiesCR.mlir::NamedAttrListR"></span><span class="target" id="classmlir_1_1emithls_1_1HelperWindowOp_1ab61b81b934493ad44b86b58d0d583c03"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">populateInherentAttrs</span></span></span><span class="sig-paren">(</span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">MLIRContext</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">ctx</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N4mlir7emithls14HelperWindowOp10PropertiesE" title="mlir::emithls::HelperWindowOp::Properties"><span class="n"><span class="pre">Properties</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">prop</span></span>, <span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">NamedAttrList</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">attrs</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4mlir7emithls14HelperWindowOp21populateInherentAttrsEPN4mlir11MLIRContextERK10PropertiesRN4mlir13NamedAttrListE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir7emithls14HelperWindowOp19verifyInherentAttrsEN4mlir13OperationNameERN4mlir13NamedAttrListEN4llvm12function_refIFN4mlir18InFlightDiagnosticEvEEE">
+<span id="_CPPv3N4mlir7emithls14HelperWindowOp19verifyInherentAttrsEN4mlir13OperationNameERN4mlir13NamedAttrListEN4llvm12function_refIFN4mlir18InFlightDiagnosticEvEEE"></span><span id="_CPPv2N4mlir7emithls14HelperWindowOp19verifyInherentAttrsEN4mlir13OperationNameERN4mlir13NamedAttrListEN4llvm12function_refIFN4mlir18InFlightDiagnosticEvEEE"></span><span class="target" id="classmlir_1_1emithls_1_1HelperWindowOp_1a6783806f17ec81b0a86ac538decb06fe"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">llvm</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">LogicalResult</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">verifyInherentAttrs</span></span></span><span class="sig-paren">(</span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">OperationName</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">opName</span></span>, <span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">NamedAttrList</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">attrs</span></span>, <span class="n"><span class="pre">llvm</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">function_ref</span></span><span class="p"><span class="pre">&lt;</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">InFlightDiagnostic</span></span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">emitError</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4mlir7emithls14HelperWindowOp19verifyInherentAttrsEN4mlir13OperationNameERN4mlir13NamedAttrListEN4llvm12function_refIFN4mlir18InFlightDiagnosticEvEEE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir7emithls14HelperWindowOp5buildERN4mlir9OpBuilderERN4mlir14OperationStateE5Value10ValueRange4Type">
+<span id="_CPPv3N4mlir7emithls14HelperWindowOp5buildERN4mlir9OpBuilderERN4mlir14OperationStateE5Value10ValueRange4Type"></span><span id="_CPPv2N4mlir7emithls14HelperWindowOp5buildERN4mlir9OpBuilderERN4mlir14OperationStateE5Value10ValueRange4Type"></span><span id="mlir::emithls::HelperWindowOp::build__mlir::OpBuilderR.mlir::OperationStateR.Value.ValueRange.Type"></span><span class="target" id="classmlir_1_1emithls_1_1HelperWindowOp_1a3277f3b8dd552839942d4fd0bac35a3e"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">build</span></span></span><span class="sig-paren">(</span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">OpBuilder</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">odsBuilder</span></span>, <span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">OperationState</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">odsState</span></span>, <span class="n"><span class="pre">Value</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">linebuf</span></span>, <span class="n"><span class="pre">ValueRange</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">indices</span></span>, <span class="n"><span class="pre">Type</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">windowType</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4mlir7emithls14HelperWindowOp5buildERN4mlir9OpBuilderERN4mlir14OperationStateE5Value10ValueRange4Type" title="Link to this definition"></a><br /></dt>
+<dd><p>Builds a <code class="docutils literal notranslate"><a class="reference internal" href="#classmlir_1_1emithls_1_1HelperWindowOp"><span class="std std-ref"><span class="pre">emithls::HelperWindowOp</span></span></a></code>. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>linebuf</strong> – The line buffer memref/array from which the window is extracted. </p></li>
+<li><p><strong>indices</strong> – Multi-dimensional index operands selecting the window origin within the line buffer. </p></li>
+<li><p><strong>windowType</strong> – The type of the resulting window memref/array. </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir7emithls14HelperWindowOp6createERN4mlir9OpBuilderEN4mlir8LocationE5Value10ValueRange4Type">
+<span id="_CPPv3N4mlir7emithls14HelperWindowOp6createERN4mlir9OpBuilderEN4mlir8LocationE5Value10ValueRange4Type"></span><span id="_CPPv2N4mlir7emithls14HelperWindowOp6createERN4mlir9OpBuilderEN4mlir8LocationE5Value10ValueRange4Type"></span><span id="mlir::emithls::HelperWindowOp::create__mlir::OpBuilderR.mlir::Location.Value.ValueRange.Type"></span><span class="target" id="classmlir_1_1emithls_1_1HelperWindowOp_1a2433f15c160f5193230957bcb12d50ff"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N4mlir7emithls14HelperWindowOpE" title="mlir::emithls::HelperWindowOp"><span class="n"><span class="pre">HelperWindowOp</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">create</span></span></span><span class="sig-paren">(</span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">OpBuilder</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">builder</span></span>, <span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">Location</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">location</span></span>, <span class="n"><span class="pre">Value</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">linebuf</span></span>, <span class="n"><span class="pre">ValueRange</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">indices</span></span>, <span class="n"><span class="pre">Type</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">windowType</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4mlir7emithls14HelperWindowOp6createERN4mlir9OpBuilderEN4mlir8LocationE5Value10ValueRange4Type" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir7emithls14HelperWindowOp6createERN4mlir20ImplicitLocOpBuilderE5Value10ValueRange4Type">
+<span id="_CPPv3N4mlir7emithls14HelperWindowOp6createERN4mlir20ImplicitLocOpBuilderE5Value10ValueRange4Type"></span><span id="_CPPv2N4mlir7emithls14HelperWindowOp6createERN4mlir20ImplicitLocOpBuilderE5Value10ValueRange4Type"></span><span id="mlir::emithls::HelperWindowOp::create__mlir::ImplicitLocOpBuilderR.Value.ValueRange.Type"></span><span class="target" id="classmlir_1_1emithls_1_1HelperWindowOp_1a9da7626ede36328d6542301131f0332b"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N4mlir7emithls14HelperWindowOpE" title="mlir::emithls::HelperWindowOp"><span class="n"><span class="pre">HelperWindowOp</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">create</span></span></span><span class="sig-paren">(</span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">ImplicitLocOpBuilder</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">builder</span></span>, <span class="n"><span class="pre">Value</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">linebuf</span></span>, <span class="n"><span class="pre">ValueRange</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">indices</span></span>, <span class="n"><span class="pre">Type</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">windowType</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4mlir7emithls14HelperWindowOp6createERN4mlir20ImplicitLocOpBuilderE5Value10ValueRange4Type" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir7emithls14HelperWindowOp5parseERN4mlir11OpAsmParserERN4mlir14OperationStateE">
+<span id="_CPPv3N4mlir7emithls14HelperWindowOp5parseERN4mlir11OpAsmParserERN4mlir14OperationStateE"></span><span id="_CPPv2N4mlir7emithls14HelperWindowOp5parseERN4mlir11OpAsmParserERN4mlir14OperationStateE"></span><span id="mlir::emithls::HelperWindowOp::parse__mlir::OpAsmParserR.mlir::OperationStateR"></span><span class="target" id="classmlir_1_1emithls_1_1HelperWindowOp_1a395244e694415777804eabce6ab1b73c"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">ParseResult</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">parse</span></span></span><span class="sig-paren">(</span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">OpAsmParser</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">parser</span></span>, <span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">OperationState</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">result</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4mlir7emithls14HelperWindowOp5parseERN4mlir11OpAsmParserERN4mlir14OperationStateE" title="Link to this definition"></a><br /></dt>
+<dd><p>Parses a <code class="docutils literal notranslate"><a class="reference internal" href="#classmlir_1_1emithls_1_1HelperWindowOp"><span class="std std-ref"><span class="pre">emithls::HelperWindowOp</span></span></a></code> from its custom assembly syntax. </p>
+<p>The expected syntax is: <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>`emithls.helper_window` linebuf `from` `[` index-list `]`
+  `:` buffer-type `-&gt;` window-type
+</pre></div>
+</div>
+</p>
+<p>All index operands are resolved as <code class="docutils literal notranslate"><span class="pre">index</span></code> type. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir7emithls14HelperWindowOp27setPropertiesFromParsedAttrER10PropertiesN4mlir9AttributeEN4llvm12function_refIFN4mlir18InFlightDiagnosticEvEEE">
+<span id="_CPPv3N4mlir7emithls14HelperWindowOp27setPropertiesFromParsedAttrER10PropertiesN4mlir9AttributeEN4llvm12function_refIFN4mlir18InFlightDiagnosticEvEEE"></span><span id="_CPPv2N4mlir7emithls14HelperWindowOp27setPropertiesFromParsedAttrER10PropertiesN4mlir9AttributeEN4llvm12function_refIFN4mlir18InFlightDiagnosticEvEEE"></span><span class="target" id="classmlir_1_1emithls_1_1HelperWindowOp_1abba71780496cb15483566b036ee7e941"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">llvm</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">LogicalResult</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">setPropertiesFromParsedAttr</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4N4mlir7emithls14HelperWindowOp10PropertiesE" title="mlir::emithls::HelperWindowOp::Properties"><span class="n"><span class="pre">Properties</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">prop</span></span>, <span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">Attribute</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">attr</span></span>, <span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">llvm</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">function_ref</span></span><span class="p"><span class="pre">&lt;</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">InFlightDiagnostic</span></span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">emitError</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4mlir7emithls14HelperWindowOp27setPropertiesFromParsedAttrER10PropertiesN4mlir9AttributeEN4llvm12function_refIFN4mlir18InFlightDiagnosticEvEEE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-static-attributes">Public Static Attributes</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir7emithls14HelperWindowOp16odsIndex_buf_refE">
+<span id="_CPPv3N4mlir7emithls14HelperWindowOp16odsIndex_buf_refE"></span><span id="_CPPv2N4mlir7emithls14HelperWindowOp16odsIndex_buf_refE"></span><span id="mlir::emithls::HelperWindowOp::odsIndex_buf_ref__i"></span><span class="target" id="classmlir_1_1emithls_1_1HelperWindowOp_1a1a7300dcca69be3b2949ab0425fa8ad3"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="k"><span class="pre">constexpr</span></span><span class="w"> </span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">odsIndex_buf_ref</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">0</span></span><a class="headerlink" href="#_CPPv4N4mlir7emithls14HelperWindowOp16odsIndex_buf_refE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir7emithls14HelperWindowOp16odsIndex_indicesE">
+<span id="_CPPv3N4mlir7emithls14HelperWindowOp16odsIndex_indicesE"></span><span id="_CPPv2N4mlir7emithls14HelperWindowOp16odsIndex_indicesE"></span><span id="mlir::emithls::HelperWindowOp::odsIndex_indices__i"></span><span class="target" id="classmlir_1_1emithls_1_1HelperWindowOp_1a7e955782ee2d5eccf5d6380ccfb3dcbe"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="k"><span class="pre">constexpr</span></span><span class="w"> </span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">odsIndex_indices</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">1</span></span><a class="headerlink" href="#_CPPv4N4mlir7emithls14HelperWindowOp16odsIndex_indicesE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+</div>
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="classmlir_1_1emithls_1_1HelperLineBufferOpGenericAdaptor.html" class="btn btn-neutral float-left" title="Template Class HelperLineBufferOpGenericAdaptor" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="classmlir_1_1emithls_1_1HelperWindowOpAdaptor.html" class="btn btn-neutral float-right" title="Class HelperWindowOpAdaptor" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

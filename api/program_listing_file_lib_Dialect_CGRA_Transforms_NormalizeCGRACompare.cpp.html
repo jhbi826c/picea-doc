@@ -1,0 +1,425 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Program Listing for File NormalizeCGRACompare.cpp &mdash; picea 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/collapsible-lists/css/tree_view.css?v=a885cde7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js?v=73120307"></script>
+      <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js?v=660e4f45"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            picea
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Installation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../README.html">About the project</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#guides">Guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#related-projects">Related projects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#development-environment-nix">Development Environment (Nix)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#build-on-ubuntu-24-04-no-nix">Build on Ubuntu 24.04 (no Nix)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#gurobi-license">Gurobi license</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#installing">Installing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#run-the-tests">Run the tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#build-the-documentation">Build the documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#compiling-a-design">Compiling a design</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#running-a-design-on-the-board">Running a design on the board</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#exporting-a-profiled-application-to-mocasin">Exporting a profiled application to Mocasin</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Guides</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../guides/laksa.html">The FPGA Variant using LAKSA backend</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/cgra.html">The CGRA Variant</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">MLIR Dialects</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/Base2Ops.html">‘base2’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/CGRAOps.html">‘cgra’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/DFGOps.html">‘dfg’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/EmitHLSOps.html">‘emithls’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/FilterOps.html">‘filter’ Dialect</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Passes</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/PICEAConversionPasses.html">PICEA Conversion Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/CGRAPasses.html">CGRA Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/DFGPasses.html">DFG Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/EmitHLSPasses.html">Emit HLS Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/FuncExtPasses.html">Func Ext Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/LinalgExtPasses.html">Linalg Ext Passes</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">C++ API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="library_root.html">C++ API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">picea</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Program Listing for File NormalizeCGRACompare.cpp</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/program_listing_file_lib_Dialect_CGRA_Transforms_NormalizeCGRACompare.cpp.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="program-listing-for-file-normalizecgracompare-cpp">
+<span id="program-listing-file-lib-dialect-cgra-transforms-normalizecgracompare-cpp"></span><h1>Program Listing for File NormalizeCGRACompare.cpp<a class="headerlink" href="#program-listing-for-file-normalizecgracompare-cpp" title="Link to this heading"></a></h1>
+<p>↰ <a class="reference internal" href="file_lib_Dialect_CGRA_Transforms_NormalizeCGRACompare.cpp.html#file-lib-dialect-cgra-transforms-normalizecgracompare-cpp"><span class="std std-ref">Return to documentation for file</span></a> (<code class="docutils literal notranslate"><span class="pre">lib/Dialect/CGRA/Transforms/NormalizeCGRACompare.cpp</span></code>)</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="c1">//===- NormalizeCGRACompare.cpp - cmpi -&gt; {&gt;0, ==0} against zero ----------===//</span>
+<span class="c1">//</span>
+<span class="c1">// The CGRA compare FU tests against zero and realises only `&gt;0` and `==0`, so</span>
+<span class="c1">// every other predicate is folded into an expression on the operand:</span>
+<span class="c1">//</span>
+<span class="c1">//   x &lt;  y -&gt; (y - x) &gt; 0          x &gt;  y -&gt; (x - y) &gt; 0</span>
+<span class="c1">//   x &lt;= y -&gt; (y - x + 1) &gt; 0      x &gt;= y -&gt; (x - y + 1) &gt; 0</span>
+<span class="c1">//   x == y -&gt; (x - y) == 0</span>
+<span class="c1">//   x != y -&gt; (x - y) == 0 with the consuming select's arms swapped; when</span>
+<span class="c1">//   consumed</span>
+<span class="c1">//             as DATA instead, ((t | -t) &gt;&gt;u 31), truncated back to i1</span>
+<span class="c1">//   ult/ule/ugt/uge -&gt; a &lt;u b == MSB((~a &amp; b) | (~(a^b) &amp; (a-b))), shifted to</span>
+<span class="c1">//   0/1</span>
+<span class="c1">//</span>
+<span class="c1">// A compare already `&gt;0`/`==0` against a literal zero is left untouched.</span>
+<span class="c1">// The sign-bit-flip identity for unsigned compares is UNSOUND here; the &lt;=/&gt;=</span>
+<span class="c1">// +1 assumes no wraparound at the integer extremes. See docs/guides/cgra.md.</span>
+<span class="c1">//</span>
+<span class="c1">//===----------------------------------------------------------------------===//</span>
+
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"mlir/Dialect/Arith/IR/Arith.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"mlir/IR/Builders.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"mlir/IR/Matchers.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"mlir/Pass/Pass.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"picea-mlir/Dialect/CGRA/Transforms/Passes.h"</span>
+
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"llvm/ADT/STLExtras.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"llvm/ADT/SmallVector.h"</span>
+
+<span class="k">using</span><span class="w"> </span><span class="k">namespace</span><span class="w"> </span><span class="nn">mlir</span><span class="p">;</span>
+
+<span class="k">namespace</span><span class="w"> </span><span class="p">{</span>
+
+<span class="c1">// Whether @p v is a literal integer zero.</span>
+<span class="k">static</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="nf">isZeroConst</span><span class="p">(</span><span class="n">Value</span><span class="w"> </span><span class="n">v</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">APInt</span><span class="w"> </span><span class="n">c</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">matchPattern</span><span class="p">(</span><span class="n">v</span><span class="p">,</span><span class="w"> </span><span class="n">m_ConstantInt</span><span class="p">(</span><span class="o">&amp;</span><span class="n">c</span><span class="p">))</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">c</span><span class="p">.</span><span class="n">isZero</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="c1">// Whether every use of @p v is the CONDITION of an arith.select. Those uses can</span>
+<span class="c1">// be fed by a cmp FU; anything else consumes the predicate as data and needs it</span>
+<span class="c1">// materialized as a 0/1 integer (see materializeAsValue).</span>
+<span class="k">static</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="nf">onlySelectConditions</span><span class="p">(</span><span class="n">Value</span><span class="w"> </span><span class="n">v</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">OpOperand</span><span class="w"> </span><span class="o">&amp;</span><span class="n">use</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">v</span><span class="p">.</span><span class="n">getUses</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">auto</span><span class="w"> </span><span class="n">sel</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dyn_cast</span><span class="o">&lt;</span><span class="n">arith</span><span class="o">::</span><span class="n">SelectOp</span><span class="o">&gt;</span><span class="p">(</span><span class="n">use</span><span class="p">.</span><span class="n">getOwner</span><span class="p">());</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">sel</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">use</span><span class="p">.</span><span class="n">getOperandNumber</span><span class="p">()</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c1">// Materialize `x != y` (or `x == y`) as a 0/1 INTEGER using ALU ops only — no</span>
+<span class="c1">// compare unit at all:</span>
+<span class="c1">//</span>
+<span class="c1">//     t = x - y;   x != y  ==  MSB(t | -t)  ==  (t | (0 - t)) &gt;&gt;u (N-1)</span>
+<span class="c1">//</span>
+<span class="c1">// `t | -t` is 0 exactly when t is 0 and has its top bit set for every other t</span>
+<span class="c1">// (one of t, -t is negative), so the logical shift lands a literal 0 or 1 at</span>
+<span class="c1">// bit 0; equality is that XOR 1. Costs 4 FUs (or, sub, shr and the exporter's</span>
+<span class="c1">// mask) against the 1 FU of a `=0` cmp node, which is why this is only used</span>
+<span class="c1">// where the cmp node cannot be: the fabric comparator has no `!=0` mode</span>
+<span class="c1">// (CGRA.py `_HW_CMP_OPS` is `{=0, &gt;0}`), so a `!=` is otherwise realised as</span>
+<span class="c1">// `==0` with its consumers inverted — and that inversion is only possible when</span>
+<span class="c1">// every consumer is a select.</span>
+<span class="c1">//</span>
+<span class="c1">// @param b,loc  Where to emit.</span>
+<span class="c1">// @param ity    Type of @p t; the result has this type (0 or 1).</span>
+<span class="c1">// @param t      The difference `x - y` (just `x` when comparing against zero,</span>
+<span class="c1">//               which saves the subtract).</span>
+<span class="k">static</span><span class="w"> </span><span class="n">Value</span>
+<span class="nf">materializeNonZero</span><span class="p">(</span><span class="n">OpBuilder</span><span class="w"> </span><span class="o">&amp;</span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="n">Location</span><span class="w"> </span><span class="n">loc</span><span class="p">,</span><span class="w"> </span><span class="n">IntegerType</span><span class="w"> </span><span class="n">ity</span><span class="p">,</span><span class="w"> </span><span class="n">Value</span><span class="w"> </span><span class="n">t</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="kt">unsigned</span><span class="w"> </span><span class="n">w</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ity</span><span class="p">.</span><span class="n">getWidth</span><span class="p">();</span>
+<span class="w">    </span><span class="k">auto</span><span class="w"> </span><span class="n">k</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="o">&amp;</span><span class="p">](</span><span class="kt">int64_t</span><span class="w"> </span><span class="n">v</span><span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">Value</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">arith</span><span class="o">::</span><span class="n">ConstantOp</span><span class="o">::</span><span class="n">create</span><span class="p">(</span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="n">loc</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="p">.</span><span class="n">getIntegerAttr</span><span class="p">(</span><span class="n">ity</span><span class="p">,</span><span class="w"> </span><span class="n">v</span><span class="p">));</span>
+<span class="w">    </span><span class="p">};</span>
+<span class="w">    </span><span class="n">Value</span><span class="w"> </span><span class="n">nz</span><span class="w"> </span><span class="o">=</span>
+<span class="w">        </span><span class="n">arith</span><span class="o">::</span><span class="n">OrIOp</span><span class="o">::</span><span class="n">create</span><span class="p">(</span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="n">loc</span><span class="p">,</span><span class="w"> </span><span class="n">t</span><span class="p">,</span><span class="w"> </span><span class="n">arith</span><span class="o">::</span><span class="n">SubIOp</span><span class="o">::</span><span class="n">create</span><span class="p">(</span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="n">loc</span><span class="p">,</span><span class="w"> </span><span class="n">k</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span><span class="w"> </span><span class="n">t</span><span class="p">));</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">arith</span><span class="o">::</span><span class="n">ShRUIOp</span><span class="o">::</span><span class="n">create</span><span class="p">(</span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="n">loc</span><span class="p">,</span><span class="w"> </span><span class="n">nz</span><span class="p">,</span><span class="w"> </span><span class="n">k</span><span class="p">(</span><span class="n">w</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">));</span>
+<span class="p">}</span>
+
+<span class="c1">// Rewrite one arith.cmpi into a fabric-supported form, or leave it unchanged.</span>
+<span class="k">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">normalize</span><span class="p">(</span><span class="n">arith</span><span class="o">::</span><span class="n">CmpIOp</span><span class="w"> </span><span class="n">cmp</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">using</span><span class="w"> </span><span class="n">P</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">arith</span><span class="o">::</span><span class="n">CmpIPredicate</span><span class="p">;</span>
+<span class="w">    </span><span class="n">P</span><span class="w"> </span><span class="n">pred</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cmp</span><span class="p">.</span><span class="n">getPredicate</span><span class="p">();</span>
+<span class="w">    </span><span class="n">Value</span><span class="w"> </span><span class="n">d</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cmp</span><span class="p">.</span><span class="n">getLhs</span><span class="p">(),</span><span class="w"> </span><span class="n">e</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cmp</span><span class="p">.</span><span class="n">getRhs</span><span class="p">();</span>
+<span class="w">    </span><span class="kt">bool</span><span class="w"> </span><span class="n">rhsZero</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">isZeroConst</span><span class="p">(</span><span class="n">e</span><span class="p">);</span>
+
+<span class="w">    </span><span class="c1">// Already canonical: `&gt;0` or `==0` against a literal zero.</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">rhsZero</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="p">(</span><span class="n">pred</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">P</span><span class="o">::</span><span class="n">sgt</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">pred</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">P</span><span class="o">::</span><span class="n">eq</span><span class="p">))</span><span class="w"> </span><span class="k">return</span><span class="p">;</span>
+
+<span class="w">    </span><span class="c1">// Unsigned ordered compare. NOTE the tempting sign-bit-flip identity</span>
+<span class="w">    </span><span class="c1">// `a &lt;u b == (a ^ 2^(N-1)) &lt;s (b ^ 2^(N-1))` is USELESS here: this fabric</span>
+<span class="w">    </span><span class="c1">// has no two-operand comparator, so every signed compare is reduced to a</span>
+<span class="w">    </span><span class="c1">// difference against zero — and `x ^ 2^(N-1) == x + 2^(N-1) (mod 2^N)`, so</span>
+<span class="w">    </span><span class="c1">// the flip cancels exactly in `(b^M) - (a^M) == b - a`. It would silently</span>
+<span class="w">    </span><span class="c1">// compile to the SIGNED comparison (verified: wrong for a=0, b=0xFFFFFFFF).</span>
+<span class="w">    </span><span class="c1">//</span>
+<span class="w">    </span><span class="c1">// Use the branch-free bitwise form instead (Hacker's Delight 2-12), whose</span>
+<span class="w">    </span><span class="c1">// result is carried in the MSB:</span>
+<span class="w">    </span><span class="c1">//     a &lt;u b  ==  MSB( (~a &amp; b) | (~(a ^ b) &amp; (a - b)) )</span>
+<span class="w">    </span><span class="c1">// Shifting that MSB down with a LOGICAL shift yields exactly 0 or 1, so the</span>
+<span class="w">    </span><span class="c1">// final test is already canonical (`&gt;0`, or `==0` for the negated</span>
+<span class="w">    </span><span class="c1">// predicates) — no overflow concern and no select inversion. All of</span>
+<span class="w">    </span><span class="c1">// and/or/xor/sub/shrui are fabric FUs (`--legalize-to-i32` emits the same</span>
+<span class="w">    </span><span class="c1">// family for the i64 carry).</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">pred</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">P</span><span class="o">::</span><span class="n">ult</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">pred</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">P</span><span class="o">::</span><span class="n">ule</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">pred</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">P</span><span class="o">::</span><span class="n">ugt</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">pred</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">P</span><span class="o">::</span><span class="n">uge</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">auto</span><span class="w"> </span><span class="n">ity</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dyn_cast</span><span class="o">&lt;</span><span class="n">IntegerType</span><span class="o">&gt;</span><span class="p">(</span><span class="n">d</span><span class="p">.</span><span class="n">getType</span><span class="p">());</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">ity</span><span class="p">)</span>
+<span class="w">            </span><span class="k">return</span><span class="p">;</span><span class="w"> </span><span class="c1">// non-integer (index/vector) operands: leave for the guard</span>
+<span class="w">        </span><span class="kt">unsigned</span><span class="w"> </span><span class="n">w</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ity</span><span class="p">.</span><span class="n">getWidth</span><span class="p">();</span>
+<span class="w">        </span><span class="n">OpBuilder</span><span class="w"> </span><span class="n">b</span><span class="p">(</span><span class="n">cmp</span><span class="p">);</span>
+<span class="w">        </span><span class="n">Location</span><span class="w"> </span><span class="n">loc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cmp</span><span class="p">.</span><span class="n">getLoc</span><span class="p">();</span>
+<span class="w">        </span><span class="k">auto</span><span class="w"> </span><span class="n">cst</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="o">&amp;</span><span class="p">](</span><span class="k">const</span><span class="w"> </span><span class="n">APInt</span><span class="w"> </span><span class="o">&amp;</span><span class="n">v</span><span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">Value</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="n">arith</span><span class="o">::</span><span class="n">ConstantOp</span><span class="o">::</span><span class="n">create</span><span class="p">(</span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="n">loc</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="p">.</span><span class="n">getIntegerAttr</span><span class="p">(</span><span class="n">ity</span><span class="p">,</span><span class="w"> </span><span class="n">v</span><span class="p">));</span>
+<span class="w">        </span><span class="p">};</span>
+<span class="w">        </span><span class="n">Value</span><span class="w"> </span><span class="n">ones</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cst</span><span class="p">(</span><span class="n">APInt</span><span class="o">::</span><span class="n">getAllOnes</span><span class="p">(</span><span class="n">w</span><span class="p">));</span>
+<span class="w">        </span><span class="k">auto</span><span class="w"> </span><span class="n">bnot</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="o">&amp;</span><span class="p">](</span><span class="n">Value</span><span class="w"> </span><span class="n">v</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="n">arith</span><span class="o">::</span><span class="n">XOrIOp</span><span class="o">::</span><span class="n">create</span><span class="p">(</span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="n">loc</span><span class="p">,</span><span class="w"> </span><span class="n">v</span><span class="p">,</span><span class="w"> </span><span class="n">ones</span><span class="p">).</span><span class="n">getResult</span><span class="p">();</span>
+<span class="w">        </span><span class="p">};</span>
+
+<span class="w">        </span><span class="c1">// a &lt;u b for (x, y); the other three predicates are swaps and/or</span>
+<span class="w">        </span><span class="c1">// negations.</span>
+<span class="w">        </span><span class="n">Value</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">d</span><span class="p">,</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">e</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">negate</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="w">        </span><span class="k">switch</span><span class="w"> </span><span class="p">(</span><span class="n">pred</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">case</span><span class="w"> </span><span class="no">P</span><span class="o">::</span><span class="no">ult</span><span class="p">:</span><span class="w"> </span><span class="k">break</span><span class="p">;</span><span class="w">                  </span><span class="c1">//  x &lt;u y</span>
+<span class="w">        </span><span class="k">case</span><span class="w"> </span><span class="no">P</span><span class="o">::</span><span class="no">uge</span><span class="p">:</span><span class="w"> </span><span class="n">negate</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span><span class="w"> </span><span class="k">break</span><span class="p">;</span><span class="w">   </span><span class="c1">// !(x &lt;u y)</span>
+<span class="w">        </span><span class="k">case</span><span class="w"> </span><span class="no">P</span><span class="o">::</span><span class="no">ugt</span><span class="p">:</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">swap</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">y</span><span class="p">);</span><span class="w"> </span><span class="k">break</span><span class="p">;</span><span class="w"> </span><span class="c1">//  y &lt;u x</span>
+<span class="w">        </span><span class="k">case</span><span class="w"> </span><span class="no">P</span><span class="o">::</span><span class="no">ule</span><span class="p">:</span>
+<span class="w">            </span><span class="n">std</span><span class="o">::</span><span class="n">swap</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">y</span><span class="p">);</span>
+<span class="w">            </span><span class="n">negate</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="w">            </span><span class="k">break</span><span class="p">;</span><span class="w"> </span><span class="c1">// !(y &lt;u x)</span>
+<span class="w">        </span><span class="k">default</span><span class="o">:</span><span class="w"> </span><span class="k">break</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="n">Value</span><span class="w"> </span><span class="n">t</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">arith</span><span class="o">::</span><span class="n">OrIOp</span><span class="o">::</span><span class="n">create</span><span class="p">(</span>
+<span class="w">            </span><span class="n">b</span><span class="p">,</span>
+<span class="w">            </span><span class="n">loc</span><span class="p">,</span>
+<span class="w">            </span><span class="n">arith</span><span class="o">::</span><span class="n">AndIOp</span><span class="o">::</span><span class="n">create</span><span class="p">(</span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="n">loc</span><span class="p">,</span><span class="w"> </span><span class="n">bnot</span><span class="p">(</span><span class="n">x</span><span class="p">),</span><span class="w"> </span><span class="n">y</span><span class="p">),</span>
+<span class="w">            </span><span class="n">arith</span><span class="o">::</span><span class="n">AndIOp</span><span class="o">::</span><span class="n">create</span><span class="p">(</span>
+<span class="w">                </span><span class="n">b</span><span class="p">,</span>
+<span class="w">                </span><span class="n">loc</span><span class="p">,</span>
+<span class="w">                </span><span class="n">bnot</span><span class="p">(</span><span class="n">arith</span><span class="o">::</span><span class="n">XOrIOp</span><span class="o">::</span><span class="n">create</span><span class="p">(</span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="n">loc</span><span class="p">,</span><span class="w"> </span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">y</span><span class="p">)),</span>
+<span class="w">                </span><span class="n">arith</span><span class="o">::</span><span class="n">SubIOp</span><span class="o">::</span><span class="n">create</span><span class="p">(</span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="n">loc</span><span class="p">,</span><span class="w"> </span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">y</span><span class="p">)));</span>
+<span class="w">        </span><span class="n">Value</span><span class="w"> </span><span class="n">msb</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">arith</span><span class="o">::</span><span class="n">ShRUIOp</span><span class="o">::</span><span class="n">create</span><span class="p">(</span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="n">loc</span><span class="p">,</span><span class="w"> </span><span class="n">t</span><span class="p">,</span><span class="w"> </span><span class="n">cst</span><span class="p">(</span><span class="n">APInt</span><span class="p">(</span><span class="n">w</span><span class="p">,</span><span class="w"> </span><span class="n">w</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">)));</span>
+<span class="w">        </span><span class="n">Value</span><span class="w"> </span><span class="n">zero</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cst</span><span class="p">(</span><span class="n">APInt</span><span class="p">(</span><span class="n">w</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">));</span>
+<span class="w">        </span><span class="n">Value</span><span class="w"> </span><span class="n">res</span><span class="w"> </span><span class="o">=</span>
+<span class="w">            </span><span class="n">arith</span><span class="o">::</span><span class="n">CmpIOp</span><span class="o">::</span><span class="n">create</span><span class="p">(</span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="n">loc</span><span class="p">,</span><span class="w"> </span><span class="n">negate</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">P</span><span class="o">::</span><span class="n">eq</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">P</span><span class="o">::</span><span class="n">sgt</span><span class="p">,</span><span class="w"> </span><span class="n">msb</span><span class="p">,</span><span class="w"> </span><span class="n">zero</span><span class="p">);</span>
+<span class="w">        </span><span class="n">cmp</span><span class="p">.</span><span class="n">getResult</span><span class="p">().</span><span class="n">replaceAllUsesWith</span><span class="p">(</span><span class="n">res</span><span class="p">);</span>
+<span class="w">        </span><span class="n">cmp</span><span class="p">.</span><span class="n">erase</span><span class="p">();</span>
+<span class="w">        </span><span class="k">return</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="c1">// Only signed ordered predicates and eq/ne are lowerable to {&gt;0, ==0}.</span>
+<span class="w">    </span><span class="kt">bool</span><span class="w"> </span><span class="n">invertSelect</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="w">    </span><span class="n">P</span><span class="w"> </span><span class="n">newPred</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">P</span><span class="o">::</span><span class="n">sgt</span><span class="p">;</span>
+<span class="w">    </span><span class="k">switch</span><span class="w"> </span><span class="p">(</span><span class="n">pred</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">case</span><span class="w"> </span><span class="no">P</span><span class="o">::</span><span class="no">slt</span><span class="p">:</span>
+<span class="w">    </span><span class="k">case</span><span class="w"> </span><span class="no">P</span><span class="o">::</span><span class="no">sle</span><span class="p">:</span>
+<span class="w">    </span><span class="k">case</span><span class="w"> </span><span class="no">P</span><span class="o">::</span><span class="no">sgt</span><span class="p">:</span>
+<span class="w">    </span><span class="k">case</span><span class="w"> </span><span class="no">P</span><span class="o">::</span><span class="no">sge</span><span class="p">:</span><span class="w"> </span><span class="k">break</span><span class="p">;</span>
+<span class="w">    </span><span class="k">case</span><span class="w"> </span><span class="no">P</span><span class="o">::</span><span class="no">eq</span><span class="p">:</span><span class="w"> </span><span class="n">newPred</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">P</span><span class="o">::</span><span class="n">eq</span><span class="p">;</span><span class="w"> </span><span class="k">break</span><span class="p">;</span>
+<span class="w">    </span><span class="k">case</span><span class="w"> </span><span class="no">P</span><span class="o">::</span><span class="no">ne</span><span class="p">:</span>
+<span class="w">        </span><span class="n">newPred</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">P</span><span class="o">::</span><span class="n">eq</span><span class="p">;</span>
+<span class="w">        </span><span class="n">invertSelect</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="w">        </span><span class="k">break</span><span class="p">;</span>
+<span class="w">    </span><span class="c1">// Unsigned ordered predicates were fully handled (and returned) above.</span>
+<span class="w">    </span><span class="k">default</span><span class="o">:</span><span class="w"> </span><span class="k">return</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="c1">// `!=` is realised as `==0` with the consumers inverted; that is only sound</span>
+<span class="w">    </span><span class="c1">// when every consumer is an arith.select using this compare as its</span>
+<span class="w">    </span><span class="c1">// condition. Otherwise the predicate is consumed as DATA (`sum += a[i] !=</span>
+<span class="w">    </span><span class="c1">// b[i]`, an `&amp;&amp;` of two compares, a stored flag) and there is nothing to</span>
+<span class="w">    </span><span class="c1">// invert — so build the 0/1 value arithmetically instead of leaving an</span>
+<span class="w">    </span><span class="c1">// `arith.cmpi ne` behind. Leaving it was not benign: --export-loop-dfg</span>
+<span class="w">    </span><span class="c1">// spells it `!=0` in the .dot and CGRA.py rejects that, so the kernel died</span>
+<span class="w">    </span><span class="c1">// at bitstream generation.</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">invertSelect</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="o">!</span><span class="n">onlySelectConditions</span><span class="p">(</span><span class="n">cmp</span><span class="p">.</span><span class="n">getResult</span><span class="p">()))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">auto</span><span class="w"> </span><span class="n">ity</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dyn_cast</span><span class="o">&lt;</span><span class="n">IntegerType</span><span class="o">&gt;</span><span class="p">(</span><span class="n">d</span><span class="p">.</span><span class="n">getType</span><span class="p">());</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">ity</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">ity</span><span class="p">.</span><span class="n">getWidth</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span>
+<span class="w">            </span><span class="k">return</span><span class="p">;</span><span class="w"> </span><span class="c1">// no MSB to shift down (or non-integer): leave for the</span>
+<span class="w">                    </span><span class="c1">// guard</span>
+<span class="w">        </span><span class="n">OpBuilder</span><span class="w"> </span><span class="n">vb</span><span class="p">(</span><span class="n">cmp</span><span class="p">);</span>
+<span class="w">        </span><span class="n">Location</span><span class="w"> </span><span class="n">loc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cmp</span><span class="p">.</span><span class="n">getLoc</span><span class="p">();</span>
+<span class="w">        </span><span class="n">Value</span><span class="w"> </span><span class="n">t</span><span class="w"> </span><span class="o">=</span>
+<span class="w">            </span><span class="n">rhsZero</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">d</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">arith</span><span class="o">::</span><span class="n">SubIOp</span><span class="o">::</span><span class="n">create</span><span class="p">(</span><span class="n">vb</span><span class="p">,</span><span class="w"> </span><span class="n">loc</span><span class="p">,</span><span class="w"> </span><span class="n">d</span><span class="p">,</span><span class="w"> </span><span class="n">e</span><span class="p">).</span><span class="n">getResult</span><span class="p">();</span>
+<span class="w">        </span><span class="n">Value</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">materializeNonZero</span><span class="p">(</span><span class="n">vb</span><span class="p">,</span><span class="w"> </span><span class="n">loc</span><span class="p">,</span><span class="w"> </span><span class="n">ity</span><span class="p">,</span><span class="w"> </span><span class="n">t</span><span class="p">);</span>
+<span class="w">        </span><span class="c1">// The consumers want the i1 the compare produced; the low bit of `v` IS</span>
+<span class="w">        </span><span class="c1">// it, and --export-loop-dfg treats trunci as a pass-through, so this</span>
+<span class="w">        </span><span class="c1">// costs no FU.</span>
+<span class="w">        </span><span class="n">Value</span><span class="w"> </span><span class="n">asI1</span><span class="w"> </span><span class="o">=</span>
+<span class="w">            </span><span class="n">arith</span><span class="o">::</span><span class="n">TruncIOp</span><span class="o">::</span><span class="n">create</span><span class="p">(</span><span class="n">vb</span><span class="p">,</span><span class="w"> </span><span class="n">cmp</span><span class="p">.</span><span class="n">getLoc</span><span class="p">(),</span><span class="w"> </span><span class="n">vb</span><span class="p">.</span><span class="n">getI1Type</span><span class="p">(),</span><span class="w"> </span><span class="n">v</span><span class="p">);</span>
+<span class="w">        </span><span class="n">cmp</span><span class="p">.</span><span class="n">getResult</span><span class="p">().</span><span class="n">replaceAllUsesWith</span><span class="p">(</span><span class="n">asI1</span><span class="p">);</span>
+<span class="w">        </span><span class="n">cmp</span><span class="p">.</span><span class="n">erase</span><span class="p">();</span>
+<span class="w">        </span><span class="k">return</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="n">OpBuilder</span><span class="w"> </span><span class="n">b</span><span class="p">(</span><span class="n">cmp</span><span class="p">);</span>
+<span class="w">    </span><span class="n">Location</span><span class="w"> </span><span class="n">loc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cmp</span><span class="p">.</span><span class="n">getLoc</span><span class="p">();</span>
+<span class="w">    </span><span class="n">Type</span><span class="w"> </span><span class="n">ty</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">d</span><span class="p">.</span><span class="n">getType</span><span class="p">();</span>
+<span class="w">    </span><span class="k">auto</span><span class="w"> </span><span class="n">k</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="o">&amp;</span><span class="p">](</span><span class="kt">int64_t</span><span class="w"> </span><span class="n">v</span><span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">Value</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">arith</span><span class="o">::</span><span class="n">ConstantOp</span><span class="o">::</span><span class="n">create</span><span class="p">(</span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="n">loc</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="p">.</span><span class="n">getIntegerAttr</span><span class="p">(</span><span class="n">ty</span><span class="p">,</span><span class="w"> </span><span class="n">v</span><span class="p">));</span>
+<span class="w">    </span><span class="p">};</span>
+<span class="w">    </span><span class="k">auto</span><span class="w"> </span><span class="n">sub</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="o">&amp;</span><span class="p">](</span><span class="n">Value</span><span class="w"> </span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">Value</span><span class="w"> </span><span class="n">y</span><span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">Value</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">arith</span><span class="o">::</span><span class="n">SubIOp</span><span class="o">::</span><span class="n">create</span><span class="p">(</span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="n">loc</span><span class="p">,</span><span class="w"> </span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">y</span><span class="p">);</span>
+<span class="w">    </span><span class="p">};</span>
+<span class="w">    </span><span class="k">auto</span><span class="w"> </span><span class="n">inc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="o">&amp;</span><span class="p">](</span><span class="n">Value</span><span class="w"> </span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">Value</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">arith</span><span class="o">::</span><span class="n">AddIOp</span><span class="o">::</span><span class="n">create</span><span class="p">(</span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="n">loc</span><span class="p">,</span><span class="w"> </span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">k</span><span class="p">(</span><span class="mi">1</span><span class="p">));</span>
+<span class="w">    </span><span class="p">};</span>
+
+<span class="w">    </span><span class="c1">// Build the operand whose sign/zero-ness carries the original comparison.</span>
+<span class="w">    </span><span class="n">Value</span><span class="w"> </span><span class="n">nv</span><span class="p">;</span>
+<span class="w">    </span><span class="k">switch</span><span class="w"> </span><span class="p">(</span><span class="n">pred</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">case</span><span class="w"> </span><span class="no">P</span><span class="o">::</span><span class="no">slt</span><span class="p">:</span><span class="w"> </span><span class="n">nv</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">rhsZero</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">sub</span><span class="p">(</span><span class="n">k</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span><span class="w"> </span><span class="n">d</span><span class="p">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">sub</span><span class="p">(</span><span class="n">e</span><span class="p">,</span><span class="w"> </span><span class="n">d</span><span class="p">);</span><span class="w"> </span><span class="k">break</span><span class="p">;</span><span class="w"> </span><span class="c1">// (y - x) &gt; 0</span>
+<span class="w">    </span><span class="k">case</span><span class="w"> </span><span class="no">P</span><span class="o">::</span><span class="no">sle</span><span class="p">:</span>
+<span class="w">        </span><span class="n">nv</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">rhsZero</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">sub</span><span class="p">(</span><span class="n">k</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span><span class="w"> </span><span class="n">d</span><span class="p">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">inc</span><span class="p">(</span><span class="n">sub</span><span class="p">(</span><span class="n">e</span><span class="p">,</span><span class="w"> </span><span class="n">d</span><span class="p">));</span>
+<span class="w">        </span><span class="k">break</span><span class="p">;</span><span class="w"> </span><span class="c1">// (y - x + 1) &gt; 0</span>
+<span class="w">    </span><span class="k">case</span><span class="w"> </span><span class="no">P</span><span class="o">::</span><span class="no">sge</span><span class="p">:</span>
+<span class="w">        </span><span class="n">nv</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">rhsZero</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">inc</span><span class="p">(</span><span class="n">d</span><span class="p">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">inc</span><span class="p">(</span><span class="n">sub</span><span class="p">(</span><span class="n">d</span><span class="p">,</span><span class="w"> </span><span class="n">e</span><span class="p">));</span>
+<span class="w">        </span><span class="k">break</span><span class="p">;</span><span class="w">   </span><span class="c1">// (x - y + 1) &gt; 0</span>
+<span class="w">    </span><span class="k">case</span><span class="w"> </span><span class="no">P</span><span class="o">::</span><span class="no">sgt</span><span class="p">:</span><span class="w"> </span><span class="c1">// (x - y) &gt; 0</span>
+<span class="w">    </span><span class="k">case</span><span class="w"> </span><span class="no">P</span><span class="o">::</span><span class="no">eq</span><span class="p">:</span><span class="w">  </span><span class="c1">// (x - y) == 0</span>
+<span class="w">    </span><span class="k">case</span><span class="w"> </span><span class="no">P</span><span class="o">::</span><span class="no">ne</span><span class="p">:</span><span class="w"> </span><span class="n">nv</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">rhsZero</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">d</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">sub</span><span class="p">(</span><span class="n">d</span><span class="p">,</span><span class="w"> </span><span class="n">e</span><span class="p">);</span><span class="w"> </span><span class="k">break</span><span class="p">;</span>
+<span class="w">    </span><span class="k">default</span><span class="o">:</span><span class="w"> </span><span class="k">return</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="n">Value</span><span class="w"> </span><span class="n">nc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">arith</span><span class="o">::</span><span class="n">CmpIOp</span><span class="o">::</span><span class="n">create</span><span class="p">(</span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="n">loc</span><span class="p">,</span><span class="w"> </span><span class="n">newPred</span><span class="p">,</span><span class="w"> </span><span class="n">nv</span><span class="p">,</span><span class="w"> </span><span class="n">k</span><span class="p">(</span><span class="mi">0</span><span class="p">));</span>
+
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">invertSelect</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">cmp</span><span class="p">.</span><span class="n">getResult</span><span class="p">().</span><span class="n">replaceAllUsesWith</span><span class="p">(</span><span class="n">nc</span><span class="p">);</span>
+<span class="w">        </span><span class="n">cmp</span><span class="p">.</span><span class="n">erase</span><span class="p">();</span>
+<span class="w">        </span><span class="k">return</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="c1">// `!=` -&gt; `==0`: swap each consuming select's arms and repoint its</span>
+<span class="w">    </span><span class="c1">// condition.</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">Operation</span><span class="o">*</span><span class="w"> </span><span class="n">u</span><span class="w"> </span><span class="o">:</span>
+<span class="w">         </span><span class="n">llvm</span><span class="o">::</span><span class="n">make_early_inc_range</span><span class="p">(</span><span class="n">cmp</span><span class="p">.</span><span class="n">getResult</span><span class="p">().</span><span class="n">getUsers</span><span class="p">()))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">auto</span><span class="w"> </span><span class="n">sel</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cast</span><span class="o">&lt;</span><span class="n">arith</span><span class="o">::</span><span class="n">SelectOp</span><span class="o">&gt;</span><span class="p">(</span><span class="n">u</span><span class="p">);</span>
+<span class="w">        </span><span class="n">Value</span><span class="w"> </span><span class="n">t</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sel</span><span class="p">.</span><span class="n">getTrueValue</span><span class="p">(),</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sel</span><span class="p">.</span><span class="n">getFalseValue</span><span class="p">();</span>
+<span class="w">        </span><span class="n">sel</span><span class="p">.</span><span class="n">getTrueValueMutable</span><span class="p">().</span><span class="n">assign</span><span class="p">(</span><span class="n">f</span><span class="p">);</span>
+<span class="w">        </span><span class="n">sel</span><span class="p">.</span><span class="n">getFalseValueMutable</span><span class="p">().</span><span class="n">assign</span><span class="p">(</span><span class="n">t</span><span class="p">);</span>
+<span class="w">        </span><span class="n">sel</span><span class="p">.</span><span class="n">getConditionMutable</span><span class="p">().</span><span class="n">assign</span><span class="p">(</span><span class="n">nc</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="n">cmp</span><span class="p">.</span><span class="n">erase</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">CGRANormalizeComparePass</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">PassWrapper</span><span class="o">&lt;</span>
+<span class="w">                                     </span><span class="n">CGRANormalizeComparePass</span><span class="p">,</span>
+<span class="w">                                     </span><span class="n">OperationPass</span><span class="o">&lt;</span><span class="n">ModuleOp</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+<span class="w">    </span><span class="n">MLIR_DEFINE_EXPLICIT_INTERNAL_INLINE_TYPE_ID</span><span class="p">(</span><span class="n">CGRANormalizeComparePass</span><span class="p">)</span>
+
+<span class="w">    </span><span class="n">StringRef</span><span class="w"> </span><span class="n">getArgument</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">final</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="s">"normalize-cgra-compare"</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="n">StringRef</span><span class="w"> </span><span class="nf">getDescription</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">final</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="s">"Rewrite arith.cmpi into the fabric-supported &gt;0 / ==0 vs zero "</span>
+<span class="w">               </span><span class="s">"forms"</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="nf">getDependentDialects</span><span class="p">(</span><span class="n">DialectRegistry</span><span class="w"> </span><span class="o">&amp;</span><span class="n">registry</span><span class="p">)</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">override</span>
+<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="n">registry</span><span class="p">.</span><span class="n">insert</span><span class="o">&lt;</span><span class="n">arith</span><span class="o">::</span><span class="n">ArithDialect</span><span class="o">&gt;</span><span class="p">();</span><span class="w"> </span><span class="p">}</span>
+
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="nf">runOnOperation</span><span class="p">()</span><span class="w"> </span><span class="k">override</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="c1">// Collect first: normalize erases the op it visits.</span>
+<span class="w">        </span><span class="n">SmallVector</span><span class="o">&lt;</span><span class="n">arith</span><span class="o">::</span><span class="n">CmpIOp</span><span class="o">&gt;</span><span class="w"> </span><span class="n">work</span><span class="p">;</span>
+<span class="w">        </span><span class="n">getOperation</span><span class="p">().</span><span class="n">walk</span><span class="p">([</span><span class="o">&amp;</span><span class="p">](</span><span class="n">arith</span><span class="o">::</span><span class="n">CmpIOp</span><span class="w"> </span><span class="n">c</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">work</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">c</span><span class="p">);</span><span class="w"> </span><span class="p">});</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">arith</span><span class="o">::</span><span class="n">CmpIOp</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">work</span><span class="p">)</span><span class="w"> </span><span class="n">normalize</span><span class="p">(</span><span class="n">c</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">};</span>
+
+<span class="p">}</span><span class="w"> </span><span class="c1">// namespace</span>
+
+<span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">mlir</span><span class="o">::</span><span class="n">Pass</span><span class="o">&gt;</span><span class="w"> </span><span class="n">cgra</span><span class="o">::</span><span class="n">createCGRANormalizeComparePass</span><span class="p">()</span>
+<span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">make_unique</span><span class="o">&lt;</span><span class="n">CGRANormalizeComparePass</span><span class="o">&gt;</span><span class="p">();</span><span class="w"> </span><span class="p">}</span>
+</pre></div>
+</div>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

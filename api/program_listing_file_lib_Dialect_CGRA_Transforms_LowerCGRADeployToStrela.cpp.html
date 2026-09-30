@@ -1,0 +1,803 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Program Listing for File LowerCGRADeployToStrela.cpp &mdash; picea 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/collapsible-lists/css/tree_view.css?v=a885cde7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js?v=73120307"></script>
+      <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js?v=660e4f45"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            picea
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Installation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../README.html">About the project</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#guides">Guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#related-projects">Related projects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#development-environment-nix">Development Environment (Nix)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#build-on-ubuntu-24-04-no-nix">Build on Ubuntu 24.04 (no Nix)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#gurobi-license">Gurobi license</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#installing">Installing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#run-the-tests">Run the tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#build-the-documentation">Build the documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#compiling-a-design">Compiling a design</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#running-a-design-on-the-board">Running a design on the board</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#exporting-a-profiled-application-to-mocasin">Exporting a profiled application to Mocasin</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Guides</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../guides/laksa.html">The FPGA Variant using LAKSA backend</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/cgra.html">The CGRA Variant</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">MLIR Dialects</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/Base2Ops.html">‘base2’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/CGRAOps.html">‘cgra’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/DFGOps.html">‘dfg’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/EmitHLSOps.html">‘emithls’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/FilterOps.html">‘filter’ Dialect</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Passes</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/PICEAConversionPasses.html">PICEA Conversion Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/CGRAPasses.html">CGRA Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/DFGPasses.html">DFG Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/EmitHLSPasses.html">Emit HLS Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/FuncExtPasses.html">Func Ext Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/LinalgExtPasses.html">Linalg Ext Passes</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">C++ API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="library_root.html">C++ API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">picea</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Program Listing for File LowerCGRADeployToStrela.cpp</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/program_listing_file_lib_Dialect_CGRA_Transforms_LowerCGRADeployToStrela.cpp.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="program-listing-for-file-lowercgradeploytostrela-cpp">
+<span id="program-listing-file-lib-dialect-cgra-transforms-lowercgradeploytostrela-cpp"></span><h1>Program Listing for File LowerCGRADeployToStrela.cpp<a class="headerlink" href="#program-listing-for-file-lowercgradeploytostrela-cpp" title="Link to this heading"></a></h1>
+<p>↰ <a class="reference internal" href="file_lib_Dialect_CGRA_Transforms_LowerCGRADeployToStrela.cpp.html#file-lib-dialect-cgra-transforms-lowercgradeploytostrela-cpp"><span class="std std-ref">Return to documentation for file</span></a> (<code class="docutils literal notranslate"><span class="pre">lib/Dialect/CGRA/Transforms/LowerCGRADeployToStrela.cpp</span></code>)</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="c1">// Lower cgra.deploy to the STRELA MMIO configuration sequence, in two stages:</span>
+<span class="c1">//</span>
+<span class="c1">//   Stage 1 (--cgra-deploy-to-strela): replace each cgra.deploy region with the</span>
+<span class="c1">//     sequence of cgra.strela_write / cgra.strela_read ops that program and</span>
+<span class="c1">//     launch the fabric, and rewrite the kernel function signature so its</span>
+<span class="c1">//     memref arguments become bare !llvm.ptr — because after offload the</span>
+<span class="c1">//     function only needs each stream's base address, and a bare-pointer</span>
+<span class="c1">//     signature is what the RISC-V C driver can actually call (linalg(int32_t*,</span>
+<span class="c1">//     int32_t*, int32_t*)). The loop body itself is erased: it runs on the</span>
+<span class="c1">//     fabric, not the CPU.</span>
+<span class="c1">//</span>
+<span class="c1">//   Stage 2 (--strela-to-llvm): lower cgra.strela_write / cgra.strela_read to</span>
+<span class="c1">//     volatile llvm.store / llvm.load at the resolved MMIO addresses.</span>
+<span class="c1">//</span>
+<span class="c1">//   --cgra-deploy-to-llvm runs both, for the standard lowering pipeline.</span>
+<span class="c1">//</span>
+<span class="c1">// Keeping the register layout in one table (resolveReg, stage 2 only) means the</span>
+<span class="c1">// programming sequence is defined once; the symbolic cgra.strela_write ops in</span>
+<span class="c1">// between are lit-testable and are the same sequence a C driver would issue.</span>
+<span class="c1">//</span>
+<span class="c1">// Register offsets (strela_regs.h):</span>
+<span class="c1">//   CTRL=0x00  MODE=0x04  STATUS=0x08  CONF_ADDR=0x1c</span>
+<span class="c1">//   IMN_N_ADDR = 0x20 + N*8   IMN_N_PARAM = 0x24 + N*8  (stride&lt;&lt;16 | size)</span>
+<span class="c1">//   OMN_N_ADDR = 0x40 + N*8   OMN_N_SIZE  = 0x44 + N*8</span>
+
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"mlir/Dialect/Affine/IR/AffineOps.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"mlir/Dialect/Arith/IR/Arith.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"mlir/Dialect/Func/IR/FuncOps.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"mlir/Dialect/LLVMIR/LLVMDialect.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"mlir/Dialect/MemRef/IR/MemRef.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"mlir/Dialect/SCF/IR/SCF.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"mlir/IR/Builders.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"mlir/IR/BuiltinOps.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"mlir/IR/BuiltinTypes.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"mlir/Pass/Pass.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"mlir/Pass/PassRegistry.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"mlir/Support/LogicalResult.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"picea-mlir/Dialect/CGRA/IR/CGRA.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"picea-mlir/Dialect/CGRA/Transforms/Passes.h"</span>
+
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"llvm/ADT/SmallSet.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"llvm/ADT/SmallVector.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"llvm/Support/JSON.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"llvm/Support/MemoryBuffer.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"llvm/Support/raw_ostream.h"</span>
+
+<span class="k">using</span><span class="w"> </span><span class="k">namespace</span><span class="w"> </span><span class="nn">mlir</span><span class="p">;</span>
+
+<span class="c1">// ─── STRELA register map (resolved only in stage 2) ─────────────────────────</span>
+<span class="k">namespace</span><span class="w"> </span><span class="p">{</span>
+
+<span class="k">constexpr</span><span class="w"> </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">STATUS_DONE_MASK</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="mi">1u</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
+<span class="k">constexpr</span><span class="w"> </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">CTRL_CLR</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="mi">1u</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="mi">1</span><span class="p">);</span>
+<span class="k">constexpr</span><span class="w"> </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">CTRL_START</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="mi">1u</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
+<span class="k">constexpr</span><span class="w"> </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">MODE_PERF_CTR_EN</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="mi">1u</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="mi">1</span><span class="p">);</span>
+<span class="k">constexpr</span><span class="w"> </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">MODE_INTR_EN</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="mi">1u</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
+
+<span class="c1">// Symbolic register names carried by cgra.strela_write / cgra.strela_read.</span>
+<span class="k">namespace</span><span class="w"> </span><span class="nn">regname</span><span class="w"> </span><span class="p">{</span>
+<span class="k">constexpr</span><span class="w"> </span><span class="n">StringRef</span><span class="w"> </span><span class="n">Ctrl</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"STRELA_CTRL"</span><span class="p">;</span>
+<span class="k">constexpr</span><span class="w"> </span><span class="n">StringRef</span><span class="w"> </span><span class="n">Mode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"STRELA_MODE"</span><span class="p">;</span>
+<span class="k">constexpr</span><span class="w"> </span><span class="n">StringRef</span><span class="w"> </span><span class="n">Status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"STRELA_STATUS"</span><span class="p">;</span>
+<span class="k">constexpr</span><span class="w"> </span><span class="n">StringRef</span><span class="w"> </span><span class="n">Conf</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"STRELA_CONF"</span><span class="p">;</span>
+<span class="k">constexpr</span><span class="w"> </span><span class="n">StringRef</span><span class="w"> </span><span class="n">ImnAddr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"STRELA_IMN_ADDR"</span><span class="p">;</span>
+<span class="k">constexpr</span><span class="w"> </span><span class="n">StringRef</span><span class="w"> </span><span class="n">ImnParam</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"STRELA_IMN_PARAM"</span><span class="p">;</span>
+<span class="k">constexpr</span><span class="w"> </span><span class="n">StringRef</span><span class="w"> </span><span class="n">OmnAddr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"STRELA_OMN_ADDR"</span><span class="p">;</span>
+<span class="k">constexpr</span><span class="w"> </span><span class="n">StringRef</span><span class="w"> </span><span class="n">OmnSize</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"STRELA_OMN_SIZE"</span><span class="p">;</span>
+<span class="p">}</span><span class="w"> </span><span class="c1">// namespace regname</span>
+
+<span class="k">struct</span><span class="w"> </span><span class="nc">RegInfo</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">offset</span><span class="p">;</span><span class="w"> </span><span class="c1">// byte offset of channel 0</span>
+<span class="w">    </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">step</span><span class="p">;</span><span class="w">   </span><span class="c1">// per-channel stride (0 if the register has no channel)</span>
+<span class="p">};</span>
+
+<span class="c1">// Resolve a symbolic register name to its (offset, per-channel step).</span>
+<span class="k">static</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="nf">resolveReg</span><span class="p">(</span><span class="n">StringRef</span><span class="w"> </span><span class="n">reg</span><span class="p">,</span><span class="w"> </span><span class="n">RegInfo</span><span class="w"> </span><span class="o">&amp;</span><span class="n">out</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">reg</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">regname</span><span class="o">::</span><span class="n">Ctrl</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">out</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="mh">0x00</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">};</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">reg</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">regname</span><span class="o">::</span><span class="n">Mode</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">out</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="mh">0x04</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">};</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">reg</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">regname</span><span class="o">::</span><span class="n">Status</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">out</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="mh">0x08</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">};</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">reg</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">regname</span><span class="o">::</span><span class="n">Conf</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">out</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="mh">0x1c</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">};</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">reg</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">regname</span><span class="o">::</span><span class="n">ImnAddr</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">out</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="mh">0x20</span><span class="p">,</span><span class="w"> </span><span class="mh">0x08</span><span class="p">};</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">reg</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">regname</span><span class="o">::</span><span class="n">ImnParam</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">out</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="mh">0x24</span><span class="p">,</span><span class="w"> </span><span class="mh">0x08</span><span class="p">};</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">reg</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">regname</span><span class="o">::</span><span class="n">OmnAddr</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">out</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="mh">0x40</span><span class="p">,</span><span class="w"> </span><span class="mh">0x08</span><span class="p">};</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">reg</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">regname</span><span class="o">::</span><span class="n">OmnSize</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">out</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="mh">0x44</span><span class="p">,</span><span class="w"> </span><span class="mh">0x08</span><span class="p">};</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c1">// Byte-width of a memref element.</span>
+<span class="k">static</span><span class="w"> </span><span class="kt">uint32_t</span><span class="w"> </span><span class="nf">elemBytes</span><span class="p">(</span><span class="n">MemRefType</span><span class="w"> </span><span class="n">mrt</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">Type</span><span class="w"> </span><span class="n">e</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mrt</span><span class="p">.</span><span class="n">getElementType</span><span class="p">();</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="n">it</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dyn_cast</span><span class="o">&lt;</span><span class="n">IntegerType</span><span class="o">&gt;</span><span class="p">(</span><span class="n">e</span><span class="p">))</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">it</span><span class="p">.</span><span class="n">getWidth</span><span class="p">()</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">8</span><span class="p">;</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="n">ft</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dyn_cast</span><span class="o">&lt;</span><span class="n">FloatType</span><span class="o">&gt;</span><span class="p">(</span><span class="n">e</span><span class="p">))</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">ft</span><span class="p">.</span><span class="n">getWidth</span><span class="p">()</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">8</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="mi">4</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c1">// Parse an io_map.json (written by the mapper's map2bitstream) into the</span>
+<span class="c1">// physical STRELA channel the mapper assigned each stream: inputCh[k] is the</span>
+<span class="c1">// channel of DFG node "input{k}", outputCh[k] of "output{k}". The mapper is</span>
+<span class="c1">// free to permute streams onto channels, so without this the .ll would drive</span>
+<span class="c1">// the wrong channels. The "input{k}" / "output{k}" numbering is</span>
+<span class="c1">// --export-loop-dfg's per-load / per-store body order, the same order</span>
+<span class="c1">// cgra-deploy-to-strela enumerates streams.</span>
+<span class="k">static</span><span class="w"> </span><span class="n">LogicalResult</span><span class="w"> </span><span class="nf">parseIoMap</span><span class="p">(</span>
+<span class="w">    </span><span class="n">StringRef</span><span class="w"> </span><span class="n">path</span><span class="p">,</span>
+<span class="w">    </span><span class="n">SmallVectorImpl</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="w"> </span><span class="o">&amp;</span><span class="n">inputCh</span><span class="p">,</span>
+<span class="w">    </span><span class="n">SmallVectorImpl</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="w"> </span><span class="o">&amp;</span><span class="n">outputCh</span><span class="p">,</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="o">&amp;</span><span class="n">err</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">auto</span><span class="w"> </span><span class="n">buf</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">llvm</span><span class="o">::</span><span class="n">MemoryBuffer</span><span class="o">::</span><span class="n">getFile</span><span class="p">(</span><span class="n">path</span><span class="p">);</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">buf</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">err</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="s">"cannot open io-map file: "</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">path</span><span class="p">).</span><span class="n">str</span><span class="p">();</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">failure</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="k">auto</span><span class="w"> </span><span class="n">parsed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">llvm</span><span class="o">::</span><span class="n">json</span><span class="o">::</span><span class="n">parse</span><span class="p">((</span><span class="o">*</span><span class="n">buf</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">getBuffer</span><span class="p">());</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">parsed</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">err</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="s">"invalid JSON in io-map: "</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">path</span><span class="p">).</span><span class="n">str</span><span class="p">();</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">failure</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="n">llvm</span><span class="o">::</span><span class="n">json</span><span class="o">::</span><span class="n">Object</span><span class="o">*</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">parsed</span><span class="o">-&gt;</span><span class="n">getAsObject</span><span class="p">();</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">root</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">err</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"io-map is not a JSON object"</span><span class="p">;</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">failure</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="k">auto</span><span class="w"> </span><span class="n">loadSection</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="o">&amp;</span><span class="p">](</span><span class="n">StringRef</span><span class="w"> </span><span class="n">key</span><span class="p">,</span><span class="w"> </span><span class="n">SmallVectorImpl</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="w"> </span><span class="o">&amp;</span><span class="n">out</span><span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">llvm</span><span class="o">::</span><span class="n">json</span><span class="o">::</span><span class="n">Object</span><span class="o">*</span><span class="w"> </span><span class="n">sec</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">root</span><span class="o">-&gt;</span><span class="n">getObject</span><span class="p">(</span><span class="n">key</span><span class="p">);</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">sec</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span><span class="w"> </span><span class="c1">// an absent section (e.g. no outputs) is fine</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="o">&amp;</span><span class="n">kv</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="o">*</span><span class="n">sec</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">StringRef</span><span class="w"> </span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">kv</span><span class="p">.</span><span class="n">first</span><span class="p">;</span>
+<span class="w">            </span><span class="n">llvm</span><span class="o">::</span><span class="n">json</span><span class="o">::</span><span class="n">Object</span><span class="o">*</span><span class="w"> </span><span class="n">entry</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">kv</span><span class="p">.</span><span class="n">second</span><span class="p">.</span><span class="n">getAsObject</span><span class="p">();</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">entry</span><span class="p">)</span><span class="w"> </span><span class="k">continue</span><span class="p">;</span>
+<span class="w">            </span><span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;</span><span class="kt">int64_t</span><span class="o">&gt;</span><span class="w"> </span><span class="n">ch</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">entry</span><span class="o">-&gt;</span><span class="n">getInteger</span><span class="p">(</span><span class="s">"channel"</span><span class="p">);</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">ch</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">err</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="s">"io-map entry missing 'channel': "</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">name</span><span class="p">).</span><span class="n">str</span><span class="p">();</span>
+<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="c1">// Index the entry by the numeric suffix of its name ("input3" -&gt;</span>
+<span class="w">            </span><span class="c1">// 3).</span>
+<span class="w">            </span><span class="kt">size_t</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">name</span><span class="p">.</span><span class="n">find_first_of</span><span class="p">(</span><span class="s">"0123456789"</span><span class="p">);</span>
+<span class="w">            </span><span class="kt">int</span><span class="w"> </span><span class="n">idx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">p</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">StringRef</span><span class="o">::</span><span class="n">npos</span>
+<span class="w">                </span><span class="o">||</span><span class="w"> </span><span class="n">name</span><span class="p">.</span><span class="n">drop_front</span><span class="p">(</span><span class="n">p</span><span class="p">).</span><span class="n">getAsInteger</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="w"> </span><span class="n">idx</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">err</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="s">"io-map entry name is not &lt;prefix&gt;&lt;N&gt;: "</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">name</span><span class="p">).</span><span class="n">str</span><span class="p">();</span>
+<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">((</span><span class="kt">int</span><span class="p">)</span><span class="n">out</span><span class="p">.</span><span class="n">size</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">idx</span><span class="p">)</span><span class="w"> </span><span class="n">out</span><span class="p">.</span><span class="n">resize</span><span class="p">(</span><span class="n">idx</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">-1</span><span class="p">);</span>
+<span class="w">            </span><span class="n">out</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="o">*</span><span class="n">ch</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="w">    </span><span class="p">};</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">loadSection</span><span class="p">(</span><span class="s">"inputs"</span><span class="p">,</span><span class="w"> </span><span class="n">inputCh</span><span class="p">))</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">failure</span><span class="p">();</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">loadSection</span><span class="p">(</span><span class="s">"outputs"</span><span class="p">,</span><span class="w"> </span><span class="n">outputCh</span><span class="p">))</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">failure</span><span class="p">();</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">success</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="p">}</span><span class="w"> </span><span class="c1">// namespace</span>
+
+<span class="c1">// ─── Stage 1: cgra.deploy → cgra.strela_write / cgra.strela_read ─────────────</span>
+
+<span class="k">namespace</span><span class="w"> </span><span class="p">{</span>
+
+<span class="k">struct</span><span class="w"> </span><span class="nc">CGRADeployToStrelaPass</span>
+<span class="w">        </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">PassWrapper</span><span class="o">&lt;</span><span class="n">CGRADeployToStrelaPass</span><span class="p">,</span><span class="w"> </span><span class="n">OperationPass</span><span class="o">&lt;</span><span class="n">ModuleOp</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">    </span><span class="n">MLIR_DEFINE_EXPLICIT_INTERNAL_INLINE_TYPE_ID</span><span class="p">(</span><span class="n">CGRADeployToStrelaPass</span><span class="p">)</span>
+
+<span class="w">    </span><span class="n">CGRADeployToStrelaPass</span><span class="p">()</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">default</span><span class="p">;</span>
+<span class="w">    </span><span class="n">CGRADeployToStrelaPass</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">CGRADeployToStrelaPass</span><span class="w"> </span><span class="o">&amp;</span><span class="n">o</span><span class="p">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">PassWrapper</span><span class="p">(</span><span class="n">o</span><span class="p">)</span><span class="w"> </span><span class="p">{}</span>
+
+<span class="w">    </span><span class="n">StringRef</span><span class="w"> </span><span class="n">getArgument</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">final</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="s">"cgra-deploy-to-strela"</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="n">StringRef</span><span class="w"> </span><span class="n">getDescription</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">final</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="s">"Replace cgra.deploy with the STRELA cgra.strela_write/read "</span>
+<span class="w">               </span><span class="s">"sequence "</span>
+<span class="w">               </span><span class="s">"and give the kernel a C-callable bare-pointer signature"</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="c1">// Optional io_map.json from the mapper: when given, each stream is</span>
+<span class="w">    </span><span class="c1">// programmed onto the physical channel the mapper chose (which it may</span>
+<span class="w">    </span><span class="c1">// permute) instead of a sequential 0,1,2… assignment — so the .ll drives</span>
+<span class="w">    </span><span class="c1">// the same channels the bitstream expects. Without it the streams keep the</span>
+<span class="w">    </span><span class="c1">// sequential assignment.</span>
+<span class="w">    </span><span class="n">Pass</span><span class="o">::</span><span class="n">Option</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span><span class="w"> </span><span class="n">ioMap</span><span class="p">{</span>
+<span class="w">        </span><span class="o">*</span><span class="k">this</span><span class="p">,</span>
+<span class="w">        </span><span class="s">"io-map"</span><span class="p">,</span>
+<span class="w">        </span><span class="n">llvm</span><span class="o">::</span><span class="n">cl</span><span class="o">::</span><span class="n">desc</span><span class="p">(</span><span class="s">"io_map.json giving the mapper's channel per stream"</span><span class="p">),</span>
+<span class="w">        </span><span class="n">llvm</span><span class="o">::</span><span class="n">cl</span><span class="o">::</span><span class="n">init</span><span class="p">(</span><span class="s">""</span><span class="p">)};</span>
+
+<span class="w">    </span><span class="c1">// The bitstream array symbol written to CONF. Defaults to</span>
+<span class="w">    </span><span class="c1">// &lt;kernel-func&gt;_kernel, but the outlined kernel function is &lt;base&gt;_kernel</span>
+<span class="w">    </span><span class="c1">// (e.g. main_kernel), whose derived symbol (main_kernel_kernel) need not</span>
+<span class="w">    </span><span class="c1">// match the bitstream array the mapper emits ($(1)_kernel). Set this so the</span>
+<span class="w">    </span><span class="c1">// .ll references the real symbol.</span>
+<span class="w">    </span><span class="n">Pass</span><span class="o">::</span><span class="n">Option</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span><span class="w"> </span><span class="n">confSymbol</span><span class="p">{</span>
+<span class="w">        </span><span class="o">*</span><span class="k">this</span><span class="p">,</span>
+<span class="w">        </span><span class="s">"conf-symbol"</span><span class="p">,</span>
+<span class="w">        </span><span class="n">llvm</span><span class="o">::</span><span class="n">cl</span><span class="o">::</span><span class="n">desc</span><span class="p">(</span>
+<span class="w">            </span><span class="s">"bitstream array symbol for the CONF register "</span>
+<span class="w">            </span><span class="s">"(default: &lt;kernel-func&gt;_kernel)"</span><span class="p">),</span>
+<span class="w">        </span><span class="n">llvm</span><span class="o">::</span><span class="n">cl</span><span class="o">::</span><span class="n">init</span><span class="p">(</span><span class="s">""</span><span class="p">)};</span>
+
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="nf">getDependentDialects</span><span class="p">(</span><span class="n">DialectRegistry</span><span class="w"> </span><span class="o">&amp;</span><span class="n">reg</span><span class="p">)</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">override</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="n">reg</span><span class="p">.</span><span class="n">insert</span><span class="o">&lt;</span>
+<span class="w">            </span><span class="n">cgra</span><span class="o">::</span><span class="n">CGRADialect</span><span class="p">,</span>
+<span class="w">            </span><span class="n">LLVM</span><span class="o">::</span><span class="n">LLVMDialect</span><span class="p">,</span>
+<span class="w">            </span><span class="n">memref</span><span class="o">::</span><span class="n">MemRefDialect</span><span class="p">,</span>
+<span class="w">            </span><span class="n">scf</span><span class="o">::</span><span class="n">SCFDialect</span><span class="p">,</span>
+<span class="w">            </span><span class="n">arith</span><span class="o">::</span><span class="n">ArithDialect</span><span class="o">&gt;</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="n">Value</span><span class="w"> </span><span class="nf">i32const</span><span class="p">(</span><span class="n">OpBuilder</span><span class="w"> </span><span class="o">&amp;</span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="n">Location</span><span class="w"> </span><span class="n">loc</span><span class="p">,</span><span class="w"> </span><span class="kt">int32_t</span><span class="w"> </span><span class="n">v</span><span class="p">)</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">arith</span><span class="o">::</span><span class="n">ConstantOp</span><span class="o">::</span><span class="n">create</span><span class="p">(</span>
+<span class="w">            </span><span class="n">b</span><span class="p">,</span>
+<span class="w">            </span><span class="n">loc</span><span class="p">,</span>
+<span class="w">            </span><span class="n">b</span><span class="p">.</span><span class="n">getI32Type</span><span class="p">(),</span>
+<span class="w">            </span><span class="n">b</span><span class="p">.</span><span class="n">getIntegerAttr</span><span class="p">(</span><span class="n">b</span><span class="p">.</span><span class="n">getI32Type</span><span class="p">(),</span><span class="w"> </span><span class="n">v</span><span class="p">));</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="kt">void</span>
+<span class="w">    </span><span class="nf">writeReg</span><span class="p">(</span><span class="n">OpBuilder</span><span class="w"> </span><span class="o">&amp;</span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="n">Location</span><span class="w"> </span><span class="n">loc</span><span class="p">,</span><span class="w"> </span><span class="n">StringRef</span><span class="w"> </span><span class="n">reg</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">channel</span><span class="p">,</span><span class="w"> </span><span class="n">Value</span><span class="w"> </span><span class="n">v</span><span class="p">)</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="n">IntegerAttr</span><span class="w"> </span><span class="n">ch</span><span class="w"> </span><span class="o">=</span>
+<span class="w">            </span><span class="n">channel</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">IntegerAttr</span><span class="p">()</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">b</span><span class="p">.</span><span class="n">getI32IntegerAttr</span><span class="p">(</span><span class="n">channel</span><span class="p">);</span>
+<span class="w">        </span><span class="n">cgra</span><span class="o">::</span><span class="n">StrelaWriteOp</span><span class="o">::</span><span class="n">create</span><span class="p">(</span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="n">loc</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="p">.</span><span class="n">getStringAttr</span><span class="p">(</span><span class="n">reg</span><span class="p">),</span><span class="w"> </span><span class="n">ch</span><span class="p">,</span><span class="w"> </span><span class="n">v</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="nf">writeImm</span><span class="p">(</span>
+<span class="w">        </span><span class="n">OpBuilder</span><span class="w"> </span><span class="o">&amp;</span><span class="n">b</span><span class="p">,</span>
+<span class="w">        </span><span class="n">Location</span><span class="w"> </span><span class="n">loc</span><span class="p">,</span>
+<span class="w">        </span><span class="n">StringRef</span><span class="w"> </span><span class="n">reg</span><span class="p">,</span>
+<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">channel</span><span class="p">,</span>
+<span class="w">        </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">imm</span><span class="p">)</span>
+<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="n">writeReg</span><span class="p">(</span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="n">loc</span><span class="p">,</span><span class="w"> </span><span class="n">reg</span><span class="p">,</span><span class="w"> </span><span class="n">channel</span><span class="p">,</span><span class="w"> </span><span class="n">i32const</span><span class="p">(</span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="n">loc</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="kt">int32_t</span><span class="p">)</span><span class="n">imm</span><span class="p">));</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="n">Value</span><span class="w"> </span><span class="nf">readReg</span><span class="p">(</span><span class="n">OpBuilder</span><span class="w"> </span><span class="o">&amp;</span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="n">Location</span><span class="w"> </span><span class="n">loc</span><span class="p">,</span><span class="w"> </span><span class="n">StringRef</span><span class="w"> </span><span class="n">reg</span><span class="p">)</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">cgra</span><span class="o">::</span><span class="n">StrelaReadOp</span><span class="o">::</span><span class="n">create</span><span class="p">(</span>
+<span class="w">            </span><span class="n">b</span><span class="p">,</span>
+<span class="w">            </span><span class="n">loc</span><span class="p">,</span>
+<span class="w">            </span><span class="n">b</span><span class="p">.</span><span class="n">getI32Type</span><span class="p">(),</span>
+<span class="w">            </span><span class="n">b</span><span class="p">.</span><span class="n">getStringAttr</span><span class="p">(</span><span class="n">reg</span><span class="p">),</span>
+<span class="w">            </span><span class="n">IntegerAttr</span><span class="p">());</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="c1">// Declare @&lt;func&gt;_kernel as an external i32-array global (the bitstream</span>
+<span class="w">    </span><span class="c1">// symbol resolved from kernels.h), and return its address as an i32.</span>
+<span class="w">    </span><span class="n">Value</span>
+<span class="w">    </span><span class="nf">kernelAddrI32</span><span class="p">(</span><span class="n">OpBuilder</span><span class="w"> </span><span class="o">&amp;</span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="n">Location</span><span class="w"> </span><span class="n">loc</span><span class="p">,</span><span class="w"> </span><span class="n">ModuleOp</span><span class="w"> </span><span class="k">module</span><span class="p">,</span><span class="w"> </span><span class="n">StringRef</span><span class="w"> </span><span class="n">name</span><span class="p">)</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="k">module</span><span class="p">.</span><span class="n">lookupSymbol</span><span class="p">(</span><span class="n">name</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">OpBuilder</span><span class="o">::</span><span class="n">InsertionGuard</span><span class="w"> </span><span class="n">guard</span><span class="p">(</span><span class="n">b</span><span class="p">);</span>
+<span class="w">            </span><span class="n">b</span><span class="p">.</span><span class="n">setInsertionPointToStart</span><span class="p">(</span><span class="k">module</span><span class="p">.</span><span class="n">getBody</span><span class="p">());</span>
+<span class="w">            </span><span class="k">auto</span><span class="w"> </span><span class="n">arrayTy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">LLVM</span><span class="o">::</span><span class="n">LLVMArrayType</span><span class="o">::</span><span class="n">get</span><span class="p">(</span><span class="n">b</span><span class="p">.</span><span class="n">getI32Type</span><span class="p">(),</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
+<span class="w">            </span><span class="n">LLVM</span><span class="o">::</span><span class="n">GlobalOp</span><span class="o">::</span><span class="n">create</span><span class="p">(</span>
+<span class="w">                </span><span class="n">b</span><span class="p">,</span>
+<span class="w">                </span><span class="n">loc</span><span class="p">,</span>
+<span class="w">                </span><span class="n">arrayTy</span><span class="p">,</span>
+<span class="w">                </span><span class="cm">/*isConstant=*/</span><span class="nb">false</span><span class="p">,</span>
+<span class="w">                </span><span class="n">LLVM</span><span class="o">::</span><span class="n">Linkage</span><span class="o">::</span><span class="n">External</span><span class="p">,</span>
+<span class="w">                </span><span class="n">name</span><span class="p">,</span>
+<span class="w">                </span><span class="cm">/*value=*/</span><span class="n">Attribute</span><span class="p">{},</span>
+<span class="w">                </span><span class="cm">/*alignment=*/</span><span class="mi">4</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">auto</span><span class="w"> </span><span class="n">ptrTy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">LLVM</span><span class="o">::</span><span class="n">LLVMPointerType</span><span class="o">::</span><span class="n">get</span><span class="p">(</span><span class="n">b</span><span class="p">.</span><span class="n">getContext</span><span class="p">());</span>
+<span class="w">        </span><span class="n">Value</span><span class="w"> </span><span class="n">ptr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">LLVM</span><span class="o">::</span><span class="n">AddressOfOp</span><span class="o">::</span><span class="n">create</span><span class="p">(</span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="n">loc</span><span class="p">,</span><span class="w"> </span><span class="n">ptrTy</span><span class="p">,</span><span class="w"> </span><span class="n">name</span><span class="p">);</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">LLVM</span><span class="o">::</span><span class="n">PtrToIntOp</span><span class="o">::</span><span class="n">create</span><span class="p">(</span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="n">loc</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="p">.</span><span class="n">getI32Type</span><span class="p">(),</span><span class="w"> </span><span class="n">ptr</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="n">LogicalResult</span><span class="w"> </span><span class="nf">lowerDeploy</span><span class="p">(</span>
+<span class="w">        </span><span class="n">cgra</span><span class="o">::</span><span class="n">DeployOp</span><span class="w"> </span><span class="n">deployOp</span><span class="p">,</span>
+<span class="w">        </span><span class="n">func</span><span class="o">::</span><span class="n">FuncOp</span><span class="w"> </span><span class="n">funcOp</span><span class="p">,</span>
+<span class="w">        </span><span class="n">ModuleOp</span><span class="w"> </span><span class="k">module</span><span class="p">,</span>
+<span class="w">        </span><span class="n">ArrayRef</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="w"> </span><span class="n">inputCh</span><span class="p">,</span>
+<span class="w">        </span><span class="n">ArrayRef</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="w"> </span><span class="n">outputCh</span><span class="p">,</span>
+<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">useIoMap</span><span class="p">)</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="n">MLIRContext</span><span class="o">*</span><span class="w"> </span><span class="n">ctx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&amp;</span><span class="n">getContext</span><span class="p">();</span>
+
+<span class="w">        </span><span class="c1">// 1. Dispatch element count (prefer the stamped dispatch_size).</span>
+<span class="w">        </span><span class="n">affine</span><span class="o">::</span><span class="n">AffineForOp</span><span class="w"> </span><span class="n">forOp</span><span class="p">;</span>
+<span class="w">        </span><span class="n">deployOp</span><span class="p">.</span><span class="n">getBody</span><span class="p">().</span><span class="n">walk</span><span class="p">([</span><span class="o">&amp;</span><span class="p">](</span><span class="n">affine</span><span class="o">::</span><span class="n">AffineForOp</span><span class="w"> </span><span class="n">op</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">forOp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">op</span><span class="p">;</span><span class="w"> </span><span class="p">});</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">forOp</span><span class="p">)</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="n">deployOp</span><span class="p">.</span><span class="n">emitError</span><span class="p">(</span><span class="s">"cgra.deploy: no inner affine.for"</span><span class="p">);</span>
+
+<span class="w">        </span><span class="kt">int64_t</span><span class="w"> </span><span class="n">N</span><span class="p">;</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="n">ds</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">deployOp</span><span class="p">.</span><span class="n">getDispatchSize</span><span class="p">())</span>
+<span class="w">            </span><span class="n">N</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ds</span><span class="p">.</span><span class="n">value</span><span class="p">();</span>
+<span class="w">        </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">forOp</span><span class="p">.</span><span class="n">hasConstantUpperBound</span><span class="p">()</span>
+<span class="w">                </span><span class="o">||</span><span class="w"> </span><span class="o">!</span><span class="n">forOp</span><span class="p">.</span><span class="n">hasConstantLowerBound</span><span class="p">())</span>
+<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="n">forOp</span><span class="p">.</span><span class="n">emitError</span><span class="p">(</span><span class="s">"cgra.deploy: non-constant loop bound"</span><span class="p">);</span>
+<span class="w">            </span><span class="n">N</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">forOp</span><span class="p">.</span><span class="n">getConstantUpperBound</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">forOp</span><span class="p">.</span><span class="n">getConstantLowerBound</span><span class="p">();</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="c1">// 2. Classify args (prefer stamped attributes).</span>
+<span class="w">        </span><span class="n">llvm</span><span class="o">::</span><span class="n">SmallVector</span><span class="o">&lt;</span><span class="kt">unsigned</span><span class="o">&gt;</span><span class="w"> </span><span class="n">inputs</span><span class="p">,</span><span class="w"> </span><span class="n">outputs</span><span class="p">,</span><span class="w"> </span><span class="n">inouts</span><span class="p">;</span>
+<span class="w">        </span><span class="c1">// The accessors return the optional BY VALUE, so the ArrayRef has to be</span>
+<span class="w">        </span><span class="c1">// held in a local. Iterating `getInputArgs().value()` directly binds</span>
+<span class="w">        </span><span class="c1">// the range to a temporary that is gone before the loop body runs.</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="n">in</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">deployOp</span><span class="p">.</span><span class="n">getInputArgs</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">idx</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="o">*</span><span class="n">in</span><span class="p">)</span><span class="w"> </span><span class="n">inputs</span><span class="p">.</span><span class="n">push_back</span><span class="p">((</span><span class="kt">unsigned</span><span class="p">)</span><span class="n">idx</span><span class="p">);</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="n">out</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">deployOp</span><span class="p">.</span><span class="n">getOutputArgs</span><span class="p">())</span>
+<span class="w">                </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">idx</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="o">*</span><span class="n">out</span><span class="p">)</span><span class="w"> </span><span class="n">outputs</span><span class="p">.</span><span class="n">push_back</span><span class="p">((</span><span class="kt">unsigned</span><span class="p">)</span><span class="n">idx</span><span class="p">);</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="n">inout</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">deployOp</span><span class="p">.</span><span class="n">getInoutArgs</span><span class="p">())</span>
+<span class="w">                </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">idx</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="o">*</span><span class="n">inout</span><span class="p">)</span><span class="w"> </span><span class="n">inouts</span><span class="p">.</span><span class="n">push_back</span><span class="p">((</span><span class="kt">unsigned</span><span class="p">)</span><span class="n">idx</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">llvm</span><span class="o">::</span><span class="n">SmallSet</span><span class="o">&lt;</span><span class="kt">unsigned</span><span class="p">,</span><span class="w"> </span><span class="mi">4</span><span class="o">&gt;</span><span class="w"> </span><span class="n">stored</span><span class="p">;</span>
+<span class="w">            </span><span class="n">forOp</span><span class="p">.</span><span class="n">getBody</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">walk</span><span class="p">([</span><span class="o">&amp;</span><span class="p">](</span><span class="n">affine</span><span class="o">::</span><span class="n">AffineStoreOp</span><span class="w"> </span><span class="n">st</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="n">ba</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dyn_cast</span><span class="o">&lt;</span><span class="n">BlockArgument</span><span class="o">&gt;</span><span class="p">(</span><span class="n">st</span><span class="p">.</span><span class="n">getMemRef</span><span class="p">()))</span>
+<span class="w">                    </span><span class="n">stored</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">ba</span><span class="p">.</span><span class="n">getArgNumber</span><span class="p">());</span>
+<span class="w">            </span><span class="p">});</span>
+<span class="w">            </span><span class="n">forOp</span><span class="p">.</span><span class="n">getBody</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">walk</span><span class="p">([</span><span class="o">&amp;</span><span class="p">](</span><span class="n">affine</span><span class="o">::</span><span class="n">AffineLoadOp</span><span class="w"> </span><span class="n">ld</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="n">ba</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dyn_cast</span><span class="o">&lt;</span><span class="n">BlockArgument</span><span class="o">&gt;</span><span class="p">(</span><span class="n">ld</span><span class="p">.</span><span class="n">getMemRef</span><span class="p">()))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                    </span><span class="kt">unsigned</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ba</span><span class="p">.</span><span class="n">getArgNumber</span><span class="p">();</span>
+<span class="w">                    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">stored</span><span class="p">.</span><span class="n">count</span><span class="p">(</span><span class="n">n</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="o">!</span><span class="n">llvm</span><span class="o">::</span><span class="n">is_contained</span><span class="p">(</span><span class="n">inputs</span><span class="p">,</span><span class="w"> </span><span class="n">n</span><span class="p">))</span>
+<span class="w">                        </span><span class="n">inputs</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">n</span><span class="p">);</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">            </span><span class="p">});</span>
+<span class="w">            </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">unsigned</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">stored</span><span class="p">)</span><span class="w"> </span><span class="n">outputs</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">n</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="c1">// 3. Element byte-width (from a memref arg, read before we rewrite</span>
+<span class="w">        </span><span class="c1">// types).</span>
+<span class="w">        </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">bytes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">4</span><span class="p">;</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">BlockArgument</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">funcOp</span><span class="p">.</span><span class="n">getArguments</span><span class="p">())</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="n">mrt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dyn_cast</span><span class="o">&lt;</span><span class="n">MemRefType</span><span class="o">&gt;</span><span class="p">(</span><span class="n">a</span><span class="p">.</span><span class="n">getType</span><span class="p">()))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">bytes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">elemBytes</span><span class="p">(</span><span class="n">mrt</span><span class="p">);</span>
+<span class="w">                </span><span class="k">break</span><span class="p">;</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">sizeBytes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="kt">uint32_t</span><span class="p">)(</span><span class="n">N</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">bytes</span><span class="p">);</span>
+<span class="w">        </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">imnParam</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">bytes</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="mi">16</span><span class="p">)</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">sizeBytes</span><span class="p">;</span><span class="w"> </span><span class="c1">// stride&lt;&lt;16 | size</span>
+
+<span class="w">        </span><span class="n">OpBuilder</span><span class="w"> </span><span class="n">b</span><span class="p">(</span><span class="n">deployOp</span><span class="p">);</span>
+<span class="w">        </span><span class="n">Location</span><span class="w"> </span><span class="n">loc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">deployOp</span><span class="p">.</span><span class="n">getLoc</span><span class="p">();</span>
+<span class="w">        </span><span class="k">auto</span><span class="w"> </span><span class="n">ptrTy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">LLVM</span><span class="o">::</span><span class="n">LLVMPointerType</span><span class="o">::</span><span class="n">get</span><span class="p">(</span><span class="n">ctx</span><span class="p">);</span>
+
+<span class="w">        </span><span class="c1">// 4. C-callable signature: rewrite a memref arg to a bare !llvm.ptr</span>
+<span class="w">        </span><span class="c1">// ONLY</span>
+<span class="w">        </span><span class="c1">//    when nothing outside this deploy region uses it. The lowering must</span>
+<span class="w">        </span><span class="c1">//    preserve the CPU code before and after the loop untouched, so an</span>
+<span class="w">        </span><span class="c1">//    array that surrounding code still reads/writes (affine.load/store)</span>
+<span class="w">        </span><span class="c1">//    has to stay a memref — rewriting it would break that code. Pure</span>
+<span class="w">        </span><span class="c1">//    stream arguments (used only inside the loop, the common kernel</span>
+<span class="w">        </span><span class="c1">//    case) become plain pointers so the RISC-V C driver can call the</span>
+<span class="w">        </span><span class="c1">//    kernel directly; any array shared with surrounding CPU code keeps</span>
+<span class="w">        </span><span class="c1">//    the memref (descriptor) ABI.</span>
+<span class="w">        </span><span class="n">Block</span><span class="w"> </span><span class="o">&amp;</span><span class="n">entry</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">funcOp</span><span class="p">.</span><span class="n">getBody</span><span class="p">().</span><span class="n">front</span><span class="p">();</span>
+<span class="w">        </span><span class="k">auto</span><span class="w"> </span><span class="n">usedOutsideDeploy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="o">&amp;</span><span class="p">](</span><span class="n">Value</span><span class="w"> </span><span class="n">v</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">Operation</span><span class="o">*</span><span class="w"> </span><span class="n">user</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">v</span><span class="p">.</span><span class="n">getUsers</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="c1">// Feeding the value in as a cgra.deploy stream operand is not</span>
+<span class="w">                </span><span class="c1">// an outside use — that is exactly the stream we are lowering.</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">user</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">deployOp</span><span class="p">.</span><span class="n">getOperation</span><span class="p">())</span><span class="w"> </span><span class="k">continue</span><span class="p">;</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">deployOp</span><span class="o">-&gt;</span><span class="n">isAncestor</span><span class="p">(</span><span class="n">user</span><span class="p">))</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="w">        </span><span class="p">};</span>
+<span class="w">        </span><span class="c1">// Do not change the signature of a kernel that is called from within</span>
+<span class="w">        </span><span class="c1">// the module (e.g. an outlined &lt;H&gt;_kernel invoked by its host</span>
+<span class="w">        </span><span class="c1">// function): the caller passes memrefs, so rewriting to bare pointers</span>
+<span class="w">        </span><span class="c1">// would break the call. Such kernels keep the memref ABI and take the</span>
+<span class="w">        </span><span class="c1">// base pointer from the descriptor. A leaf kernel called only from</span>
+<span class="w">        </span><span class="c1">// external C still becomes bare-pointer / C-callable.</span>
+<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">internallyCalled</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="w">        </span><span class="k">module</span><span class="p">.</span><span class="n">walk</span><span class="p">([</span><span class="o">&amp;</span><span class="p">](</span><span class="n">func</span><span class="o">::</span><span class="n">CallOp</span><span class="w"> </span><span class="n">c</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">c</span><span class="p">.</span><span class="n">getCallee</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">funcOp</span><span class="p">.</span><span class="n">getName</span><span class="p">())</span><span class="w"> </span><span class="n">internallyCalled</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="w">        </span><span class="p">});</span>
+<span class="w">        </span><span class="n">llvm</span><span class="o">::</span><span class="n">SmallVector</span><span class="o">&lt;</span><span class="n">Type</span><span class="o">&gt;</span><span class="w"> </span><span class="n">newInTypes</span><span class="p">(</span>
+<span class="w">            </span><span class="n">funcOp</span><span class="p">.</span><span class="n">getArgumentTypes</span><span class="p">().</span><span class="n">begin</span><span class="p">(),</span>
+<span class="w">            </span><span class="n">funcOp</span><span class="p">.</span><span class="n">getArgumentTypes</span><span class="p">().</span><span class="n">end</span><span class="p">());</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">internallyCalled</span><span class="p">)</span>
+<span class="w">            </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">unsigned</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">entry</span><span class="p">.</span><span class="n">getNumArguments</span><span class="p">();</span><span class="w"> </span><span class="o">++</span><span class="n">i</span><span class="p">)</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">isa</span><span class="o">&lt;</span><span class="n">MemRefType</span><span class="o">&gt;</span><span class="p">(</span><span class="n">entry</span><span class="p">.</span><span class="n">getArgument</span><span class="p">(</span><span class="n">i</span><span class="p">).</span><span class="n">getType</span><span class="p">())</span>
+<span class="w">                    </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="o">!</span><span class="n">usedOutsideDeploy</span><span class="p">(</span><span class="n">entry</span><span class="p">.</span><span class="n">getArgument</span><span class="p">(</span><span class="n">i</span><span class="p">)))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                    </span><span class="n">entry</span><span class="p">.</span><span class="n">getArgument</span><span class="p">(</span><span class="n">i</span><span class="p">).</span><span class="n">setType</span><span class="p">(</span><span class="n">ptrTy</span><span class="p">);</span>
+<span class="w">                    </span><span class="n">newInTypes</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ptrTy</span><span class="p">;</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">        </span><span class="n">funcOp</span><span class="p">.</span><span class="n">setType</span><span class="p">(</span>
+<span class="w">            </span><span class="n">FunctionType</span><span class="o">::</span><span class="n">get</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span><span class="w"> </span><span class="n">newInTypes</span><span class="p">,</span><span class="w"> </span><span class="n">funcOp</span><span class="p">.</span><span class="n">getResultTypes</span><span class="p">()));</span>
+
+<span class="w">        </span><span class="k">auto</span><span class="w"> </span><span class="n">argBaseI32</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="o">&amp;</span><span class="p">](</span><span class="kt">unsigned</span><span class="w"> </span><span class="n">idx</span><span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">Value</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">Value</span><span class="w"> </span><span class="n">arg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">funcOp</span><span class="p">.</span><span class="n">getArgument</span><span class="p">(</span><span class="n">idx</span><span class="p">);</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">isa</span><span class="o">&lt;</span><span class="n">LLVM</span><span class="o">::</span><span class="n">LLVMPointerType</span><span class="o">&gt;</span><span class="p">(</span><span class="n">arg</span><span class="p">.</span><span class="n">getType</span><span class="p">()))</span>
+<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="n">LLVM</span><span class="o">::</span><span class="n">PtrToIntOp</span><span class="o">::</span><span class="n">create</span><span class="p">(</span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="n">loc</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="p">.</span><span class="n">getI32Type</span><span class="p">(),</span><span class="w"> </span><span class="n">arg</span><span class="p">);</span>
+<span class="w">            </span><span class="c1">// memref kept for surrounding CPU code: take its aligned base</span>
+<span class="w">            </span><span class="c1">// pointer.</span>
+<span class="w">            </span><span class="n">Value</span><span class="w"> </span><span class="n">idxp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">memref</span><span class="o">::</span><span class="n">ExtractAlignedPointerAsIndexOp</span><span class="o">::</span><span class="n">create</span><span class="p">(</span>
+<span class="w">                </span><span class="n">b</span><span class="p">,</span>
+<span class="w">                </span><span class="n">loc</span><span class="p">,</span>
+<span class="w">                </span><span class="n">b</span><span class="p">.</span><span class="n">getIndexType</span><span class="p">(),</span>
+<span class="w">                </span><span class="n">arg</span><span class="p">);</span>
+<span class="w">            </span><span class="n">Value</span><span class="w"> </span><span class="n">i64</span><span class="w"> </span><span class="o">=</span>
+<span class="w">                </span><span class="n">arith</span><span class="o">::</span><span class="n">IndexCastOp</span><span class="o">::</span><span class="n">create</span><span class="p">(</span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="n">loc</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="p">.</span><span class="n">getI64Type</span><span class="p">(),</span><span class="w"> </span><span class="n">idxp</span><span class="p">);</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="n">arith</span><span class="o">::</span><span class="n">TruncIOp</span><span class="o">::</span><span class="n">create</span><span class="p">(</span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="n">loc</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="p">.</span><span class="n">getI32Type</span><span class="p">(),</span><span class="w"> </span><span class="n">i64</span><span class="p">);</span>
+<span class="w">        </span><span class="p">};</span>
+
+<span class="w">        </span><span class="c1">// 5. Program + launch STRELA.</span>
+<span class="w">        </span><span class="n">writeImm</span><span class="p">(</span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="n">loc</span><span class="p">,</span><span class="w"> </span><span class="n">regname</span><span class="o">::</span><span class="n">Ctrl</span><span class="p">,</span><span class="w"> </span><span class="mi">-1</span><span class="p">,</span><span class="w"> </span><span class="n">CTRL_CLR</span><span class="p">);</span>
+<span class="w">        </span><span class="n">writeImm</span><span class="p">(</span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="n">loc</span><span class="p">,</span><span class="w"> </span><span class="n">regname</span><span class="o">::</span><span class="n">Mode</span><span class="p">,</span><span class="w"> </span><span class="mi">-1</span><span class="p">,</span><span class="w"> </span><span class="n">MODE_PERF_CTR_EN</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">MODE_INTR_EN</span><span class="p">);</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">confSym</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">confSymbol</span><span class="p">.</span><span class="n">empty</span><span class="p">()</span>
+<span class="w">                                  </span><span class="o">?</span><span class="w"> </span><span class="p">(</span><span class="n">funcOp</span><span class="p">.</span><span class="n">getName</span><span class="p">()</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">"_kernel"</span><span class="p">).</span><span class="n">str</span><span class="p">()</span>
+<span class="w">                                  </span><span class="o">:</span><span class="w"> </span><span class="n">confSymbol</span><span class="p">.</span><span class="n">getValue</span><span class="p">();</span>
+<span class="w">        </span><span class="n">writeReg</span><span class="p">(</span>
+<span class="w">            </span><span class="n">b</span><span class="p">,</span>
+<span class="w">            </span><span class="n">loc</span><span class="p">,</span>
+<span class="w">            </span><span class="n">regname</span><span class="o">::</span><span class="n">Conf</span><span class="p">,</span>
+<span class="w">            </span><span class="mi">-1</span><span class="p">,</span>
+<span class="w">            </span><span class="n">kernelAddrI32</span><span class="p">(</span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="n">loc</span><span class="p">,</span><span class="w"> </span><span class="k">module</span><span class="p">,</span><span class="w"> </span><span class="n">confSym</span><span class="p">));</span>
+
+<span class="w">        </span><span class="c1">// IMN streams are inputs then inouts; OMN streams are outputs then</span>
+<span class="w">        </span><span class="c1">// inouts — the same order --export-loop-dfg (hence the io_map) numbers</span>
+<span class="w">        </span><span class="c1">// input{k} / output{k}. With an io_map each stream goes to the mapper's</span>
+<span class="w">        </span><span class="c1">// channel; a count mismatch means the correspondence is broken, so</span>
+<span class="w">        </span><span class="c1">// error rather than silently program the wrong channels.</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">useIoMap</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="kt">size_t</span><span class="w"> </span><span class="n">nIn</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">inputs</span><span class="p">.</span><span class="n">size</span><span class="p">()</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">inouts</span><span class="p">.</span><span class="n">size</span><span class="p">();</span>
+<span class="w">            </span><span class="kt">size_t</span><span class="w"> </span><span class="n">nOut</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">outputs</span><span class="p">.</span><span class="n">size</span><span class="p">()</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">inouts</span><span class="p">.</span><span class="n">size</span><span class="p">();</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">inputCh</span><span class="p">.</span><span class="n">size</span><span class="p">()</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">nIn</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">outputCh</span><span class="p">.</span><span class="n">size</span><span class="p">()</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">nOut</span><span class="p">)</span>
+<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="n">deployOp</span><span class="p">.</span><span class="n">emitError</span><span class="p">()</span>
+<span class="w">                       </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"io-map stream count mismatch: kernel has "</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">nIn</span>
+<span class="w">                       </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">" input and "</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">nOut</span>
+<span class="w">                       </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">" output streams, io-map has "</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">inputCh</span><span class="p">.</span><span class="n">size</span><span class="p">()</span>
+<span class="w">                       </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">" and "</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">outputCh</span><span class="p">.</span><span class="n">size</span><span class="p">();</span>
+<span class="w">            </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">inputCh</span><span class="p">)</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">c</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
+<span class="w">                    </span><span class="k">return</span><span class="w"> </span><span class="n">deployOp</span><span class="p">.</span><span class="n">emitError</span><span class="p">(</span>
+<span class="w">                        </span><span class="s">"io-map: missing an input channel"</span><span class="p">);</span>
+<span class="w">            </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">outputCh</span><span class="p">)</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">c</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
+<span class="w">                    </span><span class="k">return</span><span class="w"> </span><span class="n">deployOp</span><span class="p">.</span><span class="n">emitError</span><span class="p">(</span>
+<span class="w">                        </span><span class="s">"io-map: missing an output channel"</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">auto</span><span class="w"> </span><span class="n">imnChannel</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="o">&amp;</span><span class="p">](</span><span class="kt">int</span><span class="w"> </span><span class="n">k</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">useIoMap</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">inputCh</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">k</span><span class="p">;</span><span class="w"> </span><span class="p">};</span>
+<span class="w">        </span><span class="k">auto</span><span class="w"> </span><span class="n">omnChannel</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="o">&amp;</span><span class="p">](</span><span class="kt">int</span><span class="w"> </span><span class="n">k</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">useIoMap</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">outputCh</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">k</span><span class="p">;</span><span class="w"> </span><span class="p">};</span>
+
+<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">imn</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">unsigned</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">inputs</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">writeReg</span><span class="p">(</span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="n">loc</span><span class="p">,</span><span class="w"> </span><span class="n">regname</span><span class="o">::</span><span class="n">ImnAddr</span><span class="p">,</span><span class="w"> </span><span class="n">imnChannel</span><span class="p">(</span><span class="n">imn</span><span class="p">),</span><span class="w"> </span><span class="n">argBaseI32</span><span class="p">(</span><span class="n">a</span><span class="p">));</span>
+<span class="w">            </span><span class="n">writeImm</span><span class="p">(</span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="n">loc</span><span class="p">,</span><span class="w"> </span><span class="n">regname</span><span class="o">::</span><span class="n">ImnParam</span><span class="p">,</span><span class="w"> </span><span class="n">imnChannel</span><span class="p">(</span><span class="n">imn</span><span class="p">),</span><span class="w"> </span><span class="n">imnParam</span><span class="p">);</span>
+<span class="w">            </span><span class="o">++</span><span class="n">imn</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">unsigned</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">inouts</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">writeReg</span><span class="p">(</span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="n">loc</span><span class="p">,</span><span class="w"> </span><span class="n">regname</span><span class="o">::</span><span class="n">ImnAddr</span><span class="p">,</span><span class="w"> </span><span class="n">imnChannel</span><span class="p">(</span><span class="n">imn</span><span class="p">),</span><span class="w"> </span><span class="n">argBaseI32</span><span class="p">(</span><span class="n">a</span><span class="p">));</span>
+<span class="w">            </span><span class="n">writeImm</span><span class="p">(</span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="n">loc</span><span class="p">,</span><span class="w"> </span><span class="n">regname</span><span class="o">::</span><span class="n">ImnParam</span><span class="p">,</span><span class="w"> </span><span class="n">imnChannel</span><span class="p">(</span><span class="n">imn</span><span class="p">),</span><span class="w"> </span><span class="n">imnParam</span><span class="p">);</span>
+<span class="w">            </span><span class="o">++</span><span class="n">imn</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">omn</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">unsigned</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">outputs</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">writeReg</span><span class="p">(</span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="n">loc</span><span class="p">,</span><span class="w"> </span><span class="n">regname</span><span class="o">::</span><span class="n">OmnAddr</span><span class="p">,</span><span class="w"> </span><span class="n">omnChannel</span><span class="p">(</span><span class="n">omn</span><span class="p">),</span><span class="w"> </span><span class="n">argBaseI32</span><span class="p">(</span><span class="n">a</span><span class="p">));</span>
+<span class="w">            </span><span class="n">writeImm</span><span class="p">(</span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="n">loc</span><span class="p">,</span><span class="w"> </span><span class="n">regname</span><span class="o">::</span><span class="n">OmnSize</span><span class="p">,</span><span class="w"> </span><span class="n">omnChannel</span><span class="p">(</span><span class="n">omn</span><span class="p">),</span><span class="w"> </span><span class="n">sizeBytes</span><span class="p">);</span>
+<span class="w">            </span><span class="o">++</span><span class="n">omn</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">unsigned</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">inouts</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">writeReg</span><span class="p">(</span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="n">loc</span><span class="p">,</span><span class="w"> </span><span class="n">regname</span><span class="o">::</span><span class="n">OmnAddr</span><span class="p">,</span><span class="w"> </span><span class="n">omnChannel</span><span class="p">(</span><span class="n">omn</span><span class="p">),</span><span class="w"> </span><span class="n">argBaseI32</span><span class="p">(</span><span class="n">a</span><span class="p">));</span>
+<span class="w">            </span><span class="n">writeImm</span><span class="p">(</span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="n">loc</span><span class="p">,</span><span class="w"> </span><span class="n">regname</span><span class="o">::</span><span class="n">OmnSize</span><span class="p">,</span><span class="w"> </span><span class="n">omnChannel</span><span class="p">(</span><span class="n">omn</span><span class="p">),</span><span class="w"> </span><span class="n">sizeBytes</span><span class="p">);</span>
+<span class="w">            </span><span class="o">++</span><span class="n">omn</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="n">writeImm</span><span class="p">(</span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="n">loc</span><span class="p">,</span><span class="w"> </span><span class="n">regname</span><span class="o">::</span><span class="n">Ctrl</span><span class="p">,</span><span class="w"> </span><span class="mi">-1</span><span class="p">,</span><span class="w"> </span><span class="n">CTRL_START</span><span class="p">);</span>
+
+<span class="w">        </span><span class="c1">// 6. Spin-wait: while ((STATUS &amp; DONE) == 0) {}</span>
+<span class="w">        </span><span class="k">auto</span><span class="w"> </span><span class="n">whileOp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">scf</span><span class="o">::</span><span class="n">WhileOp</span><span class="o">::</span><span class="n">create</span><span class="p">(</span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="n">loc</span><span class="p">,</span><span class="w"> </span><span class="n">TypeRange</span><span class="p">{},</span><span class="w"> </span><span class="n">ValueRange</span><span class="p">{});</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="n">Block</span><span class="o">*</span><span class="w"> </span><span class="n">before</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">b</span><span class="p">.</span><span class="n">createBlock</span><span class="p">(</span><span class="o">&amp;</span><span class="n">whileOp</span><span class="p">.</span><span class="n">getBefore</span><span class="p">());</span>
+<span class="w">            </span><span class="n">OpBuilder</span><span class="w"> </span><span class="n">wb</span><span class="p">(</span><span class="n">before</span><span class="p">,</span><span class="w"> </span><span class="n">before</span><span class="o">-&gt;</span><span class="n">begin</span><span class="p">());</span>
+<span class="w">            </span><span class="n">Value</span><span class="w"> </span><span class="n">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">readReg</span><span class="p">(</span><span class="n">wb</span><span class="p">,</span><span class="w"> </span><span class="n">loc</span><span class="p">,</span><span class="w"> </span><span class="n">regname</span><span class="o">::</span><span class="n">Status</span><span class="p">);</span>
+<span class="w">            </span><span class="n">Value</span><span class="w"> </span><span class="n">masked</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">arith</span><span class="o">::</span><span class="n">AndIOp</span><span class="o">::</span><span class="n">create</span><span class="p">(</span>
+<span class="w">                </span><span class="n">wb</span><span class="p">,</span>
+<span class="w">                </span><span class="n">loc</span><span class="p">,</span>
+<span class="w">                </span><span class="n">status</span><span class="p">,</span>
+<span class="w">                </span><span class="n">i32const</span><span class="p">(</span><span class="n">wb</span><span class="p">,</span><span class="w"> </span><span class="n">loc</span><span class="p">,</span><span class="w"> </span><span class="n">STATUS_DONE_MASK</span><span class="p">));</span>
+<span class="w">            </span><span class="n">Value</span><span class="w"> </span><span class="n">running</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">arith</span><span class="o">::</span><span class="n">CmpIOp</span><span class="o">::</span><span class="n">create</span><span class="p">(</span>
+<span class="w">                </span><span class="n">wb</span><span class="p">,</span>
+<span class="w">                </span><span class="n">loc</span><span class="p">,</span>
+<span class="w">                </span><span class="n">arith</span><span class="o">::</span><span class="n">CmpIPredicate</span><span class="o">::</span><span class="n">eq</span><span class="p">,</span>
+<span class="w">                </span><span class="n">masked</span><span class="p">,</span>
+<span class="w">                </span><span class="n">i32const</span><span class="p">(</span><span class="n">wb</span><span class="p">,</span><span class="w"> </span><span class="n">loc</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">));</span>
+<span class="w">            </span><span class="n">scf</span><span class="o">::</span><span class="n">ConditionOp</span><span class="o">::</span><span class="n">create</span><span class="p">(</span><span class="n">wb</span><span class="p">,</span><span class="w"> </span><span class="n">loc</span><span class="p">,</span><span class="w"> </span><span class="n">running</span><span class="p">,</span><span class="w"> </span><span class="n">ValueRange</span><span class="p">{});</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="n">Block</span><span class="o">*</span><span class="w"> </span><span class="n">after</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">b</span><span class="p">.</span><span class="n">createBlock</span><span class="p">(</span><span class="o">&amp;</span><span class="n">whileOp</span><span class="p">.</span><span class="n">getAfter</span><span class="p">());</span>
+<span class="w">            </span><span class="n">OpBuilder</span><span class="w"> </span><span class="n">ab</span><span class="p">(</span><span class="n">after</span><span class="p">,</span><span class="w"> </span><span class="n">after</span><span class="o">-&gt;</span><span class="n">begin</span><span class="p">());</span>
+<span class="w">            </span><span class="n">scf</span><span class="o">::</span><span class="n">YieldOp</span><span class="o">::</span><span class="n">create</span><span class="p">(</span><span class="n">ab</span><span class="p">,</span><span class="w"> </span><span class="n">loc</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="n">b</span><span class="p">.</span><span class="n">setInsertionPointAfter</span><span class="p">(</span><span class="n">whileOp</span><span class="p">);</span>
+
+<span class="w">        </span><span class="c1">// 7. Drop the offloaded loop.</span>
+<span class="w">        </span><span class="n">deployOp</span><span class="p">.</span><span class="n">erase</span><span class="p">();</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">success</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="nf">runOnOperation</span><span class="p">()</span><span class="w"> </span><span class="k">override</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="n">ModuleOp</span><span class="w"> </span><span class="k">module</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">getOperation</span><span class="p">();</span>
+
+<span class="w">        </span><span class="c1">// Parse the mapper's channel assignment once, if one was given.</span>
+<span class="w">        </span><span class="n">SmallVector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="w"> </span><span class="n">inputCh</span><span class="p">,</span><span class="w"> </span><span class="n">outputCh</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">useIoMap</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">!</span><span class="n">ioMap</span><span class="p">.</span><span class="n">empty</span><span class="p">();</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">useIoMap</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">err</span><span class="p">;</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">failed</span><span class="p">(</span><span class="n">parseIoMap</span><span class="p">(</span><span class="n">ioMap</span><span class="p">,</span><span class="w"> </span><span class="n">inputCh</span><span class="p">,</span><span class="w"> </span><span class="n">outputCh</span><span class="p">,</span><span class="w"> </span><span class="n">err</span><span class="p">)))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="k">module</span><span class="p">.</span><span class="n">emitError</span><span class="p">(</span><span class="n">err</span><span class="p">);</span>
+<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="n">signalPassFailure</span><span class="p">();</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="n">llvm</span><span class="o">::</span><span class="n">SmallVector</span><span class="o">&lt;</span><span class="n">cgra</span><span class="o">::</span><span class="n">DeployOp</span><span class="o">&gt;</span><span class="w"> </span><span class="n">deploys</span><span class="p">;</span>
+<span class="w">        </span><span class="k">module</span><span class="p">.</span><span class="n">walk</span><span class="p">([</span><span class="o">&amp;</span><span class="p">](</span><span class="n">cgra</span><span class="o">::</span><span class="n">DeployOp</span><span class="w"> </span><span class="n">op</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">deploys</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">op</span><span class="p">);</span><span class="w"> </span><span class="p">});</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="n">deployOp</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">deploys</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">auto</span><span class="w"> </span><span class="n">funcOp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">deployOp</span><span class="o">-&gt;</span><span class="n">getParentOfType</span><span class="o">&lt;</span><span class="n">func</span><span class="o">::</span><span class="n">FuncOp</span><span class="o">&gt;</span><span class="p">();</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">funcOp</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">deployOp</span><span class="p">.</span><span class="n">emitError</span><span class="p">(</span><span class="s">"cgra.deploy outside a func.func"</span><span class="p">);</span>
+<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="n">signalPassFailure</span><span class="p">();</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">failed</span><span class="p">(</span><span class="n">lowerDeploy</span><span class="p">(</span>
+<span class="w">                    </span><span class="n">deployOp</span><span class="p">,</span>
+<span class="w">                    </span><span class="n">funcOp</span><span class="p">,</span>
+<span class="w">                    </span><span class="k">module</span><span class="p">,</span>
+<span class="w">                    </span><span class="n">inputCh</span><span class="p">,</span>
+<span class="w">                    </span><span class="n">outputCh</span><span class="p">,</span>
+<span class="w">                    </span><span class="n">useIoMap</span><span class="p">)))</span>
+<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="n">signalPassFailure</span><span class="p">();</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">};</span>
+
+<span class="c1">// ─── Stage 2: cgra.strela_write / cgra.strela_read → volatile llvm store/load</span>
+<span class="c1">// ─</span>
+
+<span class="k">struct</span><span class="w"> </span><span class="nc">CGRAStrelaToLLVMPass</span>
+<span class="w">        </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">PassWrapper</span><span class="o">&lt;</span><span class="n">CGRAStrelaToLLVMPass</span><span class="p">,</span><span class="w"> </span><span class="n">OperationPass</span><span class="o">&lt;</span><span class="n">ModuleOp</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">    </span><span class="n">MLIR_DEFINE_EXPLICIT_INTERNAL_INLINE_TYPE_ID</span><span class="p">(</span><span class="n">CGRAStrelaToLLVMPass</span><span class="p">)</span>
+
+<span class="w">    </span><span class="n">CGRAStrelaToLLVMPass</span><span class="p">()</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">default</span><span class="p">;</span>
+<span class="w">    </span><span class="n">CGRAStrelaToLLVMPass</span><span class="p">(</span><span class="kt">uint64_t</span><span class="w"> </span><span class="n">sBase</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">strelaBase</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sBase</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="n">CGRAStrelaToLLVMPass</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">CGRAStrelaToLLVMPass</span><span class="w"> </span><span class="o">&amp;</span><span class="n">o</span><span class="p">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">PassWrapper</span><span class="p">(</span><span class="n">o</span><span class="p">)</span>
+<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="n">strelaBase</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">o</span><span class="p">.</span><span class="n">strelaBase</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+
+<span class="w">    </span><span class="n">StringRef</span><span class="w"> </span><span class="n">getArgument</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">final</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="s">"strela-to-llvm"</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="n">StringRef</span><span class="w"> </span><span class="n">getDescription</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">final</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="s">"Lower cgra.strela_write/read to volatile llvm.store/load at "</span>
+<span class="w">               </span><span class="s">"STRELA "</span>
+<span class="w">               </span><span class="s">"MMIO addresses"</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="n">getDependentDialects</span><span class="p">(</span><span class="n">DialectRegistry</span><span class="w"> </span><span class="o">&amp;</span><span class="n">reg</span><span class="p">)</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">override</span>
+<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="n">reg</span><span class="p">.</span><span class="n">insert</span><span class="o">&lt;</span><span class="n">LLVM</span><span class="o">::</span><span class="n">LLVMDialect</span><span class="p">,</span><span class="w"> </span><span class="n">arith</span><span class="o">::</span><span class="n">ArithDialect</span><span class="o">&gt;</span><span class="p">();</span><span class="w"> </span><span class="p">}</span>
+
+<span class="w">    </span><span class="c1">// Default to a common X-Heep configuration (STRELA on EXT_PERIPHERAL).</span>
+<span class="w">    </span><span class="n">Pass</span><span class="o">::</span><span class="n">Option</span><span class="o">&lt;</span><span class="kt">uint64_t</span><span class="o">&gt;</span><span class="w"> </span><span class="n">strelaBase</span><span class="p">{</span>
+<span class="w">        </span><span class="o">*</span><span class="k">this</span><span class="p">,</span>
+<span class="w">        </span><span class="s">"strela-base"</span><span class="p">,</span>
+<span class="w">        </span><span class="n">llvm</span><span class="o">::</span><span class="n">cl</span><span class="o">::</span><span class="n">desc</span><span class="p">(</span><span class="s">"STRELA MMIO base address"</span><span class="p">),</span>
+<span class="w">        </span><span class="n">llvm</span><span class="o">::</span><span class="n">cl</span><span class="o">::</span><span class="n">init</span><span class="p">(</span><span class="mh">0x60001000ULL</span><span class="p">)};</span>
+
+<span class="w">    </span><span class="kt">uint32_t</span><span class="w"> </span><span class="nf">addrOf</span><span class="p">(</span><span class="n">StringRef</span><span class="w"> </span><span class="n">reg</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">channel</span><span class="p">)</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="n">RegInfo</span><span class="w"> </span><span class="n">info</span><span class="p">;</span>
+<span class="w">        </span><span class="n">resolveReg</span><span class="p">(</span><span class="n">reg</span><span class="p">,</span><span class="w"> </span><span class="n">info</span><span class="p">);</span><span class="w"> </span><span class="c1">// callers only emit known registers</span>
+<span class="w">        </span><span class="kt">uint64_t</span><span class="w"> </span><span class="n">base</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">strelaBase</span><span class="p">;</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="p">(</span><span class="kt">uint32_t</span><span class="p">)(</span><span class="n">base</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">info</span><span class="p">.</span><span class="n">offset</span>
+<span class="w">                          </span><span class="o">+</span><span class="w"> </span><span class="p">(</span><span class="n">channel</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="mi">0u</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="p">(</span><span class="kt">uint32_t</span><span class="p">)</span><span class="n">channel</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">info</span><span class="p">.</span><span class="n">step</span><span class="p">));</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="n">Value</span><span class="w"> </span><span class="nf">mmioPtr</span><span class="p">(</span><span class="n">OpBuilder</span><span class="w"> </span><span class="o">&amp;</span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="n">Location</span><span class="w"> </span><span class="n">loc</span><span class="p">,</span><span class="w"> </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">addr</span><span class="p">)</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="n">Value</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">arith</span><span class="o">::</span><span class="n">ConstantOp</span><span class="o">::</span><span class="n">create</span><span class="p">(</span>
+<span class="w">            </span><span class="n">b</span><span class="p">,</span>
+<span class="w">            </span><span class="n">loc</span><span class="p">,</span>
+<span class="w">            </span><span class="n">b</span><span class="p">.</span><span class="n">getI32Type</span><span class="p">(),</span>
+<span class="w">            </span><span class="n">b</span><span class="p">.</span><span class="n">getIntegerAttr</span><span class="p">(</span><span class="n">b</span><span class="p">.</span><span class="n">getI32Type</span><span class="p">(),</span><span class="w"> </span><span class="p">(</span><span class="kt">int32_t</span><span class="p">)</span><span class="n">addr</span><span class="p">));</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">LLVM</span><span class="o">::</span><span class="n">IntToPtrOp</span><span class="o">::</span><span class="n">create</span><span class="p">(</span>
+<span class="w">            </span><span class="n">b</span><span class="p">,</span>
+<span class="w">            </span><span class="n">loc</span><span class="p">,</span>
+<span class="w">            </span><span class="n">LLVM</span><span class="o">::</span><span class="n">LLVMPointerType</span><span class="o">::</span><span class="n">get</span><span class="p">(</span><span class="n">b</span><span class="p">.</span><span class="n">getContext</span><span class="p">()),</span>
+<span class="w">            </span><span class="n">a</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="nf">runOnOperation</span><span class="p">()</span><span class="w"> </span><span class="k">override</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="n">ModuleOp</span><span class="w"> </span><span class="k">module</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">getOperation</span><span class="p">();</span>
+
+<span class="w">        </span><span class="n">llvm</span><span class="o">::</span><span class="n">SmallVector</span><span class="o">&lt;</span><span class="n">cgra</span><span class="o">::</span><span class="n">StrelaWriteOp</span><span class="o">&gt;</span><span class="w"> </span><span class="n">writes</span><span class="p">;</span>
+<span class="w">        </span><span class="n">llvm</span><span class="o">::</span><span class="n">SmallVector</span><span class="o">&lt;</span><span class="n">cgra</span><span class="o">::</span><span class="n">StrelaReadOp</span><span class="o">&gt;</span><span class="w"> </span><span class="n">reads</span><span class="p">;</span>
+<span class="w">        </span><span class="k">module</span><span class="p">.</span><span class="n">walk</span><span class="p">([</span><span class="o">&amp;</span><span class="p">](</span><span class="n">Operation</span><span class="o">*</span><span class="w"> </span><span class="n">op</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="n">w</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dyn_cast</span><span class="o">&lt;</span><span class="n">cgra</span><span class="o">::</span><span class="n">StrelaWriteOp</span><span class="o">&gt;</span><span class="p">(</span><span class="n">op</span><span class="p">))</span>
+<span class="w">                </span><span class="n">writes</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">w</span><span class="p">);</span>
+<span class="w">            </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="n">r</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dyn_cast</span><span class="o">&lt;</span><span class="n">cgra</span><span class="o">::</span><span class="n">StrelaReadOp</span><span class="o">&gt;</span><span class="p">(</span><span class="n">op</span><span class="p">))</span>
+<span class="w">                </span><span class="n">reads</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">r</span><span class="p">);</span>
+<span class="w">        </span><span class="p">});</span>
+
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="n">w</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">writes</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">OpBuilder</span><span class="w"> </span><span class="n">b</span><span class="p">(</span><span class="n">w</span><span class="p">);</span>
+<span class="w">            </span><span class="kt">int</span><span class="w"> </span><span class="n">ch</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">w</span><span class="p">.</span><span class="n">getChannel</span><span class="p">()</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="o">*</span><span class="n">w</span><span class="p">.</span><span class="n">getChannel</span><span class="p">()</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="mi">-1</span><span class="p">;</span>
+<span class="w">            </span><span class="n">Value</span><span class="w"> </span><span class="n">ptr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mmioPtr</span><span class="p">(</span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="n">w</span><span class="p">.</span><span class="n">getLoc</span><span class="p">(),</span><span class="w"> </span><span class="n">addrOf</span><span class="p">(</span><span class="n">w</span><span class="p">.</span><span class="n">getReg</span><span class="p">(),</span><span class="w"> </span><span class="n">ch</span><span class="p">));</span>
+<span class="w">            </span><span class="n">LLVM</span><span class="o">::</span><span class="n">StoreOp</span><span class="o">::</span><span class="n">create</span><span class="p">(</span>
+<span class="w">                </span><span class="n">b</span><span class="p">,</span>
+<span class="w">                </span><span class="n">w</span><span class="p">.</span><span class="n">getLoc</span><span class="p">(),</span>
+<span class="w">                </span><span class="n">w</span><span class="p">.</span><span class="n">getValue</span><span class="p">(),</span>
+<span class="w">                </span><span class="n">ptr</span><span class="p">,</span>
+<span class="w">                </span><span class="cm">/*alignment=*/</span><span class="mi">4</span><span class="p">,</span>
+<span class="w">                </span><span class="cm">/*volatile=*/</span><span class="nb">true</span><span class="p">);</span>
+<span class="w">            </span><span class="n">w</span><span class="p">.</span><span class="n">erase</span><span class="p">();</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="n">r</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">reads</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">OpBuilder</span><span class="w"> </span><span class="n">b</span><span class="p">(</span><span class="n">r</span><span class="p">);</span>
+<span class="w">            </span><span class="kt">int</span><span class="w"> </span><span class="n">ch</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">r</span><span class="p">.</span><span class="n">getChannel</span><span class="p">()</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="o">*</span><span class="n">r</span><span class="p">.</span><span class="n">getChannel</span><span class="p">()</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="mi">-1</span><span class="p">;</span>
+<span class="w">            </span><span class="n">Value</span><span class="w"> </span><span class="n">ptr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mmioPtr</span><span class="p">(</span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="n">r</span><span class="p">.</span><span class="n">getLoc</span><span class="p">(),</span><span class="w"> </span><span class="n">addrOf</span><span class="p">(</span><span class="n">r</span><span class="p">.</span><span class="n">getReg</span><span class="p">(),</span><span class="w"> </span><span class="n">ch</span><span class="p">));</span>
+<span class="w">            </span><span class="n">Value</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">LLVM</span><span class="o">::</span><span class="n">LoadOp</span><span class="o">::</span><span class="n">create</span><span class="p">(</span>
+<span class="w">                </span><span class="n">b</span><span class="p">,</span>
+<span class="w">                </span><span class="n">r</span><span class="p">.</span><span class="n">getLoc</span><span class="p">(),</span>
+<span class="w">                </span><span class="n">b</span><span class="p">.</span><span class="n">getI32Type</span><span class="p">(),</span>
+<span class="w">                </span><span class="n">ptr</span><span class="p">,</span>
+<span class="w">                </span><span class="cm">/*alignment=*/</span><span class="mi">4</span><span class="p">,</span>
+<span class="w">                </span><span class="cm">/*volatile=*/</span><span class="nb">true</span><span class="p">);</span>
+<span class="w">            </span><span class="n">r</span><span class="p">.</span><span class="n">getResult</span><span class="p">().</span><span class="n">replaceAllUsesWith</span><span class="p">(</span><span class="n">v</span><span class="p">);</span>
+<span class="w">            </span><span class="n">r</span><span class="p">.</span><span class="n">erase</span><span class="p">();</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">};</span>
+
+<span class="p">}</span><span class="w"> </span><span class="c1">// namespace</span>
+
+<span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">mlir</span><span class="o">::</span><span class="n">Pass</span><span class="o">&gt;</span><span class="w"> </span><span class="n">mlir</span><span class="o">::</span><span class="n">cgra</span><span class="o">::</span><span class="n">createCGRADeployToStrelaPass</span><span class="p">()</span>
+<span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">make_unique</span><span class="o">&lt;</span><span class="n">CGRADeployToStrelaPass</span><span class="o">&gt;</span><span class="p">();</span><span class="w"> </span><span class="p">}</span>
+
+<span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">mlir</span><span class="o">::</span><span class="n">Pass</span><span class="o">&gt;</span>
+<span class="n">mlir</span><span class="o">::</span><span class="n">cgra</span><span class="o">::</span><span class="n">createCGRAStrelaToLLVMPass</span><span class="p">(</span><span class="kt">uint64_t</span><span class="w"> </span><span class="n">strelaBase</span><span class="p">)</span>
+<span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">make_unique</span><span class="o">&lt;</span><span class="n">CGRAStrelaToLLVMPass</span><span class="o">&gt;</span><span class="p">(</span><span class="n">strelaBase</span><span class="p">);</span><span class="w"> </span><span class="p">}</span>
+</pre></div>
+</div>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

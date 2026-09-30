@@ -1,0 +1,467 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Program Listing for File EmitCToLaksaRef.cpp &mdash; picea 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/collapsible-lists/css/tree_view.css?v=a885cde7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js?v=73120307"></script>
+      <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js?v=660e4f45"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            picea
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Installation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../README.html">About the project</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#guides">Guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#related-projects">Related projects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#development-environment-nix">Development Environment (Nix)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#build-on-ubuntu-24-04-no-nix">Build on Ubuntu 24.04 (no Nix)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#gurobi-license">Gurobi license</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#installing">Installing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#run-the-tests">Run the tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#build-the-documentation">Build the documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#compiling-a-design">Compiling a design</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#running-a-design-on-the-board">Running a design on the board</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#exporting-a-profiled-application-to-mocasin">Exporting a profiled application to Mocasin</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Guides</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../guides/laksa.html">The FPGA Variant using LAKSA backend</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/cgra.html">The CGRA Variant</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">MLIR Dialects</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/Base2Ops.html">‘base2’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/CGRAOps.html">‘cgra’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/DFGOps.html">‘dfg’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/EmitHLSOps.html">‘emithls’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/FilterOps.html">‘filter’ Dialect</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Passes</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/PICEAConversionPasses.html">PICEA Conversion Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/CGRAPasses.html">CGRA Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/DFGPasses.html">DFG Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/EmitHLSPasses.html">Emit HLS Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/FuncExtPasses.html">Func Ext Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/LinalgExtPasses.html">Linalg Ext Passes</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">C++ API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="library_root.html">C++ API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">picea</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Program Listing for File EmitCToLaksaRef.cpp</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/program_listing_file_lib_Target_EmitCToLaksaRef_EmitCToLaksaRef.cpp.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="program-listing-for-file-emitctolaksaref-cpp">
+<span id="program-listing-file-lib-target-emitctolaksaref-emitctolaksaref-cpp"></span><h1>Program Listing for File EmitCToLaksaRef.cpp<a class="headerlink" href="#program-listing-for-file-emitctolaksaref-cpp" title="Link to this heading"></a></h1>
+<p>↰ <a class="reference internal" href="file_lib_Target_EmitCToLaksaRef_EmitCToLaksaRef.cpp.html#file-lib-target-emitctolaksaref-emitctolaksaref-cpp"><span class="std std-ref">Return to documentation for file</span></a> (<code class="docutils literal notranslate"><span class="pre">lib/Target/EmitCToLaksaRef/EmitCToLaksaRef.cpp</span></code>)</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="c1">// Implementation of translation EmitCToLaksaRef</span>
+<span class="c1">//</span>
+<span class="c1">// @file</span>
+<span class="c1">// @author     Jiahong Bi (jiahong.bi@tu-dresden.de)</span>
+
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"mlir/Dialect/EmitC/IR/EmitC.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"picea-mlir/Target/EmitCToLaksaRef/LaksaRefEmitter.h"</span>
+
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"llvm/ADT/STLExtras.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"llvm/Support/CommandLine.h"</span>
+
+<span class="k">using</span><span class="w"> </span><span class="k">namespace</span><span class="w"> </span><span class="nn">mlir</span><span class="p">;</span>
+<span class="k">using</span><span class="w"> </span><span class="k">namespace</span><span class="w"> </span><span class="nn">mlir</span><span class="o">::</span><span class="nn">picea</span><span class="p">;</span>
+
+<span class="k">namespace</span><span class="w"> </span><span class="p">{</span>
+
+<span class="n">llvm</span><span class="o">::</span><span class="n">cl</span><span class="o">::</span><span class="n">opt</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span><span class="w"> </span><span class="n">clLaksaRefHeader</span><span class="p">(</span>
+<span class="w">    </span><span class="s">"laksa-ref-header"</span><span class="p">,</span>
+<span class="w">    </span><span class="n">llvm</span><span class="o">::</span><span class="n">cl</span><span class="o">::</span><span class="n">desc</span><span class="p">(</span>
+<span class="w">        </span><span class="s">"Header the generated program takes the reference kernel from, as "</span>
+<span class="w">        </span><span class="s">"produced by the mlir-to-cpp translation"</span><span class="p">),</span>
+<span class="w">    </span><span class="n">llvm</span><span class="o">::</span><span class="n">cl</span><span class="o">::</span><span class="n">init</span><span class="p">(</span><span class="s">"ref.h"</span><span class="p">));</span>
+
+<span class="n">llvm</span><span class="o">::</span><span class="n">cl</span><span class="o">::</span><span class="n">opt</span><span class="o">&lt;</span><span class="kt">unsigned</span><span class="o">&gt;</span><span class="w"> </span><span class="n">clLaksaRefMaxReported</span><span class="p">(</span>
+<span class="w">    </span><span class="s">"laksa-ref-max-reported"</span><span class="p">,</span>
+<span class="w">    </span><span class="n">llvm</span><span class="o">::</span><span class="n">cl</span><span class="o">::</span><span class="n">desc</span><span class="p">(</span>
+<span class="w">        </span><span class="s">"How many differing elements the generated program spells out before "</span>
+<span class="w">        </span><span class="s">"going quiet"</span><span class="p">),</span>
+<span class="w">    </span><span class="n">llvm</span><span class="o">::</span><span class="n">cl</span><span class="o">::</span><span class="n">init</span><span class="p">(</span><span class="mi">16</span><span class="p">));</span>
+
+<span class="c1">// One argument of the reference kernel.</span>
+<span class="k">struct</span><span class="w"> </span><span class="nc">RefArg</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">emitc</span><span class="o">::</span><span class="n">ArrayType</span><span class="w"> </span><span class="n">type</span><span class="p">;</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">elementType</span><span class="p">;</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">format</span><span class="p">;</span><span class="w"> </span><span class="c1">// printf conversion for one element</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">cast</span><span class="p">;</span><span class="w">   </span><span class="c1">// what to cast an element to before printing it</span>
+<span class="w">    </span><span class="kt">bool</span><span class="w"> </span><span class="n">isRead</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">bool</span><span class="w"> </span><span class="n">isWritten</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">name</span><span class="p">;</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">boardName</span><span class="p">;</span><span class="w"> </span><span class="c1">// holds output&lt;n&gt;.bin, only when written</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">file</span><span class="p">;</span><span class="w">      </span><span class="c1">// input&lt;n&gt;.bin, or output&lt;n&gt;.bin when write-only</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">fileMacro</span><span class="p">;</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">boardFile</span><span class="p">;</span><span class="w"> </span><span class="c1">// output&lt;n&gt;.bin when both read and written</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">boardFileMacro</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="c1">// The C spelling the mlir-to-cpp translation gives an element type.</span>
+<span class="n">FailureOr</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span><span class="w"> </span><span class="n">getCElementType</span><span class="p">(</span><span class="n">Type</span><span class="w"> </span><span class="n">type</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="n">intTy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dyn_cast</span><span class="o">&lt;</span><span class="n">IntegerType</span><span class="o">&gt;</span><span class="p">(</span><span class="n">type</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kt">unsigned</span><span class="w"> </span><span class="n">width</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">intTy</span><span class="p">.</span><span class="n">getWidth</span><span class="p">();</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">width</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">"bool"</span><span class="p">);</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">width</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">8</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">width</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">16</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">width</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">32</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">width</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">64</span><span class="p">)</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="p">(</span><span class="n">intTy</span><span class="p">.</span><span class="n">isUnsigned</span><span class="p">()</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">"uint"</span><span class="p">)</span>
+<span class="w">                                       </span><span class="o">:</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">"int"</span><span class="p">))</span>
+<span class="w">                   </span><span class="o">+</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">to_string</span><span class="p">(</span><span class="n">width</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">"_t"</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">isa</span><span class="o">&lt;</span><span class="n">Float32Type</span><span class="o">&gt;</span><span class="p">(</span><span class="n">type</span><span class="p">))</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">"float"</span><span class="p">);</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">isa</span><span class="o">&lt;</span><span class="n">Float64Type</span><span class="o">&gt;</span><span class="p">(</span><span class="n">type</span><span class="p">))</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">"double"</span><span class="p">);</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">failure</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="c1">// The only emitc.func with a body, which is the reference kernel.</span>
+<span class="n">FailureOr</span><span class="o">&lt;</span><span class="n">emitc</span><span class="o">::</span><span class="n">FuncOp</span><span class="o">&gt;</span><span class="w"> </span><span class="n">findRefFunc</span><span class="p">(</span><span class="n">ModuleOp</span><span class="w"> </span><span class="n">moduleOp</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">emitc</span><span class="o">::</span><span class="n">FuncOp</span><span class="w"> </span><span class="n">found</span><span class="p">;</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="n">funcOp</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">moduleOp</span><span class="p">.</span><span class="n">getOps</span><span class="o">&lt;</span><span class="n">emitc</span><span class="o">::</span><span class="n">FuncOp</span><span class="o">&gt;</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">funcOp</span><span class="p">.</span><span class="n">isExternal</span><span class="p">())</span><span class="w"> </span><span class="k">continue</span><span class="p">;</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">found</span><span class="p">)</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="n">moduleOp</span><span class="p">.</span><span class="n">emitError</span><span class="p">(</span>
+<span class="w">                </span><span class="s">"expected exactly one emitc.func to check against"</span><span class="p">);</span>
+<span class="w">        </span><span class="n">found</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">funcOp</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">found</span><span class="p">)</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">moduleOp</span><span class="p">.</span><span class="n">emitError</span><span class="p">(</span><span class="s">"expected an emitc.func to check against"</span><span class="p">);</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">found</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c1">// Whether the kernel loads from arg, stores to it, or both.</span>
+<span class="kt">void</span><span class="w"> </span><span class="n">classifyArg</span><span class="p">(</span><span class="n">BlockArgument</span><span class="w"> </span><span class="n">arg</span><span class="p">,</span><span class="w"> </span><span class="n">RefArg</span><span class="w"> </span><span class="o">&amp;</span><span class="n">refArg</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">Operation</span><span class="o">*</span><span class="w"> </span><span class="n">user</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">arg</span><span class="p">.</span><span class="n">getUsers</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">auto</span><span class="w"> </span><span class="n">subscriptOp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dyn_cast</span><span class="o">&lt;</span><span class="n">emitc</span><span class="o">::</span><span class="n">SubscriptOp</span><span class="o">&gt;</span><span class="p">(</span><span class="n">user</span><span class="p">);</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">subscriptOp</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">subscriptOp</span><span class="o">-&gt;</span><span class="n">getOperand</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">arg</span><span class="p">)</span><span class="w"> </span><span class="k">continue</span><span class="p">;</span>
+<span class="w">        </span><span class="n">Value</span><span class="w"> </span><span class="n">element</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">subscriptOp</span><span class="o">-&gt;</span><span class="n">getResult</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">Operation</span><span class="o">*</span><span class="w"> </span><span class="n">access</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">element</span><span class="p">.</span><span class="n">getUsers</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">isa</span><span class="o">&lt;</span><span class="n">emitc</span><span class="o">::</span><span class="n">LoadOp</span><span class="o">&gt;</span><span class="p">(</span><span class="n">access</span><span class="p">))</span><span class="w"> </span><span class="n">refArg</span><span class="p">.</span><span class="n">isRead</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="n">assignOp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dyn_cast</span><span class="o">&lt;</span><span class="n">emitc</span><span class="o">::</span><span class="n">AssignOp</span><span class="o">&gt;</span><span class="p">(</span><span class="n">access</span><span class="p">))</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">assignOp</span><span class="p">.</span><span class="n">getVar</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">element</span><span class="p">)</span><span class="w"> </span><span class="n">refArg</span><span class="p">.</span><span class="n">isWritten</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kt">void</span><span class="w"> </span><span class="n">emitArrayDecl</span><span class="p">(</span><span class="n">raw_ostream</span><span class="w"> </span><span class="o">&amp;</span><span class="n">os</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">RefArg</span><span class="w"> </span><span class="o">&amp;</span><span class="n">arg</span><span class="p">,</span><span class="w"> </span><span class="n">StringRef</span><span class="w"> </span><span class="n">name</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">os</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"static "</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">arg</span><span class="p">.</span><span class="n">elementType</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">" "</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">name</span><span class="p">;</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int64_t</span><span class="w"> </span><span class="n">extent</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">arg</span><span class="p">.</span><span class="n">type</span><span class="p">.</span><span class="n">getShape</span><span class="p">())</span><span class="w"> </span><span class="n">os</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"["</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">extent</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"]"</span><span class="p">;</span>
+<span class="w">    </span><span class="n">os</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">";</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">void</span><span class="w"> </span><span class="n">emitReadAll</span><span class="p">(</span><span class="n">raw_ostream</span><span class="w"> </span><span class="o">&amp;</span><span class="n">os</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">os</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"static int read_all(const char* path, void* data, size_t size)</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"{</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"    FILE* file = fopen(path, </span><span class="se">\"</span><span class="s">rb</span><span class="se">\"</span><span class="s">);</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"    if (!file) {</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"        fprintf(stderr, </span><span class="se">\"</span><span class="s">cannot open %s for reading</span><span class="se">\\</span><span class="s">n</span><span class="se">\"</span><span class="s">, path);</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"        return -1;</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"    }</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"    size_t got = fread(data, 1, size, file);</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"    int trailing = fgetc(file) != EOF;</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"    fclose(file);</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"    if (got != size) {</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"        fprintf(stderr, </span><span class="se">\"</span><span class="s">%s: expected %zu bytes, got %zu</span><span class="se">\\</span><span class="s">n</span><span class="se">\"</span><span class="s">, "</span>
+<span class="w">          </span><span class="s">"path, size, got);</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"        return -1;</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"    }</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"    if (trailing)</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"        fprintf(stderr, </span><span class="se">\"</span><span class="s">%s: ignoring bytes past %zu</span><span class="se">\\</span><span class="s">n</span><span class="se">\"</span><span class="s">, path, "</span>
+<span class="w">          </span><span class="s">"size);</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"    return 0;</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"}</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">void</span><span class="w"> </span><span class="n">emitCompare</span><span class="p">(</span><span class="n">raw_ostream</span><span class="w"> </span><span class="o">&amp;</span><span class="n">os</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">RefArg</span><span class="w"> </span><span class="o">&amp;</span><span class="n">arg</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">ArrayRef</span><span class="o">&lt;</span><span class="kt">int64_t</span><span class="o">&gt;</span><span class="w"> </span><span class="n">shape</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">arg</span><span class="p">.</span><span class="n">type</span><span class="p">.</span><span class="n">getShape</span><span class="p">();</span>
+<span class="w">    </span><span class="kt">int64_t</span><span class="w"> </span><span class="n">numElements</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int64_t</span><span class="w"> </span><span class="n">extent</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">shape</span><span class="p">)</span><span class="w"> </span><span class="n">numElements</span><span class="w"> </span><span class="o">*=</span><span class="w"> </span><span class="n">extent</span><span class="p">;</span>
+
+<span class="w">    </span><span class="n">os</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"static long compare_"</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">arg</span><span class="p">.</span><span class="n">name</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"(void)</span><span class="se">\n</span><span class="s">{</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">       </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"    long mismatches = 0;</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">indent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"    "</span><span class="p">;</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="p">[</span><span class="n">dim</span><span class="p">,</span><span class="w"> </span><span class="n">extent</span><span class="p">]</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">llvm</span><span class="o">::</span><span class="n">enumerate</span><span class="p">(</span><span class="n">shape</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">os</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">indent</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"for (size_t i"</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">dim</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">" = 0; i"</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">dim</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">" &lt; "</span>
+<span class="w">           </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">extent</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"; ++i"</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">dim</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">") {</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+<span class="w">        </span><span class="n">indent</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="s">"    "</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">subscript</span><span class="p">;</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">size_t</span><span class="w"> </span><span class="n">dim</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">dim</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">shape</span><span class="p">.</span><span class="n">size</span><span class="p">();</span><span class="w"> </span><span class="o">++</span><span class="n">dim</span><span class="p">)</span>
+<span class="w">        </span><span class="n">subscript</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="s">"[i"</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">to_string</span><span class="p">(</span><span class="n">dim</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">"]"</span><span class="p">;</span>
+
+<span class="w">    </span><span class="n">os</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">indent</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">arg</span><span class="p">.</span><span class="n">cast</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">" want = "</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">arg</span><span class="p">.</span><span class="n">name</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">subscript</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">";</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">       </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">indent</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">arg</span><span class="p">.</span><span class="n">cast</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">" have = "</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">arg</span><span class="p">.</span><span class="n">boardName</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">subscript</span>
+<span class="w">       </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">";</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">       </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">indent</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"if (want == have) continue;</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">       </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">indent</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"if (mismatches &lt; MAX_REPORTED)</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">       </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">indent</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"    printf(</span><span class="se">\"</span><span class="s">"</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">arg</span><span class="p">.</span><span class="n">name</span><span class="p">;</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">size_t</span><span class="w"> </span><span class="n">dim</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">dim</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">shape</span><span class="p">.</span><span class="n">size</span><span class="p">();</span><span class="w"> </span><span class="o">++</span><span class="n">dim</span><span class="p">)</span><span class="w"> </span><span class="n">os</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"[%zu]"</span><span class="p">;</span>
+<span class="w">    </span><span class="n">os</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">": expected "</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">arg</span><span class="p">.</span><span class="n">format</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">", got "</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">arg</span><span class="p">.</span><span class="n">format</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"</span><span class="se">\\</span><span class="s">n</span><span class="se">\"</span><span class="s">"</span><span class="p">;</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">size_t</span><span class="w"> </span><span class="n">dim</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">dim</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">shape</span><span class="p">.</span><span class="n">size</span><span class="p">();</span><span class="w"> </span><span class="o">++</span><span class="n">dim</span><span class="p">)</span><span class="w"> </span><span class="n">os</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">", i"</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">dim</span><span class="p">;</span>
+<span class="w">    </span><span class="n">os</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">", want, have);</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">       </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">indent</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"else if (mismatches == MAX_REPORTED)</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">       </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">indent</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"    printf(</span><span class="se">\"</span><span class="s">...</span><span class="se">\\</span><span class="s">n</span><span class="se">\"</span><span class="s">);</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">       </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">indent</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"++mismatches;</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">size_t</span><span class="w"> </span><span class="n">dim</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">shape</span><span class="p">.</span><span class="n">size</span><span class="p">();</span><span class="w"> </span><span class="n">dim</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="o">--</span><span class="n">dim</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">indent</span><span class="p">.</span><span class="n">resize</span><span class="p">(</span><span class="n">indent</span><span class="p">.</span><span class="n">size</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">4</span><span class="p">);</span>
+<span class="w">        </span><span class="n">os</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">indent</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"}</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="n">os</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">       </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"    if (mismatches)</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">       </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"        printf("</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">arg</span><span class="p">.</span><span class="n">boardFileMacro</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">" </span><span class="se">\"</span><span class="s">: %ld of "</span>
+<span class="w">       </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">numElements</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">" elements differ from the reference</span><span class="se">\\</span><span class="s">n</span><span class="se">\"</span><span class="s">, "</span>
+<span class="w">       </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"mismatches);</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">       </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"    else</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">       </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"        printf("</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">arg</span><span class="p">.</span><span class="n">boardFileMacro</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">" </span><span class="se">\"</span><span class="s">: all "</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">numElements</span>
+<span class="w">       </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">" elements match the reference</span><span class="se">\\</span><span class="s">n</span><span class="se">\"</span><span class="s">);</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">       </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"    return mismatches;</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"}</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="p">}</span><span class="w"> </span><span class="c1">// namespace</span>
+
+<span class="c1">//===----------------------------------------------------------------------===//</span>
+<span class="c1">// Translation entry point</span>
+<span class="c1">//===----------------------------------------------------------------------===//</span>
+
+<span class="n">LogicalResult</span><span class="w"> </span><span class="n">picea</span><span class="o">::</span><span class="n">translateEmitCToLaksaRef</span><span class="p">(</span><span class="n">ModuleOp</span><span class="w"> </span><span class="n">op</span><span class="p">,</span><span class="w"> </span><span class="n">raw_ostream</span><span class="w"> </span><span class="o">&amp;</span><span class="n">os</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">FailureOr</span><span class="o">&lt;</span><span class="n">emitc</span><span class="o">::</span><span class="n">FuncOp</span><span class="o">&gt;</span><span class="w"> </span><span class="n">refFunc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">findRefFunc</span><span class="p">(</span><span class="n">op</span><span class="p">);</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">failed</span><span class="p">(</span><span class="n">refFunc</span><span class="p">))</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">failure</span><span class="p">();</span>
+
+<span class="w">    </span><span class="n">Block</span><span class="w"> </span><span class="o">&amp;</span><span class="n">body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">refFunc</span><span class="o">-&gt;</span><span class="n">getFunctionBody</span><span class="p">().</span><span class="n">front</span><span class="p">();</span>
+<span class="w">    </span><span class="n">SmallVector</span><span class="o">&lt;</span><span class="n">RefArg</span><span class="p">,</span><span class="w"> </span><span class="mi">4</span><span class="o">&gt;</span><span class="w"> </span><span class="n">args</span><span class="p">(</span><span class="n">body</span><span class="p">.</span><span class="n">getNumArguments</span><span class="p">());</span>
+<span class="w">    </span><span class="kt">unsigned</span><span class="w"> </span><span class="n">numInputs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">unsigned</span><span class="w"> </span><span class="n">numOutputs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="p">[</span><span class="n">idx</span><span class="p">,</span><span class="w"> </span><span class="n">blockArg</span><span class="p">]</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">llvm</span><span class="o">::</span><span class="n">enumerate</span><span class="p">(</span><span class="n">body</span><span class="p">.</span><span class="n">getArguments</span><span class="p">()))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">RefArg</span><span class="w"> </span><span class="o">&amp;</span><span class="n">arg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">args</span><span class="p">[</span><span class="n">idx</span><span class="p">];</span>
+<span class="w">        </span><span class="n">arg</span><span class="p">.</span><span class="n">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dyn_cast</span><span class="o">&lt;</span><span class="n">emitc</span><span class="o">::</span><span class="n">ArrayType</span><span class="o">&gt;</span><span class="p">(</span><span class="n">blockArg</span><span class="p">.</span><span class="n">getType</span><span class="p">());</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">arg</span><span class="p">.</span><span class="n">type</span><span class="p">)</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="n">refFunc</span><span class="o">-&gt;</span><span class="n">emitError</span><span class="p">(</span><span class="s">"argument "</span><span class="p">)</span>
+<span class="w">                   </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">idx</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">" is not an emitc.array"</span><span class="p">;</span>
+
+<span class="w">        </span><span class="n">FailureOr</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span><span class="w"> </span><span class="n">elementType</span><span class="w"> </span><span class="o">=</span>
+<span class="w">            </span><span class="n">getCElementType</span><span class="p">(</span><span class="n">arg</span><span class="p">.</span><span class="n">type</span><span class="p">.</span><span class="n">getElementType</span><span class="p">());</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">failed</span><span class="p">(</span><span class="n">elementType</span><span class="p">))</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="n">refFunc</span><span class="o">-&gt;</span><span class="n">emitError</span><span class="p">(</span><span class="s">"argument "</span><span class="p">)</span>
+<span class="w">                   </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">idx</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">" has an element type without a C spelling"</span><span class="p">;</span>
+<span class="w">        </span><span class="n">arg</span><span class="p">.</span><span class="n">elementType</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">*</span><span class="n">elementType</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">isFloat</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">isa</span><span class="o">&lt;</span><span class="n">FloatType</span><span class="o">&gt;</span><span class="p">(</span><span class="n">arg</span><span class="p">.</span><span class="n">type</span><span class="p">.</span><span class="n">getElementType</span><span class="p">());</span>
+<span class="w">        </span><span class="n">arg</span><span class="p">.</span><span class="n">format</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">isFloat</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="s">"%g"</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="s">"%ld"</span><span class="p">;</span>
+<span class="w">        </span><span class="n">arg</span><span class="p">.</span><span class="n">cast</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">isFloat</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="s">"double"</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="s">"long"</span><span class="p">;</span>
+
+<span class="w">        </span><span class="n">classifyArg</span><span class="p">(</span><span class="n">blockArg</span><span class="p">,</span><span class="w"> </span><span class="n">arg</span><span class="p">);</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">arg</span><span class="p">.</span><span class="n">isRead</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="o">!</span><span class="n">arg</span><span class="p">.</span><span class="n">isWritten</span><span class="p">)</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="n">refFunc</span><span class="o">-&gt;</span><span class="n">emitError</span><span class="p">(</span><span class="s">"argument "</span><span class="p">)</span>
+<span class="w">                   </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">idx</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">" is neither read nor written by the reference"</span><span class="p">;</span>
+
+<span class="w">        </span><span class="n">arg</span><span class="p">.</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"arg"</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">to_string</span><span class="p">(</span><span class="n">idx</span><span class="p">);</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">argMacro</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"ARG"</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">to_string</span><span class="p">(</span><span class="n">idx</span><span class="p">);</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">arg</span><span class="p">.</span><span class="n">isRead</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">arg</span><span class="p">.</span><span class="n">file</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"input"</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">to_string</span><span class="p">(</span><span class="n">numInputs</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">".bin"</span><span class="p">;</span>
+<span class="w">            </span><span class="n">arg</span><span class="p">.</span><span class="n">fileMacro</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">argMacro</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">"_IN_FILE"</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">arg</span><span class="p">.</span><span class="n">isWritten</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">arg</span><span class="p">.</span><span class="n">boardName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">arg</span><span class="p">.</span><span class="n">name</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">"_board"</span><span class="p">;</span>
+<span class="w">            </span><span class="n">arg</span><span class="p">.</span><span class="n">boardFile</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"output"</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">to_string</span><span class="p">(</span><span class="n">numOutputs</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">".bin"</span><span class="p">;</span>
+<span class="w">            </span><span class="n">arg</span><span class="p">.</span><span class="n">boardFileMacro</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">argMacro</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">"_OUT_FILE"</span><span class="p">;</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">arg</span><span class="p">.</span><span class="n">isRead</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">arg</span><span class="p">.</span><span class="n">file</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">arg</span><span class="p">.</span><span class="n">boardFile</span><span class="p">;</span>
+<span class="w">                </span><span class="n">arg</span><span class="p">.</span><span class="n">fileMacro</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">arg</span><span class="p">.</span><span class="n">boardFileMacro</span><span class="p">;</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="n">StringRef</span><span class="w"> </span><span class="n">kernelName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">refFunc</span><span class="o">-&gt;</span><span class="n">getSymName</span><span class="p">();</span>
+<span class="w">    </span><span class="kt">bool</span><span class="w"> </span><span class="n">renameKernel</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">kernelName</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s">"main"</span><span class="p">;</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">kernelCall</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">renameKernel</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="s">"ref"</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">kernelName</span><span class="p">.</span><span class="n">str</span><span class="p">();</span>
+
+<span class="w">    </span><span class="n">os</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"// Generated by resin -t emitc-to-laksa-ref.</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"// Checks what the design wrote on the board against the scalar "</span>
+<span class="w">          </span><span class="s">"reference in</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"// </span><span class="se">\"</span><span class="s">"</span>
+<span class="w">       </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">clLaksaRefHeader</span>
+<span class="w">       </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"</span><span class="se">\"</span><span class="s">, generated by</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"//   resin &lt;input&gt;.mlir -t mlir-to-cpp -o "</span>
+<span class="w">       </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">clLaksaRefHeader</span>
+<span class="w">       </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"//</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"// Build, with </span><span class="se">\"</span><span class="s">"</span>
+<span class="w">       </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">clLaksaRefHeader</span>
+<span class="w">       </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"</span><span class="se">\"</span><span class="s"> next to this file:</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"//   gcc -O2 -I. -o ref ref.c</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"//</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"// Run it where app.c left its .bin files:</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"//   ./ref</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"#include &lt;stdbool.h&gt;</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"#include &lt;stddef.h&gt;</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"#include &lt;stdint.h&gt;</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"#include &lt;stdio.h&gt;</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"#include &lt;stdlib.h&gt;</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"#include &lt;string.h&gt;</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">renameKernel</span><span class="p">)</span>
+<span class="w">        </span><span class="n">os</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"// </span><span class="se">\"</span><span class="s">"</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">clLaksaRefHeader</span>
+<span class="w">           </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"</span><span class="se">\"</span><span class="s"> names the kernel 'main', the name it carries in the input</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">              </span><span class="s">"// program, so rename it on the way in.</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">              </span><span class="s">"#define main "</span>
+<span class="w">           </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">kernelCall</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+<span class="w">    </span><span class="n">os</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"#include </span><span class="se">\"</span><span class="s">"</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">clLaksaRefHeader</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"</span><span class="se">\"\n</span><span class="s">"</span><span class="p">;</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">renameKernel</span><span class="p">)</span><span class="w"> </span><span class="n">os</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"#undef main</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+<span class="w">    </span><span class="n">os</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">RefArg</span><span class="w"> </span><span class="o">&amp;</span><span class="n">arg</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">args</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">arg</span><span class="p">.</span><span class="n">fileMacro</span><span class="p">.</span><span class="n">empty</span><span class="p">())</span>
+<span class="w">            </span><span class="n">os</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"#define "</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">arg</span><span class="p">.</span><span class="n">fileMacro</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">" </span><span class="se">\"</span><span class="s">"</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">arg</span><span class="p">.</span><span class="n">file</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"</span><span class="se">\"\n</span><span class="s">"</span><span class="p">;</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">arg</span><span class="p">.</span><span class="n">isRead</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">arg</span><span class="p">.</span><span class="n">isWritten</span><span class="p">)</span>
+<span class="w">            </span><span class="n">os</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"#define "</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">arg</span><span class="p">.</span><span class="n">boardFileMacro</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">" </span><span class="se">\"</span><span class="s">"</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">arg</span><span class="p">.</span><span class="n">boardFile</span>
+<span class="w">               </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"</span><span class="se">\"\n</span><span class="s">"</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="n">os</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"// How many differing elements to spell out before going quiet.</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"#define MAX_REPORTED "</span>
+<span class="w">       </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">clLaksaRefMaxReported</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"</span><span class="se">\n\n</span><span class="s">"</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">RefArg</span><span class="w"> </span><span class="o">&amp;</span><span class="n">arg</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">args</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">emitArrayDecl</span><span class="p">(</span><span class="n">os</span><span class="p">,</span><span class="w"> </span><span class="n">arg</span><span class="p">,</span><span class="w"> </span><span class="n">arg</span><span class="p">.</span><span class="n">name</span><span class="p">);</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">arg</span><span class="p">.</span><span class="n">isWritten</span><span class="p">)</span><span class="w"> </span><span class="n">emitArrayDecl</span><span class="p">(</span><span class="n">os</span><span class="p">,</span><span class="w"> </span><span class="n">arg</span><span class="p">,</span><span class="w"> </span><span class="n">arg</span><span class="p">.</span><span class="n">boardName</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="n">os</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+<span class="w">    </span><span class="n">emitReadAll</span><span class="p">(</span><span class="n">os</span><span class="p">);</span>
+
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">RefArg</span><span class="w"> </span><span class="o">&amp;</span><span class="n">arg</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">args</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">arg</span><span class="p">.</span><span class="n">isWritten</span><span class="p">)</span><span class="w"> </span><span class="k">continue</span><span class="p">;</span>
+<span class="w">        </span><span class="n">os</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+<span class="w">        </span><span class="n">emitCompare</span><span class="p">(</span><span class="n">os</span><span class="p">,</span><span class="w"> </span><span class="n">arg</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="n">os</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"</span><span class="se">\n</span><span class="s">int main(void)</span><span class="se">\n</span><span class="s">{</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">RefArg</span><span class="w"> </span><span class="o">&amp;</span><span class="n">arg</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">args</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">arg</span><span class="p">.</span><span class="n">isRead</span><span class="p">)</span>
+<span class="w">            </span><span class="n">os</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"    if (read_all("</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">arg</span><span class="p">.</span><span class="n">fileMacro</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">", "</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">arg</span><span class="p">.</span><span class="n">name</span>
+<span class="w">               </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">", sizeof("</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">arg</span><span class="p">.</span><span class="n">name</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">")) != 0) return EXIT_FAILURE;</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">arg</span><span class="p">.</span><span class="n">isWritten</span><span class="p">)</span>
+<span class="w">            </span><span class="n">os</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"    if (read_all("</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">arg</span><span class="p">.</span><span class="n">boardFileMacro</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">", "</span>
+<span class="w">               </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">arg</span><span class="p">.</span><span class="n">boardName</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">", sizeof("</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">arg</span><span class="p">.</span><span class="n">boardName</span>
+<span class="w">               </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">")) != 0) return EXIT_FAILURE;</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="n">os</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"</span><span class="se">\n</span><span class="s">    "</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">kernelCall</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"("</span><span class="p">;</span>
+<span class="w">    </span><span class="n">llvm</span><span class="o">::</span><span class="n">interleaveComma</span><span class="p">(</span><span class="n">args</span><span class="p">,</span><span class="w"> </span><span class="n">os</span><span class="p">,</span><span class="w"> </span><span class="p">[</span><span class="o">&amp;</span><span class="p">](</span><span class="k">const</span><span class="w"> </span><span class="n">RefArg</span><span class="w"> </span><span class="o">&amp;</span><span class="n">arg</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">os</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">arg</span><span class="p">.</span><span class="n">name</span><span class="p">;</span><span class="w"> </span><span class="p">});</span>
+<span class="w">    </span><span class="n">os</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">");</span><span class="se">\n\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"    long mismatches = 0;</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">RefArg</span><span class="w"> </span><span class="o">&amp;</span><span class="n">arg</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">args</span><span class="p">)</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">arg</span><span class="p">.</span><span class="n">isWritten</span><span class="p">)</span>
+<span class="w">            </span><span class="n">os</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"    mismatches += compare_"</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">arg</span><span class="p">.</span><span class="n">name</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"();</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+
+<span class="w">    </span><span class="n">os</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"    return mismatches ? EXIT_FAILURE : EXIT_SUCCESS;</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">          </span><span class="s">"}</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">success</span><span class="p">();</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

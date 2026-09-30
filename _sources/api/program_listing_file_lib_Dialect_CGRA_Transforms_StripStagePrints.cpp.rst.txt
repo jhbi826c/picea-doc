@@ -1,0 +1,94 @@
+
+.. _program_listing_file_lib_Dialect_CGRA_Transforms_StripStagePrints.cpp:
+
+Program Listing for File StripStagePrints.cpp
+=============================================
+
+|exhale_lsh| :ref:`Return to documentation for file <file_lib_Dialect_CGRA_Transforms_StripStagePrints.cpp>` (``lib/Dialect/CGRA/Transforms/StripStagePrints.cpp``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. code-block:: cpp
+
+   
+   
+   #include "mlir/Dialect/Func/IR/FuncOps.h"
+   #include "mlir/Dialect/LLVMIR/LLVMDialect.h"
+   #include "mlir/IR/BuiltinOps.h"
+   #include "mlir/Pass/Pass.h"
+   #include "picea-mlir/Dialect/CGRA/Transforms/Passes.h"
+   
+   using namespace mlir;
+   
+   namespace {
+   
+   // The driver prints its cycle counters after the whole CGRA region, so a printf
+   // in an interleaved host stage reaches the UART first — and the sim UART is the
+   // bottleneck, so a measurement run never gets to the numbers. This drops the
+   // printf calls inside `*_stage*` functions without touching what they compute.
+   //
+   // `include-post` also drops them in `main_post`, which runs after both cycle
+   // lines and so cannot change a measured number, but stands between the numbers
+   // and the driver's SUCCESS/FAIL verdict. The array is still written and still
+   // compared; only the printing goes, so such a build must not be used for
+   // `-cpucheck`.
+   //
+   // Measurement-only: enabled by MEASURE=1 in src/Makefile.
+   struct CGRAStripStagePrintsPass : public PassWrapper<
+                                         CGRAStripStagePrintsPass,
+                                         OperationPass<ModuleOp>> {
+   
+       MLIR_DEFINE_EXPLICIT_INTERNAL_INLINE_TYPE_ID(CGRAStripStagePrintsPass)
+   
+       // An Option<> member deletes the implicit copy constructor, which
+       // clonePass() needs; the same idiom as the other option-carrying CGRA
+       // passes.
+       CGRAStripStagePrintsPass() = default;
+       CGRAStripStagePrintsPass(const CGRAStripStagePrintsPass &other)
+               : CGRAStripStagePrintsPass()
+       { copyOptionValuesFrom(&other); }
+   
+       StringRef getArgument() const final { return "strip-stage-prints"; }
+       StringRef getDescription() const final
+       {
+           return "Drop printf calls from outlined interleaved host stages "
+                  "(*_stage*) so "
+                  "a measurement run reaches the driver's cycle print";
+       }
+   
+       Option<bool> includePost{
+           *this,
+           "include-post",
+           llvm::cl::desc(
+               "also drop printf calls from the final host segment "
+               "(*_post), so a measurement run reaches the driver's "
+               "SUCCESS/FAIL line as well as its cycle counts"),
+           llvm::cl::init(false)};
+   
+       void runOnOperation() override
+       {
+           ModuleOp module = getOperation();
+           SmallVector<Operation*> dead;
+           for (auto fn : module.getOps<func::FuncOp>()) {
+               if (!fn.getName().contains("_stage")
+                   && !(includePost && fn.getName().ends_with("_post")))
+                   continue;
+               fn.walk([&](LLVM::CallOp call) {
+                   if (auto callee = call.getCallee())
+                       if (callee->contains("printf"))
+                           dead.push_back(call.getOperation());
+               });
+           }
+           for (Operation* op : dead) {
+               // printf returns an i32 nobody meaningfully uses; drop the results
+               // first.
+               for (Value r : op->getResults())
+                   if (!r.use_empty()) return signalPassFailure();
+               op->erase();
+           }
+       }
+   };
+   } // namespace
+   
+   std::unique_ptr<mlir::Pass> mlir::cgra::createCGRAStripStagePrintsPass()
+   { return std::make_unique<CGRAStripStagePrintsPass>(); }

@@ -1,0 +1,550 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Program Listing for File AffineToEmitHLS.cpp &mdash; picea 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/collapsible-lists/css/tree_view.css?v=a885cde7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js?v=73120307"></script>
+      <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js?v=660e4f45"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            picea
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Installation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../README.html">About the project</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#guides">Guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#related-projects">Related projects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#development-environment-nix">Development Environment (Nix)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#build-on-ubuntu-24-04-no-nix">Build on Ubuntu 24.04 (no Nix)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#gurobi-license">Gurobi license</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#installing">Installing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#run-the-tests">Run the tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#build-the-documentation">Build the documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#compiling-a-design">Compiling a design</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#running-a-design-on-the-board">Running a design on the board</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#exporting-a-profiled-application-to-mocasin">Exporting a profiled application to Mocasin</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Guides</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../guides/laksa.html">The FPGA Variant using LAKSA backend</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/cgra.html">The CGRA Variant</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">MLIR Dialects</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/Base2Ops.html">‘base2’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/CGRAOps.html">‘cgra’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/DFGOps.html">‘dfg’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/EmitHLSOps.html">‘emithls’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/FilterOps.html">‘filter’ Dialect</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Passes</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/PICEAConversionPasses.html">PICEA Conversion Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/CGRAPasses.html">CGRA Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/DFGPasses.html">DFG Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/EmitHLSPasses.html">Emit HLS Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/FuncExtPasses.html">Func Ext Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/LinalgExtPasses.html">Linalg Ext Passes</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">C++ API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="library_root.html">C++ API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">picea</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Program Listing for File AffineToEmitHLS.cpp</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/program_listing_file_lib_Conversion_AffineToEmitHLS_AffineToEmitHLS.cpp.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="program-listing-for-file-affinetoemithls-cpp">
+<span id="program-listing-file-lib-conversion-affinetoemithls-affinetoemithls-cpp"></span><h1>Program Listing for File AffineToEmitHLS.cpp<a class="headerlink" href="#program-listing-for-file-affinetoemithls-cpp" title="Link to this heading"></a></h1>
+<p>↰ <a class="reference internal" href="file_lib_Conversion_AffineToEmitHLS_AffineToEmitHLS.cpp.html#file-lib-conversion-affinetoemithls-affinetoemithls-cpp"><span class="std std-ref">Return to documentation for file</span></a> (<code class="docutils literal notranslate"><span class="pre">lib/Conversion/AffineToEmitHLS/AffineToEmitHLS.cpp</span></code>)</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">"picea-mlir/Conversion/AffineToEmitHLS/AffineToEmitHLS.h"</span>
+
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"mlir/Dialect/Affine/IR/AffineOps.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"mlir/Dialect/Affine/Utils.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"mlir/Dialect/MemRef/IR/MemRef.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"mlir/IR/PatternMatch.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"picea-mlir/Dialect/EmitHLS/IR/EmitHLS.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"picea-mlir/Dialect/EmitHLS/IR/EmitHLSOps.h"</span>
+
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;llvm/Support/Debug.h&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;llvm/Support/LogicalResult.h&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;mlir/Dialect/Arith/IR/Arith.h&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;mlir/IR/BuiltinAttributes.h&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;mlir/IR/BuiltinOps.h&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;mlir/IR/IRMapping.h&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;mlir/IR/IntegerSet.h&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;mlir/IR/Location.h&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;mlir/IR/MLIRContext.h&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;mlir/IR/SymbolTable.h&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;mlir/IR/ValueRange.h&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;mlir/Transforms/DialectConversion.h&gt;</span>
+
+<span class="cp">#define DEBUG_TYPE "affine-to-emithls"</span>
+<span class="cp">#define PICEA_DEBUG(X)                                                         \</span>
+<span class="cp">    LLVM_DEBUG(llvm::dbgs() &lt;&lt; "[affine-to-emithls] "; X; llvm::dbgs() &lt;&lt; "\n")</span>
+
+<span class="k">namespace</span><span class="w"> </span><span class="nn">mlir</span><span class="w"> </span><span class="p">{</span>
+<span class="cp">#define GEN_PASS_DEF_CONVERTAFFINETOEMITHLS</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"picea-mlir/Conversion/Passes.h.inc"</span>
+<span class="p">}</span><span class="w"> </span><span class="c1">// namespace mlir</span>
+
+<span class="k">using</span><span class="w"> </span><span class="k">namespace</span><span class="w"> </span><span class="nn">mlir</span><span class="p">;</span>
+<span class="k">using</span><span class="w"> </span><span class="k">namespace</span><span class="w"> </span><span class="nn">mlir</span><span class="o">::</span><span class="nn">emithls</span><span class="p">;</span>
+
+<span class="k">namespace</span><span class="w"> </span><span class="p">{</span>
+
+<span class="c1">// Recursively retypes an EmitHLS helper op's buffer result (and any upstream</span>
+<span class="c1">// helper op feeding it) from memref to the equivalent emithls.array, in place.</span>
+<span class="k">static</span><span class="w"> </span><span class="kt">void</span>
+<span class="nf">retypeHelperChainAsArray</span><span class="p">(</span><span class="n">ConversionPatternRewriter</span><span class="w"> </span><span class="o">&amp;</span><span class="n">rewriter</span><span class="p">,</span><span class="w"> </span><span class="n">Value</span><span class="w"> </span><span class="n">buffer</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">auto</span><span class="w"> </span><span class="n">memrefType</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dyn_cast</span><span class="o">&lt;</span><span class="n">MemRefType</span><span class="o">&gt;</span><span class="p">(</span><span class="n">buffer</span><span class="p">.</span><span class="n">getType</span><span class="p">());</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">memrefType</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">memrefType</span><span class="p">.</span><span class="n">getShape</span><span class="p">().</span><span class="n">empty</span><span class="p">())</span><span class="w"> </span><span class="k">return</span><span class="p">;</span>
+<span class="w">    </span><span class="k">auto</span><span class="w"> </span><span class="n">arrayType</span><span class="w"> </span><span class="o">=</span>
+<span class="w">        </span><span class="n">ArrayType</span><span class="o">::</span><span class="n">get</span><span class="p">(</span><span class="n">memrefType</span><span class="p">.</span><span class="n">getShape</span><span class="p">(),</span><span class="w"> </span><span class="n">memrefType</span><span class="p">.</span><span class="n">getElementType</span><span class="p">());</span>
+
+<span class="w">    </span><span class="n">Operation</span><span class="o">*</span><span class="w"> </span><span class="n">defOp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">buffer</span><span class="p">.</span><span class="n">getDefiningOp</span><span class="p">();</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="n">linebufOp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dyn_cast_or_null</span><span class="o">&lt;</span><span class="n">HelperLineBufferOp</span><span class="o">&gt;</span><span class="p">(</span><span class="n">defOp</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">rewriter</span><span class="p">.</span><span class="n">modifyOpInPlace</span><span class="p">(</span><span class="n">defOp</span><span class="p">,</span><span class="w"> </span><span class="p">[</span><span class="o">&amp;</span><span class="p">]</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">buffer</span><span class="p">.</span><span class="n">setType</span><span class="p">(</span><span class="n">arrayType</span><span class="p">);</span><span class="w"> </span><span class="p">});</span>
+<span class="w">        </span><span class="n">retypeHelperChainAsArray</span><span class="p">(</span><span class="n">rewriter</span><span class="p">,</span><span class="w"> </span><span class="n">linebufOp</span><span class="p">.</span><span class="n">getTokenRef</span><span class="p">());</span>
+<span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="n">windowOp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dyn_cast_or_null</span><span class="o">&lt;</span><span class="n">HelperWindowOp</span><span class="o">&gt;</span><span class="p">(</span><span class="n">defOp</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">rewriter</span><span class="p">.</span><span class="n">modifyOpInPlace</span><span class="p">(</span><span class="n">defOp</span><span class="p">,</span><span class="w"> </span><span class="p">[</span><span class="o">&amp;</span><span class="p">]</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">buffer</span><span class="p">.</span><span class="n">setType</span><span class="p">(</span><span class="n">arrayType</span><span class="p">);</span><span class="w"> </span><span class="p">});</span>
+<span class="w">        </span><span class="n">retypeHelperChainAsArray</span><span class="p">(</span><span class="n">rewriter</span><span class="p">,</span><span class="w"> </span><span class="n">windowOp</span><span class="p">.</span><span class="n">getBufRef</span><span class="p">());</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">// Materializes an affine.load/affine.store's memref operand as an emithls.array</span>
+<span class="c1">// value of type arrayType.</span>
+<span class="k">static</span><span class="w"> </span><span class="n">Value</span><span class="w"> </span><span class="nf">materializeArray</span><span class="p">(</span>
+<span class="w">    </span><span class="n">ConversionPatternRewriter</span><span class="w"> </span><span class="o">&amp;</span><span class="n">rewriter</span><span class="p">,</span>
+<span class="w">    </span><span class="n">Location</span><span class="w"> </span><span class="n">loc</span><span class="p">,</span>
+<span class="w">    </span><span class="n">Value</span><span class="w"> </span><span class="n">memref</span><span class="p">,</span>
+<span class="w">    </span><span class="n">ArrayType</span><span class="w"> </span><span class="n">arrayType</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">isa_and_nonnull</span><span class="o">&lt;</span><span class="n">HelperLineBufferOp</span><span class="p">,</span><span class="w"> </span><span class="n">HelperWindowOp</span><span class="o">&gt;</span><span class="p">(</span>
+<span class="w">            </span><span class="n">memref</span><span class="p">.</span><span class="n">getDefiningOp</span><span class="p">()))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">retypeHelperChainAsArray</span><span class="p">(</span><span class="n">rewriter</span><span class="p">,</span><span class="w"> </span><span class="n">memref</span><span class="p">);</span>
+<span class="w">        </span><span class="n">PICEA_DEBUG</span><span class="p">(</span>
+<span class="w">            </span><span class="n">llvm</span><span class="o">::</span><span class="n">dbgs</span><span class="p">()</span>
+<span class="w">            </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"Retyped helper op chain to "</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">arrayType</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">" in place."</span><span class="p">);</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">memref</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="n">PICEA_DEBUG</span><span class="p">(</span><span class="n">llvm</span><span class="o">::</span><span class="n">dbgs</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"Materialize using unrealized cast."</span><span class="p">);</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">UnrealizedConversionCastOp</span><span class="o">::</span><span class="n">create</span><span class="p">(</span><span class="n">rewriter</span><span class="p">,</span><span class="w"> </span><span class="n">loc</span><span class="p">,</span><span class="w"> </span><span class="n">arrayType</span><span class="p">,</span><span class="w"> </span><span class="n">memref</span><span class="p">)</span>
+<span class="w">        </span><span class="p">.</span><span class="n">getResult</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="c1">// Builds the emithls.variable based on the used memref.global</span>
+<span class="k">static</span><span class="w"> </span><span class="n">Value</span><span class="w"> </span><span class="nf">materializeGlobalVariable</span><span class="p">(</span>
+<span class="w">    </span><span class="n">ConversionPatternRewriter</span><span class="w"> </span><span class="o">&amp;</span><span class="n">rewriter</span><span class="p">,</span>
+<span class="w">    </span><span class="n">memref</span><span class="o">::</span><span class="n">GetGlobalOp</span><span class="w"> </span><span class="n">getGlobalOp</span><span class="p">,</span>
+<span class="w">    </span><span class="n">ArrayType</span><span class="w"> </span><span class="n">arrayType</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">auto</span><span class="w"> </span><span class="n">globalOp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">SymbolTable</span><span class="o">::</span><span class="n">lookupNearestSymbolFrom</span><span class="o">&lt;</span><span class="n">memref</span><span class="o">::</span><span class="n">GlobalOp</span><span class="o">&gt;</span><span class="p">(</span>
+<span class="w">        </span><span class="n">getGlobalOp</span><span class="p">,</span>
+<span class="w">        </span><span class="n">getGlobalOp</span><span class="p">.</span><span class="n">getNameAttr</span><span class="p">());</span>
+
+<span class="w">    </span><span class="n">Attribute</span><span class="w"> </span><span class="n">initNumber</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">bool</span><span class="w"> </span><span class="n">isConst</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">globalOp</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="n">constInit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">globalOp</span><span class="p">.</span><span class="n">getConstantInitValue</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="n">denseInit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dyn_cast</span><span class="o">&lt;</span><span class="n">DenseElementsAttr</span><span class="o">&gt;</span><span class="p">(</span><span class="n">constInit</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">initNumber</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">denseInit</span><span class="p">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">arrayType</span><span class="p">);</span>
+<span class="w">                </span><span class="n">isConst</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="n">PICEA_DEBUG</span><span class="p">(</span>
+<span class="w">        </span><span class="n">llvm</span><span class="o">::</span><span class="n">dbgs</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"Materialize memref.get_global @"</span>
+<span class="w">                     </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">getGlobalOp</span><span class="p">.</span><span class="n">getName</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">" as emithls.variable."</span><span class="p">);</span>
+
+<span class="w">    </span><span class="c1">// Build the variable where get_global was</span>
+<span class="w">    </span><span class="n">OpBuilder</span><span class="o">::</span><span class="n">InsertionGuard</span><span class="w"> </span><span class="n">guard</span><span class="p">(</span><span class="n">rewriter</span><span class="p">);</span>
+<span class="w">    </span><span class="n">rewriter</span><span class="p">.</span><span class="n">setInsertionPoint</span><span class="p">(</span><span class="n">getGlobalOp</span><span class="p">);</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">VariableOp</span><span class="o">::</span><span class="n">create</span><span class="p">(</span>
+<span class="w">        </span><span class="n">rewriter</span><span class="p">,</span>
+<span class="w">        </span><span class="n">getGlobalOp</span><span class="p">.</span><span class="n">getLoc</span><span class="p">(),</span>
+<span class="w">        </span><span class="n">arrayType</span><span class="p">,</span>
+<span class="w">        </span><span class="n">initNumber</span><span class="p">,</span>
+<span class="w">        </span><span class="n">isConst</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="k">struct</span><span class="w"> </span><span class="nc">ForLoopTransformation</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">OpConversionPattern</span><span class="o">&lt;</span><span class="n">affine</span><span class="o">::</span><span class="n">AffineForOp</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">using</span><span class="w"> </span><span class="n">OpConversionPattern</span><span class="o">&lt;</span><span class="n">affine</span><span class="o">::</span><span class="n">AffineForOp</span><span class="o">&gt;::</span><span class="n">OpConversionPattern</span><span class="p">;</span>
+
+<span class="w">    </span><span class="n">ForLoopTransformation</span><span class="p">(</span><span class="n">TypeConverter</span><span class="w"> </span><span class="o">&amp;</span><span class="n">typeConverter</span><span class="p">,</span><span class="w"> </span><span class="n">MLIRContext</span><span class="o">*</span><span class="w"> </span><span class="n">context</span><span class="p">)</span>
+<span class="w">            </span><span class="o">:</span><span class="w"> </span><span class="n">OpConversionPattern</span><span class="o">&lt;</span><span class="n">affine</span><span class="o">::</span><span class="n">AffineForOp</span><span class="o">&gt;</span><span class="p">(</span><span class="n">typeConverter</span><span class="p">,</span><span class="w"> </span><span class="n">context</span><span class="p">)</span>
+<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="n">setHasBoundedRewriteRecursion</span><span class="p">();</span><span class="w"> </span><span class="p">};</span>
+
+<span class="w">    </span><span class="n">LogicalResult</span><span class="w"> </span><span class="nf">matchAndRewrite</span><span class="p">(</span>
+<span class="w">        </span><span class="n">affine</span><span class="o">::</span><span class="n">AffineForOp</span><span class="w"> </span><span class="n">op</span><span class="p">,</span>
+<span class="w">        </span><span class="n">affine</span><span class="o">::</span><span class="n">AffineForOpAdaptor</span><span class="p">,</span>
+<span class="w">        </span><span class="n">ConversionPatternRewriter</span><span class="w"> </span><span class="o">&amp;</span><span class="n">rewriter</span><span class="p">)</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">override</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="k">auto</span><span class="w"> </span><span class="n">loc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">op</span><span class="p">.</span><span class="n">getLoc</span><span class="p">();</span>
+<span class="w">        </span><span class="k">auto</span><span class="w"> </span><span class="n">lb</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">op</span><span class="p">.</span><span class="n">getConstantLowerBound</span><span class="p">();</span>
+<span class="w">        </span><span class="k">auto</span><span class="w"> </span><span class="n">ub</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">op</span><span class="p">.</span><span class="n">getConstantUpperBound</span><span class="p">();</span>
+<span class="w">        </span><span class="k">auto</span><span class="w"> </span><span class="n">step</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">op</span><span class="p">.</span><span class="n">getStepAsInt</span><span class="p">();</span>
+<span class="w">        </span><span class="n">PICEA_DEBUG</span><span class="p">(</span>
+<span class="w">            </span><span class="n">llvm</span><span class="o">::</span><span class="n">dbgs</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"Found for loop from "</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">lb</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">" to "</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">ub</span>
+<span class="w">                         </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">" with step "</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">step</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">" at "</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">loc</span><span class="p">);</span>
+
+<span class="w">        </span><span class="k">auto</span><span class="w"> </span><span class="n">newForOp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ForOp</span><span class="o">::</span><span class="n">create</span><span class="p">(</span>
+<span class="w">            </span><span class="n">rewriter</span><span class="p">,</span>
+<span class="w">            </span><span class="n">loc</span><span class="p">,</span>
+<span class="w">            </span><span class="n">lb</span><span class="p">,</span>
+<span class="w">            </span><span class="n">ub</span><span class="p">,</span>
+<span class="w">            </span><span class="n">step</span><span class="p">,</span>
+<span class="w">            </span><span class="p">[</span><span class="o">&amp;</span><span class="p">](</span><span class="n">OpBuilder</span><span class="w"> </span><span class="o">&amp;</span><span class="n">forBuilder</span><span class="p">,</span><span class="w"> </span><span class="n">Location</span><span class="p">,</span><span class="w"> </span><span class="n">ValueRange</span><span class="w"> </span><span class="n">forArgs</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">IRMapping</span><span class="w"> </span><span class="n">mapper</span><span class="p">;</span>
+<span class="w">                </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="p">[</span><span class="n">oldArg</span><span class="p">,</span><span class="w"> </span><span class="n">newArg</span><span class="p">]</span><span class="w"> </span><span class="o">:</span>
+<span class="w">                     </span><span class="n">llvm</span><span class="o">::</span><span class="n">zip</span><span class="p">(</span><span class="n">op</span><span class="p">.</span><span class="n">getBody</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">getArguments</span><span class="p">(),</span><span class="w"> </span><span class="n">forArgs</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                    </span><span class="n">mapper</span><span class="p">.</span><span class="n">map</span><span class="p">(</span><span class="n">oldArg</span><span class="p">,</span><span class="w"> </span><span class="n">newArg</span><span class="p">);</span>
+<span class="w">                    </span><span class="n">PICEA_DEBUG</span><span class="p">(</span>
+<span class="w">                        </span><span class="n">llvm</span><span class="o">::</span><span class="n">dbgs</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"  Map "</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">oldArg</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">" to "</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">newArg</span><span class="p">);</span>
+<span class="w">                </span><span class="p">}</span>
+
+<span class="w">                </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="o">&amp;</span><span class="n">opi</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">op</span><span class="p">.</span><span class="n">getBody</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">getOperations</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">isa</span><span class="o">&lt;</span><span class="n">affine</span><span class="o">::</span><span class="n">AffineYieldOp</span><span class="o">&gt;</span><span class="p">(</span><span class="n">opi</span><span class="p">))</span><span class="w"> </span><span class="k">break</span><span class="p">;</span>
+<span class="w">                    </span><span class="n">forBuilder</span><span class="p">.</span><span class="n">clone</span><span class="p">(</span><span class="n">opi</span><span class="p">,</span><span class="w"> </span><span class="n">mapper</span><span class="p">);</span>
+<span class="w">                    </span><span class="n">PICEA_DEBUG</span><span class="p">(</span>
+<span class="w">                        </span><span class="n">llvm</span><span class="o">::</span><span class="n">dbgs</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"  Copying "</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">opi</span><span class="p">.</span><span class="n">getName</span><span class="p">()</span>
+<span class="w">                                     </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">" into new for loop"</span><span class="p">);</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">            </span><span class="p">});</span>
+<span class="w">        </span><span class="n">rewriter</span><span class="p">.</span><span class="n">replaceOp</span><span class="p">(</span><span class="n">op</span><span class="p">,</span><span class="w"> </span><span class="n">newForOp</span><span class="p">);</span>
+
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">success</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">};</span>
+<span class="k">struct</span><span class="w"> </span><span class="nc">IfTransformation</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">OpConversionPattern</span><span class="o">&lt;</span><span class="n">affine</span><span class="o">::</span><span class="n">AffineIfOp</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">using</span><span class="w"> </span><span class="n">OpConversionPattern</span><span class="o">&lt;</span><span class="n">affine</span><span class="o">::</span><span class="n">AffineIfOp</span><span class="o">&gt;::</span><span class="n">OpConversionPattern</span><span class="p">;</span>
+
+<span class="w">    </span><span class="n">IfTransformation</span><span class="p">(</span><span class="n">TypeConverter</span><span class="w"> </span><span class="o">&amp;</span><span class="n">typeConverter</span><span class="p">,</span><span class="w"> </span><span class="n">MLIRContext</span><span class="o">*</span><span class="w"> </span><span class="n">context</span><span class="p">)</span>
+<span class="w">            </span><span class="o">:</span><span class="w"> </span><span class="n">OpConversionPattern</span><span class="o">&lt;</span><span class="n">affine</span><span class="o">::</span><span class="n">AffineIfOp</span><span class="o">&gt;</span><span class="p">(</span><span class="n">typeConverter</span><span class="p">,</span><span class="w"> </span><span class="n">context</span><span class="p">)</span>
+<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="n">setHasBoundedRewriteRecursion</span><span class="p">();</span><span class="w"> </span><span class="p">};</span>
+
+<span class="w">    </span><span class="n">LogicalResult</span><span class="w"> </span><span class="nf">matchAndRewrite</span><span class="p">(</span>
+<span class="w">        </span><span class="n">affine</span><span class="o">::</span><span class="n">AffineIfOp</span><span class="w"> </span><span class="n">op</span><span class="p">,</span>
+<span class="w">        </span><span class="n">affine</span><span class="o">::</span><span class="n">AffineIfOpAdaptor</span><span class="p">,</span>
+<span class="w">        </span><span class="n">ConversionPatternRewriter</span><span class="w"> </span><span class="o">&amp;</span><span class="n">rewriter</span><span class="p">)</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">override</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">op</span><span class="p">.</span><span class="n">getNumResults</span><span class="p">()</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="n">rewriter</span><span class="p">.</span><span class="n">notifyMatchFailure</span><span class="p">(</span>
+<span class="w">                </span><span class="n">op</span><span class="p">,</span>
+<span class="w">                </span><span class="s">"affine.if with results is not supported"</span><span class="p">);</span>
+
+<span class="w">        </span><span class="k">auto</span><span class="w"> </span><span class="n">loc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">op</span><span class="p">.</span><span class="n">getLoc</span><span class="p">();</span>
+<span class="w">        </span><span class="n">PICEA_DEBUG</span><span class="p">(</span>
+<span class="w">            </span><span class="n">llvm</span><span class="o">::</span><span class="n">dbgs</span><span class="p">()</span>
+<span class="w">            </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"Found affine.if with "</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">op</span><span class="p">.</span><span class="n">getIntegerSet</span><span class="p">().</span><span class="n">getNumConstraints</span><span class="p">()</span>
+<span class="w">            </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">" constraint(s) at "</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">loc</span><span class="p">);</span>
+
+<span class="w">        </span><span class="k">auto</span><span class="w"> </span><span class="n">exprOp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ExpressionOp</span><span class="o">::</span><span class="n">create</span><span class="p">(</span>
+<span class="w">            </span><span class="n">rewriter</span><span class="p">,</span>
+<span class="w">            </span><span class="n">loc</span><span class="p">,</span>
+<span class="w">            </span><span class="n">rewriter</span><span class="p">.</span><span class="n">getI1Type</span><span class="p">(),</span>
+<span class="w">            </span><span class="p">[</span><span class="o">&amp;</span><span class="p">](</span><span class="n">OpBuilder</span><span class="w"> </span><span class="o">&amp;</span><span class="n">exprBuilder</span><span class="p">,</span><span class="w"> </span><span class="n">Location</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="k">auto</span><span class="w"> </span><span class="n">integerSet</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">op</span><span class="p">.</span><span class="n">getIntegerSet</span><span class="p">();</span>
+<span class="w">                </span><span class="n">SmallVector</span><span class="o">&lt;</span><span class="n">Value</span><span class="o">&gt;</span><span class="w"> </span><span class="n">operands</span><span class="p">(</span><span class="n">op</span><span class="p">.</span><span class="n">getOperands</span><span class="p">());</span>
+<span class="w">                </span><span class="n">ArrayRef</span><span class="o">&lt;</span><span class="n">Value</span><span class="o">&gt;</span><span class="w"> </span><span class="n">operandsRef</span><span class="p">(</span><span class="n">operands</span><span class="p">);</span>
+<span class="w">                </span><span class="kt">unsigned</span><span class="w"> </span><span class="n">numDims</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">integerSet</span><span class="p">.</span><span class="n">getNumDims</span><span class="p">();</span>
+
+<span class="w">                </span><span class="n">Value</span><span class="w"> </span><span class="n">zero</span><span class="w"> </span><span class="o">=</span>
+<span class="w">                    </span><span class="n">arith</span><span class="o">::</span><span class="n">ConstantIndexOp</span><span class="o">::</span><span class="n">create</span><span class="p">(</span><span class="n">exprBuilder</span><span class="p">,</span><span class="w"> </span><span class="n">loc</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
+<span class="w">                </span><span class="n">SmallVector</span><span class="o">&lt;</span><span class="n">Value</span><span class="o">&gt;</span><span class="w"> </span><span class="n">cmpVals</span><span class="p">;</span>
+<span class="w">                </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">unsigned</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">e</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">integerSet</span><span class="p">.</span><span class="n">getNumConstraints</span><span class="p">();</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">e</span><span class="p">;</span>
+<span class="w">                     </span><span class="o">++</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                    </span><span class="n">Value</span><span class="w"> </span><span class="n">affineResult</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">affine</span><span class="o">::</span><span class="n">expandAffineExpr</span><span class="p">(</span>
+<span class="w">                        </span><span class="n">exprBuilder</span><span class="p">,</span>
+<span class="w">                        </span><span class="n">loc</span><span class="p">,</span>
+<span class="w">                        </span><span class="n">integerSet</span><span class="p">.</span><span class="n">getConstraint</span><span class="p">(</span><span class="n">i</span><span class="p">),</span>
+<span class="w">                        </span><span class="n">operandsRef</span><span class="p">.</span><span class="n">take_front</span><span class="p">(</span><span class="n">numDims</span><span class="p">),</span>
+<span class="w">                        </span><span class="n">operandsRef</span><span class="p">.</span><span class="n">drop_front</span><span class="p">(</span><span class="n">numDims</span><span class="p">));</span>
+<span class="w">                    </span><span class="n">PICEA_DEBUG</span><span class="p">(</span>
+<span class="w">                        </span><span class="n">llvm</span><span class="o">::</span><span class="n">dbgs</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"  Expanded the affine constraint to "</span>
+<span class="w">                                        </span><span class="s">"arith operation."</span><span class="p">);</span>
+<span class="w">                    </span><span class="k">auto</span><span class="w"> </span><span class="n">predicate</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">integerSet</span><span class="p">.</span><span class="n">isEq</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">CmpPredicate</span><span class="o">::</span><span class="n">eq</span>
+<span class="w">                                                        </span><span class="o">:</span><span class="w"> </span><span class="n">CmpPredicate</span><span class="o">::</span><span class="n">ge</span><span class="p">;</span>
+<span class="w">                    </span><span class="n">cmpVals</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span>
+<span class="w">                        </span><span class="n">ArithCmpOp</span><span class="o">::</span><span class="n">create</span><span class="p">(</span>
+<span class="w">                            </span><span class="n">exprBuilder</span><span class="p">,</span>
+<span class="w">                            </span><span class="n">loc</span><span class="p">,</span>
+<span class="w">                            </span><span class="n">predicate</span><span class="p">,</span>
+<span class="w">                            </span><span class="n">affineResult</span><span class="p">,</span>
+<span class="w">                            </span><span class="n">zero</span><span class="p">)</span>
+<span class="w">                            </span><span class="p">.</span><span class="n">getResult</span><span class="p">());</span>
+<span class="w">                    </span><span class="n">PICEA_DEBUG</span><span class="p">(</span>
+<span class="w">                        </span><span class="n">llvm</span><span class="o">::</span><span class="n">dbgs</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"  Created comparison operation "</span>
+<span class="w">                                        </span><span class="s">"according to constraint."</span><span class="p">);</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">                </span><span class="n">Value</span><span class="w"> </span><span class="n">cond</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cmpVals</span><span class="p">.</span><span class="n">size</span><span class="p">()</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">ArithLogicalAndOp</span><span class="o">::</span><span class="n">create</span><span class="p">(</span>
+<span class="w">                                                      </span><span class="n">exprBuilder</span><span class="p">,</span>
+<span class="w">                                                      </span><span class="n">loc</span><span class="p">,</span>
+<span class="w">                                                      </span><span class="n">exprBuilder</span><span class="p">.</span><span class="n">getI1Type</span><span class="p">(),</span>
+<span class="w">                                                      </span><span class="n">cmpVals</span><span class="p">)</span>
+<span class="w">                                                      </span><span class="p">.</span><span class="n">getResult</span><span class="p">()</span>
+<span class="w">                                                </span><span class="o">:</span><span class="w"> </span><span class="n">cmpVals</span><span class="p">.</span><span class="n">front</span><span class="p">();</span>
+<span class="w">                </span><span class="n">PICEA_DEBUG</span><span class="p">(</span>
+<span class="w">                    </span><span class="n">llvm</span><span class="o">::</span><span class="n">dbgs</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"  Insert logical and operation to combine "</span>
+<span class="w">                                    </span><span class="s">"the affine constraint values."</span><span class="p">);</span>
+<span class="w">                </span><span class="n">YieldOp</span><span class="o">::</span><span class="n">create</span><span class="p">(</span><span class="n">exprBuilder</span><span class="p">,</span><span class="w"> </span><span class="n">loc</span><span class="p">,</span><span class="w"> </span><span class="n">cond</span><span class="p">);</span>
+<span class="w">            </span><span class="p">});</span>
+
+<span class="w">        </span><span class="k">auto</span><span class="w"> </span><span class="n">cloneBlockBody</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[](</span><span class="n">Block</span><span class="o">*</span><span class="w"> </span><span class="n">srcBlock</span><span class="p">,</span><span class="w"> </span><span class="n">OpBuilder</span><span class="w"> </span><span class="o">&amp;</span><span class="n">builder</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">IRMapping</span><span class="w"> </span><span class="n">mapper</span><span class="p">;</span>
+<span class="w">            </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="o">&amp;</span><span class="n">opi</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">srcBlock</span><span class="o">-&gt;</span><span class="n">getOperations</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">isa</span><span class="o">&lt;</span><span class="n">affine</span><span class="o">::</span><span class="n">AffineYieldOp</span><span class="o">&gt;</span><span class="p">(</span><span class="n">opi</span><span class="p">))</span><span class="w"> </span><span class="k">break</span><span class="p">;</span>
+<span class="w">                </span><span class="n">builder</span><span class="p">.</span><span class="n">clone</span><span class="p">(</span><span class="n">opi</span><span class="p">,</span><span class="w"> </span><span class="n">mapper</span><span class="p">);</span>
+<span class="w">                </span><span class="n">PICEA_DEBUG</span><span class="p">(</span>
+<span class="w">                    </span><span class="n">llvm</span><span class="o">::</span><span class="n">dbgs</span><span class="p">()</span>
+<span class="w">                    </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"  Copying "</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">opi</span><span class="p">.</span><span class="n">getName</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">" into new if op"</span><span class="p">);</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">};</span>
+
+<span class="w">        </span><span class="n">Block</span><span class="o">*</span><span class="w"> </span><span class="n">thenBlock</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">op</span><span class="p">.</span><span class="n">getThenBlock</span><span class="p">();</span>
+<span class="w">        </span><span class="n">IfOp</span><span class="w"> </span><span class="n">newIf</span><span class="p">;</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">op</span><span class="p">.</span><span class="n">hasElse</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">Block</span><span class="o">*</span><span class="w"> </span><span class="n">elseBlock</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">op</span><span class="p">.</span><span class="n">getElseBlock</span><span class="p">();</span>
+<span class="w">            </span><span class="n">newIf</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">IfOp</span><span class="o">::</span><span class="n">create</span><span class="p">(</span>
+<span class="w">                </span><span class="n">rewriter</span><span class="p">,</span>
+<span class="w">                </span><span class="n">loc</span><span class="p">,</span>
+<span class="w">                </span><span class="n">exprOp</span><span class="p">.</span><span class="n">getResult</span><span class="p">(),</span>
+<span class="w">                </span><span class="p">[</span><span class="o">&amp;</span><span class="p">](</span><span class="n">OpBuilder</span><span class="w"> </span><span class="o">&amp;</span><span class="n">builder</span><span class="p">,</span><span class="w"> </span><span class="n">Location</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                    </span><span class="n">cloneBlockBody</span><span class="p">(</span><span class="n">thenBlock</span><span class="p">,</span><span class="w"> </span><span class="n">builder</span><span class="p">);</span>
+<span class="w">                </span><span class="p">},</span>
+<span class="w">                </span><span class="p">[</span><span class="o">&amp;</span><span class="p">](</span><span class="n">OpBuilder</span><span class="w"> </span><span class="o">&amp;</span><span class="n">builder</span><span class="p">,</span><span class="w"> </span><span class="n">Location</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                    </span><span class="n">cloneBlockBody</span><span class="p">(</span><span class="n">elseBlock</span><span class="p">,</span><span class="w"> </span><span class="n">builder</span><span class="p">);</span>
+<span class="w">                </span><span class="p">});</span>
+<span class="w">        </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">newIf</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">IfOp</span><span class="o">::</span><span class="n">create</span><span class="p">(</span>
+<span class="w">                </span><span class="n">rewriter</span><span class="p">,</span>
+<span class="w">                </span><span class="n">loc</span><span class="p">,</span>
+<span class="w">                </span><span class="n">exprOp</span><span class="p">.</span><span class="n">getResult</span><span class="p">(),</span>
+<span class="w">                </span><span class="p">[</span><span class="o">&amp;</span><span class="p">](</span><span class="n">OpBuilder</span><span class="w"> </span><span class="o">&amp;</span><span class="n">builder</span><span class="p">,</span><span class="w"> </span><span class="n">Location</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                    </span><span class="n">cloneBlockBody</span><span class="p">(</span><span class="n">thenBlock</span><span class="p">,</span><span class="w"> </span><span class="n">builder</span><span class="p">);</span>
+<span class="w">                </span><span class="p">});</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="n">rewriter</span><span class="p">.</span><span class="n">replaceOp</span><span class="p">(</span><span class="n">op</span><span class="p">,</span><span class="w"> </span><span class="n">newIf</span><span class="p">);</span>
+
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">success</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">};</span>
+<span class="k">struct</span><span class="w"> </span><span class="nc">EraseYield</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">OpConversionPattern</span><span class="o">&lt;</span><span class="n">affine</span><span class="o">::</span><span class="n">AffineYieldOp</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">using</span><span class="w"> </span><span class="n">OpConversionPattern</span><span class="o">&lt;</span><span class="n">affine</span><span class="o">::</span><span class="n">AffineYieldOp</span><span class="o">&gt;::</span><span class="n">OpConversionPattern</span><span class="p">;</span>
+
+<span class="w">    </span><span class="n">EraseYield</span><span class="p">(</span><span class="n">TypeConverter</span><span class="w"> </span><span class="o">&amp;</span><span class="n">typeConverter</span><span class="p">,</span><span class="w"> </span><span class="n">MLIRContext</span><span class="o">*</span><span class="w"> </span><span class="n">context</span><span class="p">)</span>
+<span class="w">            </span><span class="o">:</span><span class="w"> </span><span class="n">OpConversionPattern</span><span class="o">&lt;</span><span class="n">affine</span><span class="o">::</span><span class="n">AffineYieldOp</span><span class="o">&gt;</span><span class="p">(</span>
+<span class="w">                  </span><span class="n">typeConverter</span><span class="p">,</span>
+<span class="w">                  </span><span class="n">context</span><span class="p">)</span><span class="w"> </span><span class="p">{};</span>
+
+<span class="w">    </span><span class="n">LogicalResult</span><span class="w"> </span><span class="nf">matchAndRewrite</span><span class="p">(</span>
+<span class="w">        </span><span class="n">affine</span><span class="o">::</span><span class="n">AffineYieldOp</span><span class="w"> </span><span class="n">op</span><span class="p">,</span>
+<span class="w">        </span><span class="n">affine</span><span class="o">::</span><span class="n">AffineYieldOpAdaptor</span><span class="p">,</span>
+<span class="w">        </span><span class="n">ConversionPatternRewriter</span><span class="w"> </span><span class="o">&amp;</span><span class="n">rewriter</span><span class="p">)</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">override</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">op</span><span class="o">-&gt;</span><span class="n">getNumOperands</span><span class="p">()</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="n">rewriter</span><span class="p">.</span><span class="n">notifyMatchFailure</span><span class="p">(</span>
+<span class="w">                </span><span class="n">op</span><span class="p">.</span><span class="n">getLoc</span><span class="p">(),</span>
+<span class="w">                </span><span class="s">"Expect zero operand."</span><span class="p">);</span>
+<span class="w">        </span><span class="n">rewriter</span><span class="p">.</span><span class="n">eraseOp</span><span class="p">(</span><span class="n">op</span><span class="p">);</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">success</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">};</span>
+<span class="k">struct</span><span class="w"> </span><span class="nc">LoadTransformation</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">OpConversionPattern</span><span class="o">&lt;</span><span class="n">affine</span><span class="o">::</span><span class="n">AffineLoadOp</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">using</span><span class="w"> </span><span class="n">OpConversionPattern</span><span class="o">&lt;</span><span class="n">affine</span><span class="o">::</span><span class="n">AffineLoadOp</span><span class="o">&gt;::</span><span class="n">OpConversionPattern</span><span class="p">;</span>
+
+<span class="w">    </span><span class="n">LoadTransformation</span><span class="p">(</span><span class="n">TypeConverter</span><span class="w"> </span><span class="o">&amp;</span><span class="n">typeConverter</span><span class="p">,</span><span class="w"> </span><span class="n">MLIRContext</span><span class="o">*</span><span class="w"> </span><span class="n">context</span><span class="p">)</span>
+<span class="w">            </span><span class="o">:</span><span class="w"> </span><span class="n">OpConversionPattern</span><span class="o">&lt;</span><span class="n">affine</span><span class="o">::</span><span class="n">AffineLoadOp</span><span class="o">&gt;</span><span class="p">(</span>
+<span class="w">                  </span><span class="n">typeConverter</span><span class="p">,</span>
+<span class="w">                  </span><span class="n">context</span><span class="p">)</span><span class="w"> </span><span class="p">{};</span>
+
+<span class="w">    </span><span class="n">LogicalResult</span><span class="w"> </span><span class="nf">matchAndRewrite</span><span class="p">(</span>
+<span class="w">        </span><span class="n">affine</span><span class="o">::</span><span class="n">AffineLoadOp</span><span class="w"> </span><span class="n">op</span><span class="p">,</span>
+<span class="w">        </span><span class="n">affine</span><span class="o">::</span><span class="n">AffineLoadOpAdaptor</span><span class="p">,</span>
+<span class="w">        </span><span class="n">ConversionPatternRewriter</span><span class="w"> </span><span class="o">&amp;</span><span class="n">rewriter</span><span class="p">)</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">override</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="k">auto</span><span class="w"> </span><span class="n">loc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">op</span><span class="p">.</span><span class="n">getLoc</span><span class="p">();</span>
+<span class="w">        </span><span class="k">auto</span><span class="w"> </span><span class="n">indices</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">affine</span><span class="o">::</span><span class="n">expandAffineMap</span><span class="p">(</span>
+<span class="w">            </span><span class="n">rewriter</span><span class="p">,</span>
+<span class="w">            </span><span class="n">loc</span><span class="p">,</span>
+<span class="w">            </span><span class="n">op</span><span class="p">.</span><span class="n">getAffineMap</span><span class="p">(),</span>
+<span class="w">            </span><span class="n">op</span><span class="p">.</span><span class="n">getMapOperands</span><span class="p">());</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">indices</span><span class="p">)</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="n">rewriter</span><span class="p">.</span><span class="n">notifyMatchFailure</span><span class="p">(</span>
+<span class="w">                </span><span class="n">op</span><span class="p">,</span>
+<span class="w">                </span><span class="s">"failed to expand affine map into indices"</span><span class="p">);</span>
+<span class="w">        </span><span class="n">PICEA_DEBUG</span><span class="p">(</span><span class="n">llvm</span><span class="o">::</span><span class="n">dbgs</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"Converting affine.load at "</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">loc</span><span class="p">);</span>
+
+<span class="w">        </span><span class="k">auto</span><span class="w"> </span><span class="n">memrefType</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">op</span><span class="p">.</span><span class="n">getMemRefType</span><span class="p">();</span>
+<span class="w">        </span><span class="k">auto</span><span class="w"> </span><span class="n">arrayType</span><span class="w"> </span><span class="o">=</span>
+<span class="w">            </span><span class="n">ArrayType</span><span class="o">::</span><span class="n">get</span><span class="p">(</span><span class="n">memrefType</span><span class="p">.</span><span class="n">getShape</span><span class="p">(),</span><span class="w"> </span><span class="n">memrefType</span><span class="p">.</span><span class="n">getElementType</span><span class="p">());</span>
+
+<span class="w">        </span><span class="k">auto</span><span class="w"> </span><span class="n">getGlobalOp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">op</span><span class="p">.</span><span class="n">getMemref</span><span class="p">().</span><span class="n">getDefiningOp</span><span class="o">&lt;</span><span class="n">memref</span><span class="o">::</span><span class="n">GetGlobalOp</span><span class="o">&gt;</span><span class="p">();</span>
+<span class="w">        </span><span class="n">Value</span><span class="w"> </span><span class="n">array</span><span class="w"> </span><span class="o">=</span>
+<span class="w">            </span><span class="n">getGlobalOp</span>
+<span class="w">                </span><span class="o">?</span><span class="w"> </span><span class="n">materializeGlobalVariable</span><span class="p">(</span><span class="n">rewriter</span><span class="p">,</span><span class="w"> </span><span class="n">getGlobalOp</span><span class="p">,</span><span class="w"> </span><span class="n">arrayType</span><span class="p">)</span>
+<span class="w">                </span><span class="o">:</span><span class="w"> </span><span class="n">materializeArray</span><span class="p">(</span><span class="n">rewriter</span><span class="p">,</span><span class="w"> </span><span class="n">loc</span><span class="p">,</span><span class="w"> </span><span class="n">op</span><span class="p">.</span><span class="n">getMemref</span><span class="p">(),</span><span class="w"> </span><span class="n">arrayType</span><span class="p">);</span>
+
+<span class="w">        </span><span class="n">rewriter</span><span class="p">.</span><span class="n">replaceOpWithNewOp</span><span class="o">&lt;</span><span class="n">ArrayReadOp</span><span class="o">&gt;</span><span class="p">(</span><span class="n">op</span><span class="p">,</span><span class="w"> </span><span class="n">array</span><span class="p">,</span><span class="w"> </span><span class="o">*</span><span class="n">indices</span><span class="p">);</span>
+
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">success</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">};</span>
+<span class="p">}</span><span class="w"> </span><span class="c1">// namespace</span>
+
+<span class="kt">void</span><span class="w"> </span><span class="n">mlir</span><span class="o">::</span><span class="n">populateAffineToEmitHLSConversionPatterns</span><span class="p">(</span>
+<span class="w">    </span><span class="n">TypeConverter</span><span class="w"> </span><span class="o">&amp;</span><span class="n">typeConverter</span><span class="p">,</span>
+<span class="w">    </span><span class="n">RewritePatternSet</span><span class="w"> </span><span class="o">&amp;</span><span class="n">patterns</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">patterns</span><span class="p">.</span><span class="n">add</span><span class="o">&lt;</span><span class="n">ForLoopTransformation</span><span class="o">&gt;</span><span class="p">(</span><span class="n">typeConverter</span><span class="p">,</span><span class="w"> </span><span class="n">patterns</span><span class="p">.</span><span class="n">getContext</span><span class="p">());</span>
+<span class="w">    </span><span class="n">patterns</span><span class="p">.</span><span class="n">add</span><span class="o">&lt;</span><span class="n">IfTransformation</span><span class="o">&gt;</span><span class="p">(</span><span class="n">typeConverter</span><span class="p">,</span><span class="w"> </span><span class="n">patterns</span><span class="p">.</span><span class="n">getContext</span><span class="p">());</span>
+<span class="w">    </span><span class="n">patterns</span><span class="p">.</span><span class="n">add</span><span class="o">&lt;</span><span class="n">EraseYield</span><span class="o">&gt;</span><span class="p">(</span><span class="n">typeConverter</span><span class="p">,</span><span class="w"> </span><span class="n">patterns</span><span class="p">.</span><span class="n">getContext</span><span class="p">());</span>
+<span class="w">    </span><span class="n">patterns</span><span class="p">.</span><span class="n">add</span><span class="o">&lt;</span><span class="n">LoadTransformation</span><span class="o">&gt;</span><span class="p">(</span><span class="n">typeConverter</span><span class="p">,</span><span class="w"> </span><span class="n">patterns</span><span class="p">.</span><span class="n">getContext</span><span class="p">());</span>
+<span class="p">}</span>
+
+<span class="k">namespace</span><span class="w"> </span><span class="p">{</span>
+<span class="k">struct</span><span class="w"> </span><span class="nc">ConvertAffineToEmitHLSPass</span>
+<span class="w">        </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">impl</span><span class="o">::</span><span class="n">ConvertAffineToEmitHLSBase</span><span class="o">&lt;</span><span class="n">ConvertAffineToEmitHLSPass</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="nf">runOnOperation</span><span class="p">()</span><span class="w"> </span><span class="k">final</span><span class="p">;</span>
+<span class="p">};</span>
+<span class="p">}</span><span class="w"> </span><span class="c1">// namespace</span>
+
+<span class="kt">void</span><span class="w"> </span><span class="n">ConvertAffineToEmitHLSPass</span><span class="o">::</span><span class="n">runOnOperation</span><span class="p">()</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">ConversionTarget</span><span class="w"> </span><span class="nf">target</span><span class="p">(</span><span class="n">getContext</span><span class="p">());</span>
+<span class="w">    </span><span class="n">RewritePatternSet</span><span class="w"> </span><span class="nf">patterns</span><span class="p">(</span><span class="o">&amp;</span><span class="n">getContext</span><span class="p">());</span>
+
+<span class="w">    </span><span class="n">TypeConverter</span><span class="w"> </span><span class="n">converter</span><span class="p">;</span>
+<span class="w">    </span><span class="n">converter</span><span class="p">.</span><span class="n">addConversion</span><span class="p">([</span><span class="o">&amp;</span><span class="p">](</span><span class="n">Type</span><span class="w"> </span><span class="n">type</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">type</span><span class="p">;</span><span class="w"> </span><span class="p">});</span>
+
+<span class="w">    </span><span class="n">populateAffineToEmitHLSConversionPatterns</span><span class="p">(</span><span class="n">converter</span><span class="p">,</span><span class="w"> </span><span class="n">patterns</span><span class="p">);</span>
+
+<span class="w">    </span><span class="n">target</span><span class="p">.</span><span class="n">addLegalDialect</span><span class="o">&lt;</span><span class="n">EmitHLSDialect</span><span class="o">&gt;</span><span class="p">();</span>
+<span class="w">    </span><span class="n">target</span><span class="p">.</span><span class="n">addIllegalDialect</span><span class="o">&lt;</span><span class="n">affine</span><span class="o">::</span><span class="n">AffineDialect</span><span class="o">&gt;</span><span class="p">();</span>
+<span class="w">    </span><span class="n">target</span><span class="p">.</span><span class="n">markUnknownOpDynamicallyLegal</span><span class="p">([](</span><span class="n">Operation</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span><span class="w"> </span><span class="p">});</span>
+
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">failed</span><span class="p">(</span><span class="n">applyPartialConversion</span><span class="p">(</span>
+<span class="w">            </span><span class="n">getOperation</span><span class="p">(),</span>
+<span class="w">            </span><span class="n">target</span><span class="p">,</span>
+<span class="w">            </span><span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">patterns</span><span class="p">))))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">signalPassFailure</span><span class="p">();</span>
+<span class="w">        </span><span class="k">return</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="c1">// Clean the dead global and get_global operations after the patterns</span>
+<span class="w">    </span><span class="n">IRRewriter</span><span class="w"> </span><span class="n">rewriter</span><span class="p">(</span><span class="o">&amp;</span><span class="n">getContext</span><span class="p">());</span>
+<span class="w">    </span><span class="n">SmallVector</span><span class="o">&lt;</span><span class="n">memref</span><span class="o">::</span><span class="n">GetGlobalOp</span><span class="o">&gt;</span><span class="w"> </span><span class="n">deadGetGlobals</span><span class="p">;</span>
+<span class="w">    </span><span class="n">getOperation</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">walk</span><span class="p">([</span><span class="o">&amp;</span><span class="p">](</span><span class="n">memref</span><span class="o">::</span><span class="n">GetGlobalOp</span><span class="w"> </span><span class="n">op</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">op</span><span class="o">-&gt;</span><span class="n">use_empty</span><span class="p">())</span><span class="w"> </span><span class="n">deadGetGlobals</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">op</span><span class="p">);</span>
+<span class="w">    </span><span class="p">});</span>
+<span class="w">    </span><span class="n">SmallVector</span><span class="o">&lt;</span><span class="n">memref</span><span class="o">::</span><span class="n">GlobalOp</span><span class="o">&gt;</span><span class="w"> </span><span class="n">maybeDeadGlobals</span><span class="p">;</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="n">op</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">deadGetGlobals</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="n">globalOp</span><span class="w"> </span><span class="o">=</span>
+<span class="w">                </span><span class="n">SymbolTable</span><span class="o">::</span><span class="n">lookupNearestSymbolFrom</span><span class="o">&lt;</span><span class="n">memref</span><span class="o">::</span><span class="n">GlobalOp</span><span class="o">&gt;</span><span class="p">(</span>
+<span class="w">                    </span><span class="n">op</span><span class="p">,</span>
+<span class="w">                    </span><span class="n">op</span><span class="p">.</span><span class="n">getNameAttr</span><span class="p">()))</span>
+<span class="w">            </span><span class="n">maybeDeadGlobals</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">globalOp</span><span class="p">);</span>
+<span class="w">        </span><span class="n">rewriter</span><span class="p">.</span><span class="n">eraseOp</span><span class="p">(</span><span class="n">op</span><span class="p">);</span>
+<span class="w">        </span><span class="n">PICEA_DEBUG</span><span class="p">(</span>
+<span class="w">            </span><span class="n">llvm</span><span class="o">::</span><span class="n">dbgs</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"Erase the dead get_global at "</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">op</span><span class="p">.</span><span class="n">getLoc</span><span class="p">());</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="n">globalOp</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">maybeDeadGlobals</span><span class="p">)</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">SymbolTable</span><span class="o">::</span><span class="n">symbolKnownUseEmpty</span><span class="p">(</span><span class="n">globalOp</span><span class="p">,</span><span class="w"> </span><span class="n">getOperation</span><span class="p">()))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">rewriter</span><span class="p">.</span><span class="n">eraseOp</span><span class="p">(</span><span class="n">globalOp</span><span class="p">);</span>
+<span class="w">            </span><span class="n">PICEA_DEBUG</span><span class="p">(</span>
+<span class="w">                </span><span class="n">llvm</span><span class="o">::</span><span class="n">dbgs</span><span class="p">()</span>
+<span class="w">                </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"Erase the dead global at "</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">globalOp</span><span class="p">.</span><span class="n">getLoc</span><span class="p">());</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">Pass</span><span class="o">&gt;</span><span class="w"> </span><span class="n">mlir</span><span class="o">::</span><span class="n">createConvertAffineToEmitHLSPass</span><span class="p">()</span>
+<span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">make_unique</span><span class="o">&lt;</span><span class="n">ConvertAffineToEmitHLSPass</span><span class="o">&gt;</span><span class="p">();</span><span class="w"> </span><span class="p">}</span>
+</pre></div>
+</div>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

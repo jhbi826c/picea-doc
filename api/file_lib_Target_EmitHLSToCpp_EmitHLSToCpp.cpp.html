@@ -1,0 +1,231 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>File EmitHLSToCpp.cpp &mdash; picea 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/collapsible-lists/css/tree_view.css?v=a885cde7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js?v=73120307"></script>
+      <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js?v=660e4f45"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            picea
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Installation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../README.html">About the project</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#guides">Guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#related-projects">Related projects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#development-environment-nix">Development Environment (Nix)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#build-on-ubuntu-24-04-no-nix">Build on Ubuntu 24.04 (no Nix)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#gurobi-license">Gurobi license</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#installing">Installing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#run-the-tests">Run the tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#build-the-documentation">Build the documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#compiling-a-design">Compiling a design</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#running-a-design-on-the-board">Running a design on the board</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#exporting-a-profiled-application-to-mocasin">Exporting a profiled application to Mocasin</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Guides</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../guides/laksa.html">The FPGA Variant using LAKSA backend</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/cgra.html">The CGRA Variant</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">MLIR Dialects</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/Base2Ops.html">‘base2’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/CGRAOps.html">‘cgra’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/DFGOps.html">‘dfg’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/EmitHLSOps.html">‘emithls’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/FilterOps.html">‘filter’ Dialect</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Passes</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/PICEAConversionPasses.html">PICEA Conversion Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/CGRAPasses.html">CGRA Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/DFGPasses.html">DFG Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/EmitHLSPasses.html">Emit HLS Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/FuncExtPasses.html">Func Ext Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/LinalgExtPasses.html">Linalg Ext Passes</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">C++ API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="library_root.html">C++ API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">picea</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">File EmitHLSToCpp.cpp</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/file_lib_Target_EmitHLSToCpp_EmitHLSToCpp.cpp.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="file-emithlstocpp-cpp">
+<span id="file-lib-target-emithlstocpp-emithlstocpp-cpp"></span><h1>File EmitHLSToCpp.cpp<a class="headerlink" href="#file-emithlstocpp-cpp" title="Link to this heading"></a></h1>
+<p>↰ <a class="reference internal" href="dir_lib_Target_EmitHLSToCpp.html#dir-lib-target-emithlstocpp"><span class="std std-ref">Parent directory</span></a> (<code class="docutils literal notranslate"><span class="pre">lib/Target/EmitHLSToCpp</span></code>)</p>
+<nav class="contents local" id="contents">
+<p class="topic-title">Contents</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#definition-lib-target-emithlstocpp-emithlstocpp-cpp" id="id1">Definition (<code class="docutils literal notranslate"><span class="pre">lib/Target/EmitHLSToCpp/EmitHLSToCpp.cpp</span></code>)</a></p></li>
+<li><p><a class="reference internal" href="#includes" id="id2">Includes</a></p></li>
+<li><p><a class="reference internal" href="#functions" id="id3">Functions</a></p></li>
+</ul>
+</nav>
+<section id="definition-lib-target-emithlstocpp-emithlstocpp-cpp">
+<h2>Definition (<code class="docutils literal notranslate"><span class="pre">lib/Target/EmitHLSToCpp/EmitHLSToCpp.cpp</span></code>)<a class="headerlink" href="#definition-lib-target-emithlstocpp-emithlstocpp-cpp" title="Link to this heading"></a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="program_listing_file_lib_Target_EmitHLSToCpp_EmitHLSToCpp.cpp.html">Program Listing for File EmitHLSToCpp.cpp</a></li>
+</ul>
+</div>
+</section>
+<section id="includes">
+<h2>Includes<a class="headerlink" href="#includes" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">cmath</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">llvm/ADT/APFloat.h</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">llvm/ADT/APInt.h</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">llvm/ADT/DenseMap.h</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">llvm/ADT/STLExtras.h</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">llvm/ADT/Sequence.h</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">llvm/ADT/SmallPtrSet.h</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">llvm/ADT/SmallString.h</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">llvm/ADT/SmallVector.h</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">llvm/ADT/StringMap.h</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">llvm/ADT/TypeSwitch.h</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">llvm/Support/FormatVariadic.h</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">mlir/IR/BuiltinOps.h</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">mlir/IR/Diagnostics.h</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">mlir/Support/IndentedOstream.h</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">picea-mlir/Dialect/EmitHLS/IR/EmitHLS.h</span></code> (<a class="reference internal" href="file_include_picea-mlir_Dialect_EmitHLS_IR_EmitHLS.h.html#file-include-picea-mlir-dialect-emithls-ir-emithls-h"><span class="std std-ref">File EmitHLS.h</span></a>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">picea-mlir/Target/EmitHLSToCpp/HLSCppEmitter.h</span></code> (<a class="reference internal" href="file_include_picea-mlir_Target_EmitHLSToCpp_HLSCppEmitter.h.html#file-include-picea-mlir-target-emithlstocpp-hlscppemitter-h"><span class="std std-ref">File HLSCppEmitter.h</span></a>)</p></li>
+</ul>
+</section>
+<section id="functions">
+<h2>Functions<a class="headerlink" href="#functions" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="function_EmitHLSToCpp_8cpp_1a1b4e3b3aba20f057cf7ea5c1b9205acc.html#exhale-function-emithlstocpp-8cpp-1a1b4e3b3aba20f057cf7ea5c1b9205acc"><span class="std std-ref">Function printBinaryOperation</span></a></p></li>
+<li><p><a class="reference internal" href="function_EmitHLSToCpp_8cpp_1a57ac82fb84d71927ddb53028ebae1e3f.html#exhale-function-emithlstocpp-8cpp-1a57ac82fb84d71927ddb53028ebae1e3f"><span class="std std-ref">Function printLogicalOperation</span></a></p></li>
+<li><p><a class="reference internal" href="function_EmitHLSToCpp_8cpp_1a7c21a539b1f87b66cbbfaf397dc76260.html#exhale-function-emithlstocpp-8cpp-1a7c21a539b1f87b66cbbfaf397dc76260"><span class="std std-ref">Function printOperation(HLSCppEmitter&amp;, ArithLogicalAndOp)</span></a></p></li>
+<li><p><a class="reference internal" href="function_EmitHLSToCpp_8cpp_1a879459ddc8d55612cbecfaa3335771c3.html#exhale-function-emithlstocpp-8cpp-1a879459ddc8d55612cbecfaa3335771c3"><span class="std std-ref">Function printOperation(HLSCppEmitter&amp;, ArithLogicalOrOp)</span></a></p></li>
+<li><p><a class="reference internal" href="function_EmitHLSToCpp_8cpp_1ac8f2cd60556f2cb51554a922af3fa1cb.html#exhale-function-emithlstocpp-8cpp-1ac8f2cd60556f2cb51554a922af3fa1cb"><span class="std std-ref">Function printOperation(HLSCppEmitter&amp;, ArithFusedOp)</span></a></p></li>
+<li><p><a class="reference internal" href="function_EmitHLSToCpp_8cpp_1a48b160081daa1e86308210fe2fdf9268.html#exhale-function-emithlstocpp-8cpp-1a48b160081daa1e86308210fe2fdf9268"><span class="std std-ref">Function printOperation(HLSCppEmitter&amp;, ArithCastOp)</span></a></p></li>
+<li><p><a class="reference internal" href="function_EmitHLSToCpp_8cpp_1a4ebb5c77868a1d0714a223d6a588210f.html#exhale-function-emithlstocpp-8cpp-1a4ebb5c77868a1d0714a223d6a588210f"><span class="std std-ref">Function printOperation(HLSCppEmitter&amp;, ArithCmpOp)</span></a></p></li>
+<li><p><a class="reference internal" href="function_EmitHLSToCpp_8cpp_1a3def35a7413a88efd25679a0123e8e76.html#exhale-function-emithlstocpp-8cpp-1a3def35a7413a88efd25679a0123e8e76"><span class="std std-ref">Function printOperation(HLSCppEmitter&amp;, ArithSelectOp)</span></a></p></li>
+<li><p><a class="reference internal" href="function_EmitHLSToCpp_8cpp_1a299f637a1eb1a64e2968d65dd167ce4d.html#exhale-function-emithlstocpp-8cpp-1a299f637a1eb1a64e2968d65dd167ce4d"><span class="std std-ref">Function printOperation(HLSCppEmitter&amp;, ArithDataRangeOp)</span></a></p></li>
+<li><p><a class="reference internal" href="function_EmitHLSToCpp_8cpp_1ad4fca9b6e7bf33003cd80a7d1820184a.html#exhale-function-emithlstocpp-8cpp-1ad4fca9b6e7bf33003cd80a7d1820184a"><span class="std std-ref">Function printOperation(HLSCppEmitter&amp;, ArrayReadOp)</span></a></p></li>
+<li><p><a class="reference internal" href="function_EmitHLSToCpp_8cpp_1a9792ae4f2f2c93d50036c950a88f0f5f.html#exhale-function-emithlstocpp-8cpp-1a9792ae4f2f2c93d50036c950a88f0f5f"><span class="std std-ref">Function printOperation(HLSCppEmitter&amp;, ArrayWriteOp)</span></a></p></li>
+<li><p><a class="reference internal" href="function_EmitHLSToCpp_8cpp_1ab66dab83db86135f438ee473fe5ae066.html#exhale-function-emithlstocpp-8cpp-1ab66dab83db86135f438ee473fe5ae066"><span class="std std-ref">Function printOperation(HLSCppEmitter&amp;, ArrayPointerReadOp)</span></a></p></li>
+<li><p><a class="reference internal" href="function_EmitHLSToCpp_8cpp_1ad6ce9570bae987f85bc816461f32c028.html#exhale-function-emithlstocpp-8cpp-1ad6ce9570bae987f85bc816461f32c028"><span class="std std-ref">Function printOperation(HLSCppEmitter&amp;, ArrayPointerWriteOp)</span></a></p></li>
+<li><p><a class="reference internal" href="function_EmitHLSToCpp_8cpp_1a35ea9d9e72aaf1707aae23c9977e8360.html#exhale-function-emithlstocpp-8cpp-1a35ea9d9e72aaf1707aae23c9977e8360"><span class="std std-ref">Function printOperation(HLSCppEmitter&amp;, StreamReadOp)</span></a></p></li>
+<li><p><a class="reference internal" href="function_EmitHLSToCpp_8cpp_1a324258fae5bc72a9a9fca6464849ec0d.html#exhale-function-emithlstocpp-8cpp-1a324258fae5bc72a9a9fca6464849ec0d"><span class="std std-ref">Function printOperation(HLSCppEmitter&amp;, StreamWriteOp)</span></a></p></li>
+<li><p><a class="reference internal" href="function_EmitHLSToCpp_8cpp_1a9e2b04d75ebab439ca12b4e3eb87d156.html#exhale-function-emithlstocpp-8cpp-1a9e2b04d75ebab439ca12b4e3eb87d156"><span class="std std-ref">Function printOperation(HLSCppEmitter&amp;, PragmaArrayPartitionOp)</span></a></p></li>
+<li><p><a class="reference internal" href="function_EmitHLSToCpp_8cpp_1a8fe15c1ee6b3fd1aa035fe4b9a8070db.html#exhale-function-emithlstocpp-8cpp-1a8fe15c1ee6b3fd1aa035fe4b9a8070db"><span class="std std-ref">Function printOperation(HLSCppEmitter&amp;, PragmaBindStorageOp)</span></a></p></li>
+<li><p><a class="reference internal" href="function_EmitHLSToCpp_8cpp_1a8c7327c04bc2a3a4519a29b88f8520bc.html#exhale-function-emithlstocpp-8cpp-1a8c7327c04bc2a3a4519a29b88f8520bc"><span class="std std-ref">Function printOperation(HLSCppEmitter&amp;, PragmaDataflowOp)</span></a></p></li>
+<li><p><a class="reference internal" href="function_EmitHLSToCpp_8cpp_1ab8802c1e5bbd385a213013524dc7451a.html#exhale-function-emithlstocpp-8cpp-1ab8802c1e5bbd385a213013524dc7451a"><span class="std std-ref">Function printOperation(HLSCppEmitter&amp;, PragmaInlineOp)</span></a></p></li>
+<li><p><a class="reference internal" href="function_EmitHLSToCpp_8cpp_1a9b1e2e2e8f8c48eebc699fb3e6aac1e6.html#exhale-function-emithlstocpp-8cpp-1a9b1e2e2e8f8c48eebc699fb3e6aac1e6"><span class="std std-ref">Function printOperation(HLSCppEmitter&amp;, PragmaPipelineOp)</span></a></p></li>
+<li><p><a class="reference internal" href="function_EmitHLSToCpp_8cpp_1ac10c94aff0ae545a90b39813dd2ff7a9.html#exhale-function-emithlstocpp-8cpp-1ac10c94aff0ae545a90b39813dd2ff7a9"><span class="std std-ref">Function printOperation(HLSCppEmitter&amp;, PragmaStreamOp)</span></a></p></li>
+<li><p><a class="reference internal" href="function_EmitHLSToCpp_8cpp_1a88914b1cd38196137a39304a3c498a17.html#exhale-function-emithlstocpp-8cpp-1a88914b1cd38196137a39304a3c498a17"><span class="std std-ref">Function printOperation(HLSCppEmitter&amp;, PragmaUnrollOp)</span></a></p></li>
+<li><p><a class="reference internal" href="function_EmitHLSToCpp_8cpp_1ad2101e676712647236e1674973fe0b26.html#exhale-function-emithlstocpp-8cpp-1ad2101e676712647236e1674973fe0b26"><span class="std std-ref">Function printOperation(HLSCppEmitter&amp;, PragmaTopInterfaceOp)</span></a></p></li>
+<li><p><a class="reference internal" href="function_EmitHLSToCpp_8cpp_1a2354d984f89f9eecc25bdc2f3abb2178.html#exhale-function-emithlstocpp-8cpp-1a2354d984f89f9eecc25bdc2f3abb2178"><span class="std std-ref">Function printOperation(HLSCppEmitter&amp;, VariableOp)</span></a></p></li>
+<li><p><a class="reference internal" href="function_EmitHLSToCpp_8cpp_1ae1a25abe3cf2321709a1282315674e53.html#exhale-function-emithlstocpp-8cpp-1ae1a25abe3cf2321709a1282315674e53"><span class="std std-ref">Function printOperation(HLSCppEmitter&amp;, IncludeOp)</span></a></p></li>
+<li><p><a class="reference internal" href="function_EmitHLSToCpp_8cpp_1ad2495569b9e1f85ed1f1a5edb92a240f.html#exhale-function-emithlstocpp-8cpp-1ad2495569b9e1f85ed1f1a5edb92a240f"><span class="std std-ref">Function printOperation(HLSCppEmitter&amp;, ModuleOp)</span></a></p></li>
+<li><p><a class="reference internal" href="function_EmitHLSToCpp_8cpp_1aab9fe071c93c612df47ddef83245e7cd.html#exhale-function-emithlstocpp-8cpp-1aab9fe071c93c612df47ddef83245e7cd"><span class="std std-ref">Function printOperation(HLSCppEmitter&amp;, UpdateOp)</span></a></p></li>
+<li><p><a class="reference internal" href="function_EmitHLSToCpp_8cpp_1a3b080abf85794cc100d04cb84abafbe1.html#exhale-function-emithlstocpp-8cpp-1a3b080abf85794cc100d04cb84abafbe1"><span class="std std-ref">Function printOperation(HLSCppEmitter&amp;, FuncOp)</span></a></p></li>
+<li><p><a class="reference internal" href="function_EmitHLSToCpp_8cpp_1a8a2151953d17be85ccf60419dece4f34.html#exhale-function-emithlstocpp-8cpp-1a8a2151953d17be85ccf60419dece4f34"><span class="std std-ref">Function printOperation(HLSCppEmitter&amp;, CallOp)</span></a></p></li>
+<li><p><a class="reference internal" href="function_EmitHLSToCpp_8cpp_1a7f708113640d783f32c2c9f1e0dac28c.html#exhale-function-emithlstocpp-8cpp-1a7f708113640d783f32c2c9f1e0dac28c"><span class="std std-ref">Function printOperation(HLSCppEmitter&amp;, IfOp)</span></a></p></li>
+<li><p><a class="reference internal" href="function_EmitHLSToCpp_8cpp_1ad62ba920aa6324be48f7bf443d7491fb.html#exhale-function-emithlstocpp-8cpp-1ad62ba920aa6324be48f7bf443d7491fb"><span class="std std-ref">Function printOperation(HLSCppEmitter&amp;, ForOp)</span></a></p></li>
+<li><p><a class="reference internal" href="function_EmitHLSToCpp_8cpp_1a4aa221471fe615b3d5221ea4632c21b8.html#exhale-function-emithlstocpp-8cpp-1a4aa221471fe615b3d5221ea4632c21b8"><span class="std std-ref">Function printOperation(HLSCppEmitter&amp;, ExpressionOp)</span></a></p></li>
+<li><p><a class="reference internal" href="function_EmitHLSToCpp_8cpp_1abd8c59d886e7a73a0760082f4ef8e85a.html#exhale-function-emithlstocpp-8cpp-1abd8c59d886e7a73a0760082f4ef8e85a"><span class="std std-ref">Function printOperation(HLSCppEmitter&amp;, ArithAddOp)</span></a></p></li>
+<li><p><a class="reference internal" href="function_EmitHLSToCpp_8cpp_1a649a3f94bad160ed03fc659068405270.html#exhale-function-emithlstocpp-8cpp-1a649a3f94bad160ed03fc659068405270"><span class="std std-ref">Function printOperation(HLSCppEmitter&amp;, ArithSubOp)</span></a></p></li>
+<li><p><a class="reference internal" href="function_EmitHLSToCpp_8cpp_1a62297a4bc88b1c78fbc4314e89e64a3f.html#exhale-function-emithlstocpp-8cpp-1a62297a4bc88b1c78fbc4314e89e64a3f"><span class="std std-ref">Function printOperation(HLSCppEmitter&amp;, ArithMulOp)</span></a></p></li>
+<li><p><a class="reference internal" href="function_EmitHLSToCpp_8cpp_1a18d174e6cab85519a01bd002f8f4472c.html#exhale-function-emithlstocpp-8cpp-1a18d174e6cab85519a01bd002f8f4472c"><span class="std std-ref">Function printOperation(HLSCppEmitter&amp;, ArithDivOp)</span></a></p></li>
+<li><p><a class="reference internal" href="function_EmitHLSToCpp_8cpp_1aab4da8cd565532cab35b4364f4c7e62c.html#exhale-function-emithlstocpp-8cpp-1aab4da8cd565532cab35b4364f4c7e62c"><span class="std std-ref">Function printOperation(HLSCppEmitter&amp;, ArithRemOp)</span></a></p></li>
+<li><p><a class="reference internal" href="function_EmitHLSToCpp_8cpp_1aaa07ec2709508513e212bf7ae4e28a33.html#exhale-function-emithlstocpp-8cpp-1aaa07ec2709508513e212bf7ae4e28a33"><span class="std std-ref">Function printOperation(HLSCppEmitter&amp;, ArithAndOp)</span></a></p></li>
+<li><p><a class="reference internal" href="function_EmitHLSToCpp_8cpp_1a0693f723b71cf281519a20054c9e9cd9.html#exhale-function-emithlstocpp-8cpp-1a0693f723b71cf281519a20054c9e9cd9"><span class="std std-ref">Function printOperation(HLSCppEmitter&amp;, ArithOrOp)</span></a></p></li>
+<li><p><a class="reference internal" href="function_EmitHLSToCpp_8cpp_1a07799f68fc54aaf8ec1413115de336dc.html#exhale-function-emithlstocpp-8cpp-1a07799f68fc54aaf8ec1413115de336dc"><span class="std std-ref">Function printOperation(HLSCppEmitter&amp;, ArithShlOp)</span></a></p></li>
+<li><p><a class="reference internal" href="function_EmitHLSToCpp_8cpp_1a785a6c57be1af75c06c98c306ec7320b.html#exhale-function-emithlstocpp-8cpp-1a785a6c57be1af75c06c98c306ec7320b"><span class="std std-ref">Function printOperation(HLSCppEmitter&amp;, ArithShrOp)</span></a></p></li>
+<li><p><a class="reference internal" href="function_EmitHLSToCpp_8cpp_1a27da55e95154630bcd21613cfd8bf111.html#exhale-function-emithlstocpp-8cpp-1a27da55e95154630bcd21613cfd8bf111"><span class="std std-ref">Function printOperation(HLSCppEmitter&amp;, ArithMaxOp)</span></a></p></li>
+<li><p><a class="reference internal" href="function_EmitHLSToCpp_8cpp_1ae338451a6d18279a6afa12a2f5af98dc.html#exhale-function-emithlstocpp-8cpp-1ae338451a6d18279a6afa12a2f5af98dc"><span class="std std-ref">Function printOperation(HLSCppEmitter&amp;, ArithMinOp)</span></a></p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
