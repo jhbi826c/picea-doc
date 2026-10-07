@@ -1,0 +1,388 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Base2Ops &mdash; picea 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/collapsible-lists/css/tree_view.css?v=a885cde7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js?v=73120307"></script>
+      <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js?v=660e4f45"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            picea
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Installation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../README.html">About the project</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#guides">Guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#related-projects">Related projects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#development-environment-nix">Development Environment (Nix)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#build-on-ubuntu-24-04-no-nix">Build on Ubuntu 24.04 (no Nix)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#gurobi-license">Gurobi license</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#installing">Installing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#run-the-tests">Run the tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#build-the-documentation">Build the documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#compiling-a-design">Compiling a design</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#running-a-design-on-the-board">Running a design on the board</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#exporting-a-profiled-application-to-mocasin">Exporting a profiled application to Mocasin</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Guides</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../guides/laksa.html">The FPGA Variant using LAKSA backend</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/cgra.html">The CGRA Variant</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">MLIR Dialects</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/Base2Ops.html">‘base2’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/CGRAOps.html">‘cgra’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/DFGOps.html">‘dfg’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/EmitHLSOps.html">‘emithls’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/FilterOps.html">‘filter’ Dialect</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Passes</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/PICEAConversionPasses.html">PICEA Conversion Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/CGRAPasses.html">CGRA Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/DFGPasses.html">DFG Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/EmitHLSPasses.html">Emit HLS Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/FuncExtPasses.html">Func Ext Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/LinalgExtPasses.html">Linalg Ext Passes</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">C++ API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="library_root.html">C++ API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">picea</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Base2Ops</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/page_md_build_2include_2picea-mlir_2Dialect_2Base2_2IR_2Base2Ops.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="base2ops">
+<span id="page-md-build-2include-2picea-mlir-2dialect-2base2-2ir-2base2ops"></span><h1>Base2Ops<a class="headerlink" href="#base2ops" title="Link to this heading"></a></h1>
+<dl>
+<dt class="sig sig-object cpp">
+<span class="target" id="md_build_2include_2picea-mlir_2Dialect_2Base2_2IR_2Base2Ops"></span><em><span class="pre">page</span></em> <span class="sig-name descname"><span class="pre">Base2Ops</span></span></dt>
+<dd><section id="md_build_2include_2picea-mlir_2Dialect_2Base2_2IR_2Base2Ops_1autotoc_md10">
+<h2>‘base2’ Dialect<a class="headerlink" href="#md_build_2include_2picea-mlir_2Dialect_2Base2_2IR_2Base2Ops_1autotoc_md10" title="Link to this heading"></a></h2>
+<p id="md_build_2include_2picea-mlir_2Dialect_2Base2_2IR_2Base2Ops_1autotoc_md10">The <code class="docutils literal notranslate"><span class="pre">base2</span></code> dialect groups together a set of types, operations and interfaces that abstracts binary representations of numbers in both fixed-point and floating point formats.</p>
+<section id="md_build_2include_2picea-mlir_2Dialect_2Base2_2IR_2Base2Ops_1autotoc_md11">
+<h3>Operations<a class="headerlink" href="#md_build_2include_2picea-mlir_2Dialect_2Base2_2IR_2Base2Ops_1autotoc_md11" title="Link to this heading"></a></h3>
+<section id="md_build_2include_2picea-mlir_2Dialect_2Base2_2IR_2Base2Ops_1autotoc_md12">
+<span id="md_build_2include_2picea-mlir_2Dialect_2Base2_2IR_2Base2Ops_1autotoc_md11"></span><h4>&lt;tt&gt;base2.add&lt;/tt&gt; (base2::ArithAddOp)<a class="headerlink" href="#md_build_2include_2picea-mlir_2Dialect_2Base2_2IR_2Base2Ops_1autotoc_md12" title="Link to this heading"></a></h4>
+<p id="md_build_2include_2picea-mlir_2Dialect_2Base2_2IR_2Base2Ops_1autotoc_md12">Syntax:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>operation ::= `base2.add` $lhs `,` $rhs attr-dict `:` type($result)
+</pre></div>
+</div>
+<p>Traits: <code class="docutils literal notranslate"><span class="pre">AlwaysSpeculatableImplTrait</span></code>, <code class="docutils literal notranslate"><span class="pre">SameOperandsAndResultType</span></code></p>
+<p>Interfaces: <code class="docutils literal notranslate"><span class="pre">ConditionallySpeculatable</span></code>, <code class="docutils literal notranslate"><span class="pre">InferTypeOpInterface</span></code>, <code class="docutils literal notranslate"><span class="pre">NoMemoryEffect</span> <span class="pre">(MemoryEffectOpInterface)</span></code></p>
+<p>Effects: <code class="docutils literal notranslate"><span class="pre">MemoryEffects::Effect{}</span></code></p>
+</section>
+<section id="md_build_2include_2picea-mlir_2Dialect_2Base2_2IR_2Base2Ops_1autotoc_md15">
+<h4>&lt;tt&gt;base2.and&lt;/tt&gt; (base2::ArithAndOp)<a class="headerlink" href="#md_build_2include_2picea-mlir_2Dialect_2Base2_2IR_2Base2Ops_1autotoc_md15" title="Link to this heading"></a></h4>
+<p id="md_build_2include_2picea-mlir_2Dialect_2Base2_2IR_2Base2Ops_1autotoc_md15">Syntax:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>operation ::= `base2.and` $lhs `,` $rhs attr-dict `:` type($result)
+</pre></div>
+</div>
+<p>Traits: <code class="docutils literal notranslate"><span class="pre">AlwaysSpeculatableImplTrait</span></code>, <code class="docutils literal notranslate"><span class="pre">SameOperandsAndResultType</span></code></p>
+<p>Interfaces: <code class="docutils literal notranslate"><span class="pre">ConditionallySpeculatable</span></code>, <code class="docutils literal notranslate"><span class="pre">InferTypeOpInterface</span></code>, <code class="docutils literal notranslate"><span class="pre">NoMemoryEffect</span> <span class="pre">(MemoryEffectOpInterface)</span></code></p>
+<p>Effects: <code class="docutils literal notranslate"><span class="pre">MemoryEffects::Effect{}</span></code></p>
+</section>
+<section id="md_build_2include_2picea-mlir_2Dialect_2Base2_2IR_2Base2Ops_1autotoc_md18">
+<h4>&lt;tt&gt;base2.cast&lt;/tt&gt; (base2::ArithCastOp)<a class="headerlink" href="#md_build_2include_2picea-mlir_2Dialect_2Base2_2IR_2Base2Ops_1autotoc_md18" title="Link to this heading"></a></h4>
+<p id="md_build_2include_2picea-mlir_2Dialect_2Base2_2IR_2Base2Ops_1autotoc_md18"><em>Arithmetic type cast operation.</em></p>
+<p>Syntax:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>operation ::= `base2.cast` $from attr-dict `:` type($from) `to` type($to)
+</pre></div>
+</div>
+<p>Traits: <code class="docutils literal notranslate"><span class="pre">AlwaysSpeculatableImplTrait</span></code>, <code class="docutils literal notranslate"><span class="pre">SameOperandsAndResultShape</span></code></p>
+<p>Interfaces: <code class="docutils literal notranslate"><span class="pre">ConditionallySpeculatable</span></code>, <code class="docutils literal notranslate"><span class="pre">NoMemoryEffect</span> <span class="pre">(MemoryEffectOpInterface)</span></code></p>
+<p>Effects: <code class="docutils literal notranslate"><span class="pre">MemoryEffects::Effect{}</span></code></p>
+</section>
+<section id="md_build_2include_2picea-mlir_2Dialect_2Base2_2IR_2Base2Ops_1autotoc_md21">
+<h4>&lt;tt&gt;base2.cmp&lt;/tt&gt; (base2::ArithCmpOp)<a class="headerlink" href="#md_build_2include_2picea-mlir_2Dialect_2Base2_2IR_2Base2Ops_1autotoc_md21" title="Link to this heading"></a></h4>
+<p id="md_build_2include_2picea-mlir_2Dialect_2Base2_2IR_2Base2Ops_1autotoc_md21"><em>Arithmetic comparison with predicate.</em></p>
+<p>Syntax:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>operation ::= `base2.cmp` $predicate `,` $lhs `,` $rhs attr-dict `:` type($lhs)
+</pre></div>
+</div>
+<p>Traits: <code class="docutils literal notranslate"><span class="pre">AlwaysSpeculatableImplTrait</span></code>, <code class="docutils literal notranslate"><span class="pre">SameTypeOperands</span></code></p>
+<p>Interfaces: <code class="docutils literal notranslate"><span class="pre">ConditionallySpeculatable</span></code>, <code class="docutils literal notranslate"><span class="pre">InferTypeOpInterface</span></code>, <code class="docutils literal notranslate"><span class="pre">NoMemoryEffect</span> <span class="pre">(MemoryEffectOpInterface)</span></code></p>
+<p>Effects: <code class="docutils literal notranslate"><span class="pre">MemoryEffects::Effect{}</span></code></p>
+</section>
+<section id="md_build_2include_2picea-mlir_2Dialect_2Base2_2IR_2Base2Ops_1autotoc_md25">
+<h4>&lt;tt&gt;base2.constant&lt;/tt&gt; (base2::ConstantOp)<a class="headerlink" href="#md_build_2include_2picea-mlir_2Dialect_2Base2_2IR_2Base2Ops_1autotoc_md25" title="Link to this heading"></a></h4>
+<p id="md_build_2include_2picea-mlir_2Dialect_2Base2_2IR_2Base2Ops_1autotoc_md25"><em>Declares a constant of any Base2 dialect number.</em></p>
+<p>Syntax:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>operation ::= `base2.constant` attr-dict $value
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">constant</span></code> operation produces a value of a Base2 number type from a compile-time constant.</p>
+<p>Traits: <code class="docutils literal notranslate"><span class="pre">AlwaysSpeculatableImplTrait</span></code>, <code class="docutils literal notranslate"><span class="pre">ConstantLike</span></code></p>
+<p>Interfaces: <code class="docutils literal notranslate"><span class="pre">ConditionallySpeculatable</span></code>, <code class="docutils literal notranslate"><span class="pre">InferTypeOpInterface</span></code>, <code class="docutils literal notranslate"><span class="pre">NoMemoryEffect</span> <span class="pre">(MemoryEffectOpInterface)</span></code>, <code class="docutils literal notranslate"><span class="pre">OpAsmOpInterface</span></code></p>
+<p>Effects: <code class="docutils literal notranslate"><span class="pre">MemoryEffects::Effect{}</span></code></p>
+</section>
+<section id="md_build_2include_2picea-mlir_2Dialect_2Base2_2IR_2Base2Ops_1autotoc_md28">
+<h4>&lt;tt&gt;base2.div&lt;/tt&gt; (base2::ArithDivOp)<a class="headerlink" href="#md_build_2include_2picea-mlir_2Dialect_2Base2_2IR_2Base2Ops_1autotoc_md28" title="Link to this heading"></a></h4>
+<p id="md_build_2include_2picea-mlir_2Dialect_2Base2_2IR_2Base2Ops_1autotoc_md28">Syntax:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>operation ::= `base2.div` $lhs `,` $rhs attr-dict `:` type($result)
+</pre></div>
+</div>
+<p>Traits: <code class="docutils literal notranslate"><span class="pre">AlwaysSpeculatableImplTrait</span></code>, <code class="docutils literal notranslate"><span class="pre">SameOperandsAndResultType</span></code></p>
+<p>Interfaces: <code class="docutils literal notranslate"><span class="pre">ConditionallySpeculatable</span></code>, <code class="docutils literal notranslate"><span class="pre">InferTypeOpInterface</span></code>, <code class="docutils literal notranslate"><span class="pre">NoMemoryEffect</span> <span class="pre">(MemoryEffectOpInterface)</span></code></p>
+<p>Effects: <code class="docutils literal notranslate"><span class="pre">MemoryEffects::Effect{}</span></code></p>
+</section>
+<section id="md_build_2include_2picea-mlir_2Dialect_2Base2_2IR_2Base2Ops_1autotoc_md31">
+<h4>&lt;tt&gt;base2.max&lt;/tt&gt; (base2::ArithMaxOp)<a class="headerlink" href="#md_build_2include_2picea-mlir_2Dialect_2Base2_2IR_2Base2Ops_1autotoc_md31" title="Link to this heading"></a></h4>
+<p id="md_build_2include_2picea-mlir_2Dialect_2Base2_2IR_2Base2Ops_1autotoc_md31">Syntax:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>operation ::= `base2.max` $lhs `,` $rhs attr-dict `:` type($result)
+</pre></div>
+</div>
+<p>Traits: <code class="docutils literal notranslate"><span class="pre">AlwaysSpeculatableImplTrait</span></code>, <code class="docutils literal notranslate"><span class="pre">SameOperandsAndResultType</span></code></p>
+<p>Interfaces: <code class="docutils literal notranslate"><span class="pre">ConditionallySpeculatable</span></code>, <code class="docutils literal notranslate"><span class="pre">InferTypeOpInterface</span></code>, <code class="docutils literal notranslate"><span class="pre">NoMemoryEffect</span> <span class="pre">(MemoryEffectOpInterface)</span></code></p>
+<p>Effects: <code class="docutils literal notranslate"><span class="pre">MemoryEffects::Effect{}</span></code></p>
+</section>
+<section id="md_build_2include_2picea-mlir_2Dialect_2Base2_2IR_2Base2Ops_1autotoc_md34">
+<h4>&lt;tt&gt;base2.min&lt;/tt&gt; (base2::ArithMinOp)<a class="headerlink" href="#md_build_2include_2picea-mlir_2Dialect_2Base2_2IR_2Base2Ops_1autotoc_md34" title="Link to this heading"></a></h4>
+<p id="md_build_2include_2picea-mlir_2Dialect_2Base2_2IR_2Base2Ops_1autotoc_md34">Syntax:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>operation ::= `base2.min` $lhs `,` $rhs attr-dict `:` type($result)
+</pre></div>
+</div>
+<p>Traits: <code class="docutils literal notranslate"><span class="pre">AlwaysSpeculatableImplTrait</span></code>, <code class="docutils literal notranslate"><span class="pre">SameOperandsAndResultType</span></code></p>
+<p>Interfaces: <code class="docutils literal notranslate"><span class="pre">ConditionallySpeculatable</span></code>, <code class="docutils literal notranslate"><span class="pre">InferTypeOpInterface</span></code>, <code class="docutils literal notranslate"><span class="pre">NoMemoryEffect</span> <span class="pre">(MemoryEffectOpInterface)</span></code></p>
+<p>Effects: <code class="docutils literal notranslate"><span class="pre">MemoryEffects::Effect{}</span></code></p>
+</section>
+<section id="md_build_2include_2picea-mlir_2Dialect_2Base2_2IR_2Base2Ops_1autotoc_md37">
+<h4>&lt;tt&gt;base2.mul&lt;/tt&gt; (base2::ArithMulOp)<a class="headerlink" href="#md_build_2include_2picea-mlir_2Dialect_2Base2_2IR_2Base2Ops_1autotoc_md37" title="Link to this heading"></a></h4>
+<p id="md_build_2include_2picea-mlir_2Dialect_2Base2_2IR_2Base2Ops_1autotoc_md37">Syntax:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>operation ::= `base2.mul` $lhs `,` $rhs attr-dict `:` type($result)
+</pre></div>
+</div>
+<p>Traits: <code class="docutils literal notranslate"><span class="pre">AlwaysSpeculatableImplTrait</span></code>, <code class="docutils literal notranslate"><span class="pre">SameOperandsAndResultType</span></code></p>
+<p>Interfaces: <code class="docutils literal notranslate"><span class="pre">ConditionallySpeculatable</span></code>, <code class="docutils literal notranslate"><span class="pre">InferTypeOpInterface</span></code>, <code class="docutils literal notranslate"><span class="pre">NoMemoryEffect</span> <span class="pre">(MemoryEffectOpInterface)</span></code></p>
+<p>Effects: <code class="docutils literal notranslate"><span class="pre">MemoryEffects::Effect{}</span></code></p>
+</section>
+<section id="md_build_2include_2picea-mlir_2Dialect_2Base2_2IR_2Base2Ops_1autotoc_md40">
+<h4>&lt;tt&gt;base2.or&lt;/tt&gt; (base2::ArithOrOp)<a class="headerlink" href="#md_build_2include_2picea-mlir_2Dialect_2Base2_2IR_2Base2Ops_1autotoc_md40" title="Link to this heading"></a></h4>
+<p id="md_build_2include_2picea-mlir_2Dialect_2Base2_2IR_2Base2Ops_1autotoc_md40">Syntax:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>operation ::= `base2.or` $lhs `,` $rhs attr-dict `:` type($result)
+</pre></div>
+</div>
+<p>Traits: <code class="docutils literal notranslate"><span class="pre">AlwaysSpeculatableImplTrait</span></code>, <code class="docutils literal notranslate"><span class="pre">SameOperandsAndResultType</span></code></p>
+<p>Interfaces: <code class="docutils literal notranslate"><span class="pre">ConditionallySpeculatable</span></code>, <code class="docutils literal notranslate"><span class="pre">InferTypeOpInterface</span></code>, <code class="docutils literal notranslate"><span class="pre">NoMemoryEffect</span> <span class="pre">(MemoryEffectOpInterface)</span></code></p>
+<p>Effects: <code class="docutils literal notranslate"><span class="pre">MemoryEffects::Effect{}</span></code></p>
+</section>
+<section id="md_build_2include_2picea-mlir_2Dialect_2Base2_2IR_2Base2Ops_1autotoc_md43">
+<h4>&lt;tt&gt;base2.rem&lt;/tt&gt; (base2::ArithRemOp)<a class="headerlink" href="#md_build_2include_2picea-mlir_2Dialect_2Base2_2IR_2Base2Ops_1autotoc_md43" title="Link to this heading"></a></h4>
+<p id="md_build_2include_2picea-mlir_2Dialect_2Base2_2IR_2Base2Ops_1autotoc_md43">Syntax:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>operation ::= `base2.rem` $lhs `,` $rhs attr-dict `:` type($result)
+</pre></div>
+</div>
+<p>Traits: <code class="docutils literal notranslate"><span class="pre">AlwaysSpeculatableImplTrait</span></code>, <code class="docutils literal notranslate"><span class="pre">SameOperandsAndResultType</span></code></p>
+<p>Interfaces: <code class="docutils literal notranslate"><span class="pre">ConditionallySpeculatable</span></code>, <code class="docutils literal notranslate"><span class="pre">InferTypeOpInterface</span></code>, <code class="docutils literal notranslate"><span class="pre">NoMemoryEffect</span> <span class="pre">(MemoryEffectOpInterface)</span></code></p>
+<p>Effects: <code class="docutils literal notranslate"><span class="pre">MemoryEffects::Effect{}</span></code></p>
+</section>
+<section id="md_build_2include_2picea-mlir_2Dialect_2Base2_2IR_2Base2Ops_1autotoc_md46">
+<h4>&lt;tt&gt;base2.select&lt;/tt&gt; (base2::ArithSelectOp)<a class="headerlink" href="#md_build_2include_2picea-mlir_2Dialect_2Base2_2IR_2Base2Ops_1autotoc_md46" title="Link to this heading"></a></h4>
+<p id="md_build_2include_2picea-mlir_2Dialect_2Base2_2IR_2Base2Ops_1autotoc_md46">Syntax:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>operation ::= `base2.select` $condition `,` $true_value `,` $false_value attr-dict `:` type($result)
+</pre></div>
+</div>
+<p>Traits: <code class="docutils literal notranslate"><span class="pre">AlwaysSpeculatableImplTrait</span></code></p>
+<p>Interfaces: <code class="docutils literal notranslate"><span class="pre">ConditionallySpeculatable</span></code>, <code class="docutils literal notranslate"><span class="pre">InferTypeOpInterface</span></code>, <code class="docutils literal notranslate"><span class="pre">NoMemoryEffect</span> <span class="pre">(MemoryEffectOpInterface)</span></code></p>
+<p>Effects: <code class="docutils literal notranslate"><span class="pre">MemoryEffects::Effect{}</span></code></p>
+</section>
+<section id="md_build_2include_2picea-mlir_2Dialect_2Base2_2IR_2Base2Ops_1autotoc_md49">
+<h4>&lt;tt&gt;base2.shl&lt;/tt&gt; (base2::ArithShlOp)<a class="headerlink" href="#md_build_2include_2picea-mlir_2Dialect_2Base2_2IR_2Base2Ops_1autotoc_md49" title="Link to this heading"></a></h4>
+<p id="md_build_2include_2picea-mlir_2Dialect_2Base2_2IR_2Base2Ops_1autotoc_md49">Syntax:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>operation ::= `base2.shl` $lhs `,` $rhs attr-dict `:` type($result)
+</pre></div>
+</div>
+<p>Traits: <code class="docutils literal notranslate"><span class="pre">AlwaysSpeculatableImplTrait</span></code>, <code class="docutils literal notranslate"><span class="pre">SameOperandsAndResultType</span></code></p>
+<p>Interfaces: <code class="docutils literal notranslate"><span class="pre">ConditionallySpeculatable</span></code>, <code class="docutils literal notranslate"><span class="pre">InferTypeOpInterface</span></code>, <code class="docutils literal notranslate"><span class="pre">NoMemoryEffect</span> <span class="pre">(MemoryEffectOpInterface)</span></code></p>
+<p>Effects: <code class="docutils literal notranslate"><span class="pre">MemoryEffects::Effect{}</span></code></p>
+</section>
+<section id="md_build_2include_2picea-mlir_2Dialect_2Base2_2IR_2Base2Ops_1autotoc_md52">
+<h4>&lt;tt&gt;base2.shr&lt;/tt&gt; (base2::ArithShrOp)<a class="headerlink" href="#md_build_2include_2picea-mlir_2Dialect_2Base2_2IR_2Base2Ops_1autotoc_md52" title="Link to this heading"></a></h4>
+<p id="md_build_2include_2picea-mlir_2Dialect_2Base2_2IR_2Base2Ops_1autotoc_md52">Syntax:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>operation ::= `base2.shr` $lhs `,` $rhs attr-dict `:` type($result)
+</pre></div>
+</div>
+<p>Traits: <code class="docutils literal notranslate"><span class="pre">AlwaysSpeculatableImplTrait</span></code>, <code class="docutils literal notranslate"><span class="pre">SameOperandsAndResultType</span></code></p>
+<p>Interfaces: <code class="docutils literal notranslate"><span class="pre">ConditionallySpeculatable</span></code>, <code class="docutils literal notranslate"><span class="pre">InferTypeOpInterface</span></code>, <code class="docutils literal notranslate"><span class="pre">NoMemoryEffect</span> <span class="pre">(MemoryEffectOpInterface)</span></code></p>
+<p>Effects: <code class="docutils literal notranslate"><span class="pre">MemoryEffects::Effect{}</span></code></p>
+</section>
+<section id="md_build_2include_2picea-mlir_2Dialect_2Base2_2IR_2Base2Ops_1autotoc_md55">
+<h4>&lt;tt&gt;base2.sub&lt;/tt&gt; (base2::ArithSubOp)<a class="headerlink" href="#md_build_2include_2picea-mlir_2Dialect_2Base2_2IR_2Base2Ops_1autotoc_md55" title="Link to this heading"></a></h4>
+<p id="md_build_2include_2picea-mlir_2Dialect_2Base2_2IR_2Base2Ops_1autotoc_md55">Syntax:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>operation ::= `base2.sub` $lhs `,` $rhs attr-dict `:` type($result)
+</pre></div>
+</div>
+<p>Traits: <code class="docutils literal notranslate"><span class="pre">AlwaysSpeculatableImplTrait</span></code>, <code class="docutils literal notranslate"><span class="pre">SameOperandsAndResultType</span></code></p>
+<p>Interfaces: <code class="docutils literal notranslate"><span class="pre">ConditionallySpeculatable</span></code>, <code class="docutils literal notranslate"><span class="pre">InferTypeOpInterface</span></code>, <code class="docutils literal notranslate"><span class="pre">NoMemoryEffect</span> <span class="pre">(MemoryEffectOpInterface)</span></code></p>
+<p>Effects: <code class="docutils literal notranslate"><span class="pre">MemoryEffects::Effect{}</span></code></p>
+</section>
+</section>
+<section id="md_build_2include_2picea-mlir_2Dialect_2Base2_2IR_2Base2Ops_1autotoc_md58">
+<h3>Attributes<a class="headerlink" href="#md_build_2include_2picea-mlir_2Dialect_2Base2_2IR_2Base2Ops_1autotoc_md58" title="Link to this heading"></a></h3>
+<section id="md_build_2include_2picea-mlir_2Dialect_2Base2_2IR_2Base2Ops_1autotoc_md59">
+<span id="md_build_2include_2picea-mlir_2Dialect_2Base2_2IR_2Base2Ops_1autotoc_md58"></span><h4>BitsAttr<a class="headerlink" href="#md_build_2include_2picea-mlir_2Dialect_2Base2_2IR_2Base2Ops_1autotoc_md59" title="Link to this heading"></a></h4>
+<p id="md_build_2include_2picea-mlir_2Dialect_2Base2_2IR_2Base2Ops_1autotoc_md59"><em>Constant bit sequence attribute</em></p>
+<p>Syntax:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">#base2.bits&lt;</span>
+  <span class="p">::</span><span class="n">mlir</span><span class="p">::</span><span class="n">Type</span><span class="p">,</span>   <span class="c1"># type</span>
+  <span class="n">BitSequence</span>   <span class="c1"># value</span>
+<span class="o">&gt;</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">bits</span></code> attribute represents a compile-time constant sequence of bits that defines the value of a <code class="docutils literal notranslate"><span class="pre">BitSequenceType</span></code>.</p>
+<p>Syntax:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>bits-attr    ::= `bits` `&lt;` bit-sequence `&gt;` `:` type
+bit-sequence ::= `"` bit-literal (trunc-spec)? `"`
+bit-literal  ::= `0b` [_01]* | `0x` [_0-9a-fA-F]*
+trunc-spec   ::= `/` [0-9]+
+</pre></div>
+</div>
+<p>The number of bits in the bit-sequence must be equal to the bit width of the type.</p>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">//</span> <span class="n">These</span> <span class="nb">all</span> <span class="n">have</span> <span class="n">the</span> <span class="n">same</span> <span class="n">value</span><span class="o">.</span>
+<span class="c1">#base2.bits&lt;"0b0000001000"&gt; : i10</span>
+<span class="c1">#base2.bits&lt;"0b1000/10"&gt; : i10</span>
+<span class="c1">#base2.bits&lt;"0x8/10"&gt; : i10</span>
+<span class="c1">#base2.bits&lt;"0x0008/10"&gt; : i10</span>
+<span class="c1">#base2.bits&lt;"0x000008/10"&gt; : i10</span>
+
+<span class="o">//</span> <span class="n">And</span> <span class="n">this</span> <span class="ow">is</span> <span class="n">the</span> <span class="n">canonical</span> <span class="n">version</span> <span class="n">of</span> <span class="n">the</span> <span class="n">same</span> <span class="n">value</span><span class="o">.</span>
+<span class="c1">#base2.bits&lt;"0x08/10"&gt; : i10</span>
+</pre></div>
+</div>
+</section>
+<section id="md_build_2include_2picea-mlir_2Dialect_2Base2_2IR_2Base2Ops_1autotoc_md61">
+<h4>DenseBitsAttr<a class="headerlink" href="#md_build_2include_2picea-mlir_2Dialect_2Base2_2IR_2Base2Ops_1autotoc_md61" title="Link to this heading"></a></h4>
+<p id="md_build_2include_2picea-mlir_2Dialect_2Base2_2IR_2Base2Ops_1autotoc_md61"><em>Constant densely-packed bit sequence container attribute</em></p>
+<p>The <code class="docutils literal notranslate"><span class="pre">dense_bits</span></code> attribute represents a compile-time constant container of sequences of bits that each define the value of a common <code class="docutils literal notranslate"><span class="pre">BitSequenceType</span></code> element type.</p>
+<p>Syntax:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>dense-bits-attr ::= `dense_bits` `&lt;` $type `=` $data `&gt;`
+</pre></div>
+</div>
+<p>The result type must be a shaped type of <code class="docutils literal notranslate"><span class="pre">BitSequenceType</span></code> elements, and the dense elements contained must match the shape of type, or be a splat.</p>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">//</span> <span class="n">These</span> <span class="nb">all</span> <span class="n">have</span> <span class="n">the</span> <span class="n">same</span> <span class="n">value</span><span class="o">.</span>
+<span class="c1">#base2.dense_bits&lt;tensor&lt;3xi10&gt; = dense&lt;1&gt;&gt;</span>
+<span class="c1">#base2.dense_bits&lt;tensor&lt;3xi10&gt; = dense&lt;[1, 2, 3]&gt;&gt;</span>
+<span class="c1">#base2.dense_bits&lt;tensor&lt;3xi10&gt; = dense&lt;"0x010002000300"&gt;&gt;</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="md_build_2include_2picea-mlir_2Dialect_2Base2_2IR_2Base2Ops_1autotoc_md63">
+<h3>Types<a class="headerlink" href="#md_build_2include_2picea-mlir_2Dialect_2Base2_2IR_2Base2Ops_1autotoc_md63" title="Link to this heading"></a></h3>
+<section id="md_build_2include_2picea-mlir_2Dialect_2Base2_2IR_2Base2Ops_1autotoc_md64">
+<span id="md_build_2include_2picea-mlir_2Dialect_2Base2_2IR_2Base2Ops_1autotoc_md63"></span><h4>FixedType<a class="headerlink" href="#md_build_2include_2picea-mlir_2Dialect_2Base2_2IR_2Base2Ops_1autotoc_md64" title="Link to this heading"></a></h4>
+<p id="md_build_2include_2picea-mlir_2Dialect_2Base2_2IR_2Base2Ops_1autotoc_md64"><em>Fixed-point number type</em></p>
+<p>Syntax:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>!base2.fixed&lt;
+  unsigned,   # integerBits
+  unsigned   # fractionalBits
+&gt;
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">base2.fixed</span></code> type stores a fixed-point rational number using the specified number of <code class="docutils literal notranslate"><span class="pre">$integerBits</span></code> and <code class="docutils literal notranslate"><span class="pre">$fractionalBits</span></code>, which sign bit is implicit.</p>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>fixed-type ::= `fixed` `&lt;` $integerBits `,` $fractionalBits `&gt;`
+</pre></div>
+</div>
+</section>
+</section>
+<section id="md_build_2include_2picea-mlir_2Dialect_2Base2_2IR_2Base2Ops_1autotoc_md66">
+<h3>Enums<a class="headerlink" href="#md_build_2include_2picea-mlir_2Dialect_2Base2_2IR_2Base2Ops_1autotoc_md66" title="Link to this heading"></a></h3>
+<section id="md_build_2include_2picea-mlir_2Dialect_2Base2_2IR_2Base2Ops_1autotoc_md67">
+<span id="md_build_2include_2picea-mlir_2Dialect_2Base2_2IR_2Base2Ops_1autotoc_md66"></span><h4>OrderingPredicate<a class="headerlink" href="#md_build_2include_2picea-mlir_2Dialect_2Base2_2IR_2Base2Ops_1autotoc_md67" title="Link to this heading"></a></h4>
+<p id="md_build_2include_2picea-mlir_2Dialect_2Base2_2IR_2Base2Ops_1autotoc_md67"><em>Predicate to apply during comparison operation</em></p>
+</section>
+</section>
+</section>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,493 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The FPGA Variant using LAKSA backend &mdash; picea 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/collapsible-lists/css/tree_view.css?v=a885cde7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js?v=73120307"></script>
+      <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js?v=660e4f45"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="The CGRA Variant" href="cgra.html" />
+    <link rel="prev" title="About the project" href="../README.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            picea
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Installation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../README.html">About the project</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#guides">Guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#related-projects">Related projects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#development-environment-nix">Development Environment (Nix)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#build-on-ubuntu-24-04-no-nix">Build on Ubuntu 24.04 (no Nix)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#gurobi-license">Gurobi license</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#installing">Installing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#run-the-tests">Run the tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#build-the-documentation">Build the documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#compiling-a-design">Compiling a design</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#running-a-design-on-the-board">Running a design on the board</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#exporting-a-profiled-application-to-mocasin">Exporting a profiled application to Mocasin</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Guides</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">The FPGA Variant using LAKSA backend</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#what-the-backend-produces">1. What the backend produces</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#kernel-classification-and-the-line-buffer">2. Kernel classification and the line buffer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#the-convert-to-emithls-pipeline">3. The <code class="docutils literal notranslate"><span class="pre">convert-to-emithls</span></code> pipeline</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#normalize-the-graph">3.1 Normalize the graph</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#build-the-dataflow-graph">3.2 Build the dataflow graph</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#lower-the-bodies">3.3 Lower the bodies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#clean-up-the-emitted-c">3.4 Clean up the emitted C++</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#design-space-exploration-and-pragmas">3.5 Design space exploration and pragmas</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#the-ilp-model">4. The ILP model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#getting-the-artifacts-out">5. Getting the artifacts out</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="cgra.html">The CGRA Variant</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">MLIR Dialects</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/Base2Ops.html">‘base2’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/CGRAOps.html">‘cgra’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/DFGOps.html">‘dfg’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/EmitHLSOps.html">‘emithls’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/FilterOps.html">‘filter’ Dialect</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Passes</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/PICEAConversionPasses.html">PICEA Conversion Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/CGRAPasses.html">CGRA Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/DFGPasses.html">DFG Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/EmitHLSPasses.html">Emit HLS Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/FuncExtPasses.html">Func Ext Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/LinalgExtPasses.html">Linalg Ext Passes</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">C++ API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../api/library_root.html">C++ API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">picea</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">The FPGA Variant using LAKSA backend</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/guides/laksa.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="the-fpga-variant-using-laksa-backend">
+<h1>The FPGA Variant using LAKSA backend<a class="headerlink" href="#the-fpga-variant-using-laksa-backend" title="Link to this heading"></a></h1>
+<p>With this backend, <code class="docutils literal notranslate"><span class="pre">picea</span></code> lowers a given input graph, for instance, the bottleneck part of a CNN or DSP application, to an optimized HLS C++ code, that is compatible directly with the Xilinx Vivado Suite.
+The lowering is <strong>template-free and annotation-free</strong>: every implementation decision — where a line buffer goes, how wide each stream is, which loop is unrolled by how much, which pragma lands where — is inferred from the <code class="docutils literal notranslate"><span class="pre">linalg</span></code> indexing maps and from two numbers describing the board, not from a library of pre-written operator templates or from user-supplied directives.</p>
+<p><a class="reference external" href="https://github.com/tud-ccc/laksa">LAKSA</a> (<strong>L</strong>inear <strong>A</strong>lgebra <strong>K</strong>ernel <strong>S</strong>treaming <strong>A</strong>rchitecture) is described in the CASES’26 paper of the same name; this page is the narrative reference for its implementation here.
+The exhaustive per-pass option lists and operation definitions are generated from the tablegen sources and live in the Passes and MLIR Dialects sections of this documentation.</p>
+<section id="what-the-backend-produces">
+<h2>1. What the backend produces<a class="headerlink" href="#what-the-backend-produces" title="Link to this heading"></a></h2>
+<p>The input is a <code class="docutils literal notranslate"><span class="pre">linalg</span></code>-on-tensors graph, typically emitted by IREE from an ONNX / TensorFlow / PyTorch model, or a <code class="docutils literal notranslate"><span class="pre">filter</span></code> dialect kernel for DSP workloads.
+The output is a <strong>streaming dataflow architecture</strong>: one HLS C++ function per graph node, connected by <code class="docutils literal notranslate"><span class="pre">hls::stream</span></code> FIFOs, wrapped in a top function carrying <code class="docutils literal notranslate"><span class="pre">DATAFLOW</span></code>, with all resource pragmas already in place.</p>
+<p>Three properties drive the whole design, and they are what separates LAKSA from a generic HLS lowering:</p>
+<ul class="simple">
+<li><p><strong>Line buffers instead of intermediate tensors.</strong> A node never materializes its full input.
+For a sliding-window kernel only the rows still needed by a later window are kept, so on-chip memory stays flat as the input grows rather than scaling with it.
+This is what keeps a 224×224 convolution inside the BRAM budget of an edge device.</p></li>
+<li><p><strong>A single ILP that bounds BRAM <em>and</em> DSP.</strong> Loop unroll factors, pipeline placement and array partitioning are not independent knobs: unrolling a loop multiplies both the DSPs its body needs and the partitioning its arrays need.
+<code class="docutils literal notranslate"><span class="pre">--emithls-pragma-dse</span></code> solves for all of them at once against the real device limits.</p></li>
+<li><p><strong>FIFO depths derived from the same solution.</strong> The per-node cycle estimates the ILP already computed are reused to size each channel, so a fast branch of a diamond (e.g. a residual block) cannot deadlock against a slow one.</p></li>
+</ul>
+</section>
+<section id="kernel-classification-and-the-line-buffer">
+<h2>2. Kernel classification and the line buffer<a class="headerlink" href="#kernel-classification-and-the-line-buffer" title="Link to this heading"></a></h2>
+<p>Everything downstream hangs off one analysis, performed by <code class="docutils literal notranslate"><span class="pre">--convert-linalg-to-picea-loops</span></code> on each <code class="docutils literal notranslate"><span class="pre">linalg.generic</span></code>.
+A kernel is one of three types, decided purely from its indexing maps:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Type</p></th>
+<th class="head"><p>Recognized by</p></th>
+<th class="head"><p>Example</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>PP</strong> — pure parallel</p></td>
+<td><p>every iterator is <code class="docutils literal notranslate"><span class="pre">parallel</span></code></p></td>
+<td><p>elementwise, ReLU</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>SW</strong> — sliding window</p></td>
+<td><p>some map result is a compound expression <code class="docutils literal notranslate"><span class="pre">s*d_parallel</span> <span class="pre">+</span> <span class="pre">δ*d_reduction</span></code></p></td>
+<td><p>Conv2D, Pool2D</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>RR</strong> — regular reduction</p></td>
+<td><p>a reduction iterator, but no compound expression</p></td>
+<td><p>MatMul, fully connected</p></td>
+</tr>
+</tbody>
+</table>
+<p>The compound expression is the whole trick: <code class="docutils literal notranslate"><span class="pre">s</span></code> is the stride (how far the window moves per output) and <code class="docutils literal notranslate"><span class="pre">δ</span></code> the dilation (spacing inside the window), and both fall out of the affine expression without anyone naming the operator “convolution”.
+<code class="docutils literal notranslate"><span class="pre">analyzeSlidingWindow</span></code> returns exactly that triple.</p>
+<p>For an SW kernel the pass then splits the iteration space into three groups — <strong>read</strong> loops that scan the input in raster order, <strong>write</strong> loops over the output-only parallel dims (e.g. output channels), and <strong>reduce</strong> loops that walk inside the window — and builds:</p>
+<ul class="simple">
+<li><p>an <code class="docutils literal notranslate"><span class="pre">emithls.helper.linebuf</span></code> of <code class="docutils literal notranslate"><span class="pre">(K-1)·δ</span></code> rows, one slot per input stream, each row as wide as the input.
+The bottom row is consumed as it streams in and is never stored;</p></li>
+<li><p>an <code class="docutils literal notranslate"><span class="pre">emithls.helper.window</span></code> reading the full dilated receptive field out of it;</p></li>
+<li><p>an <code class="docutils literal notranslate"><span class="pre">affine.if</span></code> guarding the computation with the <em>warm-up</em> condition <code class="docutils literal notranslate"><span class="pre">d_i</span> <span class="pre">≥</span> <span class="pre">(K-1)·δ</span></code> and, when <code class="docutils literal notranslate"><span class="pre">s</span> <span class="pre">&gt;</span> <span class="pre">1</span></code>, the <em>stride</em> condition <code class="docutils literal notranslate"><span class="pre">(d_i</span> <span class="pre">−</span> <span class="pre">(K-1)·δ)</span> <span class="pre">mod</span> <span class="pre">s</span> <span class="pre">==</span> <span class="pre">0</span></code>.
+That single <code class="docutils literal notranslate"><span class="pre">IntegerSet</span></code> is what makes strided and dilated convolutions fall out of the same code path;</p></li>
+<li><p>an <code class="docutils literal notranslate"><span class="pre">emithls.helper.accumulate</span></code> for the reduction, tagged with <code class="docutils literal notranslate"><span class="pre">accu_at</span></code> so the later passes know which axes may be written in parallel.</p></li>
+</ul>
+<p>An RR kernel takes the same path with the buffer degenerating to one slot per stream, and a PP kernel just becomes a plain affine loop nest.
+Fill and broadcast generics are not lowered at all — their constant is folded onto the output buffer as a <code class="docutils literal notranslate"><span class="pre">fill_with</span></code> attribute and consumed later.</p>
+</section>
+<section id="the-convert-to-emithls-pipeline">
+<h2>3. The <code class="docutils literal notranslate"><span class="pre">convert-to-emithls</span></code> pipeline<a class="headerlink" href="#the-convert-to-emithls-pipeline" title="Link to this heading"></a></h2>
+<p>Declared in <a class="reference internal" href="#include/picea-mlir/Conversion/ConvertToEmitHLS/ConvertToEmitHLS.h"><span class="xref myst">ConvertToEmitHLS</span></a>.
+It takes two options, both defaulting to the AMD KV260:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Option</p></th>
+<th class="head"><p>Default</p></th>
+<th class="head"><p>Meaning</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">available-bram</span></code></p></td>
+<td><p>288</p></td>
+<td><p>BRAM18K blocks the design may use</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">available-dsp</span></code></p></td>
+<td><p>1248</p></td>
+<td><p>DSP48 slices the design may use</p></td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>picea-opt<span class="w"> </span>--convert-to-emithls<span class="o">=</span><span class="s2">"available-bram=288 available-dsp=1248"</span><span class="w"> </span>model.mlir
+</pre></div>
+</div>
+<p>The pipeline runs in five phases.
+Canonicalization and CSE run between them and are omitted from the tables below.</p>
+<section id="normalize-the-graph">
+<h3>3.1 Normalize the graph<a class="headerlink" href="#normalize-the-graph" title="Link to this heading"></a></h3>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Pass</p></th>
+<th class="head"><p>Role</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">--convert-filter-to-linalg</span></code></p></td>
+<td><p>Expands <code class="docutils literal notranslate"><span class="pre">filter.fir</span></code> and friends into <code class="docutils literal notranslate"><span class="pre">linalg</span></code> generics, so DSP kernels join the same path as ML ones.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">--linalg-soft-transpose</span></code></p></td>
+<td><p>Transposes constant tensors at compile time instead of emitting a runtime transpose.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">--linalg-generalize-named-ops</span></code></p></td>
+<td><p>Upstream: named ops (<code class="docutils literal notranslate"><span class="pre">linalg.conv_2d_nhwc_hwcf</span></code>, …) become <code class="docutils literal notranslate"><span class="pre">linalg.generic</span></code>, so only one form has to be analyzed.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">--linalg-scalarize-splat-dense</span></code></p></td>
+<td><p>A splat tensor operand becomes a scalar, removing a buffer that would otherwise be allocated.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">--linalg-inline-scalar-operands</span></code></p></td>
+<td><p>Upstream: folds rank-0 operands into the body.</p></td>
+</tr>
+</tbody>
+</table>
+<p>After this phase the graph is a flat sequence of <code class="docutils literal notranslate"><span class="pre">linalg.generic</span></code> ops, which is the only shape the kernel analysis knows.</p>
+</section>
+<section id="build-the-dataflow-graph">
+<h3>3.2 Build the dataflow graph<a class="headerlink" href="#build-the-dataflow-graph" title="Link to this heading"></a></h3>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Pass</p></th>
+<th class="head"><p>Role</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">--func-outline-computation-leaf</span></code></p></td>
+<td><p>Splits the model function into one leaf function per computation, leaving a caller that is just a sequence of calls — the graph.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">--convert-func-to-dfg</span></code></p></td>
+<td><p>A leaf (no calls) becomes a <code class="docutils literal notranslate"><span class="pre">dfg.operator</span></code>; the caller becomes a <code class="docutils literal notranslate"><span class="pre">dfg.region</span></code>; each <code class="docutils literal notranslate"><span class="pre">func.call</span></code> becomes a <code class="docutils literal notranslate"><span class="pre">dfg.instantiate</span></code> plus the <code class="docutils literal notranslate"><span class="pre">dfg.channel</span></code>s wiring its results onward.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">--dfg-channel-fanout-expansion</span></code></p></td>
+<td><p>A channel read by more than one consumer is cloned per consumer, because a FIFO cannot be read twice.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">--dfg-operator-to-process</span></code></p></td>
+<td><p>Turns the SDF operator into a KPN <code class="docutils literal notranslate"><span class="pre">dfg.process</span></code>: an explicit pull/compute/push body.</p></td>
+</tr>
+</tbody>
+</table>
+<p>The <code class="docutils literal notranslate"><span class="pre">dfg</span></code> dialect is where the streaming semantics live; from here on, “a node” means a process and “an edge” means a channel.</p>
+</section>
+<section id="lower-the-bodies">
+<h3>3.3 Lower the bodies<a class="headerlink" href="#lower-the-bodies" title="Link to this heading"></a></h3>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Pass</p></th>
+<th class="head"><p>Role</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">--one-shot-bufferize</span></code></p></td>
+<td><p>Tensors become memrefs. Everything after this point is memory, which is what the line-buffer analysis needs.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">--linalg-map-to-generic</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">linalg.map</span></code> normalized to <code class="docutils literal notranslate"><span class="pre">linalg.generic</span></code>.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">--convert-linalg-to-picea-loops</span></code></p></td>
+<td><p><strong>The core pass</strong>: classification, line buffer, compute window, warm-up/stride guard, accumulate helper.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">--dfg-io-normalization</span></code></p></td>
+<td><p>Normalizes port shapes and the pull/push ops against what the bodies actually consume and produce.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">--convert-memref-pad-to-picea-loops</span></code></p></td>
+<td><p>Recognizes the “subview into a larger alloc” padding idiom and rewrites it as a streaming loop that emits the <code class="docutils literal notranslate"><span class="pre">fill_with</span></code> constant outside the real region — no padded copy is ever stored.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">--convert-affine-to-emithls</span></code>, <code class="docutils literal notranslate"><span class="pre">--convert-arith-to-emithls</span></code>, <code class="docutils literal notranslate"><span class="pre">--convert-base2-to-emithls</span></code></p></td>
+<td><p>Loops, arithmetic and fixed-point ops become their <code class="docutils literal notranslate"><span class="pre">emithls</span></code> equivalents.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">--dfg-collapse-unit-dims</span></code></p></td>
+<td><p>Drops statically size-1 axes from port shapes, which otherwise survive as <code class="docutils literal notranslate"><span class="pre">for</span> <span class="pre">(i</span> <span class="pre">=</span> <span class="pre">0;</span> <span class="pre">i</span> <span class="pre">&lt;</span> <span class="pre">1;</span> <span class="pre">++i)</span></code> in the generated C++.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">--convert-dfg-to-emithls</span></code></p></td>
+<td><p>Processes and regions become <code class="docutils literal notranslate"><span class="pre">emithls.func</span></code>, channels become <code class="docutils literal notranslate"><span class="pre">hls::stream</span></code> variables, instantiations become calls, pulls/pushes become <code class="docutils literal notranslate"><span class="pre">emithls.stream.read</span></code>/<code class="docutils literal notranslate"><span class="pre">write</span></code>.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">--reconcile-unrealized-casts</span></code></p></td>
+<td><p>Cleans up the casts the partial conversions left behind.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="clean-up-the-emitted-c">
+<h3>3.4 Clean up the emitted C++<a class="headerlink" href="#clean-up-the-emitted-c" title="Link to this heading"></a></h3>
+<p>At this point the IR is already C++-shaped, and the passes are about the quality of the code a human would read in <code class="docutils literal notranslate"><span class="pre">main.cpp</span></code>.</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Pass</p></th>
+<th class="head"><p>Role</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">--emithls-resolve-helpers</span></code></p></td>
+<td><p>Turns the <code class="docutils literal notranslate"><span class="pre">helper.linebuf</span></code> / <code class="docutils literal notranslate"><span class="pre">helper.window</span></code> / <code class="docutils literal notranslate"><span class="pre">helper.accumulate</span></code> placeholders into real arrays, shift loops and accumulation code. This is where the abstract line-buffer description becomes real storage.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">--emithls-loop-fusion</span></code></p></td>
+<td><p>Merges adjacent <code class="docutils literal notranslate"><span class="pre">emithls.for</span></code> loops when every shared resource is touched at corresponding indices, and forwards a store immediately read back at the same address.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">--emithls-fuse-operator</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">a</span> <span class="pre">=</span> <span class="pre">a</span> <span class="pre">+</span> <span class="pre">b</span></code> becomes <code class="docutils literal notranslate"><span class="pre">a</span> <span class="pre">+=</span> <span class="pre">b</span></code>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">--emithls-fold-expression</span></code></p></td>
+<td><p>Folds an expression’s content, e.g. pushing a negation through a comparison instead of emitting it.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">--emithls-add-io-functions</span></code></p></td>
+<td><p>Rewrites the top function’s interface to word-wide pointer arguments and generates the pack/unpack functions between those words and the internal streams.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="design-space-exploration-and-pragmas">
+<h3>3.5 Design space exploration and pragmas<a class="headerlink" href="#design-space-exploration-and-pragmas" title="Link to this heading"></a></h3>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Pass</p></th>
+<th class="head"><p>Role</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">--emithls-pragma-dse</span></code></p></td>
+<td><p>Builds the ILP and solves it. Writes the solution back as <code class="docutils literal notranslate"><span class="pre">dse.*</span></code> attributes; changes no code.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">--emithls-pragma-insertion</span></code></p></td>
+<td><p>Consumes those attributes: strip-mines each loop into its outer/inner pair, rewrites port widths, and materializes the actual <code class="docutils literal notranslate"><span class="pre">emithls.pragma.*</span></code> ops.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">--emithls-insert-includes</span></code></p></td>
+<td><p>Adds the <code class="docutils literal notranslate"><span class="pre">#include</span></code>s the generated code turned out to need.</p></td>
+</tr>
+</tbody>
+</table>
+<p>Splitting solve from rewrite is deliberate.
+The solver runs on normalized IR where every loop still has its original trip count, which is what the cycle and resource formulas are written against; and the decisions survive as plain attributes, so the IR can be dumped, inspected or hand-edited between the two.</p>
+</section>
+</section>
+<section id="the-ilp-model">
+<h2>4. The ILP model<a class="headerlink" href="#the-ilp-model" title="Link to this heading"></a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">--emithls-pragma-dse</span></code> builds a Gurobi model over the whole dataflow graph — a Gurobi license is therefore required to run this pipeline.
+It abstracts the IR into nodes (a call plus its callee) and edges (a stream variable connecting one producer port to one consumer port), then:</p>
+<ul class="simple">
+<li><p><strong>Variables.</strong> Each candidate loop gets a split factor chosen from the divisors of its trip count, plus a binary “pipelined” decision.
+A loop whose factor is dictated by the port it feeds is tied to that port instead of choosing freely.</p></li>
+<li><p><strong>Pipelining implies unrolling.</strong> A pipelined loop’s body must be one combinational block, so every candidate nested inside it is forced to full unroll.
+A loop reducing into a single accumulator only pipelines usefully once fully duplicated, so pipelining pins its own factor to its trip count.</p></li>
+<li><p><strong>BRAM.</strong> Each local array’s cost is a static baseline from its unpartitioned dimensions times the product of the factors of the loops that drive its partitioned ones — 18,432 bits per BRAM18K.
+Const tables and shift-register-style self-updating arrays are recognized as register-backed and cost nothing.
+The sum over every node must fit <code class="docutils literal notranslate"><span class="pre">available-bram</span></code>.</p></li>
+<li><p><strong>DSP.</strong> Each multiplication is charged by its <em>pre-cast</em> operand width (the datapath upcasts to i32 before multiplying, so the declared width would overcount), times the number of parallel hardware copies of the loop it sits in.
+The sum must fit <code class="docutils literal notranslate"><span class="pre">available-dsp</span></code>.</p></li>
+<li><p><strong>Objective.</strong> Not the sum of all node cycles but the graph’s <strong>critical path</strong>: the longest producer-to-consumer chain, maxed over every sink.
+For a straight chain the two coincide; they differ exactly when the graph forks and merges.</p></li>
+</ul>
+<p>Both resource models are deliberate over-estimates — actual HLS binding is far more subtle — so the constraint is an upper bound, and a design that satisfies it fits.
+The paper quantifies the gap against post-PnR numbers.</p>
+<p><strong>FIFO sizing</strong> reuses the solved per-token cycle counts: each edge is sized so its producer never stalls, and at a merge every incoming edge is padded by the gap between its own producer’s latency and the slowest one’s.
+That padding is what keeps a residual block from deadlocking.</p>
+</section>
+<section id="getting-the-artifacts-out">
+<h2>5. Getting the artifacts out<a class="headerlink" href="#getting-the-artifacts-out" title="Link to this heading"></a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">emithls</span></code> is a C++-shaped dialect, so the translations are direct emitters.
+<code class="docutils literal notranslate"><span class="pre">resin</span> <span class="pre">--hls</span></code> runs the pipeline and all of them in one step.
+It also lowers the same input a second time through <code class="docutils literal notranslate"><span class="pre">convert-to-picea-emitc</span></code>, into a scalar reference that the board run is checked against:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>resin<span class="w"> </span>--hls<span class="w"> </span>-o<span class="w"> </span>out/<span class="w"> </span>model.mlir
+</pre></div>
+</div>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>File</p></th>
+<th class="head"><p>Translation</p></th>
+<th class="head"><p>Purpose</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">hls.mlir</span></code></p></td>
+<td><p>—</p></td>
+<td><p>The lowered IR, kept for inspection</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ref.mlir</span></code></p></td>
+<td><p>—</p></td>
+<td><p>The same input lowered to <code class="docutils literal notranslate"><span class="pre">emitc</span></code> instead</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">hw/main.cpp</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">emithls-to-cpp</span></code></p></td>
+<td><p>Vitis HLS input</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">hw/run_hls.tcl</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">emithls-to-hls-tcl</span></code></p></td>
+<td><p>Synthesis script</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">hw/run_vivado.tcl</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">emithls-to-vivado-tcl</span></code></p></td>
+<td><p>Block design, implementation and bitstream</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">hw/build.sh</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">emithls-to-hls-build-script</span></code></p></td>
+<td><p>Runs both scripts and extracts the bitstream</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">app/app.h</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">emithls-to-laksa-header</span></code></p></td>
+<td><p>Board-side driver API</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">app/app.c</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">emithls-to-laksa-app</span></code></p></td>
+<td><p>Userspace program driving the design</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">app/app.dtsi</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">emithls-to-kria-dtsi</span></code></p></td>
+<td><p>Device tree overlay</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">app/ref.h</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">mlir-to-cpp</span></code> (from <code class="docutils literal notranslate"><span class="pre">ref.mlir</span></code>)</p></td>
+<td><p>Scalar reference</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">app/ref.c</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">emitc-to-laksa-ref</span></code> (from <code class="docutils literal notranslate"><span class="pre">ref.mlir</span></code>)</p></td>
+<td><p>Compares the board’s output against <code class="docutils literal notranslate"><span class="pre">ref.h</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">app/run.sh</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">emithls-to-laksa-run-script</span></code></p></td>
+<td><p>Loads the design, runs it and checks it</p></td>
+</tr>
+</tbody>
+</table>
+<p>The <code class="docutils literal notranslate"><span class="pre">app/</span></code> artifacts target <a class="reference external" href="https://github.com/tud-ccc/laksa-hls-kria-dirver"><code class="docutils literal notranslate"><span class="pre">laksa-hls-kria-driver</span></code></a>, which exposes <code class="docutils literal notranslate"><span class="pre">/dev/laksa</span></code> so a userspace program can drive the generated kernel over AXI Lite without recompiling the kernel module per design.
+The file names are not free-form — <code class="docutils literal notranslate"><span class="pre">run_hls.tcl</span></code> feeds <code class="docutils literal notranslate"><span class="pre">main.cpp</span></code> to <code class="docutils literal notranslate"><span class="pre">add_files</span></code>, and <code class="docutils literal notranslate"><span class="pre">app.c</span></code> includes <code class="docutils literal notranslate"><span class="pre">app.h</span></code>.
+<code class="docutils literal notranslate"><span class="pre">--num-bram</span></code> and <code class="docutils literal notranslate"><span class="pre">--num-dsp</span></code> override the resource budget the pragma DSE works with.</p>
+<p>On the board, <code class="docutils literal notranslate"><span class="pre">run.sh</span></code> runs <code class="docutils literal notranslate"><span class="pre">app</span></code> and then <code class="docutils literal notranslate"><span class="pre">ref</span></code>, and each reports how long its kernel took before the outputs are compared:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>&lt;design&gt;: ran on the FPGA in &lt;time&gt; ms
+reference: ran on the CPU in &lt;time&gt; ms
+output0.bin: all &lt;num&gt; elements match the reference
+</pre></div>
+</div>
+<p>Both times cover the kernel alone.
+<code class="docutils literal notranslate"><span class="pre">app</span></code> takes its from asserting <code class="docutils literal notranslate"><span class="pre">ap_start</span></code> to seeing <code class="docutils literal notranslate"><span class="pre">ap_done</span></code>, which leaves out copying the buffers to and from the device, and <code class="docutils literal notranslate"><span class="pre">ref</span></code> takes its around the call to the scalar reference, which leaves out reading the <code class="docutils literal notranslate"><span class="pre">.bin</span></code> files and comparing them.</p>
+<p>Each stage can also be run on its own with <code class="docutils literal notranslate"><span class="pre">picea-opt</span></code> and <code class="docutils literal notranslate"><span class="pre">picea-translate</span></code>; <code class="docutils literal notranslate"><span class="pre">resin</span> <span class="pre">-v</span></code> (repeatable) prints the exact command lines it dispatches, which is the quickest way to reproduce one stage by hand.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../README.html" class="btn btn-neutral float-left" title="About the project" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="cgra.html" class="btn btn-neutral float-right" title="The CGRA Variant" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,1577 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Program Listing for File EmitHLSOps.md &mdash; picea 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/collapsible-lists/css/tree_view.css?v=a885cde7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js?v=73120307"></script>
+      <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js?v=660e4f45"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            picea
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Installation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../README.html">About the project</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#guides">Guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#related-projects">Related projects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#development-environment-nix">Development Environment (Nix)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#build-on-ubuntu-24-04-no-nix">Build on Ubuntu 24.04 (no Nix)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#gurobi-license">Gurobi license</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#installing">Installing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#run-the-tests">Run the tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#build-the-documentation">Build the documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#compiling-a-design">Compiling a design</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#running-a-design-on-the-board">Running a design on the board</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#exporting-a-profiled-application-to-mocasin">Exporting a profiled application to Mocasin</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Guides</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../guides/laksa.html">The FPGA Variant using LAKSA backend</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/cgra.html">The CGRA Variant</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">MLIR Dialects</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/Base2Ops.html">‘base2’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/CGRAOps.html">‘cgra’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/DFGOps.html">‘dfg’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/EmitHLSOps.html">‘emithls’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/FilterOps.html">‘filter’ Dialect</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Passes</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/PICEAConversionPasses.html">PICEA Conversion Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/CGRAPasses.html">CGRA Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/DFGPasses.html">DFG Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/EmitHLSPasses.html">Emit HLS Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/FuncExtPasses.html">Func Ext Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/LinalgExtPasses.html">Linalg Ext Passes</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">C++ API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="library_root.html">C++ API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">picea</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Program Listing for File EmitHLSOps.md</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/program_listing_file_build_include_picea-mlir_Dialect_EmitHLS_IR_EmitHLSOps.md.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="program-listing-for-file-emithlsops-md">
+<span id="program-listing-file-build-include-picea-mlir-dialect-emithls-ir-emithlsops-md"></span><h1>Program Listing for File EmitHLSOps.md<a class="headerlink" href="#program-listing-for-file-emithlsops-md" title="Link to this heading"></a></h1>
+<p>↰ <a class="reference internal" href="file_build_include_picea-mlir_Dialect_EmitHLS_IR_EmitHLSOps.md.html#file-build-include-picea-mlir-dialect-emithls-ir-emithlsops-md"><span class="std std-ref">Return to documentation for file</span></a> (<code class="docutils literal notranslate"><span class="pre">build/include/picea-mlir/Dialect/EmitHLS/IR/EmitHLSOps.md</span></code>)</p>
+<div class="highlight-markdown notranslate"><div class="highlight"><pre><span></span>&lt;!-- Autogenerated by mlir-tblgen; don't manually edit --&gt;
+
+<span class="gh"># 'emithls' Dialect</span>
+
+The <span class="sb">`emithls`</span> dialect groups together a set of types, operations and
+transformations that are useful to represent a High-Level Synthese
+style C++ code.
+These abstractions works as a.
+
+
+<span class="gu">## Operations</span>
+
+<span class="gu">### `emithls.arith.add` (emithls::ArithAddOp)</span>
+
+Syntax:
+
+<span class="sb">```</span>
+<span class="sb">operation ::= `emithls.arith.add` $lhs `,` $rhs attr-dict `:` type($result)</span>
+<span class="sb">```</span>
+
+Traits: <span class="sb">`AlwaysSpeculatableImplTrait`</span>, <span class="sb">`SameOperandsAndResultType`</span>
+
+Interfaces: <span class="sb">`ConditionallySpeculatable`</span>, <span class="sb">`InferTypeOpInterface`</span>, <span class="sb">`NoMemoryEffect (MemoryEffectOpInterface)`</span>
+
+Effects: <span class="sb">`MemoryEffects::Effect{}`</span>
+
+<span class="gu">#### Operands:</span>
+
+| Operand | Description |
+| :-----: | ----------- |
+| <span class="sb">`lhs`</span> | any non-token type |
+| <span class="sb">`rhs`</span> | any non-token type |
+
+<span class="gu">#### Results:</span>
+
+| Result | Description |
+| :----: | ----------- |
+| <span class="sb">`result`</span> | any non-token type |
+
+
+
+<span class="gu">### `emithls.arith.and` (emithls::ArithAndOp)</span>
+
+Syntax:
+
+<span class="sb">```</span>
+<span class="sb">operation ::= `emithls.arith.and` $lhs `,` $rhs attr-dict `:` type($result)</span>
+<span class="sb">```</span>
+
+Traits: <span class="sb">`AlwaysSpeculatableImplTrait`</span>, <span class="sb">`SameOperandsAndResultType`</span>
+
+Interfaces: <span class="sb">`ConditionallySpeculatable`</span>, <span class="sb">`InferTypeOpInterface`</span>, <span class="sb">`NoMemoryEffect (MemoryEffectOpInterface)`</span>
+
+Effects: <span class="sb">`MemoryEffects::Effect{}`</span>
+
+<span class="gu">#### Operands:</span>
+
+| Operand | Description |
+| :-----: | ----------- |
+| <span class="sb">`lhs`</span> | any non-token type |
+| <span class="sb">`rhs`</span> | any non-token type |
+
+<span class="gu">#### Results:</span>
+
+| Result | Description |
+| :----: | ----------- |
+| <span class="sb">`result`</span> | any non-token type |
+
+
+
+<span class="gu">### `emithls.arith.cast` (emithls::ArithCastOp)</span>
+
+<span class="ge">_Arithmetic type cast operation._</span>
+
+Syntax:
+
+<span class="sb">```</span>
+<span class="sb">operation ::= `emithls.arith.cast` $from attr-dict `:` type($from) `to` type($to)</span>
+<span class="sb">```</span>
+
+Traits: <span class="sb">`AlwaysSpeculatableImplTrait`</span>, <span class="sb">`SameOperandsAndResultShape`</span>
+
+Interfaces: <span class="sb">`ConditionallySpeculatable`</span>, <span class="sb">`NoMemoryEffect (MemoryEffectOpInterface)`</span>
+
+Effects: <span class="sb">`MemoryEffects::Effect{}`</span>
+
+<span class="gu">#### Operands:</span>
+
+| Operand | Description |
+| :-----: | ----------- |
+| <span class="sb">`from`</span> | any non-token type |
+
+<span class="gu">#### Results:</span>
+
+| Result | Description |
+| :----: | ----------- |
+| <span class="sb">`to`</span> | any non-token type |
+
+
+
+<span class="gu">### `emithls.arith.cmp` (emithls::ArithCmpOp)</span>
+
+<span class="ge">_Arithmetic comparison with predicate._</span>
+
+Syntax:
+
+<span class="sb">```</span>
+<span class="sb">operation ::= `emithls.arith.cmp` $predicate `,` $lhs `,` $rhs attr-dict `:` type($lhs)</span>
+<span class="sb">```</span>
+
+Traits: <span class="sb">`AlwaysSpeculatableImplTrait`</span>, <span class="sb">`SameTypeOperands`</span>
+
+Interfaces: <span class="sb">`ConditionallySpeculatable`</span>, <span class="sb">`InferTypeOpInterface`</span>, <span class="sb">`NoMemoryEffect (MemoryEffectOpInterface)`</span>
+
+Effects: <span class="sb">`MemoryEffects::Effect{}`</span>
+
+<span class="gu">#### Attributes:</span>
+
+&lt;table&gt;
+&lt;tr&gt;&lt;th&gt;Attribute&lt;/th&gt;&lt;th&gt;MLIR Type&lt;/th&gt;&lt;th&gt;Description&lt;/th&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;&lt;code&gt;predicate&lt;/code&gt;&lt;/td&gt;&lt;td&gt;::mlir::emithls::CmpPredicateAttr&lt;/td&gt;&lt;td&gt;predicate for comparison operation&lt;/td&gt;&lt;/tr&gt;
+&lt;/table&gt;
+
+<span class="gu">#### Operands:</span>
+
+| Operand | Description |
+| :-----: | ----------- |
+| <span class="sb">`lhs`</span> | any non-token type |
+| <span class="sb">`rhs`</span> | any non-token type |
+
+<span class="gu">#### Results:</span>
+
+| Result | Description |
+| :----: | ----------- |
+| <span class="sb">`result`</span> | 1-bit signless integer |
+
+
+
+<span class="gu">### `emithls.arith.data_range` (emithls::ArithDataRangeOp)</span>
+
+Traits: <span class="sb">`AlwaysSpeculatableImplTrait`</span>
+
+Interfaces: <span class="sb">`ConditionallySpeculatable`</span>, <span class="sb">`NoMemoryEffect (MemoryEffectOpInterface)`</span>
+
+Effects: <span class="sb">`MemoryEffects::Effect{}`</span>
+
+<span class="gu">#### Operands:</span>
+
+| Operand | Description |
+| :-----: | ----------- |
+| <span class="sb">`data`</span> | any non-token type |
+| <span class="sb">`high_bit`</span> | index |
+| <span class="sb">`low_bit`</span> | index |
+
+<span class="gu">#### Results:</span>
+
+| Result | Description |
+| :----: | ----------- |
+| <span class="sb">`result`</span> | any non-token type |
+
+
+
+<span class="gu">### `emithls.arith.div` (emithls::ArithDivOp)</span>
+
+Syntax:
+
+<span class="sb">```</span>
+<span class="sb">operation ::= `emithls.arith.div` $lhs `,` $rhs attr-dict `:` type($result)</span>
+<span class="sb">```</span>
+
+Traits: <span class="sb">`AlwaysSpeculatableImplTrait`</span>, <span class="sb">`SameOperandsAndResultType`</span>
+
+Interfaces: <span class="sb">`ConditionallySpeculatable`</span>, <span class="sb">`InferTypeOpInterface`</span>, <span class="sb">`NoMemoryEffect (MemoryEffectOpInterface)`</span>
+
+Effects: <span class="sb">`MemoryEffects::Effect{}`</span>
+
+<span class="gu">#### Operands:</span>
+
+| Operand | Description |
+| :-----: | ----------- |
+| <span class="sb">`lhs`</span> | any non-token type |
+| <span class="sb">`rhs`</span> | any non-token type |
+
+<span class="gu">#### Results:</span>
+
+| Result | Description |
+| :----: | ----------- |
+| <span class="sb">`result`</span> | any non-token type |
+
+
+
+<span class="gu">### `emithls.arith.fused` (emithls::ArithFusedOp)</span>
+
+<span class="ge">_Defines C/C++ style fused assignment._</span>
+
+Syntax:
+
+<span class="sb">```</span>
+<span class="sb">operation ::= `emithls.arith.fused` $op_code `,` $acc `,` $val attr-dict `:` type($acc)</span>
+<span class="sb">```</span>
+
+Traits: <span class="sb">`SameTypeOperands`</span>
+
+Interfaces: <span class="sb">`MemoryEffectsOpInterface`</span>
+
+<span class="gu">#### Attributes:</span>
+
+&lt;table&gt;
+&lt;tr&gt;&lt;th&gt;Attribute&lt;/th&gt;&lt;th&gt;MLIR Type&lt;/th&gt;&lt;th&gt;Description&lt;/th&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;&lt;code&gt;op_code&lt;/code&gt;&lt;/td&gt;&lt;td&gt;::mlir::emithls::FusedOperatorAttr&lt;/td&gt;&lt;td&gt;fused operator such as <span class="sb">`+=`</span>&lt;/td&gt;&lt;/tr&gt;
+&lt;/table&gt;
+
+<span class="gu">#### Operands:</span>
+
+| Operand | Description |
+| :-----: | ----------- |
+| <span class="sb">`acc`</span> | any non-token type |
+| <span class="sb">`val`</span> | any non-token type |
+
+
+
+<span class="gu">### `emithls.arith.logical_and` (emithls::ArithLogicalAndOp)</span>
+
+Syntax:
+
+<span class="sb">```</span>
+<span class="sb">operation ::= `emithls.arith.logical_and` $values attr-dict `:` type($result)</span>
+<span class="sb">```</span>
+
+Traits: <span class="sb">`AlwaysSpeculatableImplTrait`</span>, <span class="sb">`SameOperandsAndResultType`</span>
+
+Interfaces: <span class="sb">`ConditionallySpeculatable`</span>, <span class="sb">`NoMemoryEffect (MemoryEffectOpInterface)`</span>
+
+Effects: <span class="sb">`MemoryEffects::Effect{}`</span>
+
+<span class="gu">#### Operands:</span>
+
+| Operand | Description |
+| :-----: | ----------- |
+| <span class="sb">`values`</span> | variadic of 1-bit signless integer |
+
+<span class="gu">#### Results:</span>
+
+| Result | Description |
+| :----: | ----------- |
+| <span class="sb">`result`</span> | 1-bit signless integer |
+
+
+
+<span class="gu">### `emithls.arith.logical_or` (emithls::ArithLogicalOrOp)</span>
+
+Syntax:
+
+<span class="sb">```</span>
+<span class="sb">operation ::= `emithls.arith.logical_or` $values attr-dict `:` type($result)</span>
+<span class="sb">```</span>
+
+Traits: <span class="sb">`AlwaysSpeculatableImplTrait`</span>, <span class="sb">`SameOperandsAndResultType`</span>
+
+Interfaces: <span class="sb">`ConditionallySpeculatable`</span>, <span class="sb">`NoMemoryEffect (MemoryEffectOpInterface)`</span>
+
+Effects: <span class="sb">`MemoryEffects::Effect{}`</span>
+
+<span class="gu">#### Operands:</span>
+
+| Operand | Description |
+| :-----: | ----------- |
+| <span class="sb">`values`</span> | variadic of 1-bit signless integer |
+
+<span class="gu">#### Results:</span>
+
+| Result | Description |
+| :----: | ----------- |
+| <span class="sb">`result`</span> | 1-bit signless integer |
+
+
+
+<span class="gu">### `emithls.arith.max` (emithls::ArithMaxOp)</span>
+
+Syntax:
+
+<span class="sb">```</span>
+<span class="sb">operation ::= `emithls.arith.max` $lhs `,` $rhs attr-dict `:` type($result)</span>
+<span class="sb">```</span>
+
+Traits: <span class="sb">`AlwaysSpeculatableImplTrait`</span>, <span class="sb">`SameOperandsAndResultType`</span>
+
+Interfaces: <span class="sb">`ConditionallySpeculatable`</span>, <span class="sb">`InferTypeOpInterface`</span>, <span class="sb">`NoMemoryEffect (MemoryEffectOpInterface)`</span>
+
+Effects: <span class="sb">`MemoryEffects::Effect{}`</span>
+
+<span class="gu">#### Operands:</span>
+
+| Operand | Description |
+| :-----: | ----------- |
+| <span class="sb">`lhs`</span> | any non-token type |
+| <span class="sb">`rhs`</span> | any non-token type |
+
+<span class="gu">#### Results:</span>
+
+| Result | Description |
+| :----: | ----------- |
+| <span class="sb">`result`</span> | any non-token type |
+
+
+
+<span class="gu">### `emithls.arith.min` (emithls::ArithMinOp)</span>
+
+Syntax:
+
+<span class="sb">```</span>
+<span class="sb">operation ::= `emithls.arith.min` $lhs `,` $rhs attr-dict `:` type($result)</span>
+<span class="sb">```</span>
+
+Traits: <span class="sb">`AlwaysSpeculatableImplTrait`</span>, <span class="sb">`SameOperandsAndResultType`</span>
+
+Interfaces: <span class="sb">`ConditionallySpeculatable`</span>, <span class="sb">`InferTypeOpInterface`</span>, <span class="sb">`NoMemoryEffect (MemoryEffectOpInterface)`</span>
+
+Effects: <span class="sb">`MemoryEffects::Effect{}`</span>
+
+<span class="gu">#### Operands:</span>
+
+| Operand | Description |
+| :-----: | ----------- |
+| <span class="sb">`lhs`</span> | any non-token type |
+| <span class="sb">`rhs`</span> | any non-token type |
+
+<span class="gu">#### Results:</span>
+
+| Result | Description |
+| :----: | ----------- |
+| <span class="sb">`result`</span> | any non-token type |
+
+
+
+<span class="gu">### `emithls.arith.mul` (emithls::ArithMulOp)</span>
+
+Syntax:
+
+<span class="sb">```</span>
+<span class="sb">operation ::= `emithls.arith.mul` $lhs `,` $rhs attr-dict `:` type($result)</span>
+<span class="sb">```</span>
+
+Traits: <span class="sb">`AlwaysSpeculatableImplTrait`</span>, <span class="sb">`SameOperandsAndResultType`</span>
+
+Interfaces: <span class="sb">`ConditionallySpeculatable`</span>, <span class="sb">`InferTypeOpInterface`</span>, <span class="sb">`NoMemoryEffect (MemoryEffectOpInterface)`</span>
+
+Effects: <span class="sb">`MemoryEffects::Effect{}`</span>
+
+<span class="gu">#### Operands:</span>
+
+| Operand | Description |
+| :-----: | ----------- |
+| <span class="sb">`lhs`</span> | any non-token type |
+| <span class="sb">`rhs`</span> | any non-token type |
+
+<span class="gu">#### Results:</span>
+
+| Result | Description |
+| :----: | ----------- |
+| <span class="sb">`result`</span> | any non-token type |
+
+
+
+<span class="gu">### `emithls.arith.or` (emithls::ArithOrOp)</span>
+
+Syntax:
+
+<span class="sb">```</span>
+<span class="sb">operation ::= `emithls.arith.or` $lhs `,` $rhs attr-dict `:` type($result)</span>
+<span class="sb">```</span>
+
+Traits: <span class="sb">`AlwaysSpeculatableImplTrait`</span>, <span class="sb">`SameOperandsAndResultType`</span>
+
+Interfaces: <span class="sb">`ConditionallySpeculatable`</span>, <span class="sb">`InferTypeOpInterface`</span>, <span class="sb">`NoMemoryEffect (MemoryEffectOpInterface)`</span>
+
+Effects: <span class="sb">`MemoryEffects::Effect{}`</span>
+
+<span class="gu">#### Operands:</span>
+
+| Operand | Description |
+| :-----: | ----------- |
+| <span class="sb">`lhs`</span> | any non-token type |
+| <span class="sb">`rhs`</span> | any non-token type |
+
+<span class="gu">#### Results:</span>
+
+| Result | Description |
+| :----: | ----------- |
+| <span class="sb">`result`</span> | any non-token type |
+
+
+
+<span class="gu">### `emithls.arith.rem` (emithls::ArithRemOp)</span>
+
+Syntax:
+
+<span class="sb">```</span>
+<span class="sb">operation ::= `emithls.arith.rem` $lhs `,` $rhs attr-dict `:` type($result)</span>
+<span class="sb">```</span>
+
+Traits: <span class="sb">`AlwaysSpeculatableImplTrait`</span>, <span class="sb">`SameOperandsAndResultType`</span>
+
+Interfaces: <span class="sb">`ConditionallySpeculatable`</span>, <span class="sb">`InferTypeOpInterface`</span>, <span class="sb">`NoMemoryEffect (MemoryEffectOpInterface)`</span>
+
+Effects: <span class="sb">`MemoryEffects::Effect{}`</span>
+
+<span class="gu">#### Operands:</span>
+
+| Operand | Description |
+| :-----: | ----------- |
+| <span class="sb">`lhs`</span> | any non-token type |
+| <span class="sb">`rhs`</span> | any non-token type |
+
+<span class="gu">#### Results:</span>
+
+| Result | Description |
+| :----: | ----------- |
+| <span class="sb">`result`</span> | any non-token type |
+
+
+
+<span class="gu">### `emithls.arith.select` (emithls::ArithSelectOp)</span>
+
+Syntax:
+
+<span class="sb">```</span>
+<span class="sb">operation ::= `emithls.arith.select` $condition `,` $true_value `,` $false_value attr-dict `:` type($result)</span>
+<span class="sb">```</span>
+
+Traits: <span class="sb">`AlwaysSpeculatableImplTrait`</span>
+
+Interfaces: <span class="sb">`ConditionallySpeculatable`</span>, <span class="sb">`InferTypeOpInterface`</span>, <span class="sb">`NoMemoryEffect (MemoryEffectOpInterface)`</span>
+
+Effects: <span class="sb">`MemoryEffects::Effect{}`</span>
+
+<span class="gu">#### Operands:</span>
+
+| Operand | Description |
+| :-----: | ----------- |
+| <span class="sb">`condition`</span> | 1-bit signless integer |
+| <span class="sb">`true_value`</span> | any non-token type |
+| <span class="sb">`false_value`</span> | any non-token type |
+
+<span class="gu">#### Results:</span>
+
+| Result | Description |
+| :----: | ----------- |
+| <span class="sb">`result`</span> | any non-token type |
+
+
+
+<span class="gu">### `emithls.arith.shl` (emithls::ArithShlOp)</span>
+
+Syntax:
+
+<span class="sb">```</span>
+<span class="sb">operation ::= `emithls.arith.shl` $lhs `,` $rhs attr-dict `:` type($result)</span>
+<span class="sb">```</span>
+
+Traits: <span class="sb">`AlwaysSpeculatableImplTrait`</span>, <span class="sb">`SameOperandsAndResultType`</span>
+
+Interfaces: <span class="sb">`ConditionallySpeculatable`</span>, <span class="sb">`InferTypeOpInterface`</span>, <span class="sb">`NoMemoryEffect (MemoryEffectOpInterface)`</span>
+
+Effects: <span class="sb">`MemoryEffects::Effect{}`</span>
+
+<span class="gu">#### Operands:</span>
+
+| Operand | Description |
+| :-----: | ----------- |
+| <span class="sb">`lhs`</span> | any non-token type |
+| <span class="sb">`rhs`</span> | any non-token type |
+
+<span class="gu">#### Results:</span>
+
+| Result | Description |
+| :----: | ----------- |
+| <span class="sb">`result`</span> | any non-token type |
+
+
+
+<span class="gu">### `emithls.arith.shr` (emithls::ArithShrOp)</span>
+
+Syntax:
+
+<span class="sb">```</span>
+<span class="sb">operation ::= `emithls.arith.shr` $lhs `,` $rhs attr-dict `:` type($result)</span>
+<span class="sb">```</span>
+
+Traits: <span class="sb">`AlwaysSpeculatableImplTrait`</span>, <span class="sb">`SameOperandsAndResultType`</span>
+
+Interfaces: <span class="sb">`ConditionallySpeculatable`</span>, <span class="sb">`InferTypeOpInterface`</span>, <span class="sb">`NoMemoryEffect (MemoryEffectOpInterface)`</span>
+
+Effects: <span class="sb">`MemoryEffects::Effect{}`</span>
+
+<span class="gu">#### Operands:</span>
+
+| Operand | Description |
+| :-----: | ----------- |
+| <span class="sb">`lhs`</span> | any non-token type |
+| <span class="sb">`rhs`</span> | any non-token type |
+
+<span class="gu">#### Results:</span>
+
+| Result | Description |
+| :----: | ----------- |
+| <span class="sb">`result`</span> | any non-token type |
+
+
+
+<span class="gu">### `emithls.arith.sub` (emithls::ArithSubOp)</span>
+
+Syntax:
+
+<span class="sb">```</span>
+<span class="sb">operation ::= `emithls.arith.sub` $lhs `,` $rhs attr-dict `:` type($result)</span>
+<span class="sb">```</span>
+
+Traits: <span class="sb">`AlwaysSpeculatableImplTrait`</span>, <span class="sb">`SameOperandsAndResultType`</span>
+
+Interfaces: <span class="sb">`ConditionallySpeculatable`</span>, <span class="sb">`InferTypeOpInterface`</span>, <span class="sb">`NoMemoryEffect (MemoryEffectOpInterface)`</span>
+
+Effects: <span class="sb">`MemoryEffects::Effect{}`</span>
+
+<span class="gu">#### Operands:</span>
+
+| Operand | Description |
+| :-----: | ----------- |
+| <span class="sb">`lhs`</span> | any non-token type |
+| <span class="sb">`rhs`</span> | any non-token type |
+
+<span class="gu">#### Results:</span>
+
+| Result | Description |
+| :----: | ----------- |
+| <span class="sb">`result`</span> | any non-token type |
+
+
+
+<span class="gu">### `emithls.array.ptr_read` (emithls::ArrayPointerReadOp)</span>
+
+<span class="ge">_Reads a value from an pointer_</span>
+
+Syntax:
+
+<span class="sb">```</span>
+<span class="sb">operation ::= `emithls.array.ptr_read` $pointer `[` $indices `]` attr-dict `:` qualified(type($pointer)) `-&gt;` type($result)</span>
+<span class="sb">```</span>
+
+Interfaces: <span class="sb">`InferTypeOpInterface`</span>, <span class="sb">`MemoryEffectsOpInterface`</span>
+
+<span class="gu">#### Operands:</span>
+
+| Operand | Description |
+| :-----: | ----------- |
+| <span class="sb">`pointer`</span> | Pointer type in HLS C++ |
+| <span class="sb">`indices`</span> | variadic of index |
+
+<span class="gu">#### Results:</span>
+
+| Result | Description |
+| :----: | ----------- |
+| <span class="sb">`result`</span> | any non-token type |
+
+
+
+<span class="gu">### `emithls.array.ptr_write` (emithls::ArrayPointerWriteOp)</span>
+
+<span class="ge">_Writes a value into an array_</span>
+
+Syntax:
+
+<span class="sb">```</span>
+<span class="sb">operation ::= `emithls.array.ptr_write` $value `,` $pointer `[` $indices `]` attr-dict `:` type($value) `-&gt;` qualified(type($pointer))</span>
+<span class="sb">```</span>
+
+Interfaces: <span class="sb">`MemoryEffectsOpInterface`</span>
+
+<span class="gu">#### Operands:</span>
+
+| Operand | Description |
+| :-----: | ----------- |
+| <span class="sb">`value`</span> | any non-token type |
+| <span class="sb">`pointer`</span> | Pointer type in HLS C++ |
+| <span class="sb">`indices`</span> | variadic of index |
+
+
+
+<span class="gu">### `emithls.array.read` (emithls::ArrayReadOp)</span>
+
+<span class="ge">_Reads a value from an array_</span>
+
+Syntax:
+
+<span class="sb">```</span>
+<span class="sb">operation ::= `emithls.array.read` $array `[` $indices `]` attr-dict `:` qualified(type($array)) `-&gt;` type($result)</span>
+<span class="sb">```</span>
+
+Interfaces: <span class="sb">`InferTypeOpInterface`</span>, <span class="sb">`MemoryEffectsOpInterface`</span>
+
+<span class="gu">#### Operands:</span>
+
+| Operand | Description |
+| :-----: | ----------- |
+| <span class="sb">`array`</span> | Array type in C++ |
+| <span class="sb">`indices`</span> | variadic of index |
+
+<span class="gu">#### Results:</span>
+
+| Result | Description |
+| :----: | ----------- |
+| <span class="sb">`result`</span> | any non-token type |
+
+
+
+<span class="gu">### `emithls.array.write` (emithls::ArrayWriteOp)</span>
+
+<span class="ge">_Writes a value into an array_</span>
+
+Syntax:
+
+<span class="sb">```</span>
+<span class="sb">operation ::= `emithls.array.write` $value `,` $array `[` $indices `]` attr-dict `:` type($value) `-&gt;` qualified(type($array))</span>
+<span class="sb">```</span>
+
+Interfaces: <span class="sb">`MemoryEffectsOpInterface`</span>
+
+<span class="gu">#### Operands:</span>
+
+| Operand | Description |
+| :-----: | ----------- |
+| <span class="sb">`value`</span> | any non-token type |
+| <span class="sb">`array`</span> | Array type in C++ |
+| <span class="sb">`indices`</span> | variadic of index |
+
+
+
+<span class="gu">### `emithls.call` (emithls::CallOp)</span>
+
+<span class="ge">_Defines a function call._</span>
+
+Syntax:
+
+<span class="sb">```</span>
+<span class="sb">operation ::= `emithls.call` $callee `(` $operands `)` attr-dict `:` functional-type($operands, results)</span>
+<span class="sb">```</span>
+
+Interfaces: <span class="sb">`ArgAndResultAttrsOpInterface`</span>, <span class="sb">`CallOpInterface`</span>
+
+<span class="gu">#### Attributes:</span>
+
+&lt;table&gt;
+&lt;tr&gt;&lt;th&gt;Attribute&lt;/th&gt;&lt;th&gt;MLIR Type&lt;/th&gt;&lt;th&gt;Description&lt;/th&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;&lt;code&gt;callee&lt;/code&gt;&lt;/td&gt;&lt;td&gt;::mlir::FlatSymbolRefAttr&lt;/td&gt;&lt;td&gt;flat symbol reference attribute&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;&lt;code&gt;arg_attrs&lt;/code&gt;&lt;/td&gt;&lt;td&gt;::mlir::ArrayAttr&lt;/td&gt;&lt;td&gt;Array of dictionary attributes&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;&lt;code&gt;res_attrs&lt;/code&gt;&lt;/td&gt;&lt;td&gt;::mlir::ArrayAttr&lt;/td&gt;&lt;td&gt;Array of dictionary attributes&lt;/td&gt;&lt;/tr&gt;
+&lt;/table&gt;
+
+<span class="gu">#### Operands:</span>
+
+| Operand | Description |
+| :-----: | ----------- |
+| <span class="sb">`operands`</span> | variadic of any non-token type |
+
+<span class="gu">#### Results:</span>
+
+| Result | Description |
+| :----: | ----------- |
+| &amp;laquo;unnamed&amp;raquo; | variadic of any non-token type |
+
+
+
+<span class="gu">### `emithls.expr` (emithls::ExpressionOp)</span>
+
+<span class="ge">_Represents a combined C/C++ expression._</span>
+
+Syntax:
+
+<span class="sb">```</span>
+<span class="sb">operation ::= `emithls.expr` attr-dict `:` type($result) $body</span>
+<span class="sb">```</span>
+
+The <span class="sb">`expression`</span> operation defines a set of operations that together
+form a C/C++ style complex expression, such as:
+<span class="sb">`int var = (a + b) * c;`</span>.
+This operation returns one value with a scalar type, which is yielded
+from the region using <span class="sb">`YieldOp`</span>.
+Nested expressions are also allowed.
+Example:
+<span class="sb">```</span>
+<span class="sb">// Assume %lhs, %rhs, %cst are i32 values</span>
+<span class="sb">%expr = emithls.expr : i32 {</span>
+<span class="sb">    %0 = arith.addi %lhs, %cst : i32</span>
+<span class="sb">    %1 = arith.muli %0, %rhs : i32</span>
+<span class="sb">    emithls.yield %1 : i32</span>
+<span class="sb">}</span>
+<span class="sb">```</span>
+
+Traits: <span class="sb">`NoRegionArguments`</span>, <span class="sb">`SingleBlockImplicitTerminator&lt;YieldOp&gt;`</span>, <span class="sb">`SingleBlock`</span>
+
+Interfaces: <span class="sb">`OpAsmOpInterface`</span>
+
+<span class="gu">#### Results:</span>
+
+| Result | Description |
+| :----: | ----------- |
+| <span class="sb">`result`</span> | any non-token type |
+
+
+
+<span class="gu">### `emithls.for` (emithls::ForOp)</span>
+
+<span class="ge">_Defines a C/C++ for loop._</span>
+
+The <span class="sb">`for`</span> operation defines a counted loop with compile-time constant
+lower bound, upper bound, and step, mapping to a C/C++ <span class="sb">`for`</span> loop.
+The loop body receives the current induction variable as a block
+argument and iterates from <span class="sb">`lowerBound`</span> to <span class="sb">`upperBound`</span> (exclusive)
+in increments of <span class="sb">`step`</span>.
+Example:
+<span class="sb">```</span>
+<span class="sb">emithls.for %idx0 = 0 to 10 step 1 {</span>
+<span class="sb">    ops using %idx0 ...</span>
+<span class="sb">}</span>
+<span class="sb">```</span>
+
+Traits: <span class="sb">`NoTerminator`</span>, <span class="sb">`RecursiveMemoryEffects`</span>
+
+Interfaces: <span class="sb">`OpAsmOpInterface`</span>
+
+<span class="gu">#### Attributes:</span>
+
+&lt;table&gt;
+&lt;tr&gt;&lt;th&gt;Attribute&lt;/th&gt;&lt;th&gt;MLIR Type&lt;/th&gt;&lt;th&gt;Description&lt;/th&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;&lt;code&gt;lowerBound&lt;/code&gt;&lt;/td&gt;&lt;td&gt;::mlir::IntegerAttr&lt;/td&gt;&lt;td&gt;index attribute&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;&lt;code&gt;upperBound&lt;/code&gt;&lt;/td&gt;&lt;td&gt;::mlir::IntegerAttr&lt;/td&gt;&lt;td&gt;index attribute&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;&lt;code&gt;step&lt;/code&gt;&lt;/td&gt;&lt;td&gt;::mlir::IntegerAttr&lt;/td&gt;&lt;td&gt;index attribute&lt;/td&gt;&lt;/tr&gt;
+&lt;/table&gt;
+
+
+
+<span class="gu">### `emithls.func` (emithls::FuncOp)</span>
+
+<span class="ge">_Defines a C/C++ function with a void return type._</span>
+
+The <span class="sb">`func`</span> operation defines a C/C++ function with a void return type,
+serving as the node and top-level function unit for HLS code generation.
+The function is identified by its symbol name and is isolated from
+above, meaning it cannot reference values defined outside its scope.
+Function arguments are accessible via the entry block of the body region.
+Example:
+<span class="sb">```</span>
+<span class="sb">emithls.func @my_func(%arg0: type, %arg1: type, ...) {</span>
+<span class="sb">    ops...</span>
+<span class="sb">}</span>
+<span class="sb">```</span>
+
+Traits: <span class="sb">`AutomaticAllocationScope`</span>, <span class="sb">`IsolatedFromAbove`</span>, <span class="sb">`NoTerminator`</span>
+
+Interfaces: <span class="sb">`ArgAndResultAttrsOpInterface`</span>, <span class="sb">`CallableOpInterface`</span>, <span class="sb">`FunctionOpInterface`</span>, <span class="sb">`Symbol`</span>
+
+<span class="gu">#### Attributes:</span>
+
+&lt;table&gt;
+&lt;tr&gt;&lt;th&gt;Attribute&lt;/th&gt;&lt;th&gt;MLIR Type&lt;/th&gt;&lt;th&gt;Description&lt;/th&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;&lt;code&gt;sym_name&lt;/code&gt;&lt;/td&gt;&lt;td&gt;::mlir::StringAttr&lt;/td&gt;&lt;td&gt;string attribute&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;&lt;code&gt;function_type&lt;/code&gt;&lt;/td&gt;&lt;td&gt;::mlir::TypeAttr&lt;/td&gt;&lt;td&gt;type attribute of function type&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;&lt;code&gt;arg_attrs&lt;/code&gt;&lt;/td&gt;&lt;td&gt;::mlir::ArrayAttr&lt;/td&gt;&lt;td&gt;Array of dictionary attributes&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;&lt;code&gt;res_attrs&lt;/code&gt;&lt;/td&gt;&lt;td&gt;::mlir::ArrayAttr&lt;/td&gt;&lt;td&gt;Array of dictionary attributes&lt;/td&gt;&lt;/tr&gt;
+&lt;/table&gt;
+
+
+
+<span class="gu">### `emithls.helper.accumulate` (emithls::HelperAccumulateOp)</span>
+
+<span class="ge">_Helper to mark the accumulate axis in the computation._</span>
+
+Traits: <span class="sb">`HasParent&lt;ForOp, affine::AffineForOp&gt;`</span>
+
+<span class="gu">#### Attributes:</span>
+
+&lt;table&gt;
+&lt;tr&gt;&lt;th&gt;Attribute&lt;/th&gt;&lt;th&gt;MLIR Type&lt;/th&gt;&lt;th&gt;Description&lt;/th&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;&lt;code&gt;op_code&lt;/code&gt;&lt;/td&gt;&lt;td&gt;::mlir::emithls::FusedOperatorAttr&lt;/td&gt;&lt;td&gt;fused operator such as <span class="sb">`+=`</span>&lt;/td&gt;&lt;/tr&gt;
+&lt;/table&gt;
+
+<span class="gu">#### Operands:</span>
+
+| Operand | Description |
+| :-----: | ----------- |
+| <span class="sb">`accu_ref`</span> | memref or emithls.array type |
+| <span class="sb">`value`</span> | any non-token type |
+| <span class="sb">`indices`</span> | variadic of index |
+
+
+
+<span class="gu">### `emithls.helper.linebuf` (emithls::HelperLineBufferOp)</span>
+
+<span class="ge">_Helper to store information of line buffer construction_</span>
+
+Traits: <span class="sb">`HasParent&lt;ForOp, affine::AffineForOp&gt;`</span>
+
+Interfaces: <span class="sb">`OpAsmOpInterface`</span>
+
+<span class="gu">#### Attributes:</span>
+
+&lt;table&gt;
+&lt;tr&gt;&lt;th&gt;Attribute&lt;/th&gt;&lt;th&gt;MLIR Type&lt;/th&gt;&lt;th&gt;Description&lt;/th&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;&lt;code&gt;num_chan&lt;/code&gt;&lt;/td&gt;&lt;td&gt;::mlir::ArrayAttr&lt;/td&gt;&lt;td&gt;32-bit integer array attribute&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;&lt;code&gt;num_line&lt;/code&gt;&lt;/td&gt;&lt;td&gt;::mlir::IntegerAttr&lt;/td&gt;&lt;td&gt;32-bit signless integer attribute&lt;/td&gt;&lt;/tr&gt;
+&lt;/table&gt;
+
+<span class="gu">#### Operands:</span>
+
+| Operand | Description |
+| :-----: | ----------- |
+| <span class="sb">`token_ref`</span> | memref or emithls.array type |
+| <span class="sb">`index`</span> | index |
+
+<span class="gu">#### Results:</span>
+
+| Result | Description |
+| :----: | ----------- |
+| <span class="sb">`buf_ref`</span> | memref or emithls.array type |
+
+
+
+<span class="gu">### `emithls.helper.window` (emithls::HelperWindowOp)</span>
+
+<span class="ge">_Helper to construct a compute windows from line buffer._</span>
+
+Traits: <span class="sb">`HasParent&lt;ForOp, affine::AffineForOp&gt;`</span>
+
+Interfaces: <span class="sb">`OpAsmOpInterface`</span>
+
+<span class="gu">#### Operands:</span>
+
+| Operand | Description |
+| :-----: | ----------- |
+| <span class="sb">`buf_ref`</span> | memref or emithls.array type |
+| <span class="sb">`indices`</span> | variadic of index |
+
+<span class="gu">#### Results:</span>
+
+| Result | Description |
+| :----: | ----------- |
+| <span class="sb">`win_ref`</span> | memref or emithls.array type |
+
+
+
+<span class="gu">### `emithls.if` (emithls::IfOp)</span>
+
+<span class="ge">_Defines a C/C style if-statement._</span>
+
+The <span class="sb">`if`</span> operation conditionally executes one of two regions based on
+an <span class="sb">`i1`</span> condition value, mapping to a C/C++ <span class="sb">`if`</span>/<span class="sb">`else`</span> statement.
+The <span class="sb">`then`</span> region is always executed when the condition is true.
+The optional <span class="sb">`else`</span> region is executed when the condition is false;
+if absent, no action is taken on the false path.
+Example:
+<span class="sb">```</span>
+<span class="sb">emithls.if %cond {</span>
+<span class="sb">    ops ...</span>
+<span class="sb">} else {</span>
+<span class="sb">    ops ...</span>
+<span class="sb">}</span>
+<span class="sb">```</span>
+
+Traits: <span class="sb">`NoRegionArguments`</span>, <span class="sb">`NoTerminator`</span>, <span class="sb">`RecursiveMemoryEffects`</span>
+
+<span class="gu">#### Operands:</span>
+
+| Operand | Description |
+| :-----: | ----------- |
+| <span class="sb">`condition`</span> | 1-bit signless integer |
+
+
+
+<span class="gu">### `emithls.include` (emithls::IncludeOp)</span>
+
+<span class="ge">_C/C++ include statement_</span>
+
+The <span class="sb">`include`</span> operation abstracts the C/C++ include syntax.
+However, this operation does not check the existence of the
+header file.
+This operation is created automatically by a transformation pass
+inside this dialect.
+
+Traits: <span class="sb">`HasParent&lt;ModuleOp&gt;`</span>
+
+<span class="gu">#### Attributes:</span>
+
+&lt;table&gt;
+&lt;tr&gt;&lt;th&gt;Attribute&lt;/th&gt;&lt;th&gt;MLIR Type&lt;/th&gt;&lt;th&gt;Description&lt;/th&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;&lt;code&gt;header&lt;/code&gt;&lt;/td&gt;&lt;td&gt;::mlir::StringAttr&lt;/td&gt;&lt;td&gt;string attribute&lt;/td&gt;&lt;/tr&gt;
+&lt;/table&gt;
+
+
+
+<span class="gu">### `emithls.pragma.array_partition` (emithls::PragmaArrayPartitionOp)</span>
+
+<span class="ge">_#pragma HLS ARRAY_</span>PARTITION variable= type= factor= dim=_
+
+Interfaces: <span class="sb">`EmitHLS_PragmaInterface`</span>
+
+<span class="gu">#### Attributes:</span>
+
+&lt;table&gt;
+&lt;tr&gt;&lt;th&gt;Attribute&lt;/th&gt;&lt;th&gt;MLIR Type&lt;/th&gt;&lt;th&gt;Description&lt;/th&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;&lt;code&gt;part_type&lt;/code&gt;&lt;/td&gt;&lt;td&gt;::mlir::emithls::ArrayPartitionTypeAttr&lt;/td&gt;&lt;td&gt;#pragma HLS array_partition type=?&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;&lt;code&gt;part_factor&lt;/code&gt;&lt;/td&gt;&lt;td&gt;::mlir::IntegerAttr&lt;/td&gt;&lt;td&gt;32-bit signless integer attribute&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;&lt;code&gt;part_dim&lt;/code&gt;&lt;/td&gt;&lt;td&gt;::mlir::IntegerAttr&lt;/td&gt;&lt;td&gt;32-bit signless integer attribute&lt;/td&gt;&lt;/tr&gt;
+&lt;/table&gt;
+
+<span class="gu">#### Operands:</span>
+
+| Operand | Description |
+| :-----: | ----------- |
+| <span class="sb">`variable`</span> | Array type in C++ |
+
+
+
+<span class="gu">### `emithls.pragma.bind_storage` (emithls::PragmaBindStorageOp)</span>
+
+<span class="ge">_#pragma HLS BIND_</span>STORAGE variable= type= impl=_
+
+Interfaces: <span class="sb">`EmitHLS_PragmaInterface`</span>
+
+<span class="gu">#### Attributes:</span>
+
+&lt;table&gt;
+&lt;tr&gt;&lt;th&gt;Attribute&lt;/th&gt;&lt;th&gt;MLIR Type&lt;/th&gt;&lt;th&gt;Description&lt;/th&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;&lt;code&gt;storage_type&lt;/code&gt;&lt;/td&gt;&lt;td&gt;::mlir::emithls::BindStorageTypeAttr&lt;/td&gt;&lt;td&gt;#pragma HLS bind_storage type=?&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;&lt;code&gt;storage_impl&lt;/code&gt;&lt;/td&gt;&lt;td&gt;::mlir::emithls::BindStorageImplAttr&lt;/td&gt;&lt;td&gt;#pragma HLS bind_storage impl=?&lt;/td&gt;&lt;/tr&gt;
+&lt;/table&gt;
+
+<span class="gu">#### Operands:</span>
+
+| Operand | Description |
+| :-----: | ----------- |
+| <span class="sb">`variable`</span> | Array type in C++ or Stream type in HLS C++ |
+
+
+
+<span class="gu">### `emithls.pragma.dataflow` (emithls::PragmaDataflowOp)</span>
+
+<span class="ge">_#pragma HLS DATAFLOW_</span>
+
+Syntax:
+
+<span class="sb">```</span>
+<span class="sb">operation ::= `emithls.pragma.dataflow` $body attr-dict</span>
+<span class="sb">```</span>
+
+Traits: <span class="sb">`NoTerminator`</span>
+
+Interfaces: <span class="sb">`EmitHLS_PragmaInterface`</span>
+
+
+
+<span class="gu">### `emithls.pragma.inline` (emithls::PragmaInlineOp)</span>
+
+<span class="ge">_#pragma HLS INLINE off_</span>
+
+Interfaces: <span class="sb">`EmitHLS_PragmaInterface`</span>
+
+<span class="gu">#### Attributes:</span>
+
+&lt;table&gt;
+&lt;tr&gt;&lt;th&gt;Attribute&lt;/th&gt;&lt;th&gt;MLIR Type&lt;/th&gt;&lt;th&gt;Description&lt;/th&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;&lt;code&gt;off&lt;/code&gt;&lt;/td&gt;&lt;td&gt;::mlir::UnitAttr&lt;/td&gt;&lt;td&gt;unit attribute&lt;/td&gt;&lt;/tr&gt;
+&lt;/table&gt;
+
+
+
+<span class="gu">### `emithls.pragma.pipeline` (emithls::PragmaPipelineOp)</span>
+
+<span class="ge">_#pragma HLS PIPELINE II=_</span>
+
+Interfaces: <span class="sb">`EmitHLS_PragmaInterface`</span>
+
+<span class="gu">#### Attributes:</span>
+
+&lt;table&gt;
+&lt;tr&gt;&lt;th&gt;Attribute&lt;/th&gt;&lt;th&gt;MLIR Type&lt;/th&gt;&lt;th&gt;Description&lt;/th&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;&lt;code&gt;interval&lt;/code&gt;&lt;/td&gt;&lt;td&gt;::mlir::IntegerAttr&lt;/td&gt;&lt;td&gt;32-bit signless integer attribute&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;&lt;code&gt;style&lt;/code&gt;&lt;/td&gt;&lt;td&gt;::mlir::emithls::PipelineStyleAttr&lt;/td&gt;&lt;td&gt;##pragma HLS HLS pipeline style=?&lt;/td&gt;&lt;/tr&gt;
+&lt;/table&gt;
+
+
+
+<span class="gu">### `emithls.pragma.stream` (emithls::PragmaStreamOp)</span>
+
+<span class="ge">_#pragma HLS STREAM type=fifo depth=_</span>
+
+Interfaces: <span class="sb">`EmitHLS_PragmaInterface`</span>
+
+<span class="gu">#### Attributes:</span>
+
+&lt;table&gt;
+&lt;tr&gt;&lt;th&gt;Attribute&lt;/th&gt;&lt;th&gt;MLIR Type&lt;/th&gt;&lt;th&gt;Description&lt;/th&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;&lt;code&gt;depth&lt;/code&gt;&lt;/td&gt;&lt;td&gt;::mlir::IntegerAttr&lt;/td&gt;&lt;td&gt;32-bit signless integer attribute&lt;/td&gt;&lt;/tr&gt;
+&lt;/table&gt;
+
+<span class="gu">#### Operands:</span>
+
+| Operand | Description |
+| :-----: | ----------- |
+| <span class="sb">`variable`</span> | Stream type in HLS C++ or Array type in C++ |
+
+
+
+<span class="gu">### `emithls.pragma.unroll` (emithls::PragmaUnrollOp)</span>
+
+<span class="ge">_#pragma HLS UNROLL factor=_</span>
+
+Traits: <span class="sb">`HasParent&lt;ForOp&gt;`</span>
+
+Interfaces: <span class="sb">`EmitHLS_PragmaInterface`</span>
+
+<span class="gu">#### Attributes:</span>
+
+&lt;table&gt;
+&lt;tr&gt;&lt;th&gt;Attribute&lt;/th&gt;&lt;th&gt;MLIR Type&lt;/th&gt;&lt;th&gt;Description&lt;/th&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;&lt;code&gt;factor&lt;/code&gt;&lt;/td&gt;&lt;td&gt;::mlir::IntegerAttr&lt;/td&gt;&lt;td&gt;32-bit signless integer attribute&lt;/td&gt;&lt;/tr&gt;
+&lt;/table&gt;
+
+
+
+<span class="gu">### `emithls.stream.read` (emithls::StreamReadOp)</span>
+
+<span class="ge">_Reads data out from hls::stream._</span>
+
+Syntax:
+
+<span class="sb">```</span>
+<span class="sb">operation ::= `emithls.stream.read` $stream (`[` $indices^ `]`)? attr-dict `:` qualified(type($stream)) `-&gt;` type($data)</span>
+<span class="sb">```</span>
+
+Interfaces: <span class="sb">`MemoryEffectsOpInterface`</span>
+
+<span class="gu">#### Operands:</span>
+
+| Operand | Description |
+| :-----: | ----------- |
+| <span class="sb">`stream`</span> | Stream type in HLS C++ or Array type in C++ |
+| <span class="sb">`indices`</span> | variadic of index |
+
+<span class="gu">#### Results:</span>
+
+| Result | Description |
+| :----: | ----------- |
+| <span class="sb">`data`</span> | any non-token type |
+
+
+
+<span class="gu">### `emithls.stream.write` (emithls::StreamWriteOp)</span>
+
+<span class="ge">_Writes data into hls::stream._</span>
+
+Syntax:
+
+<span class="sb">```</span>
+<span class="sb">operation ::= `emithls.stream.write` $data `to` $stream (`[` $indices^ `]`)? attr-dict `:` type($data) `-&gt;` qualified(type($stream))</span>
+<span class="sb">```</span>
+
+Interfaces: <span class="sb">`MemoryEffectsOpInterface`</span>
+
+<span class="gu">#### Operands:</span>
+
+| Operand | Description |
+| :-----: | ----------- |
+| <span class="sb">`data`</span> | any non-token type |
+| <span class="sb">`stream`</span> | Stream type in HLS C++ or Array type in C++ |
+| <span class="sb">`indices`</span> | variadic of index |
+
+
+
+<span class="gu">### `emithls.top_interface` (emithls::PragmaTopInterfaceOp)</span>
+
+<span class="ge">_#pragma HLS INTERFACE for the top function_</span>
+
+Syntax:
+
+<span class="sb">```</span>
+<span class="sb">operation ::= `emithls.top_interface` attr-dict</span>
+<span class="sb">```</span>
+
+Interfaces: <span class="sb">`EmitHLS_PragmaInterface`</span>
+
+
+
+<span class="gu">### `emithls.update` (emithls::UpdateOp)</span>
+
+<span class="ge">_Defines a C/C++ style assignment._</span>
+
+The <span class="sb">`update`</span> operation performs a C/C++ style assignment to an
+existing variable.
+This operation also supports element-wise assignment for array
+types using a list of <span class="sb">`IndexType`</span> indices.
+<span class="sb">```</span>
+<span class="sb">emithls.update %var with %new_value : type &lt;- type</span>
+<span class="sb">emithls.update %var with %arr[%indices]</span>
+<span class="sb">    : type &lt;- !emithls.array&lt;shape x type&gt;</span>
+<span class="sb">emithls.update %arr[%indices] with %new_value</span>
+<span class="sb">    : !emithls.array&lt;shape x type&gt; &lt;- type</span>
+<span class="sb">emithls.update %arr0[%indices] with %arr1[%indices]</span>
+<span class="sb">    : !emithls.array&lt;shape x type&gt; &lt;- !emithls.array&lt;shape x type&gt;</span>
+<span class="sb">```</span>
+
+Traits: <span class="sb">`AttrSizedOperandSegments`</span>
+
+Interfaces: <span class="sb">`MemoryEffectsOpInterface`</span>
+
+<span class="gu">#### Operands:</span>
+
+| Operand | Description |
+| :-----: | ----------- |
+| <span class="sb">`variable`</span> | any non-token type |
+| <span class="sb">`indices`</span> | variadic of index |
+| <span class="sb">`new_value`</span> | any non-token type |
+| <span class="sb">`new_value_indices`</span> | variadic of index |
+
+
+
+<span class="gu">### `emithls.variable` (emithls::VariableOp)</span>
+
+<span class="ge">_Defines a C/C++ style variable._</span>
+
+The <span class="sb">`variable`</span> operation defines a C/C++ variable, which is used to
+simplify the translation from <span class="sb">`emithls`</span> dialect to HLS code.
+MLIR adopts the Single Static Assignment form, which forbids multiple
+assignments to the same variable.
+To solve this, the <span class="sb">`variable`</span> operation and an <span class="sb">`update`</span> operation are
+defined, such as:
+<span class="sb">```</span>
+<span class="sb">%var = emithls.variable : type</span>
+<span class="sb">emithls.update %var, %value : type</span>
+<span class="sb">```</span>
+A <span class="sb">`variable`</span> can also be defined as a constant as in C/C++.
+
+Interfaces: <span class="sb">`OpAsmOpInterface`</span>
+
+<span class="gu">#### Attributes:</span>
+
+&lt;table&gt;
+&lt;tr&gt;&lt;th&gt;Attribute&lt;/th&gt;&lt;th&gt;MLIR Type&lt;/th&gt;&lt;th&gt;Description&lt;/th&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;&lt;code&gt;init_number&lt;/code&gt;&lt;/td&gt;&lt;td&gt;::mlir::Attribute&lt;/td&gt;&lt;td&gt;any attribute&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;&lt;code&gt;is_const&lt;/code&gt;&lt;/td&gt;&lt;td&gt;::mlir::UnitAttr&lt;/td&gt;&lt;td&gt;unit attribute&lt;/td&gt;&lt;/tr&gt;
+&lt;/table&gt;
+
+<span class="gu">#### Operands:</span>
+
+| Operand | Description |
+| :-----: | ----------- |
+| <span class="sb">`init_value`</span> | any non-token type |
+
+<span class="gu">#### Results:</span>
+
+| Result | Description |
+| :----: | ----------- |
+| <span class="sb">`variable`</span> | any non-token type |
+
+
+
+<span class="gu">### `emithls.yield` (emithls::YieldOp)</span>
+
+<span class="ge">_Yields the result value of an expression._</span>
+
+Syntax:
+
+<span class="sb">```</span>
+<span class="sb">operation ::= `emithls.yield` attr-dict $value `:` type($value)</span>
+<span class="sb">```</span>
+
+The <span class="sb">`yield`</span> operation terminates an expression block with a value,
+which becomes the result of the enclosing expression.
+This operation mimics a combined expression in C/C++.
+
+Traits: <span class="sb">`AlwaysSpeculatableImplTrait`</span>, <span class="sb">`HasParent&lt;ExpressionOp&gt;`</span>, <span class="sb">`Terminator`</span>
+
+Interfaces: <span class="sb">`ConditionallySpeculatable`</span>, <span class="sb">`NoMemoryEffect (MemoryEffectOpInterface)`</span>
+
+Effects: <span class="sb">`MemoryEffects::Effect{}`</span>
+
+<span class="gu">#### Operands:</span>
+
+| Operand | Description |
+| :-----: | ----------- |
+| <span class="sb">`value`</span> | any non-token type |
+
+
+
+<span class="gu">## Attributes</span>
+
+<span class="gu">### DenseFixedAttr</span>
+
+<span class="ge">_Constant densely-packed array of fixed-point values_</span>
+
+The <span class="sb">`dense_fixed`</span> attribute represents a compile-time constant array
+of values that each define the value of a common <span class="sb">`FixedType`</span> element
+type.
+
+Syntax:
+
+<span class="sb">```</span>
+<span class="sb">dense-fixed-attr ::= `dense_fixed` `&lt;` $type `=` $data `&gt;`</span>
+<span class="sb">```</span>
+
+The result type must be a statically-shaped <span class="sb">`ArrayType`</span> of <span class="sb">`FixedType`</span>
+elements, and the dense elements contained must match the shape of
+type, or be a splat.
+
+Example:
+
+<span class="sb">```</span>
+<span class="sb">#emithls.dense_fixed&lt;!emithls.array&lt;3x!emithls.fixed&lt;4, 2&gt;&gt; = dense&lt;[1, 2, 3]&gt;&gt;</span>
+<span class="sb">```</span>
+
+<span class="gu">#### Parameters:</span>
+
+| Parameter | C++ type | Description |
+| :-------: | :-------: | ----------- |
+| type | <span class="sb">`::mlir::Type`</span> |  |
+| data | <span class="sb">`DenseIntElementsAttr`</span> |  |
+
+<span class="gu">### FixedAttr</span>
+
+<span class="ge">_Constant fixed-point bit-pattern attribute_</span>
+
+Syntax:
+
+<span class="sb">```</span>
+<span class="sb">#emithls.fixed&lt;</span>
+<span class="sb">  ::mlir::Type,   # type</span>
+<span class="sb">  ::mlir::base2::BitSequence   # value</span>
+<span class="sb">&gt;</span>
+<span class="sb">```</span>
+
+The <span class="sb">`fixed`</span> attribute represents a compile-time constant bit pattern
+that defines the value of a <span class="sb">`FixedType`</span>.
+
+Syntax:
+
+<span class="sb">```</span>
+<span class="sb">fixed-attr   ::= `fixed` `&lt;` bit-sequence `&gt;` `:` type</span>
+<span class="sb">bit-sequence ::= `"` bit-literal (trunc-spec)? `"`</span>
+<span class="sb">bit-literal  ::= `0b` [_01]* | `0x` [_0-9a-fA-F]*</span>
+<span class="sb">trunc-spec   ::= `/` [0-9]+</span>
+<span class="sb">```</span>
+
+The number of bits in the bit-sequence must equal the type's total
+bit width.
+
+Example:
+
+<span class="sb">```</span>
+<span class="sb">#emithls.fixed&lt;"0b0100"&gt; : !emithls.fixed&lt;4, 2&gt;</span>
+<span class="sb">```</span>
+
+<span class="gu">#### Parameters:</span>
+
+| Parameter | C++ type | Description |
+| :-------: | :-------: | ----------- |
+| type | <span class="sb">`::mlir::Type`</span> |  |
+| value | <span class="sb">`::mlir::base2::BitSequence`</span> |  |
+
+<span class="gu">## Types</span>
+
+<span class="gu">### ArrayType</span>
+
+<span class="ge">_Array type in C++_</span>
+
+The <span class="sb">`array`</span> type represents a C++ style array, which contains
+a shaped amount of variables of one scalar type, such as:
+<span class="sb">`!emithls.array&lt;2xi32&gt;`</span>, <span class="sb">`!emithls.array&lt;2x2xi32&gt;`</span>
+
+<span class="gu">#### Parameters:</span>
+
+| Parameter | C++ type | Description |
+| :-------: | :-------: | ----------- |
+| shape | <span class="sb">`::llvm::ArrayRef&lt;int64_t&gt;`</span> |  |
+| elementType | <span class="sb">`Type`</span> |  |
+
+<span class="gu">### FixedType</span>
+
+<span class="ge">_AP_</span>Fixed type in HLS C++_
+
+Syntax:
+
+<span class="sb">```</span>
+<span class="sb">!emithls.fixed&lt;</span>
+<span class="sb">  int64_t,   # totalBits</span>
+<span class="sb">  int64_t   # intBits</span>
+<span class="sb">&gt;</span>
+<span class="sb">```</span>
+
+The <span class="sb">`fixed`</span> type represents a HLS C++ <span class="sb">`ap_fixed&lt;totalBits, intBits&gt;`</span>
+fixed-point number. <span class="sb">`totalBits`</span> is the overall bit width and <span class="sb">`intBits`</span>
+is the number of integer bits, which includes the sign bit. The
+number of fractional bits is implicit: <span class="sb">`totalBits - intBits`</span>.
+
+<span class="gu">#### Parameters:</span>
+
+| Parameter | C++ type | Description |
+| :-------: | :-------: | ----------- |
+| totalBits | <span class="sb">`int64_t`</span> |  |
+| intBits | <span class="sb">`int64_t`</span> |  |
+
+<span class="gu">### PointerType</span>
+
+<span class="ge">_Pointer type in HLS C++_</span>
+
+Syntax:
+
+<span class="sb">```</span>
+<span class="sb">!emithls.ptr&lt;</span>
+<span class="sb">  Type   # elementType</span>
+<span class="sb">&gt;</span>
+<span class="sb">```</span>
+
+The <span class="sb">`pointer`</span> type represents a C++ pointer type, which points
+to the address of a value, e.g. <span class="sb">`!emithls.ptr&lt;i32&gt;`</span>.
+
+<span class="gu">#### Parameters:</span>
+
+| Parameter | C++ type | Description |
+| :-------: | :-------: | ----------- |
+| elementType | <span class="sb">`Type`</span> |  |
+
+<span class="gu">### StreamType</span>
+
+<span class="ge">_Stream type in HLS C++_</span>
+
+Syntax:
+
+<span class="sb">```</span>
+<span class="sb">!emithls.stream&lt;</span>
+<span class="sb">  Type   # elementType</span>
+<span class="sb">&gt;</span>
+<span class="sb">```</span>
+
+The <span class="sb">`stream`</span> type represents a HLS C++ hls::stream type, which
+constructs an FIFO stream with element type flowing in it,
+e.g. <span class="sb">`!emithls.stream&lt;i32&gt;`</span>.
+
+<span class="gu">#### Parameters:</span>
+
+| Parameter | C++ type | Description |
+| :-------: | :-------: | ----------- |
+| elementType | <span class="sb">`Type`</span> |  |
+
+<span class="gu">## Enums</span>
+
+<span class="gu">### ArrayPartitionType</span>
+
+<span class="ge">_#pragma HLS array_</span>partition type=?_
+
+<span class="gu">#### Cases:</span>
+
+| Symbol | Value | String |
+| :----: | :---: | ------ |
+| cyclic | <span class="sb">`0`</span> | cyclic |
+| block | <span class="sb">`1`</span> | block |
+| complete | <span class="sb">`2`</span> | complete |
+
+<span class="gu">### BindStorageImpl</span>
+
+<span class="ge">_#pragma HLS bind_</span>storage impl=?_
+
+<span class="gu">#### Cases:</span>
+
+| Symbol | Value | String |
+| :----: | :---: | ------ |
+| bram | <span class="sb">`0`</span> | bram |
+| lutram | <span class="sb">`1`</span> | lutram |
+| srl | <span class="sb">`2`</span> | srl |
+
+<span class="gu">### BindStorageType</span>
+
+<span class="ge">_#pragma HLS bind_</span>storage type=?_
+
+<span class="gu">#### Cases:</span>
+
+| Symbol | Value | String |
+| :----: | :---: | ------ |
+| fifo | <span class="sb">`0`</span> | fifo |
+| ram_1p | <span class="sb">`1`</span> | ram_1p |
+| ram_2p | <span class="sb">`2`</span> | ram_2p |
+| rom_1p | <span class="sb">`3`</span> | rom_1p |
+| rom_2p | <span class="sb">`4`</span> | rom_2p |
+
+<span class="gu">### CmpPredicate</span>
+
+<span class="ge">_Predicate for comparison operation_</span>
+
+<span class="gu">#### Cases:</span>
+
+| Symbol | Value | String |
+| :----: | :---: | ------ |
+| eq | <span class="sb">`0`</span> | eq |
+| ne | <span class="sb">`1`</span> | ne |
+| lt | <span class="sb">`2`</span> | lt |
+| le | <span class="sb">`3`</span> | le |
+| gt | <span class="sb">`4`</span> | gt |
+| ge | <span class="sb">`5`</span> | ge |
+
+<span class="gu">### FusedOperator</span>
+
+<span class="ge">_Fused operator such as `+=`_</span>
+
+<span class="gu">#### Cases:</span>
+
+| Symbol | Value | String |
+| :----: | :---: | ------ |
+| add | <span class="sb">`0`</span> | add |
+| sub | <span class="sb">`1`</span> | sub |
+| mul | <span class="sb">`2`</span> | mul |
+
+<span class="gu">### PipelineStyle</span>
+
+<span class="ge">_##pragma HLS HLS pipeline style=?_</span>
+
+<span class="gu">#### Cases:</span>
+
+| Symbol | Value | String |
+| :----: | :---: | ------ |
+| stp | <span class="sb">`0`</span> | stp |
+| flp | <span class="sb">`1`</span> | flp |
+| frp | <span class="sb">`2`</span> | frp |
+</pre></div>
+</div>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

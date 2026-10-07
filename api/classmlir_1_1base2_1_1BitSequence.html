@@ -1,0 +1,580 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Class BitSequence &mdash; picea 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/collapsible-lists/css/tree_view.css?v=a885cde7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js?v=73120307"></script>
+      <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js?v=660e4f45"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Class BitSequence::Builder" href="classmlir_1_1base2_1_1BitSequence_1_1Builder.html" />
+    <link rel="prev" title="Class BitsAttr" href="classmlir_1_1base2_1_1BitsAttr.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            picea
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Installation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../README.html">About the project</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#guides">Guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#related-projects">Related projects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#development-environment-nix">Development Environment (Nix)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#build-on-ubuntu-24-04-no-nix">Build on Ubuntu 24.04 (no Nix)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#gurobi-license">Gurobi license</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#installing">Installing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#run-the-tests">Run the tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#build-the-documentation">Build the documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#compiling-a-design">Compiling a design</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#running-a-design-on-the-board">Running a design on the board</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#exporting-a-profiled-application-to-mocasin">Exporting a profiled application to Mocasin</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Guides</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../guides/laksa.html">The FPGA Variant using LAKSA backend</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/cgra.html">The CGRA Variant</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">MLIR Dialects</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/Base2Ops.html">‘base2’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/CGRAOps.html">‘cgra’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/DFGOps.html">‘dfg’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/EmitHLSOps.html">‘emithls’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/FilterOps.html">‘filter’ Dialect</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Passes</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/PICEAConversionPasses.html">PICEA Conversion Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/CGRAPasses.html">CGRA Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/DFGPasses.html">DFG Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/EmitHLSPasses.html">Emit HLS Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/FuncExtPasses.html">Func Ext Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/LinalgExtPasses.html">Linalg Ext Passes</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">C++ API</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="library_root.html">C++ API Reference</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="library_root.html#picea">picea</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="library_root.html#page-hierarchy">Page Hierarchy</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="library_root.html#full-api">Full API</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="library_root.html#namespaces">Namespaces</a></li>
+<li class="toctree-l4 current"><a class="reference internal" href="library_root.html#classes-and-structs">Classes and Structs</a></li>
+<li class="toctree-l4"><a class="reference internal" href="library_root.html#enums">Enums</a></li>
+<li class="toctree-l4"><a class="reference internal" href="library_root.html#functions">Functions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="library_root.html#variables">Variables</a></li>
+<li class="toctree-l4"><a class="reference internal" href="library_root.html#defines">Defines</a></li>
+<li class="toctree-l4"><a class="reference internal" href="library_root.html#typedefs">Typedefs</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">picea</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="library_root.html">C++ API Reference</a></li>
+      <li class="breadcrumb-item active">Class BitSequence</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/classmlir_1_1base2_1_1BitSequence.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="class-bitsequence">
+<span id="exhale-class-classmlir-1-1base2-1-1bitsequence"></span><h1>Class BitSequence<a class="headerlink" href="#class-bitsequence" title="Link to this heading"></a></h1>
+<ul class="simple">
+<li><p>Defined in <a class="reference internal" href="file_include_picea-mlir_Dialect_Base2_Analysis_BitSequence.h.html#file-include-picea-mlir-dialect-base2-analysis-bitsequence-h"><span class="std std-ref">File BitSequence.h</span></a></p></li>
+</ul>
+<section id="nested-relationships">
+<h2>Nested Relationships<a class="headerlink" href="#nested-relationships" title="Link to this heading"></a></h2>
+<section id="nested-types">
+<h3>Nested Types<a class="headerlink" href="#nested-types" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><a class="reference internal" href="classmlir_1_1base2_1_1BitSequence_1_1Builder.html#exhale-class-classmlir-1-1base2-1-1bitsequence-1-1builder"><span class="std std-ref">Class BitSequence::Builder</span></a></p></li>
+</ul>
+</section>
+</section>
+<section id="class-documentation">
+<h2>Class Documentation<a class="headerlink" href="#class-documentation" title="Link to this heading"></a></h2>
+<dl class="cpp class">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir5base211BitSequenceE">
+<span id="_CPPv3N4mlir5base211BitSequenceE"></span><span id="_CPPv2N4mlir5base211BitSequenceE"></span><span id="mlir::base2::BitSequence"></span><span class="target" id="classmlir_1_1base2_1_1BitSequence"></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">BitSequence</span></span></span><a class="headerlink" href="#_CPPv4N4mlir5base211BitSequenceE" title="Link to this definition"></a><br /></dt>
+<dd><p>Stores an immutable sequence of ordered bits. </p>
+<p>A <a class="reference internal" href="#classmlir_1_1base2_1_1BitSequence"><span class="std std-ref">BitSequence</span></a> is canonically ordered from MSB to LSB.</p>
+<p>A <a class="reference internal" href="#classmlir_1_1base2_1_1BitSequence"><span class="std std-ref">BitSequence</span></a> differs from an llvm::APInt in that:<ul class="simple">
+<li><p>it is immutable,</p></li>
+<li><p>it does not prescribe how the bits are interpreted, and</p></li>
+<li><p>it does not support arithmetic operations.</p></li>
+</ul>
+</p>
+<p>Additionally, a <a class="reference internal" href="#classmlir_1_1base2_1_1BitSequence"><span class="std std-ref">BitSequence</span></a> can be used as an MLIR field type, where it is always represented using a string literal of the syntax:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>bit-sequence ::= `"` bit-literal (trunc-spec)? `"`
+bit-literal  ::= `0b` [_01]* | `0x` [_0-9a-fA-F]*
+trunc-spec   ::= `/` [0-9]+
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This class isn’t <code class="docutils literal notranslate"><span class="pre">constexpr</span></code> because <code class="docutils literal notranslate"><span class="pre">llvm::APInt</span></code> isn’t. </p>
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-types">Public Types</p>
+<dl class="cpp type">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir5base211BitSequence9size_typeE">
+<span id="_CPPv3N4mlir5base211BitSequence9size_typeE"></span><span id="_CPPv2N4mlir5base211BitSequence9size_typeE"></span><span class="target" id="classmlir_1_1base2_1_1BitSequence_1afe91d5602b044d1d80810f4dc33b819a"></span><span class="k"><span class="pre">using</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">size_type</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><a class="reference internal" href="typedef_namespacemlir_1_1base2_1a33e452fef23c70643d0623bac3809f07.html#_CPPv4N4mlir5base211bit_width_tE" title="mlir::base2::bit_width_t"><span class="n"><span class="pre">bit_width_t</span></span></a><a class="headerlink" href="#_CPPv4N4mlir5base211BitSequence9size_typeE" title="Link to this definition"></a><br /></dt>
+<dd><p>Type that holds the size. </p>
+</dd></dl>
+
+<dl class="cpp type">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir5base211BitSequence12storage_typeE">
+<span id="_CPPv3N4mlir5base211BitSequence12storage_typeE"></span><span id="_CPPv2N4mlir5base211BitSequence12storage_typeE"></span><span class="target" id="classmlir_1_1base2_1_1BitSequence_1a36979373b26ee615077d63074744fe02"></span><span class="k"><span class="pre">using</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">storage_type</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="n"><span class="pre">llvm</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">APInt</span></span><a class="headerlink" href="#_CPPv4N4mlir5base211BitSequence12storage_typeE" title="Link to this definition"></a><br /></dt>
+<dd><p>The underlying storage type. </p>
+</dd></dl>
+
+<dl class="cpp type">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir5base211BitSequence9word_typeE">
+<span id="_CPPv3N4mlir5base211BitSequence9word_typeE"></span><span id="_CPPv2N4mlir5base211BitSequence9word_typeE"></span><span class="target" id="classmlir_1_1base2_1_1BitSequence_1a3ca157151b51f1374ec5f59ae0196e5b"></span><span class="k"><span class="pre">using</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">word_type</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N4mlir5base211BitSequence12storage_typeE" title="mlir::base2::BitSequence::storage_type"><span class="n"><span class="pre">storage_type</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">WordType</span></span><a class="headerlink" href="#_CPPv4N4mlir5base211BitSequence9word_typeE" title="Link to this definition"></a><br /></dt>
+<dd><p>Type that stores bits in memory. </p>
+</dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir5base211BitSequence11BitSequenceEv">
+<span id="_CPPv3N4mlir5base211BitSequence11BitSequenceEv"></span><span id="_CPPv2N4mlir5base211BitSequence11BitSequenceEv"></span><span id="mlir::base2::BitSequence::BitSequence"></span><span class="target" id="classmlir_1_1base2_1_1BitSequence_1a0125eb9f0e70aee4080427519f2e127d"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">BitSequence</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4mlir5base211BitSequence11BitSequenceEv" title="Link to this definition"></a><br /></dt>
+<dd><p>Initializes an empty <a class="reference internal" href="#classmlir_1_1base2_1_1BitSequence"><span class="std std-ref">BitSequence</span></a>. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4I_12bit_sequenceEN4mlir5base211BitSequence11BitSequenceE4Bits11bit_width_t">
+<span id="_CPPv3I_12bit_sequenceEN4mlir5base211BitSequence11BitSequenceE4Bits11bit_width_t"></span><span id="_CPPv2I_12bit_sequenceEN4mlir5base211BitSequence11BitSequenceE4Bits11bit_width_t"></span><span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">bit_sequence</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Bits</span></span></span><span class="p"><span class="pre">&gt;</span></span><br /><span class="target" id="classmlir_1_1base2_1_1BitSequence_1a97f687b76de9c6742ef9866b54572b57"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">BitSequence</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4I_12bit_sequenceEN4mlir5base211BitSequence11BitSequenceE4Bits11bit_width_t" title="mlir::base2::BitSequence::BitSequence::Bits"><span class="n"><span class="pre">Bits</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">bits</span></span>, <a class="reference internal" href="typedef_namespacemlir_1_1base2_1a33e452fef23c70643d0623bac3809f07.html#_CPPv4N4mlir5base211bit_width_tE" title="mlir::base2::bit_width_t"><span class="n"><span class="pre">bit_width_t</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">n</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><a class="reference internal" href="variable_namespacemlir_1_1base2_1a866748b8ce4e7e67e14d3213f537cc34.html#_CPPv4I_12bit_sequenceEN4mlir5base219bit_sequence_lengthE" title="mlir::base2::bit_sequence_length"><span class="n"><span class="pre">bit_sequence_length</span></span></a><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4I_12bit_sequenceEN4mlir5base211BitSequence11BitSequenceE4Bits11bit_width_t" title="mlir::base2::BitSequence::BitSequence::Bits"><span class="n"><span class="pre">Bits</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I_12bit_sequenceEN4mlir5base211BitSequence11BitSequenceE4Bits11bit_width_t" title="Link to this definition"></a><br /></dt>
+<dd><p>Initializes a <a class="reference internal" href="#classmlir_1_1base2_1_1BitSequence"><span class="std std-ref">BitSequence</span></a> from <code class="docutils literal notranslate"><span class="pre">n</span></code> lsb bits of <code class="docutils literal notranslate"><span class="pre">bits</span></code> . </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir5base211BitSequence11BitSequenceE12storage_type">
+<span id="_CPPv3N4mlir5base211BitSequence11BitSequenceE12storage_type"></span><span id="_CPPv2N4mlir5base211BitSequence11BitSequenceE12storage_type"></span><span id="mlir::base2::BitSequence::BitSequence__storage_type"></span><span class="target" id="classmlir_1_1base2_1_1BitSequence_1a094a2b78ea88ea471296e7e4f405b42c"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">BitSequence</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4N4mlir5base211BitSequence12storage_typeE" title="mlir::base2::BitSequence::storage_type"><span class="n"><span class="pre">storage_type</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">apint</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4mlir5base211BitSequence11BitSequenceE12storage_type" title="Link to this definition"></a><br /></dt>
+<dd><p>Initializes a <a class="reference internal" href="#classmlir_1_1base2_1_1BitSequence"><span class="std std-ref">BitSequence</span></a> from <code class="docutils literal notranslate"><span class="pre">apint</span></code> . </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir5base211BitSequence11BitSequenceERKN4llvm7APFloatE">
+<span id="_CPPv3N4mlir5base211BitSequence11BitSequenceERKN4llvm7APFloatE"></span><span id="_CPPv2N4mlir5base211BitSequence11BitSequenceERKN4llvm7APFloatE"></span><span id="mlir::base2::BitSequence::BitSequence__llvm::APFloatCR"></span><span class="target" id="classmlir_1_1base2_1_1BitSequence_1abeed529ca7194fe12d985c6289c9ceaf"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">BitSequence</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">llvm</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">APFloat</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">apfloat</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4mlir5base211BitSequence11BitSequenceERKN4llvm7APFloatE" title="Link to this definition"></a><br /></dt>
+<dd><p>Initializes a bit sequence from <code class="docutils literal notranslate"><span class="pre">apfloat</span></code> . </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK4mlir5base211BitSequence6asUIntEv">
+<span id="_CPPv3NK4mlir5base211BitSequence6asUIntEv"></span><span id="_CPPv2NK4mlir5base211BitSequence6asUIntEv"></span><span id="mlir::base2::BitSequence::asUIntC"></span><span class="target" id="classmlir_1_1base2_1_1BitSequence_1adde4370902cbddb49ee004cb03fc45d1"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N4mlir5base211BitSequence12storage_typeE" title="mlir::base2::BitSequence::storage_type"><span class="n"><span class="pre">storage_type</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="sig-name descname"><span class="n"><span class="pre">asUInt</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK4mlir5base211BitSequence6asUIntEv" title="Link to this definition"></a><br /></dt>
+<dd><p>Obtains the contained bit sequence as an unsigned llvm::APInt. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK4mlir5base211BitSequence6getLSBE9size_type">
+<span id="_CPPv3NK4mlir5base211BitSequence6getLSBE9size_type"></span><span id="_CPPv2NK4mlir5base211BitSequence6getLSBE9size_type"></span><span id="mlir::base2::BitSequence::getLSB__size_typeC"></span><span class="target" id="classmlir_1_1base2_1_1BitSequence_1acee9c66461cd1372cb97afd53e38fdf0"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N4mlir5base211BitSequenceE" title="mlir::base2::BitSequence"><span class="n"><span class="pre">BitSequence</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">getLSB</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4N4mlir5base211BitSequence9size_typeE" title="mlir::base2::BitSequence::size_type"><span class="n"><span class="pre">size_type</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">width</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK4mlir5base211BitSequence6getLSBE9size_type" title="Link to this definition"></a><br /></dt>
+<dd><p>Gets the <code class="docutils literal notranslate"><span class="pre">width</span></code> LSB bits. </p>
+<p>If <code class="docutils literal notranslate"><span class="pre">width</span></code> is larger than <code class="docutils literal notranslate"><a class="reference internal" href="#classmlir_1_1base2_1_1BitSequence_1a7bedc836f09b11dab1743eca30540c66"><span class="std std-ref"><span class="pre">size()</span></span></a></code>, the result MSB is padded with 0. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK4mlir5base211BitSequence6getMSBE9size_type">
+<span id="_CPPv3NK4mlir5base211BitSequence6getMSBE9size_type"></span><span id="_CPPv2NK4mlir5base211BitSequence6getMSBE9size_type"></span><span id="mlir::base2::BitSequence::getMSB__size_typeC"></span><span class="target" id="classmlir_1_1base2_1_1BitSequence_1ae24d5b175515d86ed71d4fe7518e3b6b"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N4mlir5base211BitSequenceE" title="mlir::base2::BitSequence"><span class="n"><span class="pre">BitSequence</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">getMSB</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4N4mlir5base211BitSequence9size_typeE" title="mlir::base2::BitSequence::size_type"><span class="n"><span class="pre">size_type</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">width</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK4mlir5base211BitSequence6getMSBE9size_type" title="Link to this definition"></a><br /></dt>
+<dd><p>Gets the <code class="docutils literal notranslate"><span class="pre">width</span></code> MSB bits. </p>
+<p>If <code class="docutils literal notranslate"><span class="pre">width</span></code> is larger than <code class="docutils literal notranslate"><a class="reference internal" href="#classmlir_1_1base2_1_1BitSequence_1a7bedc836f09b11dab1743eca30540c66"><span class="std std-ref"><span class="pre">size()</span></span></a></code>, the result LSB is padded with 0. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK4mlir5base211BitSequence9logicCmplEv">
+<span id="_CPPv3NK4mlir5base211BitSequence9logicCmplEv"></span><span id="_CPPv2NK4mlir5base211BitSequence9logicCmplEv"></span><span id="mlir::base2::BitSequence::logicCmplC"></span><span class="target" id="classmlir_1_1base2_1_1BitSequence_1ac5a6cfcee34dd18cf30fa7391b83326c"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N4mlir5base211BitSequenceE" title="mlir::base2::BitSequence"><span class="n"><span class="pre">BitSequence</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">logicCmpl</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK4mlir5base211BitSequence9logicCmplEv" title="Link to this definition"></a><br /></dt>
+<dd><p>Computes the bitwise complement. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK4mlir5base211BitSequence8logicAndERK11BitSequence">
+<span id="_CPPv3NK4mlir5base211BitSequence8logicAndERK11BitSequence"></span><span id="_CPPv2NK4mlir5base211BitSequence8logicAndERK11BitSequence"></span><span id="mlir::base2::BitSequence::logicAnd__BitSequenceCRC"></span><span class="target" id="classmlir_1_1base2_1_1BitSequence_1ab13ecbf17f4f384fa713ec0362561595"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N4mlir5base211BitSequenceE" title="mlir::base2::BitSequence"><span class="n"><span class="pre">BitSequence</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">logicAnd</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N4mlir5base211BitSequenceE" title="mlir::base2::BitSequence"><span class="n"><span class="pre">BitSequence</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">rhs</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK4mlir5base211BitSequence8logicAndERK11BitSequence" title="Link to this definition"></a><br /></dt>
+<dd><p>Computes the bitwise logical and with <code class="docutils literal notranslate"><span class="pre">rhs</span></code> . </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK4mlir5base211BitSequence7logicOrERK11BitSequence">
+<span id="_CPPv3NK4mlir5base211BitSequence7logicOrERK11BitSequence"></span><span id="_CPPv2NK4mlir5base211BitSequence7logicOrERK11BitSequence"></span><span id="mlir::base2::BitSequence::logicOr__BitSequenceCRC"></span><span class="target" id="classmlir_1_1base2_1_1BitSequence_1ac97f94013eaaa3e60341a3d0577970b2"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N4mlir5base211BitSequenceE" title="mlir::base2::BitSequence"><span class="n"><span class="pre">BitSequence</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">logicOr</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N4mlir5base211BitSequenceE" title="mlir::base2::BitSequence"><span class="n"><span class="pre">BitSequence</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">rhs</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK4mlir5base211BitSequence7logicOrERK11BitSequence" title="Link to this definition"></a><br /></dt>
+<dd><p>Computes the bitwise logical or with <code class="docutils literal notranslate"><span class="pre">rhs</span></code> . </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK4mlir5base211BitSequence8logicXorERK11BitSequence">
+<span id="_CPPv3NK4mlir5base211BitSequence8logicXorERK11BitSequence"></span><span id="_CPPv2NK4mlir5base211BitSequence8logicXorERK11BitSequence"></span><span id="mlir::base2::BitSequence::logicXor__BitSequenceCRC"></span><span class="target" id="classmlir_1_1base2_1_1BitSequence_1a57b91f5461edf0a4c669e0241e17fd0d"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N4mlir5base211BitSequenceE" title="mlir::base2::BitSequence"><span class="n"><span class="pre">BitSequence</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">logicXor</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N4mlir5base211BitSequenceE" title="mlir::base2::BitSequence"><span class="n"><span class="pre">BitSequence</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">rhs</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK4mlir5base211BitSequence8logicXorERK11BitSequence" title="Link to this definition"></a><br /></dt>
+<dd><p>Computes the bitwise exclusive or with <code class="docutils literal notranslate"><span class="pre">rhs</span></code> . </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK4mlir5base211BitSequence8logicShlE11bit_width_t">
+<span id="_CPPv3NK4mlir5base211BitSequence8logicShlE11bit_width_t"></span><span id="_CPPv2NK4mlir5base211BitSequence8logicShlE11bit_width_t"></span><span id="mlir::base2::BitSequence::logicShl__bit_width_tC"></span><span class="target" id="classmlir_1_1base2_1_1BitSequence_1a82e80befaf8416b203c784348118b68f"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N4mlir5base211BitSequenceE" title="mlir::base2::BitSequence"><span class="n"><span class="pre">BitSequence</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">logicShl</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="typedef_namespacemlir_1_1base2_1a33e452fef23c70643d0623bac3809f07.html#_CPPv4N4mlir5base211bit_width_tE" title="mlir::base2::bit_width_t"><span class="n"><span class="pre">bit_width_t</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">amount</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK4mlir5base211BitSequence8logicShlE11bit_width_t" title="Link to this definition"></a><br /></dt>
+<dd><p>Performs a logical left shift. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK4mlir5base211BitSequence9funnelShlERK11BitSequence11bit_width_t">
+<span id="_CPPv3NK4mlir5base211BitSequence9funnelShlERK11BitSequence11bit_width_t"></span><span id="_CPPv2NK4mlir5base211BitSequence9funnelShlERK11BitSequence11bit_width_t"></span><span id="mlir::base2::BitSequence::funnelShl__BitSequenceCR.bit_width_tC"></span><span class="target" id="classmlir_1_1base2_1_1BitSequence_1ad5e0d0f63dab284da0b071cf37454a05"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N4mlir5base211BitSequenceE" title="mlir::base2::BitSequence"><span class="n"><span class="pre">BitSequence</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">funnelShl</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N4mlir5base211BitSequenceE" title="mlir::base2::BitSequence"><span class="n"><span class="pre">BitSequence</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">rhs</span></span>, <a class="reference internal" href="typedef_namespacemlir_1_1base2_1a33e452fef23c70643d0623bac3809f07.html#_CPPv4N4mlir5base211bit_width_tE" title="mlir::base2::bit_width_t"><span class="n"><span class="pre">bit_width_t</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">amount</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK4mlir5base211BitSequence9funnelShlERK11BitSequence11bit_width_t" title="Link to this definition"></a><br /></dt>
+<dd><p>Performs a logical left shift with funnel <code class="docutils literal notranslate"><span class="pre">rhs</span></code> . </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK4mlir5base211BitSequence8logicShrE11bit_width_t">
+<span id="_CPPv3NK4mlir5base211BitSequence8logicShrE11bit_width_t"></span><span id="_CPPv2NK4mlir5base211BitSequence8logicShrE11bit_width_t"></span><span id="mlir::base2::BitSequence::logicShr__bit_width_tC"></span><span class="target" id="classmlir_1_1base2_1_1BitSequence_1a4953248668cb4a9564f5fdc915df8481"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N4mlir5base211BitSequenceE" title="mlir::base2::BitSequence"><span class="n"><span class="pre">BitSequence</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">logicShr</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="typedef_namespacemlir_1_1base2_1a33e452fef23c70643d0623bac3809f07.html#_CPPv4N4mlir5base211bit_width_tE" title="mlir::base2::bit_width_t"><span class="n"><span class="pre">bit_width_t</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">amount</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK4mlir5base211BitSequence8logicShrE11bit_width_t" title="Link to this definition"></a><br /></dt>
+<dd><p>Performs a logical right shift. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK4mlir5base211BitSequence9funnelShrERK11BitSequence11bit_width_t">
+<span id="_CPPv3NK4mlir5base211BitSequence9funnelShrERK11BitSequence11bit_width_t"></span><span id="_CPPv2NK4mlir5base211BitSequence9funnelShrERK11BitSequence11bit_width_t"></span><span id="mlir::base2::BitSequence::funnelShr__BitSequenceCR.bit_width_tC"></span><span class="target" id="classmlir_1_1base2_1_1BitSequence_1a39bb387dcebc2a8741a516e4f6a8c811"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N4mlir5base211BitSequenceE" title="mlir::base2::BitSequence"><span class="n"><span class="pre">BitSequence</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">funnelShr</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N4mlir5base211BitSequenceE" title="mlir::base2::BitSequence"><span class="n"><span class="pre">BitSequence</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">lhs</span></span>, <a class="reference internal" href="typedef_namespacemlir_1_1base2_1a33e452fef23c70643d0623bac3809f07.html#_CPPv4N4mlir5base211bit_width_tE" title="mlir::base2::bit_width_t"><span class="n"><span class="pre">bit_width_t</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">amount</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK4mlir5base211BitSequence9funnelShrERK11BitSequence11bit_width_t" title="Link to this definition"></a><br /></dt>
+<dd><p>Performs a logical right shift with funnel <code class="docutils literal notranslate"><span class="pre">lhs</span></code>. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK4mlir5base211BitSequence9countOnesEv">
+<span id="_CPPv3NK4mlir5base211BitSequence9countOnesEv"></span><span id="_CPPv2NK4mlir5base211BitSequence9countOnesEv"></span><span id="mlir::base2::BitSequence::countOnesC"></span><span class="target" id="classmlir_1_1base2_1_1BitSequence_1abf9942801dc5771de52e49b4c5e0d645"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><a class="reference internal" href="typedef_namespacemlir_1_1base2_1a33e452fef23c70643d0623bac3809f07.html#_CPPv4N4mlir5base211bit_width_tE" title="mlir::base2::bit_width_t"><span class="n"><span class="pre">bit_width_t</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">countOnes</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK4mlir5base211BitSequence9countOnesEv" title="Link to this definition"></a><br /></dt>
+<dd><p>Counts the number of 1 bits. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK4mlir5base211BitSequence17countLeadingZerosEv">
+<span id="_CPPv3NK4mlir5base211BitSequence17countLeadingZerosEv"></span><span id="_CPPv2NK4mlir5base211BitSequence17countLeadingZerosEv"></span><span id="mlir::base2::BitSequence::countLeadingZerosC"></span><span class="target" id="classmlir_1_1base2_1_1BitSequence_1ae02499ae6be7ff06ffb25e9a14f3dc87"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><a class="reference internal" href="typedef_namespacemlir_1_1base2_1a33e452fef23c70643d0623bac3809f07.html#_CPPv4N4mlir5base211bit_width_tE" title="mlir::base2::bit_width_t"><span class="n"><span class="pre">bit_width_t</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">countLeadingZeros</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK4mlir5base211BitSequence17countLeadingZerosEv" title="Link to this definition"></a><br /></dt>
+<dd><p>Counts the number of leading 0 bits. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK4mlir5base211BitSequence18countTrailingZerosEv">
+<span id="_CPPv3NK4mlir5base211BitSequence18countTrailingZerosEv"></span><span id="_CPPv2NK4mlir5base211BitSequence18countTrailingZerosEv"></span><span id="mlir::base2::BitSequence::countTrailingZerosC"></span><span class="target" id="classmlir_1_1base2_1_1BitSequence_1ac271326f22e38d7c6a78ba89a0ed0d11"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><a class="reference internal" href="typedef_namespacemlir_1_1base2_1a33e452fef23c70643d0623bac3809f07.html#_CPPv4N4mlir5base211bit_width_tE" title="mlir::base2::bit_width_t"><span class="n"><span class="pre">bit_width_t</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">countTrailingZeros</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK4mlir5base211BitSequence18countTrailingZerosEv" title="Link to this definition"></a><br /></dt>
+<dd><p>Counts the number of trailing 0 bits. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK4mlir5base211BitSequence5emptyEv">
+<span id="_CPPv3NK4mlir5base211BitSequence5emptyEv"></span><span id="_CPPv2NK4mlir5base211BitSequence5emptyEv"></span><span id="mlir::base2::BitSequence::emptyC"></span><span class="target" id="classmlir_1_1base2_1_1BitSequence_1a2bda223ac3720216629bdb6056b1ad5d"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">empty</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK4mlir5base211BitSequence5emptyEv" title="Link to this definition"></a><br /></dt>
+<dd><p>whether this sequence is empty. </p>
+<p>whether this sequence is empty. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK4mlir5base211BitSequence4sizeEv">
+<span id="_CPPv3NK4mlir5base211BitSequence4sizeEv"></span><span id="_CPPv2NK4mlir5base211BitSequence4sizeEv"></span><span id="mlir::base2::BitSequence::sizeC"></span><span class="target" id="classmlir_1_1base2_1_1BitSequence_1a7bedc836f09b11dab1743eca30540c66"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N4mlir5base211BitSequence9size_typeE" title="mlir::base2::BitSequence::size_type"><span class="n"><span class="pre">size_type</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">size</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK4mlir5base211BitSequence4sizeEv" title="Link to this definition"></a><br /></dt>
+<dd><p>the number of bits. </p>
+<p>the number of bits. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK4mlir5base211BitSequence7isZerosEv">
+<span id="_CPPv3NK4mlir5base211BitSequence7isZerosEv"></span><span id="_CPPv2NK4mlir5base211BitSequence7isZerosEv"></span><span id="mlir::base2::BitSequence::isZerosC"></span><span class="target" id="classmlir_1_1base2_1_1BitSequence_1a00ef4652107ec43ac314585c142d50ca"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">isZeros</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK4mlir5base211BitSequence7isZerosEv" title="Link to this definition"></a><br /></dt>
+<dd><p>Determines whether this sequence is just zero bits. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK4mlir5base211BitSequence6isOnesEv">
+<span id="_CPPv3NK4mlir5base211BitSequence6isOnesEv"></span><span id="_CPPv2NK4mlir5base211BitSequence6isOnesEv"></span><span id="mlir::base2::BitSequence::isOnesC"></span><span class="target" id="classmlir_1_1base2_1_1BitSequence_1a8f58e39eecc4038f9baf0dde50f41335"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">isOnes</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK4mlir5base211BitSequence6isOnesEv" title="Link to this definition"></a><br /></dt>
+<dd><p>Determines whether this sequence is just one bits. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK4mlir5base211BitSequenceeqERK12storage_type">
+<span id="_CPPv3NK4mlir5base211BitSequenceeqERK12storage_type"></span><span id="_CPPv2NK4mlir5base211BitSequenceeqERK12storage_type"></span><span id="mlir::base2::BitSequence::eq-operator__storage_typeCRC"></span><span class="target" id="classmlir_1_1base2_1_1BitSequence_1aab12476121a8f29be1668d3e2b8a1c5e"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="k"><span class="pre">operator</span></span><span class="o"><span class="pre">==</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N4mlir5base211BitSequence12storage_typeE" title="mlir::base2::BitSequence::storage_type"><span class="n"><span class="pre">storage_type</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">other</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK4mlir5base211BitSequenceeqERK12storage_type" title="Link to this definition"></a><br /></dt>
+<dd><p>Determines whether <code class="docutils literal notranslate"><span class="pre">other</span></code> is the same bit sequence. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK4mlir5base211BitSequenceeqERK11BitSequence">
+<span id="_CPPv3NK4mlir5base211BitSequenceeqERK11BitSequence"></span><span id="_CPPv2NK4mlir5base211BitSequenceeqERK11BitSequence"></span><span id="mlir::base2::BitSequence::eq-operator__BitSequenceCRC"></span><span class="target" id="classmlir_1_1base2_1_1BitSequence_1a684239ddcd762a0b3f7661e48a968abc"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="k"><span class="pre">operator</span></span><span class="o"><span class="pre">==</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N4mlir5base211BitSequenceE" title="mlir::base2::BitSequence"><span class="n"><span class="pre">BitSequence</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">other</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK4mlir5base211BitSequenceeqERK11BitSequence" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK4mlir5base211BitSequence8getBytesERN4llvm15SmallVectorImplINSt7uint8_tEEENSt6endianE">
+<span id="_CPPv3NK4mlir5base211BitSequence8getBytesERN4llvm15SmallVectorImplINSt7uint8_tEEENSt6endianE"></span><span id="_CPPv2NK4mlir5base211BitSequence8getBytesERN4llvm15SmallVectorImplINSt7uint8_tEEENSt6endianE"></span><span id="mlir::base2::BitSequence::getBytes__llvm::SmallVectorImpl:std::uint8_t:R.std::endianC"></span><span class="target" id="classmlir_1_1base2_1_1BitSequence_1ae93cc997a73858baa65ddfcc3bb9caf6"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">getBytes</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">llvm</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">SmallVectorImpl</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">uint8_t</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">result</span></span>, <span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">endian</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">endian</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">endian</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">native</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK4mlir5base211BitSequence8getBytesERN4llvm15SmallVectorImplINSt7uint8_tEEENSt6endianE" title="Link to this definition"></a><br /></dt>
+<dd><p>Copies the bytes of this bit sequence into <code class="docutils literal notranslate"><span class="pre">result</span></code> . </p>
+<p>Similar to print(llvm::raw_ostream &amp;), the minimum number of bytes required to fit all bits will be emitted. Inserted padding bits are 0.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Pre<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="docutils literal notranslate"><span class="pre">endian</span> <span class="pre">==</span> <span class="pre">std::endian::big</span> <span class="pre">||</span> <span class="pre">endian</span> <span class="pre">==</span> <span class="pre">std::endian::little</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK4mlir5base211BitSequence5printERN4llvm11raw_ostreamE">
+<span id="_CPPv3NK4mlir5base211BitSequence5printERN4llvm11raw_ostreamE"></span><span id="_CPPv2NK4mlir5base211BitSequence5printERN4llvm11raw_ostreamE"></span><span id="mlir::base2::BitSequence::print__llvm::raw_ostreamRC"></span><span class="target" id="classmlir_1_1base2_1_1BitSequence_1aebf7a7eb3bb9e5b7d5bb31329cba5c87"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">print</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">llvm</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">raw_ostream</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">out</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK4mlir5base211BitSequence5printERN4llvm11raw_ostreamE" title="Link to this definition"></a><br /></dt>
+<dd><p>Writes a bit sequence to <code class="docutils literal notranslate"><span class="pre">out</span></code> as a hexadecimal bitstring literal. </p>
+<p>The format emitted by this printer is given by:</p>
+<p><div class="highlight-default notranslate"><div class="highlight"><pre><span></span>/// bit-sequence ::= `0x` [_0-9a-fA-F]* (`/` [0-9]+)?
+///
+</pre></div>
+</div>
+ <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>The printer only emits whole bytes (pairs of nibbles / hex digits), but
+omits all leading zero bytes. The truncation specifier `/` will be
+present in the result if the number of written bits does not equal the
+length of this bit sequence.
+</pre></div>
+</div>
+</p>
+</dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-static-functions">Public Static Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir5base211BitSequence4fillE11bit_width_tb">
+<span id="_CPPv3N4mlir5base211BitSequence4fillE11bit_width_tb"></span><span id="_CPPv2N4mlir5base211BitSequence4fillE11bit_width_tb"></span><span id="mlir::base2::BitSequence::fill__bit_width_t.b"></span><span class="target" id="classmlir_1_1base2_1_1BitSequence_1a283349aad35c84692eafc26e901faa3d"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N4mlir5base211BitSequenceE" title="mlir::base2::BitSequence"><span class="n"><span class="pre">BitSequence</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fill</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="typedef_namespacemlir_1_1base2_1a33e452fef23c70643d0623bac3809f07.html#_CPPv4N4mlir5base211bit_width_tE" title="mlir::base2::bit_width_t"><span class="n"><span class="pre">bit_width_t</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">width</span></span>, <span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">fillBit</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4mlir5base211BitSequence4fillE11bit_width_tb" title="Link to this definition"></a><br /></dt>
+<dd><p>Initializes a <a class="reference internal" href="#classmlir_1_1base2_1_1BitSequence"><span class="std std-ref">BitSequence</span></a> of <code class="docutils literal notranslate"><span class="pre">width</span></code> filled with <code class="docutils literal notranslate"><span class="pre">fillBit</span></code> . </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir5base211BitSequence5zerosE11bit_width_t">
+<span id="_CPPv3N4mlir5base211BitSequence5zerosE11bit_width_t"></span><span id="_CPPv2N4mlir5base211BitSequence5zerosE11bit_width_t"></span><span id="mlir::base2::BitSequence::zeros__bit_width_t"></span><span class="target" id="classmlir_1_1base2_1_1BitSequence_1a30e1e0374bb9408c5305fa61e6b08551"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N4mlir5base211BitSequenceE" title="mlir::base2::BitSequence"><span class="n"><span class="pre">BitSequence</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">zeros</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="typedef_namespacemlir_1_1base2_1a33e452fef23c70643d0623bac3809f07.html#_CPPv4N4mlir5base211bit_width_tE" title="mlir::base2::bit_width_t"><span class="n"><span class="pre">bit_width_t</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">width</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4mlir5base211BitSequence5zerosE11bit_width_t" title="Link to this definition"></a><br /></dt>
+<dd><p>Initializes a <a class="reference internal" href="#classmlir_1_1base2_1_1BitSequence"><span class="std std-ref">BitSequence</span></a> of <code class="docutils literal notranslate"><span class="pre">width</span></code> zeros. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir5base211BitSequence4onesE11bit_width_t">
+<span id="_CPPv3N4mlir5base211BitSequence4onesE11bit_width_t"></span><span id="_CPPv2N4mlir5base211BitSequence4onesE11bit_width_t"></span><span id="mlir::base2::BitSequence::ones__bit_width_t"></span><span class="target" id="classmlir_1_1base2_1_1BitSequence_1a9aaac4fdf6c11bcc3847ecfd8ec82944"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N4mlir5base211BitSequenceE" title="mlir::base2::BitSequence"><span class="n"><span class="pre">BitSequence</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ones</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="typedef_namespacemlir_1_1base2_1a33e452fef23c70643d0623bac3809f07.html#_CPPv4N4mlir5base211bit_width_tE" title="mlir::base2::bit_width_t"><span class="n"><span class="pre">bit_width_t</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">width</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4mlir5base211BitSequence4onesE11bit_width_t" title="Link to this definition"></a><br /></dt>
+<dd><p>Initializes a <a class="reference internal" href="#classmlir_1_1base2_1_1BitSequence"><span class="std std-ref">BitSequence</span></a> of <code class="docutils literal notranslate"><span class="pre">width</span></code> ones. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir5base211BitSequence7fromLSBE11bit_width_t9word_type">
+<span id="_CPPv3N4mlir5base211BitSequence7fromLSBE11bit_width_t9word_type"></span><span id="_CPPv2N4mlir5base211BitSequence7fromLSBE11bit_width_t9word_type"></span><span id="mlir::base2::BitSequence::fromLSB__bit_width_t.word_type"></span><span class="target" id="classmlir_1_1base2_1_1BitSequence_1ae6a00938ea9ec32fb692153faa1fcb14"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N4mlir5base211BitSequenceE" title="mlir::base2::BitSequence"><span class="n"><span class="pre">BitSequence</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fromLSB</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="typedef_namespacemlir_1_1base2_1a33e452fef23c70643d0623bac3809f07.html#_CPPv4N4mlir5base211bit_width_tE" title="mlir::base2::bit_width_t"><span class="n"><span class="pre">bit_width_t</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">width</span></span>, <a class="reference internal" href="#_CPPv4N4mlir5base211BitSequence9word_typeE" title="mlir::base2::BitSequence::word_type"><span class="n"><span class="pre">word_type</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">lsb</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4mlir5base211BitSequence7fromLSBE11bit_width_t9word_type" title="Link to this definition"></a><br /></dt>
+<dd><p>Initializes a <a class="reference internal" href="#classmlir_1_1base2_1_1BitSequence"><span class="std std-ref">BitSequence</span></a> of <code class="docutils literal notranslate"><span class="pre">width</span></code> copying <code class="docutils literal notranslate"><span class="pre">lsb</span></code> . </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir5base211BitSequence9fromBytesE8ArrayRefINSt7uint8_tEE11bit_width_tNSt6endianE">
+<span id="_CPPv3N4mlir5base211BitSequence9fromBytesE8ArrayRefINSt7uint8_tEE11bit_width_tNSt6endianE"></span><span id="_CPPv2N4mlir5base211BitSequence9fromBytesE8ArrayRefINSt7uint8_tEE11bit_width_tNSt6endianE"></span><span id="mlir::base2::BitSequence::fromBytes__ArrayRef:std::uint8_t:.bit_width_t.std::endian"></span><span class="target" id="classmlir_1_1base2_1_1BitSequence_1ac80e786904da510045caa34eef89e883"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N4mlir5base211BitSequenceE" title="mlir::base2::BitSequence"><span class="n"><span class="pre">BitSequence</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fromBytes</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">ArrayRef</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">uint8_t</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">bytes</span></span>, <a class="reference internal" href="typedef_namespacemlir_1_1base2_1a33e452fef23c70643d0623bac3809f07.html#_CPPv4N4mlir5base211bit_width_tE" title="mlir::base2::bit_width_t"><span class="n"><span class="pre">bit_width_t</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">bitWidth</span></span>, <span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">endian</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">endian</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">endian</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">native</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4mlir5base211BitSequence9fromBytesE8ArrayRefINSt7uint8_tEE11bit_width_tNSt6endianE" title="Link to this definition"></a><br /></dt>
+<dd><p>Initializes a <a class="reference internal" href="#classmlir_1_1base2_1_1BitSequence"><span class="std std-ref">BitSequence</span></a> from <code class="docutils literal notranslate"><span class="pre">bytes</span></code> . </p>
+<p>Performs the inverse operation of <a class="reference internal" href="#classmlir_1_1base2_1_1BitSequence_1ae93cc997a73858baa65ddfcc3bb9caf6"><span class="std std-ref">getBytes()</span></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Pre<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="docutils literal notranslate"><span class="pre">bytes.size()</span> <span class="pre">&gt;=</span> <span class="pre">bitWidth</span> <span class="pre">*</span> <span class="pre">8</span></code></p>
+</dd>
+<dt class="field-even">Pre<span class="colon">:</span></dt>
+<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">endian</span> <span class="pre">==</span> <span class="pre">std::endian::big</span> <span class="pre">||</span> <span class="pre">endian</span> <span class="pre">==</span> <span class="pre">std::endian::little</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir5base211BitSequence9fromBytesERN4llvm15SmallVectorImplI11BitSequenceEE8ArrayRefINSt7uint8_tEE11bit_width_tNSt6endianE">
+<span id="_CPPv3N4mlir5base211BitSequence9fromBytesERN4llvm15SmallVectorImplI11BitSequenceEE8ArrayRefINSt7uint8_tEE11bit_width_tNSt6endianE"></span><span id="_CPPv2N4mlir5base211BitSequence9fromBytesERN4llvm15SmallVectorImplI11BitSequenceEE8ArrayRefINSt7uint8_tEE11bit_width_tNSt6endianE"></span><span id="mlir::base2::BitSequence::fromBytes__llvm::SmallVectorImpl:BitSequence:R.ArrayRef:std::uint8_t:.bit_width_t.std::endian"></span><span class="target" id="classmlir_1_1base2_1_1BitSequence_1a141bab9c4434bdc4d4af64d458bdf3df"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">fromBytes</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">llvm</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">SmallVectorImpl</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4N4mlir5base211BitSequenceE" title="mlir::base2::BitSequence"><span class="n"><span class="pre">BitSequence</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">result</span></span>, <span class="n"><span class="pre">ArrayRef</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">uint8_t</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">bytes</span></span>, <a class="reference internal" href="typedef_namespacemlir_1_1base2_1a33e452fef23c70643d0623bac3809f07.html#_CPPv4N4mlir5base211bit_width_tE" title="mlir::base2::bit_width_t"><span class="n"><span class="pre">bit_width_t</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">bitWidth</span></span>, <span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">endian</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">endian</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">endian</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">native</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4mlir5base211BitSequence9fromBytesERN4llvm15SmallVectorImplI11BitSequenceEE8ArrayRefINSt7uint8_tEE11bit_width_tNSt6endianE" title="Link to this definition"></a><br /></dt>
+<dd><p>Reads packed <a class="reference internal" href="#classmlir_1_1base2_1_1BitSequence"><span class="std std-ref">BitSequence</span></a> values from <code class="docutils literal notranslate"><span class="pre">bytes</span></code> . </p>
+<p>Performs the inverse operation of <a class="reference internal" href="#classmlir_1_1base2_1_1BitSequence_1ae93cc997a73858baa65ddfcc3bb9caf6"><span class="std std-ref">getBytes()</span></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Pre<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="docutils literal notranslate"><span class="pre">endian</span> <span class="pre">==</span> <span class="pre">std::endian::big</span> <span class="pre">||</span> <span class="pre">endian</span> <span class="pre">==</span> <span class="pre">std::endian::little</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-static-attributes">Public Static Attributes</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir5base211BitSequence9word_bitsE">
+<span id="_CPPv3N4mlir5base211BitSequence9word_bitsE"></span><span id="_CPPv2N4mlir5base211BitSequence9word_bitsE"></span><span id="mlir::base2::BitSequence::word_bits__size_type"></span><span class="target" id="classmlir_1_1base2_1_1BitSequence_1ae5ec2b887318e40bc3ac3d076d47ca3b"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="k"><span class="pre">constexpr</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N4mlir5base211BitSequence9size_typeE" title="mlir::base2::BitSequence::size_type"><span class="n"><span class="pre">size_type</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">word_bits</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><a class="reference internal" href="variable_namespacemlir_1_1base2_1a866748b8ce4e7e67e14d3213f537cc34.html#_CPPv4I_12bit_sequenceEN4mlir5base219bit_sequence_lengthE" title="mlir::base2::bit_sequence_length"><span class="n"><span class="pre">bit_sequence_length</span></span></a><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4N4mlir5base211BitSequence9word_typeE" title="mlir::base2::BitSequence::word_type"><span class="n"><span class="pre">word_type</span></span></a><span class="p"><span class="pre">&gt;</span></span><a class="headerlink" href="#_CPPv4N4mlir5base211BitSequence9word_bitsE" title="Link to this definition"></a><br /></dt>
+<dd><p>Number of bits per storage word. </p>
+</dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-friends">Friends</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir5base211BitSequence10hash_valueERK11BitSequence">
+<span id="_CPPv3N4mlir5base211BitSequence10hash_valueERK11BitSequence"></span><span id="_CPPv2N4mlir5base211BitSequence10hash_valueERK11BitSequence"></span><span id="mlir::base2::BitSequence::hash_value__BitSequenceCR"></span><span class="target" id="classmlir_1_1base2_1_1BitSequence_1adca5fbbd4e9b636d4116e416a11c5cde"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="k"><span class="pre">friend</span></span><span class="w"> </span><span class="n"><span class="pre">llvm</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">hash_code</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">hash_value</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N4mlir5base211BitSequenceE" title="mlir::base2::BitSequence"><span class="n"><span class="pre">BitSequence</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">bits</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4mlir5base211BitSequence10hash_valueERK11BitSequence" title="Link to this definition"></a><br /></dt>
+<dd><p>Computes a hash value for <code class="docutils literal notranslate"><span class="pre">bits</span></code> . </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir5base211BitSequencelsERN4llvm11raw_ostreamERK11BitSequence">
+<span id="_CPPv3N4mlir5base211BitSequencelsERN4llvm11raw_ostreamERK11BitSequence"></span><span id="_CPPv2N4mlir5base211BitSequencelsERN4llvm11raw_ostreamERK11BitSequence"></span><span id="mlir::base2::BitSequence::lshift-operator__llvm::raw_ostreamR.BitSequenceCR"></span><span class="target" id="classmlir_1_1base2_1_1BitSequence_1a6ab510cbad1f287c410ddab2e0bfddc2"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="k"><span class="pre">friend</span></span><span class="w"> </span><span class="n"><span class="pre">llvm</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">raw_ostream</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="sig-name descname"><span class="k"><span class="pre">operator</span></span><span class="o"><span class="pre">&lt;&lt;</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">llvm</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">raw_ostream</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">out</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N4mlir5base211BitSequenceE" title="mlir::base2::BitSequence"><span class="n"><span class="pre">BitSequence</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">bits</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4mlir5base211BitSequencelsERN4llvm11raw_ostreamERK11BitSequence" title="Link to this definition"></a><br /></dt>
+<dd><p>Writes <code class="docutils literal notranslate"><span class="pre">bits</span></code> to <code class="docutils literal notranslate"><span class="pre">out</span></code> as a hexadecimal bitstring literal. </p>
+<p>See write(llvm::raw_ostream &amp;) for more information. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir5base211BitSequencelsER10AsmPrinterRK11BitSequence">
+<span id="_CPPv3N4mlir5base211BitSequencelsER10AsmPrinterRK11BitSequence"></span><span id="_CPPv2N4mlir5base211BitSequencelsER10AsmPrinterRK11BitSequence"></span><span id="mlir::base2::BitSequence::lshift-operator__AsmPrinterR.BitSequenceCR"></span><span class="target" id="classmlir_1_1base2_1_1BitSequence_1a9cd0129abaf43c9086e4b845d780fe5a"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="k"><span class="pre">friend</span></span><span class="w"> </span><span class="n"><span class="pre">AsmPrinter</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="sig-name descname"><span class="k"><span class="pre">operator</span></span><span class="o"><span class="pre">&lt;&lt;</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">AsmPrinter</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">printer</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N4mlir5base211BitSequenceE" title="mlir::base2::BitSequence"><span class="n"><span class="pre">BitSequence</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">bits</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4mlir5base211BitSequencelsER10AsmPrinterRK11BitSequence" title="Link to this definition"></a><br /></dt>
+<dd><p>Writes <code class="docutils literal notranslate"><span class="pre">bits</span></code> to <code class="docutils literal notranslate"><span class="pre">printer</span></code> as a quoted hexadecimal bitstring literal. </p>
+<p>This overload wraps the literal in <code class="docutils literal notranslate"><span class="pre">&quot;</span></code> quotes to ensure it can be unambiguously recovered using an associated <a class="reference internal" href="structmlir_1_1FieldParser.html#structmlir_1_1FieldParser"><span class="std std-ref">mlir::FieldParser</span></a>.</p>
+<p>See write(llvm::raw_ostream &amp;) for more information. </p>
+</dd></dl>
+
+</div>
+<dl class="cpp class">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir5base211BitSequence7BuilderE">
+<span id="_CPPv3N4mlir5base211BitSequence7BuilderE"></span><span id="_CPPv2N4mlir5base211BitSequence7BuilderE"></span><span id="mlir::base2::BitSequence::Builder"></span><span class="target" id="classmlir_1_1base2_1_1BitSequence_1_1Builder"></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Builder</span></span></span><a class="headerlink" href="#_CPPv4N4mlir5base211BitSequence7BuilderE" title="Link to this definition"></a><br /></dt>
+<dd><p>Mutable builder type for constructing <a class="reference internal" href="#classmlir_1_1base2_1_1BitSequence"><span class="std std-ref">BitSequence</span></a> instances. </p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir5base211BitSequence7Builder7BuilderEv">
+<span id="_CPPv3N4mlir5base211BitSequence7Builder7BuilderEv"></span><span id="_CPPv2N4mlir5base211BitSequence7Builder7BuilderEv"></span><span id="mlir::base2::BitSequence::Builder::Builder"></span><span class="target" id="classmlir_1_1base2_1_1BitSequence_1_1Builder_1a703254ae03f7086457ef27211c062029"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Builder</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4mlir5base211BitSequence7Builder7BuilderEv" title="Link to this definition"></a><br /></dt>
+<dd><p>Initializes an empty <a class="reference internal" href="classmlir_1_1base2_1_1BitSequence_1_1Builder.html#classmlir_1_1base2_1_1BitSequence_1_1Builder"><span class="std std-ref">Builder</span></a>. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4I_12bit_sequenceEN4mlir5base211BitSequence7Builder6appendEv4Bits11bit_width_t">
+<span id="_CPPv3I_12bit_sequenceEN4mlir5base211BitSequence7Builder6appendE4Bits11bit_width_t"></span><span id="_CPPv2I_12bit_sequenceEN4mlir5base211BitSequence7Builder6appendE4Bits11bit_width_t"></span><span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">bit_sequence</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Bits</span></span></span><span class="p"><span class="pre">&gt;</span></span><br /><span class="target" id="classmlir_1_1base2_1_1BitSequence_1_1Builder_1a06e83819b3b55a7eaf50a2127d7055ae"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">append</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4I_12bit_sequenceEN4mlir5base211BitSequence7Builder6appendEv4Bits11bit_width_t" title="mlir::base2::BitSequence::Builder::append::Bits"><span class="n"><span class="pre">Bits</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">bits</span></span>, <a class="reference internal" href="typedef_namespacemlir_1_1base2_1a33e452fef23c70643d0623bac3809f07.html#_CPPv4N4mlir5base211bit_width_tE" title="mlir::base2::bit_width_t"><span class="n"><span class="pre">bit_width_t</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">n</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><a class="reference internal" href="variable_namespacemlir_1_1base2_1a866748b8ce4e7e67e14d3213f537cc34.html#_CPPv4I_12bit_sequenceEN4mlir5base219bit_sequence_lengthE" title="mlir::base2::bit_sequence_length"><span class="n"><span class="pre">bit_sequence_length</span></span></a><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4I_12bit_sequenceEN4mlir5base211BitSequence7Builder6appendEv4Bits11bit_width_t" title="mlir::base2::BitSequence::Builder::append::Bits"><span class="n"><span class="pre">Bits</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I_12bit_sequenceEN4mlir5base211BitSequence7Builder6appendEv4Bits11bit_width_t" title="Link to this definition"></a><br /></dt>
+<dd><p>Appends <code class="docutils literal notranslate"><span class="pre">n</span></code> lsb bits of <code class="docutils literal notranslate"><span class="pre">bits</span></code> to the LSB. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4I_12bit_sequenceEN4mlir5base211BitSequence7Builder7prependEv4Bits11bit_width_t">
+<span id="_CPPv3I_12bit_sequenceEN4mlir5base211BitSequence7Builder7prependE4Bits11bit_width_t"></span><span id="_CPPv2I_12bit_sequenceEN4mlir5base211BitSequence7Builder7prependE4Bits11bit_width_t"></span><span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">bit_sequence</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Bits</span></span></span><span class="p"><span class="pre">&gt;</span></span><br /><span class="target" id="classmlir_1_1base2_1_1BitSequence_1_1Builder_1aad20c0e3b4a7ec7dfad9bce184c28f60"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">prepend</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4I_12bit_sequenceEN4mlir5base211BitSequence7Builder7prependEv4Bits11bit_width_t" title="mlir::base2::BitSequence::Builder::prepend::Bits"><span class="n"><span class="pre">Bits</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">bits</span></span>, <a class="reference internal" href="typedef_namespacemlir_1_1base2_1a33e452fef23c70643d0623bac3809f07.html#_CPPv4N4mlir5base211bit_width_tE" title="mlir::base2::bit_width_t"><span class="n"><span class="pre">bit_width_t</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">n</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><a class="reference internal" href="variable_namespacemlir_1_1base2_1a866748b8ce4e7e67e14d3213f537cc34.html#_CPPv4I_12bit_sequenceEN4mlir5base219bit_sequence_lengthE" title="mlir::base2::bit_sequence_length"><span class="n"><span class="pre">bit_sequence_length</span></span></a><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4I_12bit_sequenceEN4mlir5base211BitSequence7Builder7prependEv4Bits11bit_width_t" title="mlir::base2::BitSequence::Builder::prepend::Bits"><span class="n"><span class="pre">Bits</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I_12bit_sequenceEN4mlir5base211BitSequence7Builder7prependEv4Bits11bit_width_t" title="Link to this definition"></a><br /></dt>
+<dd><p>Prepends <code class="docutils literal notranslate"><span class="pre">n</span></code> lsb bits of <code class="docutils literal notranslate"><span class="pre">bits</span></code> to the MSB. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK4mlir5base211BitSequence7Builder5emptyEv">
+<span id="_CPPv3NK4mlir5base211BitSequence7Builder5emptyEv"></span><span id="_CPPv2NK4mlir5base211BitSequence7Builder5emptyEv"></span><span id="mlir::base2::BitSequence::Builder::emptyC"></span><span class="target" id="classmlir_1_1base2_1_1BitSequence_1_1Builder_1ac33dd2a8001bc2b6a7ea8e16fa966b62"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">empty</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK4mlir5base211BitSequence7Builder5emptyEv" title="Link to this definition"></a><br /></dt>
+<dd><p>Determines whether this sequence is empty. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK4mlir5base211BitSequence7Builder4sizeEv">
+<span id="_CPPv3NK4mlir5base211BitSequence7Builder4sizeEv"></span><span id="_CPPv2NK4mlir5base211BitSequence7Builder4sizeEv"></span><span id="mlir::base2::BitSequence::Builder::sizeC"></span><span class="target" id="classmlir_1_1base2_1_1BitSequence_1_1Builder_1a125378b910d0383183d3dc6e7961eb3c"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><a class="reference internal" href="typedef_namespacemlir_1_1base2_1a33e452fef23c70643d0623bac3809f07.html#_CPPv4N4mlir5base211bit_width_tE" title="mlir::base2::bit_width_t"><span class="n"><span class="pre">bit_width_t</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">size</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK4mlir5base211BitSequence7Builder4sizeEv" title="Link to this definition"></a><br /></dt>
+<dd><p>Gets the current sequence length. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir5base211BitSequence7Builder11reserve_lsbE11bit_width_t">
+<span id="_CPPv3N4mlir5base211BitSequence7Builder11reserve_lsbE11bit_width_t"></span><span id="_CPPv2N4mlir5base211BitSequence7Builder11reserve_lsbE11bit_width_t"></span><span id="mlir::base2::BitSequence::Builder::reserve_lsb__bit_width_t"></span><span class="target" id="classmlir_1_1base2_1_1BitSequence_1_1Builder_1a0a295429f992ea15f08e83668443ce1a"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">reserve_lsb</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="typedef_namespacemlir_1_1base2_1a33e452fef23c70643d0623bac3809f07.html#_CPPv4N4mlir5base211bit_width_tE" title="mlir::base2::bit_width_t"><span class="n"><span class="pre">bit_width_t</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">capacity</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4mlir5base211BitSequence7Builder11reserve_lsbE11bit_width_t" title="Link to this definition"></a><br /></dt>
+<dd><p>Reserve capacity for <code class="docutils literal notranslate"><span class="pre">capacity</span></code> additional LSB bits. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir5base211BitSequence7Builder11reserve_msbE11bit_width_t">
+<span id="_CPPv3N4mlir5base211BitSequence7Builder11reserve_msbE11bit_width_t"></span><span id="_CPPv2N4mlir5base211BitSequence7Builder11reserve_msbE11bit_width_t"></span><span id="mlir::base2::BitSequence::Builder::reserve_msb__bit_width_t"></span><span class="target" id="classmlir_1_1base2_1_1BitSequence_1_1Builder_1ad00f3b9407c6b3561e8b73396d5c3de1"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">reserve_msb</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="typedef_namespacemlir_1_1base2_1a33e452fef23c70643d0623bac3809f07.html#_CPPv4N4mlir5base211bit_width_tE" title="mlir::base2::bit_width_t"><span class="n"><span class="pre">bit_width_t</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">capacity</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4mlir5base211BitSequence7Builder11reserve_msbE11bit_width_t" title="Link to this definition"></a><br /></dt>
+<dd><p>Reserve capacity for <code class="docutils literal notranslate"><span class="pre">capacity</span></code> additional MSB bits. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir5base211BitSequence7Builder8truncateE11bit_width_t">
+<span id="_CPPv3N4mlir5base211BitSequence7Builder8truncateE11bit_width_t"></span><span id="_CPPv2N4mlir5base211BitSequence7Builder8truncateE11bit_width_t"></span><span id="mlir::base2::BitSequence::Builder::truncate__bit_width_t"></span><span class="target" id="classmlir_1_1base2_1_1BitSequence_1_1Builder_1a96b911664976cd6b046d91f1f9af9168"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">truncate</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="typedef_namespacemlir_1_1base2_1a33e452fef23c70643d0623bac3809f07.html#_CPPv4N4mlir5base211bit_width_tE" title="mlir::base2::bit_width_t"><span class="n"><span class="pre">bit_width_t</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">newSize</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4mlir5base211BitSequence7Builder8truncateE11bit_width_t" title="Link to this definition"></a><br /></dt>
+<dd><p>Truncates the sequence to <code class="docutils literal notranslate"><span class="pre">newSize</span></code> . </p>
+<dl class="field-list simple">
+<dt class="field-odd">Pre<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="docutils literal notranslate"><span class="pre">newSize()</span> <span class="pre">&lt;=</span> <a class="reference internal" href="classmlir_1_1base2_1_1BitSequence_1_1Builder.html#classmlir_1_1base2_1_1BitSequence_1_1Builder_1a125378b910d0383183d3dc6e7961eb3c"><span class="std std-ref"><span class="pre">size()</span></span></a></code></p>
+</dd>
+<dt class="field-even">Post<span class="colon">:</span></dt>
+<dd class="field-even"><p><code class="docutils literal notranslate"><a class="reference internal" href="classmlir_1_1base2_1_1BitSequence_1_1Builder.html#classmlir_1_1base2_1_1BitSequence_1_1Builder_1a125378b910d0383183d3dc6e7961eb3c"><span class="std std-ref"><span class="pre">size()</span></span></a> <span class="pre">==</span> <span class="pre">newSize</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir5base211BitSequence7Builder6resizeE11bit_width_t">
+<span id="_CPPv3N4mlir5base211BitSequence7Builder6resizeE11bit_width_t"></span><span id="_CPPv2N4mlir5base211BitSequence7Builder6resizeE11bit_width_t"></span><span id="mlir::base2::BitSequence::Builder::resize__bit_width_t"></span><span class="target" id="classmlir_1_1base2_1_1BitSequence_1_1Builder_1aca4847db02d2484779568ed45ede65d0"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">resize</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="typedef_namespacemlir_1_1base2_1a33e452fef23c70643d0623bac3809f07.html#_CPPv4N4mlir5base211bit_width_tE" title="mlir::base2::bit_width_t"><span class="n"><span class="pre">bit_width_t</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">newSize</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4mlir5base211BitSequence7Builder6resizeE11bit_width_t" title="Link to this definition"></a><br /></dt>
+<dd><p>Resizes the sequence by removing or zero-inserting MSB bits. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Post<span class="colon">:</span></dt>
+<dd class="field-odd"><p><code class="docutils literal notranslate"><a class="reference internal" href="classmlir_1_1base2_1_1BitSequence_1_1Builder.html#classmlir_1_1base2_1_1BitSequence_1_1Builder_1a125378b910d0383183d3dc6e7961eb3c"><span class="std std-ref"><span class="pre">size()</span></span></a> <span class="pre">==</span> <span class="pre">newSize</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir5base211BitSequence7Builder6toUIntEv">
+<span id="_CPPv3N4mlir5base211BitSequence7Builder6toUIntEv"></span><span id="_CPPv2N4mlir5base211BitSequence7Builder6toUIntEv"></span><span id="mlir::base2::BitSequence::Builder::toUInt"></span><span class="target" id="classmlir_1_1base2_1_1BitSequence_1_1Builder_1afa41b064b0f1fc3cb676ddf5ac827041"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="n"><span class="pre">llvm</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">APInt</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">toUInt</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4mlir5base211BitSequence7Builder6toUIntEv" title="Link to this definition"></a><br /></dt>
+<dd><p>Converts the contained value to an llvm::APInt. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir5base211BitSequence7Builder13toBitSequenceEv">
+<span id="_CPPv3N4mlir5base211BitSequence7Builder13toBitSequenceEv"></span><span id="_CPPv2N4mlir5base211BitSequence7Builder13toBitSequenceEv"></span><span id="mlir::base2::BitSequence::Builder::toBitSequence"></span><span class="target" id="classmlir_1_1base2_1_1BitSequence_1_1Builder_1ac6880a7e1d9adfc7761fe73665cbe607"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N4mlir5base211BitSequenceE" title="mlir::base2::BitSequence"><span class="n"><span class="pre">BitSequence</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">toBitSequence</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4mlir5base211BitSequence7Builder13toBitSequenceEv" title="Link to this definition"></a><br /></dt>
+<dd><p>Converts the contained value to a <a class="reference internal" href="#classmlir_1_1base2_1_1BitSequence"><span class="std std-ref">BitSequence</span></a>. </p>
+</dd></dl>
+
+</div>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="classmlir_1_1base2_1_1BitsAttr.html" class="btn btn-neutral float-left" title="Class BitsAttr" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="classmlir_1_1base2_1_1BitSequence_1_1Builder.html" class="btn btn-neutral float-right" title="Class BitSequence::Builder" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

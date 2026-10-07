@@ -1,0 +1,56 @@
+
+.. _program_listing_file_include_picea-mlir_InitAllTranslations.h:
+
+Program Listing for File InitAllTranslations.h
+==============================================
+
+|exhale_lsh| :ref:`Return to documentation for file <file_include_picea-mlir_InitAllTranslations.h>` (``include/picea-mlir/InitAllTranslations.h``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. code-block:: cpp
+
+   
+   
+   namespace mlir {
+   
+   void registerDFGToDotTranslation();
+   void registerDFGToMocasinTranslation();
+   void registerEmitCToCPUProfileTranslation();
+   void registerEmitCToCPUProfileRunScriptTranslation();
+   void registerEmitCToLaksaRefTranslation();
+   void registerEmitHLSToCppTranslation();
+   void registerEmitHLSToHLSBuildScriptTranslation();
+   void registerEmitHLSToHLSProfileScriptTranslation();
+   void registerEmitHLSToFPGAModelProfileTranslation();
+   void registerEmitHLSToHLSTclTranslation();
+   void registerEmitHLSToKriaDtsiTranslation();
+   void registerEmitHLSToLaksaAppTranslation();
+   void registerEmitHLSToLaksaHeaderTranslation();
+   void registerEmitHLSToLaksaRunScriptTranslation();
+   void registerEmitHLSToVivadoTclTranslation();
+   
+   inline void registerAllPICEAMLIRTranslations()
+   {
+       static bool initOnce = []() {
+           registerDFGToDotTranslation();
+           registerDFGToMocasinTranslation();
+           registerEmitCToCPUProfileTranslation();
+           registerEmitCToCPUProfileRunScriptTranslation();
+           registerEmitCToLaksaRefTranslation();
+           registerEmitHLSToCppTranslation();
+           registerEmitHLSToHLSBuildScriptTranslation();
+           registerEmitHLSToHLSProfileScriptTranslation();
+           registerEmitHLSToFPGAModelProfileTranslation();
+           registerEmitHLSToHLSTclTranslation();
+           registerEmitHLSToKriaDtsiTranslation();
+           registerEmitHLSToLaksaAppTranslation();
+           registerEmitHLSToLaksaHeaderTranslation();
+           registerEmitHLSToLaksaRunScriptTranslation();
+           registerEmitHLSToVivadoTclTranslation();
+           return true;
+       }();
+       (void)initOnce;
+   }
+   
+   } // namespace mlir

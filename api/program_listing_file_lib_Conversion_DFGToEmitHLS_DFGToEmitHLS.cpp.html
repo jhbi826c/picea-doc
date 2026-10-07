@@ -1,0 +1,656 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Program Listing for File DFGToEmitHLS.cpp &mdash; picea 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/collapsible-lists/css/tree_view.css?v=a885cde7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js?v=73120307"></script>
+      <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js?v=660e4f45"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            picea
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Installation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../README.html">About the project</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#guides">Guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#related-projects">Related projects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#development-environment-nix">Development Environment (Nix)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#build-on-ubuntu-24-04-no-nix">Build on Ubuntu 24.04 (no Nix)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#gurobi-license">Gurobi license</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#installing">Installing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#run-the-tests">Run the tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#build-the-documentation">Build the documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#compiling-a-design">Compiling a design</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#running-a-design-on-the-board">Running a design on the board</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#exporting-a-profiled-application-to-mocasin">Exporting a profiled application to Mocasin</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Guides</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../guides/laksa.html">The FPGA Variant using LAKSA backend</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/cgra.html">The CGRA Variant</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">MLIR Dialects</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/Base2Ops.html">‘base2’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/CGRAOps.html">‘cgra’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/DFGOps.html">‘dfg’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/EmitHLSOps.html">‘emithls’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/FilterOps.html">‘filter’ Dialect</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Passes</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/PICEAConversionPasses.html">PICEA Conversion Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/CGRAPasses.html">CGRA Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/DFGPasses.html">DFG Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/EmitHLSPasses.html">Emit HLS Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/FuncExtPasses.html">Func Ext Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/LinalgExtPasses.html">Linalg Ext Passes</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">C++ API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="library_root.html">C++ API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">picea</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Program Listing for File DFGToEmitHLS.cpp</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/program_listing_file_lib_Conversion_DFGToEmitHLS_DFGToEmitHLS.cpp.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="program-listing-for-file-dfgtoemithls-cpp">
+<span id="program-listing-file-lib-conversion-dfgtoemithls-dfgtoemithls-cpp"></span><h1>Program Listing for File DFGToEmitHLS.cpp<a class="headerlink" href="#program-listing-for-file-dfgtoemithls-cpp" title="Link to this heading"></a></h1>
+<p>↰ <a class="reference internal" href="file_lib_Conversion_DFGToEmitHLS_DFGToEmitHLS.cpp.html#file-lib-conversion-dfgtoemithls-dfgtoemithls-cpp"><span class="std std-ref">Return to documentation for file</span></a> (<code class="docutils literal notranslate"><span class="pre">lib/Conversion/DFGToEmitHLS/DFGToEmitHLS.cpp</span></code>)</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">"picea-mlir/Conversion/DFGToEmitHLS/DFGToEmitHLS.h"</span>
+
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"mlir/Dialect/MemRef/IR/MemRef.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"mlir/IR/BuiltinOps.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"mlir/IR/IRMapping.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"mlir/IR/PatternMatch.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"mlir/IR/SymbolTable.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"picea-mlir/Dialect/DFG/IR/DFG.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"picea-mlir/Dialect/DFG/IR/DFGOps.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"picea-mlir/Dialect/DFG/IR/DFGTypes.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"picea-mlir/Dialect/EmitHLS/IR/EmitHLS.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"picea-mlir/IR/LaksaAttributes.h"</span>
+
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;llvm/Support/Debug.h&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;llvm/Support/LogicalResult.h&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;mlir/IR/MLIRContext.h&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;mlir/IR/Types.h&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;mlir/Transforms/DialectConversion.h&gt;</span>
+
+<span class="cp">#define DEBUG_TYPE "dfg-to-emithls"</span>
+<span class="cp">#define PICEA_DEBUG(X)                                                         \</span>
+<span class="cp">    LLVM_DEBUG(llvm::dbgs() &lt;&lt; "[dfg-to-emithls] "; X; llvm::dbgs() &lt;&lt; "\n")</span>
+
+<span class="k">namespace</span><span class="w"> </span><span class="nn">mlir</span><span class="w"> </span><span class="p">{</span>
+<span class="cp">#define GEN_PASS_DEF_CONVERTDFGTOEMITHLS</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"picea-mlir/Conversion/Passes.h.inc"</span>
+<span class="p">}</span><span class="w"> </span><span class="c1">// namespace mlir</span>
+
+<span class="k">using</span><span class="w"> </span><span class="k">namespace</span><span class="w"> </span><span class="nn">mlir</span><span class="p">;</span>
+<span class="k">using</span><span class="w"> </span><span class="k">namespace</span><span class="w"> </span><span class="nn">mlir</span><span class="o">::</span><span class="nn">emithls</span><span class="p">;</span>
+
+<span class="k">namespace</span><span class="w"> </span><span class="p">{</span>
+
+<span class="c1">// Prints a list of values as `[%0, %1, ...]` for debug logging.</span>
+<span class="k">static</span><span class="w"> </span><span class="n">llvm</span><span class="o">::</span><span class="n">raw_ostream</span><span class="w"> </span><span class="o">&amp;</span>
+<span class="k">operator</span><span class="o">&lt;&lt;</span><span class="p">(</span><span class="n">llvm</span><span class="o">::</span><span class="n">raw_ostream</span><span class="w"> </span><span class="o">&amp;</span><span class="n">os</span><span class="p">,</span><span class="w"> </span><span class="n">ArrayRef</span><span class="o">&lt;</span><span class="n">Value</span><span class="o">&gt;</span><span class="w"> </span><span class="n">values</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">os</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"["</span><span class="p">;</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="n">v</span><span class="p">]</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">llvm</span><span class="o">::</span><span class="n">enumerate</span><span class="p">(</span><span class="n">values</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="n">os</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">", "</span><span class="p">;</span>
+<span class="w">        </span><span class="n">os</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">v</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="n">os</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"]"</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">os</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">static</span><span class="w"> </span><span class="n">Type</span><span class="w"> </span><span class="n">buildPortType</span><span class="p">(</span><span class="n">Type</span><span class="w"> </span><span class="n">baseType</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="n">shapedType</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dyn_cast</span><span class="o">&lt;</span><span class="n">ShapedType</span><span class="o">&gt;</span><span class="p">(</span><span class="n">baseType</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">auto</span><span class="w"> </span><span class="n">streamType</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">StreamType</span><span class="o">::</span><span class="n">get</span><span class="p">(</span>
+<span class="w">            </span><span class="n">shapedType</span><span class="p">.</span><span class="n">getContext</span><span class="p">(),</span>
+<span class="w">            </span><span class="n">shapedType</span><span class="p">.</span><span class="n">getElementType</span><span class="p">());</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">ArrayType</span><span class="o">::</span><span class="n">get</span><span class="p">(</span><span class="n">shapedType</span><span class="p">.</span><span class="n">getShape</span><span class="p">(),</span><span class="w"> </span><span class="n">streamType</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">StreamType</span><span class="o">::</span><span class="n">get</span><span class="p">(</span><span class="n">baseType</span><span class="p">.</span><span class="n">getContext</span><span class="p">(),</span><span class="w"> </span><span class="n">baseType</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="c1">// process and region share the same NodeInterface-shaped port accessors, so</span>
+<span class="c1">// this and NodeToFunc below are templated over both.</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span><span class="w"> </span><span class="nc">NodeOpT</span><span class="o">&gt;</span>
+<span class="k">static</span><span class="w"> </span><span class="n">FunctionType</span><span class="w"> </span><span class="n">buildFuncTypeFromNode</span><span class="p">(</span><span class="n">NodeOpT</span><span class="w"> </span><span class="n">op</span><span class="p">,</span><span class="w"> </span><span class="n">PatternRewriter</span><span class="w"> </span><span class="o">&amp;</span><span class="n">rewriter</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">SmallVector</span><span class="o">&lt;</span><span class="n">Type</span><span class="o">&gt;</span><span class="w"> </span><span class="n">inTypes</span><span class="p">;</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="n">type</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">op</span><span class="p">.</span><span class="n">getInputPortTypes</span><span class="p">())</span>
+<span class="w">        </span><span class="n">inTypes</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">buildPortType</span><span class="p">(</span><span class="n">type</span><span class="p">));</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="n">type</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">op</span><span class="p">.</span><span class="n">getOutputPortTypes</span><span class="p">())</span>
+<span class="w">        </span><span class="n">inTypes</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">buildPortType</span><span class="p">(</span><span class="n">type</span><span class="p">));</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">rewriter</span><span class="p">.</span><span class="n">getFunctionType</span><span class="p">(</span><span class="n">inTypes</span><span class="p">,</span><span class="w"> </span><span class="p">{});</span>
+<span class="p">}</span>
+
+<span class="c1">// Looks up the unrealized cast a dfg port was mapped to</span>
+<span class="k">static</span><span class="w"> </span><span class="n">FailureOr</span><span class="o">&lt;</span><span class="n">Value</span><span class="o">&gt;</span><span class="w"> </span><span class="n">getConvertedPort</span><span class="p">(</span><span class="n">Value</span><span class="w"> </span><span class="n">dfgPort</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">auto</span><span class="w"> </span><span class="n">castOp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dfgPort</span><span class="p">.</span><span class="n">getDefiningOp</span><span class="o">&lt;</span><span class="n">UnrealizedConversionCastOp</span><span class="o">&gt;</span><span class="p">();</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">castOp</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">castOp</span><span class="p">.</span><span class="n">getInputs</span><span class="p">().</span><span class="n">size</span><span class="p">()</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">failure</span><span class="p">();</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">castOp</span><span class="p">.</span><span class="n">getInputs</span><span class="p">().</span><span class="n">front</span><span class="p">();</span>
+<span class="p">}</span>
+<span class="c1">// Builds one emithls.for nested loop per dimension of the port shape</span>
+<span class="k">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="n">buildStreamReadLoopNest</span><span class="p">(</span>
+<span class="w">    </span><span class="n">OpBuilder</span><span class="w"> </span><span class="o">&amp;</span><span class="n">builder</span><span class="p">,</span>
+<span class="w">    </span><span class="n">Location</span><span class="w"> </span><span class="n">loc</span><span class="p">,</span>
+<span class="w">    </span><span class="n">ArrayRef</span><span class="o">&lt;</span><span class="kt">int64_t</span><span class="o">&gt;</span><span class="w"> </span><span class="n">shape</span><span class="p">,</span>
+<span class="w">    </span><span class="n">SmallVector</span><span class="o">&lt;</span><span class="n">Value</span><span class="o">&gt;</span><span class="w"> </span><span class="o">&amp;</span><span class="n">indices</span><span class="p">,</span>
+<span class="w">    </span><span class="n">function_ref</span><span class="o">&lt;</span><span class="kt">void</span><span class="p">(</span><span class="n">OpBuilder</span><span class="w"> </span><span class="o">&amp;</span><span class="p">,</span><span class="w"> </span><span class="n">Location</span><span class="p">,</span><span class="w"> </span><span class="n">ValueRange</span><span class="p">)</span><span class="o">&gt;</span><span class="w"> </span><span class="n">innermost</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">indices</span><span class="p">.</span><span class="n">size</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">shape</span><span class="p">.</span><span class="n">size</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">innermost</span><span class="p">(</span><span class="n">builder</span><span class="p">,</span><span class="w"> </span><span class="n">loc</span><span class="p">,</span><span class="w"> </span><span class="n">indices</span><span class="p">);</span>
+<span class="w">        </span><span class="k">return</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="n">ForOp</span><span class="o">::</span><span class="n">create</span><span class="p">(</span>
+<span class="w">        </span><span class="n">builder</span><span class="p">,</span>
+<span class="w">        </span><span class="n">loc</span><span class="p">,</span>
+<span class="w">        </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">        </span><span class="n">shape</span><span class="p">[</span><span class="n">indices</span><span class="p">.</span><span class="n">size</span><span class="p">()],</span>
+<span class="w">        </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">        </span><span class="p">[</span><span class="o">&amp;</span><span class="p">](</span><span class="n">OpBuilder</span><span class="w"> </span><span class="o">&amp;</span><span class="n">forBuilder</span><span class="p">,</span><span class="w"> </span><span class="n">Location</span><span class="w"> </span><span class="n">forLoc</span><span class="p">,</span><span class="w"> </span><span class="n">ValueRange</span><span class="w"> </span><span class="n">forArgs</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">indices</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">forArgs</span><span class="p">.</span><span class="n">front</span><span class="p">());</span>
+<span class="w">            </span><span class="n">buildStreamReadLoopNest</span><span class="p">(</span>
+<span class="w">                </span><span class="n">forBuilder</span><span class="p">,</span>
+<span class="w">                </span><span class="n">forLoc</span><span class="p">,</span>
+<span class="w">                </span><span class="n">shape</span><span class="p">,</span>
+<span class="w">                </span><span class="n">indices</span><span class="p">,</span>
+<span class="w">                </span><span class="n">innermost</span><span class="p">);</span>
+<span class="w">            </span><span class="n">indices</span><span class="p">.</span><span class="n">pop_back</span><span class="p">();</span>
+<span class="w">        </span><span class="p">});</span>
+<span class="p">}</span>
+
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span><span class="w"> </span><span class="nc">NodeOpT</span><span class="o">&gt;</span>
+<span class="k">struct</span><span class="w"> </span><span class="nc">NodeToFunc</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">OpConversionPattern</span><span class="o">&lt;</span><span class="n">NodeOpT</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">using</span><span class="w"> </span><span class="n">OpConversionPattern</span><span class="o">&lt;</span><span class="n">NodeOpT</span><span class="o">&gt;::</span><span class="n">OpConversionPattern</span><span class="p">;</span>
+
+<span class="w">    </span><span class="n">NodeToFunc</span><span class="p">(</span><span class="n">TypeConverter</span><span class="w"> </span><span class="o">&amp;</span><span class="n">typeConverter</span><span class="p">,</span><span class="w"> </span><span class="n">MLIRContext</span><span class="o">*</span><span class="w"> </span><span class="n">context</span><span class="p">)</span>
+<span class="w">            </span><span class="o">:</span><span class="w"> </span><span class="n">OpConversionPattern</span><span class="o">&lt;</span><span class="n">NodeOpT</span><span class="o">&gt;</span><span class="p">(</span><span class="n">typeConverter</span><span class="p">,</span><span class="w"> </span><span class="n">context</span><span class="p">)</span><span class="w"> </span><span class="p">{};</span>
+
+<span class="w">    </span><span class="n">LogicalResult</span><span class="w"> </span><span class="nf">matchAndRewrite</span><span class="p">(</span>
+<span class="w">        </span><span class="n">NodeOpT</span><span class="w"> </span><span class="n">op</span><span class="p">,</span>
+<span class="w">        </span><span class="k">typename</span><span class="w"> </span><span class="nc">NodeOpT</span><span class="o">::</span><span class="n">Adaptor</span><span class="p">,</span>
+<span class="w">        </span><span class="n">ConversionPatternRewriter</span><span class="w"> </span><span class="o">&amp;</span><span class="n">rewriter</span><span class="p">)</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">override</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="k">auto</span><span class="w"> </span><span class="n">loc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">op</span><span class="p">.</span><span class="n">getLoc</span><span class="p">();</span>
+<span class="w">        </span><span class="k">auto</span><span class="w"> </span><span class="n">nodeName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">op</span><span class="p">.</span><span class="n">getNodeName</span><span class="p">();</span>
+<span class="w">        </span><span class="n">PICEA_DEBUG</span><span class="p">(</span>
+<span class="w">            </span><span class="n">llvm</span><span class="o">::</span><span class="n">dbgs</span><span class="p">()</span>
+<span class="w">            </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"Rewriting "</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="p">(</span><span class="n">isa</span><span class="o">&lt;</span><span class="n">dfg</span><span class="o">::</span><span class="n">ProcessOp</span><span class="o">&gt;</span><span class="p">(</span><span class="n">op</span><span class="p">)</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="s">"process"</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="s">"region"</span><span class="p">)</span>
+<span class="w">            </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">" </span><span class="se">\"</span><span class="s">"</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">nodeName</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"</span><span class="se">\"</span><span class="s"> at "</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">loc</span><span class="p">);</span>
+
+<span class="w">        </span><span class="k">auto</span><span class="w"> </span><span class="n">newFuncType</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">buildFuncTypeFromNode</span><span class="p">(</span><span class="n">op</span><span class="p">,</span><span class="w"> </span><span class="n">rewriter</span><span class="p">);</span>
+<span class="w">        </span><span class="n">PICEA_DEBUG</span><span class="p">(</span><span class="n">llvm</span><span class="o">::</span><span class="n">dbgs</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"  New func signature is "</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">newFuncType</span><span class="p">);</span>
+<span class="w">        </span><span class="k">auto</span><span class="w"> </span><span class="n">newFuncOp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">FuncOp</span><span class="o">::</span><span class="n">create</span><span class="p">(</span><span class="n">rewriter</span><span class="p">,</span><span class="w"> </span><span class="n">loc</span><span class="p">,</span><span class="w"> </span><span class="n">nodeName</span><span class="p">,</span><span class="w"> </span><span class="n">newFuncType</span><span class="p">);</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">Attribute</span><span class="w"> </span><span class="n">rootAttr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">op</span><span class="o">-&gt;</span><span class="n">getAttr</span><span class="p">(</span><span class="n">picea</span><span class="o">::</span><span class="n">kRootAttrName</span><span class="p">))</span>
+<span class="w">            </span><span class="n">newFuncOp</span><span class="o">-&gt;</span><span class="n">setAttr</span><span class="p">(</span><span class="n">picea</span><span class="o">::</span><span class="n">kRootAttrName</span><span class="p">,</span><span class="w"> </span><span class="n">rootAttr</span><span class="p">);</span>
+
+<span class="w">        </span><span class="c1">// Build block with new types.</span>
+<span class="w">        </span><span class="k">auto</span><span class="o">*</span><span class="w"> </span><span class="n">entryBlock</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">rewriter</span><span class="p">.</span><span class="n">createBlock</span><span class="p">(</span>
+<span class="w">            </span><span class="o">&amp;</span><span class="n">newFuncOp</span><span class="p">.</span><span class="n">getBody</span><span class="p">(),</span>
+<span class="w">            </span><span class="n">newFuncOp</span><span class="p">.</span><span class="n">getBody</span><span class="p">().</span><span class="n">end</span><span class="p">(),</span>
+<span class="w">            </span><span class="n">newFuncType</span><span class="p">.</span><span class="n">getInputs</span><span class="p">(),</span>
+<span class="w">            </span><span class="n">SmallVector</span><span class="o">&lt;</span><span class="n">Location</span><span class="o">&gt;</span><span class="p">(</span><span class="n">newFuncType</span><span class="p">.</span><span class="n">getNumInputs</span><span class="p">(),</span><span class="w"> </span><span class="n">loc</span><span class="p">));</span>
+<span class="w">        </span><span class="n">rewriter</span><span class="p">.</span><span class="n">setInsertionPointToStart</span><span class="p">(</span><span class="n">entryBlock</span><span class="p">);</span>
+
+<span class="w">        </span><span class="c1">// Cast each new block arg back to the dfg port type it replaces</span>
+<span class="w">        </span><span class="k">auto</span><span class="w"> </span><span class="n">oldInputTypes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">op</span><span class="p">.</span><span class="n">getFunctionType</span><span class="p">().</span><span class="n">getInputs</span><span class="p">();</span>
+<span class="w">        </span><span class="k">auto</span><span class="w"> </span><span class="n">oldOutputTypes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">op</span><span class="p">.</span><span class="n">getFunctionType</span><span class="p">().</span><span class="n">getResults</span><span class="p">();</span>
+<span class="w">        </span><span class="n">IRMapping</span><span class="w"> </span><span class="n">mapper</span><span class="p">;</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="p">[</span><span class="n">idx</span><span class="p">,</span><span class="w"> </span><span class="n">oldPort</span><span class="p">]</span><span class="w"> </span><span class="o">:</span>
+<span class="w">             </span><span class="n">llvm</span><span class="o">::</span><span class="n">enumerate</span><span class="p">(</span><span class="n">op</span><span class="p">.</span><span class="n">getBody</span><span class="p">().</span><span class="n">front</span><span class="p">().</span><span class="n">getArguments</span><span class="p">()))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">Type</span><span class="w"> </span><span class="n">oldPortType</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">idx</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">oldInputTypes</span><span class="p">.</span><span class="n">size</span><span class="p">()</span>
+<span class="w">                                   </span><span class="o">?</span><span class="w"> </span><span class="n">oldInputTypes</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>
+<span class="w">                                   </span><span class="o">:</span><span class="w"> </span><span class="n">oldOutputTypes</span><span class="p">[</span><span class="n">idx</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">oldInputTypes</span><span class="p">.</span><span class="n">size</span><span class="p">()];</span>
+<span class="w">            </span><span class="k">auto</span><span class="w"> </span><span class="n">castOp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">UnrealizedConversionCastOp</span><span class="o">::</span><span class="n">create</span><span class="p">(</span>
+<span class="w">                </span><span class="n">rewriter</span><span class="p">,</span>
+<span class="w">                </span><span class="n">loc</span><span class="p">,</span>
+<span class="w">                </span><span class="n">oldPortType</span><span class="p">,</span>
+<span class="w">                </span><span class="n">entryBlock</span><span class="o">-&gt;</span><span class="n">getArgument</span><span class="p">(</span><span class="n">idx</span><span class="p">));</span>
+<span class="w">            </span><span class="n">mapper</span><span class="p">.</span><span class="n">map</span><span class="p">(</span><span class="n">oldPort</span><span class="p">,</span><span class="w"> </span><span class="n">castOp</span><span class="p">.</span><span class="n">getResult</span><span class="p">(</span><span class="mi">0</span><span class="p">));</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="c1">// Copy original content</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="o">&amp;</span><span class="n">innerOp</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">op</span><span class="p">.</span><span class="n">getBody</span><span class="p">().</span><span class="n">getOps</span><span class="p">())</span>
+<span class="w">            </span><span class="n">rewriter</span><span class="p">.</span><span class="n">clone</span><span class="p">(</span><span class="n">innerOp</span><span class="p">,</span><span class="w"> </span><span class="n">mapper</span><span class="p">);</span>
+<span class="w">        </span><span class="n">PICEA_DEBUG</span><span class="p">(</span><span class="n">llvm</span><span class="o">::</span><span class="n">dbgs</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"  Cloned body into new func"</span><span class="p">);</span>
+
+<span class="w">        </span><span class="n">rewriter</span><span class="p">.</span><span class="n">eraseOp</span><span class="p">(</span><span class="n">op</span><span class="p">);</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">success</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">};</span>
+<span class="k">struct</span><span class="w"> </span><span class="nc">EraseLoop</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">OpConversionPattern</span><span class="o">&lt;</span><span class="n">dfg</span><span class="o">::</span><span class="n">LoopOp</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">using</span><span class="w"> </span><span class="n">OpConversionPattern</span><span class="o">&lt;</span><span class="n">dfg</span><span class="o">::</span><span class="n">LoopOp</span><span class="o">&gt;::</span><span class="n">OpConversionPattern</span><span class="p">;</span>
+
+<span class="w">    </span><span class="n">EraseLoop</span><span class="p">(</span><span class="n">TypeConverter</span><span class="w"> </span><span class="o">&amp;</span><span class="n">typeConverter</span><span class="p">,</span><span class="w"> </span><span class="n">MLIRContext</span><span class="o">*</span><span class="w"> </span><span class="n">context</span><span class="p">)</span>
+<span class="w">            </span><span class="o">:</span><span class="w"> </span><span class="n">OpConversionPattern</span><span class="o">&lt;</span><span class="n">dfg</span><span class="o">::</span><span class="n">LoopOp</span><span class="o">&gt;</span><span class="p">(</span><span class="n">typeConverter</span><span class="p">,</span><span class="w"> </span><span class="n">context</span><span class="p">)</span><span class="w"> </span><span class="p">{};</span>
+
+<span class="w">    </span><span class="n">LogicalResult</span><span class="w"> </span><span class="nf">matchAndRewrite</span><span class="p">(</span>
+<span class="w">        </span><span class="n">dfg</span><span class="o">::</span><span class="n">LoopOp</span><span class="w"> </span><span class="n">op</span><span class="p">,</span>
+<span class="w">        </span><span class="n">dfg</span><span class="o">::</span><span class="n">LoopOpAdaptor</span><span class="p">,</span>
+<span class="w">        </span><span class="n">ConversionPatternRewriter</span><span class="w"> </span><span class="o">&amp;</span><span class="n">rewriter</span><span class="p">)</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">override</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="k">auto</span><span class="w"> </span><span class="n">loc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">op</span><span class="p">.</span><span class="n">getLoc</span><span class="p">();</span>
+<span class="w">        </span><span class="n">PICEA_DEBUG</span><span class="p">(</span><span class="n">llvm</span><span class="o">::</span><span class="n">dbgs</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"Erasing loop at "</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">loc</span><span class="p">);</span>
+
+<span class="w">        </span><span class="n">rewriter</span><span class="p">.</span><span class="n">inlineBlockBefore</span><span class="p">(</span><span class="o">&amp;</span><span class="n">op</span><span class="p">.</span><span class="n">getBody</span><span class="p">().</span><span class="n">front</span><span class="p">(),</span><span class="w"> </span><span class="n">op</span><span class="p">);</span>
+<span class="w">        </span><span class="n">PICEA_DEBUG</span><span class="p">(</span><span class="n">llvm</span><span class="o">::</span><span class="n">dbgs</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"  Inlined the body"</span><span class="p">);</span>
+
+<span class="w">        </span><span class="n">rewriter</span><span class="p">.</span><span class="n">eraseOp</span><span class="p">(</span><span class="n">op</span><span class="p">);</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">success</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">};</span>
+<span class="k">struct</span><span class="w"> </span><span class="nc">PullToStreamRead</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">OpConversionPattern</span><span class="o">&lt;</span><span class="n">dfg</span><span class="o">::</span><span class="n">PullOp</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">using</span><span class="w"> </span><span class="n">OpConversionPattern</span><span class="o">&lt;</span><span class="n">dfg</span><span class="o">::</span><span class="n">PullOp</span><span class="o">&gt;::</span><span class="n">OpConversionPattern</span><span class="p">;</span>
+
+<span class="w">    </span><span class="n">PullToStreamRead</span><span class="p">(</span><span class="n">TypeConverter</span><span class="w"> </span><span class="o">&amp;</span><span class="n">typeConverter</span><span class="p">,</span><span class="w"> </span><span class="n">MLIRContext</span><span class="o">*</span><span class="w"> </span><span class="n">context</span><span class="p">)</span>
+<span class="w">            </span><span class="o">:</span><span class="w"> </span><span class="n">OpConversionPattern</span><span class="o">&lt;</span><span class="n">dfg</span><span class="o">::</span><span class="n">PullOp</span><span class="o">&gt;</span><span class="p">(</span><span class="n">typeConverter</span><span class="p">,</span><span class="w"> </span><span class="n">context</span><span class="p">)</span><span class="w"> </span><span class="p">{};</span>
+
+<span class="w">    </span><span class="n">LogicalResult</span><span class="w"> </span><span class="nf">matchAndRewrite</span><span class="p">(</span>
+<span class="w">        </span><span class="n">dfg</span><span class="o">::</span><span class="n">PullOp</span><span class="w"> </span><span class="n">op</span><span class="p">,</span>
+<span class="w">        </span><span class="n">dfg</span><span class="o">::</span><span class="n">PullOpAdaptor</span><span class="p">,</span>
+<span class="w">        </span><span class="n">ConversionPatternRewriter</span><span class="w"> </span><span class="o">&amp;</span><span class="n">rewriter</span><span class="p">)</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">override</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="k">auto</span><span class="w"> </span><span class="n">loc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">op</span><span class="p">.</span><span class="n">getLoc</span><span class="p">();</span>
+<span class="w">        </span><span class="n">PICEA_DEBUG</span><span class="p">(</span><span class="n">llvm</span><span class="o">::</span><span class="n">dbgs</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"Rewriting pull at "</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">loc</span><span class="p">);</span>
+
+<span class="w">        </span><span class="k">auto</span><span class="w"> </span><span class="n">stream</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">getConvertedPort</span><span class="p">(</span><span class="n">op</span><span class="p">.</span><span class="n">getReadPort</span><span class="p">());</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">failed</span><span class="p">(</span><span class="n">stream</span><span class="p">))</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="n">rewriter</span><span class="p">.</span><span class="n">notifyMatchFailure</span><span class="p">(</span>
+<span class="w">                </span><span class="n">op</span><span class="p">,</span>
+<span class="w">                </span><span class="s">"read port not converted yet"</span><span class="p">);</span>
+<span class="w">        </span><span class="n">PICEA_DEBUG</span><span class="p">(</span><span class="n">llvm</span><span class="o">::</span><span class="n">dbgs</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"  Found cast port: "</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="o">*</span><span class="n">stream</span><span class="p">);</span>
+<span class="w">        </span><span class="k">auto</span><span class="w"> </span><span class="n">readOp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">rewriter</span><span class="p">.</span><span class="n">replaceOpWithNewOp</span><span class="o">&lt;</span><span class="n">StreamReadOp</span><span class="o">&gt;</span><span class="p">(</span>
+<span class="w">            </span><span class="n">op</span><span class="p">,</span>
+<span class="w">            </span><span class="n">op</span><span class="p">.</span><span class="n">getToken</span><span class="p">().</span><span class="n">getType</span><span class="p">(),</span>
+<span class="w">            </span><span class="o">*</span><span class="n">stream</span><span class="p">,</span>
+<span class="w">            </span><span class="n">op</span><span class="p">.</span><span class="n">getIndices</span><span class="p">());</span>
+<span class="w">        </span><span class="n">PICEA_DEBUG</span><span class="p">(</span><span class="n">llvm</span><span class="o">::</span><span class="n">dbgs</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"  Replace pull with "</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">readOp</span><span class="p">);</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">success</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">};</span>
+<span class="k">struct</span><span class="w"> </span><span class="nc">PullMemRefToForLoop</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">OpConversionPattern</span><span class="o">&lt;</span><span class="n">dfg</span><span class="o">::</span><span class="n">PullAsMemRefOp</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">using</span><span class="w"> </span><span class="n">OpConversionPattern</span><span class="o">&lt;</span><span class="n">dfg</span><span class="o">::</span><span class="n">PullAsMemRefOp</span><span class="o">&gt;::</span><span class="n">OpConversionPattern</span><span class="p">;</span>
+
+<span class="w">    </span><span class="n">PullMemRefToForLoop</span><span class="p">(</span><span class="n">TypeConverter</span><span class="w"> </span><span class="o">&amp;</span><span class="n">typeConverter</span><span class="p">,</span><span class="w"> </span><span class="n">MLIRContext</span><span class="o">*</span><span class="w"> </span><span class="n">context</span><span class="p">)</span>
+<span class="w">            </span><span class="o">:</span><span class="w"> </span><span class="n">OpConversionPattern</span><span class="o">&lt;</span><span class="n">dfg</span><span class="o">::</span><span class="n">PullAsMemRefOp</span><span class="o">&gt;</span><span class="p">(</span><span class="n">typeConverter</span><span class="p">,</span><span class="w"> </span><span class="n">context</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">              </span><span class="p">};</span>
+
+<span class="w">    </span><span class="n">LogicalResult</span><span class="w"> </span><span class="nf">matchAndRewrite</span><span class="p">(</span>
+<span class="w">        </span><span class="n">dfg</span><span class="o">::</span><span class="n">PullAsMemRefOp</span><span class="w"> </span><span class="n">op</span><span class="p">,</span>
+<span class="w">        </span><span class="n">dfg</span><span class="o">::</span><span class="n">PullAsMemRefOpAdaptor</span><span class="p">,</span>
+<span class="w">        </span><span class="n">ConversionPatternRewriter</span><span class="w"> </span><span class="o">&amp;</span><span class="n">rewriter</span><span class="p">)</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">override</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="k">auto</span><span class="w"> </span><span class="n">loc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">op</span><span class="p">.</span><span class="n">getLoc</span><span class="p">();</span>
+<span class="w">        </span><span class="n">PICEA_DEBUG</span><span class="p">(</span><span class="n">llvm</span><span class="o">::</span><span class="n">dbgs</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"Rewriting pull_as_memref at "</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">loc</span><span class="p">);</span>
+
+<span class="w">        </span><span class="k">auto</span><span class="w"> </span><span class="n">array</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">getConvertedPort</span><span class="p">(</span><span class="n">op</span><span class="p">.</span><span class="n">getReadPort</span><span class="p">());</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">failed</span><span class="p">(</span><span class="n">array</span><span class="p">))</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="n">rewriter</span><span class="p">.</span><span class="n">notifyMatchFailure</span><span class="p">(</span>
+<span class="w">                </span><span class="n">op</span><span class="p">,</span>
+<span class="w">                </span><span class="s">"read port not converted yet"</span><span class="p">);</span>
+<span class="w">        </span><span class="n">PICEA_DEBUG</span><span class="p">(</span><span class="n">llvm</span><span class="o">::</span><span class="n">dbgs</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"  Found cast port: "</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="o">*</span><span class="n">array</span><span class="p">);</span>
+<span class="w">        </span><span class="k">auto</span><span class="w"> </span><span class="n">memrefType</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">op</span><span class="p">.</span><span class="n">getTokenMemref</span><span class="p">().</span><span class="n">getType</span><span class="p">();</span>
+<span class="w">        </span><span class="n">Value</span><span class="w"> </span><span class="n">alloc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">memref</span><span class="o">::</span><span class="n">AllocOp</span><span class="o">::</span><span class="n">create</span><span class="p">(</span><span class="n">rewriter</span><span class="p">,</span><span class="w"> </span><span class="n">loc</span><span class="p">,</span><span class="w"> </span><span class="n">memrefType</span><span class="p">);</span>
+<span class="w">        </span><span class="n">PICEA_DEBUG</span><span class="p">(</span><span class="n">llvm</span><span class="o">::</span><span class="n">dbgs</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"  Created buffer to store read values"</span><span class="p">);</span>
+
+<span class="w">        </span><span class="n">SmallVector</span><span class="o">&lt;</span><span class="n">Value</span><span class="o">&gt;</span><span class="w"> </span><span class="n">indices</span><span class="p">;</span>
+<span class="w">        </span><span class="n">PICEA_DEBUG</span><span class="p">(</span><span class="n">llvm</span><span class="o">::</span><span class="n">dbgs</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"  Building nested loop"</span><span class="p">);</span>
+<span class="w">        </span><span class="n">buildStreamReadLoopNest</span><span class="p">(</span>
+<span class="w">            </span><span class="n">rewriter</span><span class="p">,</span>
+<span class="w">            </span><span class="n">loc</span><span class="p">,</span>
+<span class="w">            </span><span class="n">memrefType</span><span class="p">.</span><span class="n">getShape</span><span class="p">(),</span>
+<span class="w">            </span><span class="n">indices</span><span class="p">,</span>
+<span class="w">            </span><span class="p">[</span><span class="o">&amp;</span><span class="p">](</span><span class="n">OpBuilder</span><span class="w"> </span><span class="o">&amp;</span><span class="n">loopBuilder</span><span class="p">,</span>
+<span class="w">                </span><span class="n">Location</span><span class="w"> </span><span class="n">loopLoc</span><span class="p">,</span>
+<span class="w">                </span><span class="n">SmallVector</span><span class="o">&lt;</span><span class="n">Value</span><span class="o">&gt;</span><span class="w"> </span><span class="n">indices</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">PICEA_DEBUG</span><span class="p">(</span>
+<span class="w">                    </span><span class="n">llvm</span><span class="o">::</span><span class="n">dbgs</span><span class="p">()</span>
+<span class="w">                    </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"    Rewrite pull_as_memref with indices "</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">indices</span><span class="p">);</span>
+<span class="w">                </span><span class="k">auto</span><span class="w"> </span><span class="n">elem</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">StreamReadOp</span><span class="o">::</span><span class="n">create</span><span class="p">(</span>
+<span class="w">                    </span><span class="n">loopBuilder</span><span class="p">,</span>
+<span class="w">                    </span><span class="n">loopLoc</span><span class="p">,</span>
+<span class="w">                    </span><span class="n">memrefType</span><span class="p">.</span><span class="n">getElementType</span><span class="p">(),</span>
+<span class="w">                    </span><span class="o">*</span><span class="n">array</span><span class="p">,</span>
+<span class="w">                    </span><span class="n">indices</span><span class="p">);</span>
+<span class="w">                </span><span class="n">PICEA_DEBUG</span><span class="p">(</span>
+<span class="w">                    </span><span class="n">llvm</span><span class="o">::</span><span class="n">dbgs</span><span class="p">()</span>
+<span class="w">                    </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"    Read from the input port using these indices"</span><span class="p">);</span>
+<span class="w">                </span><span class="n">memref</span><span class="o">::</span><span class="n">StoreOp</span><span class="o">::</span><span class="n">create</span><span class="p">(</span>
+<span class="w">                    </span><span class="n">loopBuilder</span><span class="p">,</span>
+<span class="w">                    </span><span class="n">loopLoc</span><span class="p">,</span>
+<span class="w">                    </span><span class="n">elem</span><span class="p">,</span>
+<span class="w">                    </span><span class="n">alloc</span><span class="p">,</span>
+<span class="w">                    </span><span class="n">indices</span><span class="p">);</span>
+<span class="w">                </span><span class="n">PICEA_DEBUG</span><span class="p">(</span>
+<span class="w">                    </span><span class="n">llvm</span><span class="o">::</span><span class="n">dbgs</span><span class="p">()</span>
+<span class="w">                    </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"    Store the temporary value into the buffer"</span><span class="p">);</span>
+<span class="w">            </span><span class="p">});</span>
+
+<span class="w">        </span><span class="n">rewriter</span><span class="p">.</span><span class="n">replaceOp</span><span class="p">(</span><span class="n">op</span><span class="p">,</span><span class="w"> </span><span class="n">alloc</span><span class="p">);</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">success</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">};</span>
+<span class="k">struct</span><span class="w"> </span><span class="nc">PushToStreamWrite</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">OpConversionPattern</span><span class="o">&lt;</span><span class="n">dfg</span><span class="o">::</span><span class="n">PushOp</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">using</span><span class="w"> </span><span class="n">OpConversionPattern</span><span class="o">&lt;</span><span class="n">dfg</span><span class="o">::</span><span class="n">PushOp</span><span class="o">&gt;::</span><span class="n">OpConversionPattern</span><span class="p">;</span>
+
+<span class="w">    </span><span class="n">PushToStreamWrite</span><span class="p">(</span><span class="n">TypeConverter</span><span class="w"> </span><span class="o">&amp;</span><span class="n">typeConverter</span><span class="p">,</span><span class="w"> </span><span class="n">MLIRContext</span><span class="o">*</span><span class="w"> </span><span class="n">context</span><span class="p">)</span>
+<span class="w">            </span><span class="o">:</span><span class="w"> </span><span class="n">OpConversionPattern</span><span class="o">&lt;</span><span class="n">dfg</span><span class="o">::</span><span class="n">PushOp</span><span class="o">&gt;</span><span class="p">(</span><span class="n">typeConverter</span><span class="p">,</span><span class="w"> </span><span class="n">context</span><span class="p">)</span><span class="w"> </span><span class="p">{};</span>
+
+<span class="w">    </span><span class="n">LogicalResult</span><span class="w"> </span><span class="nf">matchAndRewrite</span><span class="p">(</span>
+<span class="w">        </span><span class="n">dfg</span><span class="o">::</span><span class="n">PushOp</span><span class="w"> </span><span class="n">op</span><span class="p">,</span>
+<span class="w">        </span><span class="n">dfg</span><span class="o">::</span><span class="n">PushOpAdaptor</span><span class="p">,</span>
+<span class="w">        </span><span class="n">ConversionPatternRewriter</span><span class="w"> </span><span class="o">&amp;</span><span class="n">rewriter</span><span class="p">)</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">override</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="k">auto</span><span class="w"> </span><span class="n">loc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">op</span><span class="p">.</span><span class="n">getLoc</span><span class="p">();</span>
+<span class="w">        </span><span class="n">PICEA_DEBUG</span><span class="p">(</span><span class="n">llvm</span><span class="o">::</span><span class="n">dbgs</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"Rewriting push at "</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">loc</span><span class="p">);</span>
+
+<span class="w">        </span><span class="k">auto</span><span class="w"> </span><span class="n">stream</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">getConvertedPort</span><span class="p">(</span><span class="n">op</span><span class="p">.</span><span class="n">getWritePort</span><span class="p">());</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">failed</span><span class="p">(</span><span class="n">stream</span><span class="p">))</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="n">rewriter</span><span class="p">.</span><span class="n">notifyMatchFailure</span><span class="p">(</span>
+<span class="w">                </span><span class="n">op</span><span class="p">,</span>
+<span class="w">                </span><span class="s">"write port not converted yet"</span><span class="p">);</span>
+<span class="w">        </span><span class="n">PICEA_DEBUG</span><span class="p">(</span><span class="n">llvm</span><span class="o">::</span><span class="n">dbgs</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"  Found cast port: "</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="o">*</span><span class="n">stream</span><span class="p">);</span>
+<span class="w">        </span><span class="k">auto</span><span class="w"> </span><span class="n">writeOp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">rewriter</span><span class="p">.</span><span class="n">replaceOpWithNewOp</span><span class="o">&lt;</span><span class="n">StreamWriteOp</span><span class="o">&gt;</span><span class="p">(</span>
+<span class="w">            </span><span class="n">op</span><span class="p">,</span>
+<span class="w">            </span><span class="n">op</span><span class="p">.</span><span class="n">getToken</span><span class="p">(),</span>
+<span class="w">            </span><span class="o">*</span><span class="n">stream</span><span class="p">,</span>
+<span class="w">            </span><span class="n">op</span><span class="p">.</span><span class="n">getIndices</span><span class="p">());</span>
+<span class="w">        </span><span class="n">PICEA_DEBUG</span><span class="p">(</span><span class="n">llvm</span><span class="o">::</span><span class="n">dbgs</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"  Replace push with "</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">writeOp</span><span class="p">);</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">success</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">};</span>
+<span class="k">struct</span><span class="w"> </span><span class="nc">PushMemRefToForLoop</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">OpConversionPattern</span><span class="o">&lt;</span><span class="n">dfg</span><span class="o">::</span><span class="n">PushMemRefOp</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">using</span><span class="w"> </span><span class="n">OpConversionPattern</span><span class="o">&lt;</span><span class="n">dfg</span><span class="o">::</span><span class="n">PushMemRefOp</span><span class="o">&gt;::</span><span class="n">OpConversionPattern</span><span class="p">;</span>
+
+<span class="w">    </span><span class="n">PushMemRefToForLoop</span><span class="p">(</span><span class="n">TypeConverter</span><span class="w"> </span><span class="o">&amp;</span><span class="n">typeConverter</span><span class="p">,</span><span class="w"> </span><span class="n">MLIRContext</span><span class="o">*</span><span class="w"> </span><span class="n">context</span><span class="p">)</span>
+<span class="w">            </span><span class="o">:</span><span class="w"> </span><span class="n">OpConversionPattern</span><span class="o">&lt;</span><span class="n">dfg</span><span class="o">::</span><span class="n">PushMemRefOp</span><span class="o">&gt;</span><span class="p">(</span><span class="n">typeConverter</span><span class="p">,</span><span class="w"> </span><span class="n">context</span><span class="p">)</span><span class="w"> </span><span class="p">{};</span>
+
+<span class="w">    </span><span class="n">LogicalResult</span><span class="w"> </span><span class="nf">matchAndRewrite</span><span class="p">(</span>
+<span class="w">        </span><span class="n">dfg</span><span class="o">::</span><span class="n">PushMemRefOp</span><span class="w"> </span><span class="n">op</span><span class="p">,</span>
+<span class="w">        </span><span class="n">dfg</span><span class="o">::</span><span class="n">PushMemRefOpAdaptor</span><span class="p">,</span>
+<span class="w">        </span><span class="n">ConversionPatternRewriter</span><span class="w"> </span><span class="o">&amp;</span><span class="n">rewriter</span><span class="p">)</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">override</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="k">auto</span><span class="w"> </span><span class="n">loc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">op</span><span class="p">.</span><span class="n">getLoc</span><span class="p">();</span>
+<span class="w">        </span><span class="n">PICEA_DEBUG</span><span class="p">(</span><span class="n">llvm</span><span class="o">::</span><span class="n">dbgs</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"Rewriting push_memref at "</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">loc</span><span class="p">);</span>
+
+<span class="w">        </span><span class="k">auto</span><span class="w"> </span><span class="n">array</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">getConvertedPort</span><span class="p">(</span><span class="n">op</span><span class="p">.</span><span class="n">getWritePort</span><span class="p">());</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">failed</span><span class="p">(</span><span class="n">array</span><span class="p">))</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="n">rewriter</span><span class="p">.</span><span class="n">notifyMatchFailure</span><span class="p">(</span>
+<span class="w">                </span><span class="n">op</span><span class="p">,</span>
+<span class="w">                </span><span class="s">"write port not converted yet"</span><span class="p">);</span>
+<span class="w">        </span><span class="n">PICEA_DEBUG</span><span class="p">(</span><span class="n">llvm</span><span class="o">::</span><span class="n">dbgs</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"  Found cast port: "</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="o">*</span><span class="n">array</span><span class="p">);</span>
+<span class="w">        </span><span class="n">Value</span><span class="w"> </span><span class="n">tokenMemref</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">op</span><span class="p">.</span><span class="n">getTokenMemref</span><span class="p">();</span>
+<span class="w">        </span><span class="k">auto</span><span class="w"> </span><span class="n">memrefType</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">op</span><span class="p">.</span><span class="n">getTokenMemref</span><span class="p">().</span><span class="n">getType</span><span class="p">();</span>
+
+<span class="w">        </span><span class="n">SmallVector</span><span class="o">&lt;</span><span class="n">Value</span><span class="o">&gt;</span><span class="w"> </span><span class="n">indices</span><span class="p">;</span>
+<span class="w">        </span><span class="n">PICEA_DEBUG</span><span class="p">(</span><span class="n">llvm</span><span class="o">::</span><span class="n">dbgs</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"  Building nested loop"</span><span class="p">);</span>
+<span class="w">        </span><span class="n">buildStreamReadLoopNest</span><span class="p">(</span>
+<span class="w">            </span><span class="n">rewriter</span><span class="p">,</span>
+<span class="w">            </span><span class="n">loc</span><span class="p">,</span>
+<span class="w">            </span><span class="n">memrefType</span><span class="p">.</span><span class="n">getShape</span><span class="p">(),</span>
+<span class="w">            </span><span class="n">indices</span><span class="p">,</span>
+<span class="w">            </span><span class="p">[</span><span class="o">&amp;</span><span class="p">](</span><span class="n">OpBuilder</span><span class="w"> </span><span class="o">&amp;</span><span class="n">loopBuilder</span><span class="p">,</span>
+<span class="w">                </span><span class="n">Location</span><span class="w"> </span><span class="n">loopLoc</span><span class="p">,</span>
+<span class="w">                </span><span class="n">SmallVector</span><span class="o">&lt;</span><span class="n">Value</span><span class="o">&gt;</span><span class="w"> </span><span class="n">indices</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">PICEA_DEBUG</span><span class="p">(</span>
+<span class="w">                    </span><span class="n">llvm</span><span class="o">::</span><span class="n">dbgs</span><span class="p">()</span>
+<span class="w">                    </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"    Rewrite push_memref with indices "</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">indices</span><span class="p">);</span>
+<span class="w">                </span><span class="k">auto</span><span class="w"> </span><span class="n">elem</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">memref</span><span class="o">::</span><span class="n">LoadOp</span><span class="o">::</span><span class="n">create</span><span class="p">(</span>
+<span class="w">                    </span><span class="n">loopBuilder</span><span class="p">,</span>
+<span class="w">                    </span><span class="n">loopLoc</span><span class="p">,</span>
+<span class="w">                    </span><span class="n">tokenMemref</span><span class="p">,</span>
+<span class="w">                    </span><span class="n">indices</span><span class="p">);</span>
+<span class="w">                </span><span class="n">PICEA_DEBUG</span><span class="p">(</span>
+<span class="w">                    </span><span class="n">llvm</span><span class="o">::</span><span class="n">dbgs</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"    Load the value from the buffer"</span><span class="p">);</span>
+<span class="w">                </span><span class="n">StreamWriteOp</span><span class="o">::</span><span class="n">create</span><span class="p">(</span>
+<span class="w">                    </span><span class="n">loopBuilder</span><span class="p">,</span>
+<span class="w">                    </span><span class="n">loopLoc</span><span class="p">,</span>
+<span class="w">                    </span><span class="n">elem</span><span class="p">,</span>
+<span class="w">                    </span><span class="o">*</span><span class="n">array</span><span class="p">,</span>
+<span class="w">                    </span><span class="n">indices</span><span class="p">);</span>
+<span class="w">                </span><span class="n">PICEA_DEBUG</span><span class="p">(</span>
+<span class="w">                    </span><span class="n">llvm</span><span class="o">::</span><span class="n">dbgs</span><span class="p">()</span>
+<span class="w">                    </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"    Write into the output port using these indices"</span><span class="p">);</span>
+<span class="w">            </span><span class="p">});</span>
+
+<span class="w">        </span><span class="n">rewriter</span><span class="p">.</span><span class="n">eraseOp</span><span class="p">(</span><span class="n">op</span><span class="p">);</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">success</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">};</span>
+<span class="k">struct</span><span class="w"> </span><span class="nc">ChannelToVariable</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">OpConversionPattern</span><span class="o">&lt;</span><span class="n">dfg</span><span class="o">::</span><span class="n">ChannelOp</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">using</span><span class="w"> </span><span class="n">OpConversionPattern</span><span class="o">&lt;</span><span class="n">dfg</span><span class="o">::</span><span class="n">ChannelOp</span><span class="o">&gt;::</span><span class="n">OpConversionPattern</span><span class="p">;</span>
+
+<span class="w">    </span><span class="n">ChannelToVariable</span><span class="p">(</span><span class="n">TypeConverter</span><span class="w"> </span><span class="o">&amp;</span><span class="n">typeConverter</span><span class="p">,</span><span class="w"> </span><span class="n">MLIRContext</span><span class="o">*</span><span class="w"> </span><span class="n">context</span><span class="p">)</span>
+<span class="w">            </span><span class="o">:</span><span class="w"> </span><span class="n">OpConversionPattern</span><span class="o">&lt;</span><span class="n">dfg</span><span class="o">::</span><span class="n">ChannelOp</span><span class="o">&gt;</span><span class="p">(</span><span class="n">typeConverter</span><span class="p">,</span><span class="w"> </span><span class="n">context</span><span class="p">)</span><span class="w"> </span><span class="p">{};</span>
+
+<span class="w">    </span><span class="n">LogicalResult</span><span class="w"> </span><span class="nf">matchAndRewrite</span><span class="p">(</span>
+<span class="w">        </span><span class="n">dfg</span><span class="o">::</span><span class="n">ChannelOp</span><span class="w"> </span><span class="n">op</span><span class="p">,</span>
+<span class="w">        </span><span class="n">dfg</span><span class="o">::</span><span class="n">ChannelOpAdaptor</span><span class="p">,</span>
+<span class="w">        </span><span class="n">ConversionPatternRewriter</span><span class="w"> </span><span class="o">&amp;</span><span class="n">rewriter</span><span class="p">)</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">override</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="k">auto</span><span class="w"> </span><span class="n">loc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">op</span><span class="p">.</span><span class="n">getLoc</span><span class="p">();</span>
+<span class="w">        </span><span class="n">PICEA_DEBUG</span><span class="p">(</span><span class="n">llvm</span><span class="o">::</span><span class="n">dbgs</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"Rewriting channel at "</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">loc</span><span class="p">);</span>
+
+<span class="w">        </span><span class="k">auto</span><span class="w"> </span><span class="n">baseType</span><span class="w"> </span><span class="o">=</span>
+<span class="w">            </span><span class="n">cast</span><span class="o">&lt;</span><span class="n">dfg</span><span class="o">::</span><span class="n">InputType</span><span class="o">&gt;</span><span class="p">(</span><span class="n">op</span><span class="p">.</span><span class="n">getInputPort</span><span class="p">().</span><span class="n">getType</span><span class="p">()).</span><span class="n">getBaseType</span><span class="p">();</span>
+<span class="w">        </span><span class="k">auto</span><span class="w"> </span><span class="n">portType</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">buildPortType</span><span class="p">(</span><span class="n">baseType</span><span class="p">);</span>
+<span class="w">        </span><span class="k">auto</span><span class="w"> </span><span class="n">varOp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">VariableOp</span><span class="o">::</span><span class="n">create</span><span class="p">(</span>
+<span class="w">            </span><span class="n">rewriter</span><span class="p">,</span>
+<span class="w">            </span><span class="n">loc</span><span class="p">,</span>
+<span class="w">            </span><span class="n">portType</span><span class="p">,</span>
+<span class="w">            </span><span class="cm">/*initNumber=*/</span><span class="n">Attribute</span><span class="p">{});</span>
+<span class="w">        </span><span class="n">PICEA_DEBUG</span><span class="p">(</span>
+<span class="w">            </span><span class="n">llvm</span><span class="o">::</span><span class="n">dbgs</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"  Replaced channel with variable "</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">varOp</span><span class="p">);</span>
+
+<span class="w">        </span><span class="c1">// Cast the emithls.variable to dfg port types</span>
+<span class="w">        </span><span class="k">auto</span><span class="w"> </span><span class="n">inCast</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">UnrealizedConversionCastOp</span><span class="o">::</span><span class="n">create</span><span class="p">(</span>
+<span class="w">            </span><span class="n">rewriter</span><span class="p">,</span>
+<span class="w">            </span><span class="n">loc</span><span class="p">,</span>
+<span class="w">            </span><span class="n">op</span><span class="p">.</span><span class="n">getInputPort</span><span class="p">().</span><span class="n">getType</span><span class="p">(),</span>
+<span class="w">            </span><span class="n">varOp</span><span class="p">.</span><span class="n">getResult</span><span class="p">());</span>
+<span class="w">        </span><span class="k">auto</span><span class="w"> </span><span class="n">outCast</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">UnrealizedConversionCastOp</span><span class="o">::</span><span class="n">create</span><span class="p">(</span>
+<span class="w">            </span><span class="n">rewriter</span><span class="p">,</span>
+<span class="w">            </span><span class="n">loc</span><span class="p">,</span>
+<span class="w">            </span><span class="n">op</span><span class="p">.</span><span class="n">getOutputPort</span><span class="p">().</span><span class="n">getType</span><span class="p">(),</span>
+<span class="w">            </span><span class="n">varOp</span><span class="p">.</span><span class="n">getResult</span><span class="p">());</span>
+<span class="w">        </span><span class="n">PICEA_DEBUG</span><span class="p">(</span>
+<span class="w">            </span><span class="n">llvm</span><span class="o">::</span><span class="n">dbgs</span><span class="p">()</span>
+<span class="w">            </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"  Added unrealized cast to deal with the port types"</span><span class="p">);</span>
+
+<span class="w">        </span><span class="n">op</span><span class="p">.</span><span class="n">getInputPort</span><span class="p">().</span><span class="n">replaceAllUsesWith</span><span class="p">(</span><span class="n">inCast</span><span class="p">.</span><span class="n">getResult</span><span class="p">(</span><span class="mi">0</span><span class="p">));</span>
+<span class="w">        </span><span class="n">op</span><span class="p">.</span><span class="n">getOutputPort</span><span class="p">().</span><span class="n">replaceAllUsesWith</span><span class="p">(</span><span class="n">outCast</span><span class="p">.</span><span class="n">getResult</span><span class="p">(</span><span class="mi">0</span><span class="p">));</span>
+<span class="w">        </span><span class="n">rewriter</span><span class="p">.</span><span class="n">eraseOp</span><span class="p">(</span><span class="n">op</span><span class="p">);</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">success</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">};</span>
+<span class="k">struct</span><span class="w"> </span><span class="nc">InstantiateToCall</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">OpConversionPattern</span><span class="o">&lt;</span><span class="n">dfg</span><span class="o">::</span><span class="n">InstantiateOp</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">using</span><span class="w"> </span><span class="n">OpConversionPattern</span><span class="o">&lt;</span><span class="n">dfg</span><span class="o">::</span><span class="n">InstantiateOp</span><span class="o">&gt;::</span><span class="n">OpConversionPattern</span><span class="p">;</span>
+
+<span class="w">    </span><span class="n">InstantiateToCall</span><span class="p">(</span><span class="n">TypeConverter</span><span class="w"> </span><span class="o">&amp;</span><span class="n">typeConverter</span><span class="p">,</span><span class="w"> </span><span class="n">MLIRContext</span><span class="o">*</span><span class="w"> </span><span class="n">context</span><span class="p">)</span>
+<span class="w">            </span><span class="o">:</span><span class="w"> </span><span class="n">OpConversionPattern</span><span class="o">&lt;</span><span class="n">dfg</span><span class="o">::</span><span class="n">InstantiateOp</span><span class="o">&gt;</span><span class="p">(</span><span class="n">typeConverter</span><span class="p">,</span><span class="w"> </span><span class="n">context</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">              </span><span class="p">};</span>
+
+<span class="w">    </span><span class="n">LogicalResult</span><span class="w"> </span><span class="nf">matchAndRewrite</span><span class="p">(</span>
+<span class="w">        </span><span class="n">dfg</span><span class="o">::</span><span class="n">InstantiateOp</span><span class="w"> </span><span class="n">op</span><span class="p">,</span>
+<span class="w">        </span><span class="n">dfg</span><span class="o">::</span><span class="n">InstantiateOpAdaptor</span><span class="p">,</span>
+<span class="w">        </span><span class="n">ConversionPatternRewriter</span><span class="w"> </span><span class="o">&amp;</span><span class="n">rewriter</span><span class="p">)</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">override</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="k">auto</span><span class="w"> </span><span class="n">loc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">op</span><span class="p">.</span><span class="n">getLoc</span><span class="p">();</span>
+<span class="w">        </span><span class="n">PICEA_DEBUG</span><span class="p">(</span><span class="n">llvm</span><span class="o">::</span><span class="n">dbgs</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"Rewriting instantiate at "</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">loc</span><span class="p">);</span>
+
+<span class="w">        </span><span class="c1">// Loop up callee's parameters</span>
+<span class="w">        </span><span class="n">SmallVector</span><span class="o">&lt;</span><span class="n">Value</span><span class="o">&gt;</span><span class="w"> </span><span class="n">operands</span><span class="p">;</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">Value</span><span class="w"> </span><span class="n">input</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">op</span><span class="p">.</span><span class="n">getInputs</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">auto</span><span class="w"> </span><span class="n">converted</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">getConvertedPort</span><span class="p">(</span><span class="n">input</span><span class="p">);</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">failed</span><span class="p">(</span><span class="n">converted</span><span class="p">))</span>
+<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="n">rewriter</span><span class="p">.</span><span class="n">notifyMatchFailure</span><span class="p">(</span>
+<span class="w">                    </span><span class="n">op</span><span class="p">,</span>
+<span class="w">                    </span><span class="s">"input port not converted yet (likely a channel whose "</span>
+<span class="w">                    </span><span class="s">"ChannelToVariable conversion hasn't run yet)"</span><span class="p">);</span>
+<span class="w">            </span><span class="n">operands</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="o">*</span><span class="n">converted</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">Value</span><span class="w"> </span><span class="n">output</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">op</span><span class="p">.</span><span class="n">getOutputs</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">auto</span><span class="w"> </span><span class="n">converted</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">getConvertedPort</span><span class="p">(</span><span class="n">output</span><span class="p">);</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">failed</span><span class="p">(</span><span class="n">converted</span><span class="p">))</span>
+<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="n">rewriter</span><span class="p">.</span><span class="n">notifyMatchFailure</span><span class="p">(</span>
+<span class="w">                    </span><span class="n">op</span><span class="p">,</span>
+<span class="w">                    </span><span class="s">"output port not converted yet (likely a channel whose "</span>
+<span class="w">                    </span><span class="s">"ChannelToVariable conversion hasn't run yet)"</span><span class="p">);</span>
+<span class="w">            </span><span class="n">operands</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="o">*</span><span class="n">converted</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="k">auto</span><span class="w"> </span><span class="n">calleeFunc</span><span class="w"> </span><span class="o">=</span>
+<span class="w">            </span><span class="n">SymbolTable</span><span class="o">::</span><span class="n">lookupNearestSymbolFrom</span><span class="o">&lt;</span><span class="n">FuncOp</span><span class="o">&gt;</span><span class="p">(</span><span class="n">op</span><span class="p">,</span><span class="w"> </span><span class="n">op</span><span class="p">.</span><span class="n">getActorAttr</span><span class="p">());</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">calleeFunc</span><span class="p">)</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="n">rewriter</span><span class="p">.</span><span class="n">notifyMatchFailure</span><span class="p">(</span>
+<span class="w">                </span><span class="n">op</span><span class="p">,</span>
+<span class="w">                </span><span class="s">"callee has not been converted to an emithls.func yet"</span><span class="p">);</span>
+
+<span class="w">        </span><span class="n">rewriter</span><span class="p">.</span><span class="n">replaceOpWithNewOp</span><span class="o">&lt;</span><span class="n">CallOp</span><span class="o">&gt;</span><span class="p">(</span><span class="n">op</span><span class="p">,</span><span class="w"> </span><span class="n">calleeFunc</span><span class="p">,</span><span class="w"> </span><span class="n">operands</span><span class="p">);</span>
+<span class="w">        </span><span class="n">PICEA_DEBUG</span><span class="p">(</span><span class="n">llvm</span><span class="o">::</span><span class="n">dbgs</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"  Replace it with a call to function"</span><span class="p">);</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">success</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">};</span>
+<span class="p">}</span><span class="w"> </span><span class="c1">// namespace</span>
+
+<span class="kt">void</span><span class="w"> </span><span class="n">mlir</span><span class="o">::</span><span class="n">populateDFGToEmitHLSConversionPatterns</span><span class="p">(</span>
+<span class="w">    </span><span class="n">TypeConverter</span><span class="w"> </span><span class="o">&amp;</span><span class="n">typeConverter</span><span class="p">,</span>
+<span class="w">    </span><span class="n">RewritePatternSet</span><span class="w"> </span><span class="o">&amp;</span><span class="n">patterns</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">patterns</span><span class="p">.</span><span class="n">add</span><span class="o">&lt;</span><span class="n">NodeToFunc</span><span class="o">&lt;</span><span class="n">dfg</span><span class="o">::</span><span class="n">ProcessOp</span><span class="o">&gt;&gt;</span><span class="p">(</span>
+<span class="w">        </span><span class="n">typeConverter</span><span class="p">,</span>
+<span class="w">        </span><span class="n">patterns</span><span class="p">.</span><span class="n">getContext</span><span class="p">());</span>
+<span class="w">    </span><span class="n">patterns</span><span class="p">.</span><span class="n">add</span><span class="o">&lt;</span><span class="n">NodeToFunc</span><span class="o">&lt;</span><span class="n">dfg</span><span class="o">::</span><span class="n">RegionOp</span><span class="o">&gt;&gt;</span><span class="p">(</span>
+<span class="w">        </span><span class="n">typeConverter</span><span class="p">,</span>
+<span class="w">        </span><span class="n">patterns</span><span class="p">.</span><span class="n">getContext</span><span class="p">());</span>
+<span class="w">    </span><span class="n">patterns</span><span class="p">.</span><span class="n">add</span><span class="o">&lt;</span><span class="n">EraseLoop</span><span class="o">&gt;</span><span class="p">(</span><span class="n">typeConverter</span><span class="p">,</span><span class="w"> </span><span class="n">patterns</span><span class="p">.</span><span class="n">getContext</span><span class="p">());</span>
+<span class="w">    </span><span class="n">patterns</span><span class="p">.</span><span class="n">add</span><span class="o">&lt;</span><span class="n">PullToStreamRead</span><span class="o">&gt;</span><span class="p">(</span><span class="n">typeConverter</span><span class="p">,</span><span class="w"> </span><span class="n">patterns</span><span class="p">.</span><span class="n">getContext</span><span class="p">());</span>
+<span class="w">    </span><span class="n">patterns</span><span class="p">.</span><span class="n">add</span><span class="o">&lt;</span><span class="n">PullMemRefToForLoop</span><span class="o">&gt;</span><span class="p">(</span><span class="n">typeConverter</span><span class="p">,</span><span class="w"> </span><span class="n">patterns</span><span class="p">.</span><span class="n">getContext</span><span class="p">());</span>
+<span class="w">    </span><span class="n">patterns</span><span class="p">.</span><span class="n">add</span><span class="o">&lt;</span><span class="n">PushToStreamWrite</span><span class="o">&gt;</span><span class="p">(</span><span class="n">typeConverter</span><span class="p">,</span><span class="w"> </span><span class="n">patterns</span><span class="p">.</span><span class="n">getContext</span><span class="p">());</span>
+<span class="w">    </span><span class="n">patterns</span><span class="p">.</span><span class="n">add</span><span class="o">&lt;</span><span class="n">PushMemRefToForLoop</span><span class="o">&gt;</span><span class="p">(</span><span class="n">typeConverter</span><span class="p">,</span><span class="w"> </span><span class="n">patterns</span><span class="p">.</span><span class="n">getContext</span><span class="p">());</span>
+<span class="w">    </span><span class="n">patterns</span><span class="p">.</span><span class="n">add</span><span class="o">&lt;</span><span class="n">ChannelToVariable</span><span class="o">&gt;</span><span class="p">(</span><span class="n">typeConverter</span><span class="p">,</span><span class="w"> </span><span class="n">patterns</span><span class="p">.</span><span class="n">getContext</span><span class="p">());</span>
+<span class="w">    </span><span class="n">patterns</span><span class="p">.</span><span class="n">add</span><span class="o">&lt;</span><span class="n">InstantiateToCall</span><span class="o">&gt;</span><span class="p">(</span><span class="n">typeConverter</span><span class="p">,</span><span class="w"> </span><span class="n">patterns</span><span class="p">.</span><span class="n">getContext</span><span class="p">());</span>
+<span class="p">}</span>
+
+<span class="k">namespace</span><span class="w"> </span><span class="p">{</span>
+<span class="k">struct</span><span class="w"> </span><span class="nc">ConvertDFGToEmitHLSPass</span>
+<span class="w">        </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">impl</span><span class="o">::</span><span class="n">ConvertDFGToEmitHLSBase</span><span class="o">&lt;</span><span class="n">ConvertDFGToEmitHLSPass</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="nf">runOnOperation</span><span class="p">()</span><span class="w"> </span><span class="k">final</span><span class="p">;</span>
+<span class="p">};</span>
+<span class="p">}</span><span class="w"> </span><span class="c1">// namespace</span>
+
+<span class="kt">void</span><span class="w"> </span><span class="n">ConvertDFGToEmitHLSPass</span><span class="o">::</span><span class="n">runOnOperation</span><span class="p">()</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">ConversionTarget</span><span class="w"> </span><span class="nf">target</span><span class="p">(</span><span class="n">getContext</span><span class="p">());</span>
+<span class="w">    </span><span class="n">RewritePatternSet</span><span class="w"> </span><span class="nf">patterns</span><span class="p">(</span><span class="o">&amp;</span><span class="n">getContext</span><span class="p">());</span>
+
+<span class="w">    </span><span class="n">TypeConverter</span><span class="w"> </span><span class="n">converter</span><span class="p">;</span>
+<span class="w">    </span><span class="n">converter</span><span class="p">.</span><span class="n">addConversion</span><span class="p">([</span><span class="o">&amp;</span><span class="p">](</span><span class="n">Type</span><span class="w"> </span><span class="n">type</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">type</span><span class="p">;</span><span class="w"> </span><span class="p">});</span>
+
+<span class="w">    </span><span class="n">populateDFGToEmitHLSConversionPatterns</span><span class="p">(</span><span class="n">converter</span><span class="p">,</span><span class="w"> </span><span class="n">patterns</span><span class="p">);</span>
+
+<span class="w">    </span><span class="n">target</span><span class="p">.</span><span class="n">addLegalDialect</span><span class="o">&lt;</span><span class="n">EmitHLSDialect</span><span class="o">&gt;</span><span class="p">();</span>
+<span class="w">    </span><span class="n">target</span><span class="p">.</span><span class="n">addIllegalDialect</span><span class="o">&lt;</span><span class="n">dfg</span><span class="o">::</span><span class="n">DFGDialect</span><span class="o">&gt;</span><span class="p">();</span>
+<span class="w">    </span><span class="n">target</span><span class="p">.</span><span class="n">markUnknownOpDynamicallyLegal</span><span class="p">([](</span><span class="n">Operation</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span><span class="w"> </span><span class="p">});</span>
+
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">failed</span><span class="p">(</span><span class="n">applyPartialConversion</span><span class="p">(</span>
+<span class="w">            </span><span class="n">getOperation</span><span class="p">(),</span>
+<span class="w">            </span><span class="n">target</span><span class="p">,</span>
+<span class="w">            </span><span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">patterns</span><span class="p">))))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">signalPassFailure</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">Pass</span><span class="o">&gt;</span><span class="w"> </span><span class="n">mlir</span><span class="o">::</span><span class="n">createConvertDFGToEmitHLSPass</span><span class="p">()</span>
+<span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">make_unique</span><span class="o">&lt;</span><span class="n">ConvertDFGToEmitHLSPass</span><span class="o">&gt;</span><span class="p">();</span><span class="w"> </span><span class="p">}</span>
+</pre></div>
+</div>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

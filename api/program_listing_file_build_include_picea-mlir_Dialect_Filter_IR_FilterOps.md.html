@@ -1,0 +1,283 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Program Listing for File FilterOps.md &mdash; picea 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/collapsible-lists/css/tree_view.css?v=a885cde7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js?v=73120307"></script>
+      <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js?v=660e4f45"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            picea
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Installation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../README.html">About the project</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#guides">Guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#related-projects">Related projects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#development-environment-nix">Development Environment (Nix)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#build-on-ubuntu-24-04-no-nix">Build on Ubuntu 24.04 (no Nix)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#gurobi-license">Gurobi license</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#installing">Installing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#run-the-tests">Run the tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#build-the-documentation">Build the documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#compiling-a-design">Compiling a design</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#running-a-design-on-the-board">Running a design on the board</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#exporting-a-profiled-application-to-mocasin">Exporting a profiled application to Mocasin</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Guides</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../guides/laksa.html">The FPGA Variant using LAKSA backend</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/cgra.html">The CGRA Variant</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">MLIR Dialects</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/Base2Ops.html">‘base2’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/CGRAOps.html">‘cgra’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/DFGOps.html">‘dfg’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/EmitHLSOps.html">‘emithls’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/FilterOps.html">‘filter’ Dialect</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Passes</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/PICEAConversionPasses.html">PICEA Conversion Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/CGRAPasses.html">CGRA Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/DFGPasses.html">DFG Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/EmitHLSPasses.html">Emit HLS Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/FuncExtPasses.html">Func Ext Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/LinalgExtPasses.html">Linalg Ext Passes</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">C++ API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="library_root.html">C++ API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">picea</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Program Listing for File FilterOps.md</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/program_listing_file_build_include_picea-mlir_Dialect_Filter_IR_FilterOps.md.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="program-listing-for-file-filterops-md">
+<span id="program-listing-file-build-include-picea-mlir-dialect-filter-ir-filterops-md"></span><h1>Program Listing for File FilterOps.md<a class="headerlink" href="#program-listing-for-file-filterops-md" title="Link to this heading"></a></h1>
+<p>↰ <a class="reference internal" href="file_build_include_picea-mlir_Dialect_Filter_IR_FilterOps.md.html#file-build-include-picea-mlir-dialect-filter-ir-filterops-md"><span class="std std-ref">Return to documentation for file</span></a> (<code class="docutils literal notranslate"><span class="pre">build/include/picea-mlir/Dialect/Filter/IR/FilterOps.md</span></code>)</p>
+<div class="highlight-markdown notranslate"><div class="highlight"><pre><span></span>&lt;!-- Autogenerated by mlir-tblgen; don't manually edit --&gt;
+
+<span class="gh"># 'filter' Dialect</span>
+
+The <span class="sb">`filter`</span> dialect groups together a set of operations that are
+DSP filters used in the DPE use case, which includes FIR, IIR and
+a few sampling functions.
+
+
+<span class="gu">## Operations</span>
+
+<span class="gu">### `filter.envelope` (filter::EnvelopeOp)</span>
+
+<span class="ge">_Defines an envelope filter with specific style._</span>
+
+The <span class="sb">`envelope`</span> operation computes an envelope of the <span class="sb">`input`</span> signal
+using a sliding-window pooling strategy. The window advances by <span class="sb">`step`</span>
+samples at a time, and each window of <span class="sb">`window_size`</span> samples is reduced
+according to <span class="sb">`style`</span> (e.g., MA, RMS). The output size is
+<span class="sb">`(input_size - window_size) / step + 1`</span>.
+Example:
+<span class="sb">```</span>
+<span class="sb">%env_0 = filter.envelope %input { window_size=16, step=8 }</span>
+<span class="sb">    style=rms : tensor&lt;256xf32&gt; -&gt; tensor&lt;31xf32&gt;</span>
+<span class="sb">```</span>
+
+Traits: <span class="sb">`SameOperandsAndResultElementType`</span>
+
+Interfaces: <span class="sb">`OpAsmOpInterface`</span>
+
+<span class="gu">#### Attributes:</span>
+
+&lt;table&gt;
+&lt;tr&gt;&lt;th&gt;Attribute&lt;/th&gt;&lt;th&gt;MLIR Type&lt;/th&gt;&lt;th&gt;Description&lt;/th&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;&lt;code&gt;window_size&lt;/code&gt;&lt;/td&gt;&lt;td&gt;::mlir::IntegerAttr&lt;/td&gt;&lt;td&gt;32-bit signless integer attribute&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;&lt;code&gt;step&lt;/code&gt;&lt;/td&gt;&lt;td&gt;::mlir::IntegerAttr&lt;/td&gt;&lt;td&gt;32-bit signless integer attribute&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;&lt;code&gt;style&lt;/code&gt;&lt;/td&gt;&lt;td&gt;::mlir::filter::EnvelopeStyleAttr&lt;/td&gt;&lt;td&gt;The style of envelope operation&lt;/td&gt;&lt;/tr&gt;
+&lt;/table&gt;
+
+<span class="gu">#### Operands:</span>
+
+| Operand | Description |
+| :-----: | ----------- |
+| <span class="sb">`input`</span> | 1D tensor of Fixed-point number type values |
+
+<span class="gu">#### Results:</span>
+
+| Result | Description |
+| :----: | ----------- |
+| <span class="sb">`filtered`</span> | 1D tensor of Fixed-point number type values |
+
+
+
+<span class="gu">### `filter.fir` (filter::FIROp)</span>
+
+<span class="ge">_Defines an 1-D FIR filter._</span>
+
+The <span class="sb">`fir`</span> operation computes a 1-D finite impulse response (FIR) filter
+by convolving the <span class="sb">`input`</span> signal with the <span class="sb">`coefficient`</span> vector.
+The result <span class="sb">`filtered`</span> has the same type as <span class="sb">`input`</span>.
+Example:
+<span class="sb">```</span>
+<span class="sb">%fir_0 = filter.fir %input coeff=%coeff</span>
+<span class="sb">    : tensor&lt;Nxtype&gt; &lt;-&gt; tensor&lt;Mxtype&gt;</span>
+<span class="sb">```</span>
+
+Traits: <span class="sb">`SameOperandsAndResultElementType`</span>
+
+Interfaces: <span class="sb">`OpAsmOpInterface`</span>
+
+<span class="gu">#### Operands:</span>
+
+| Operand | Description |
+| :-----: | ----------- |
+| <span class="sb">`input`</span> | 1D tensor of Fixed-point number type values |
+| <span class="sb">`coefficient`</span> | 1D tensor of Fixed-point number type values |
+
+<span class="gu">#### Results:</span>
+
+| Result | Description |
+| :----: | ----------- |
+| <span class="sb">`filtered`</span> | 1D tensor of Fixed-point number type values |
+
+
+
+<span class="gu">### `filter.sos` (filter::SOSOp)</span>
+
+<span class="ge">_Defines a second-order-section IIR filter._</span>
+
+The <span class="sb">`sos`</span> operation computes an infinite impulse response (IIR) filter
+as a cascade of second-order sections (biquad stages).
+Each row of <span class="sb">`coefficient`</span> holds five values <span class="sb">`[b0, b1, b2, a1, a2]`</span>
+for one section. The optional <span class="sb">`scale`</span> vector supplies
+<span class="sb">`num_sections + 1`</span> gain factors applied before the first section,
+between consecutive sections, and after the last section.
+The result <span class="sb">`filtered`</span> has the same type as <span class="sb">`input`</span>.
+Example:
+<span class="sb">```</span>
+<span class="sb">%sos_0 = filter.sos %input coeff=%coeff</span>
+<span class="sb">    : tensor&lt;Nxtype&gt; &lt;-&gt; tensor&lt;Sx5xtype&gt;</span>
+<span class="sb">%sos_1 = filter.sos %input coeff=%coeff scale=%scale</span>
+<span class="sb">    : tensor&lt;Nxtype&gt; &lt;-&gt; tensor&lt;Sx5xtype&gt;, tensor&lt;(S+1)xtype&gt;</span>
+<span class="sb">```</span>
+
+Traits: <span class="sb">`SameOperandsAndResultElementType`</span>
+
+Interfaces: <span class="sb">`OpAsmOpInterface`</span>
+
+<span class="gu">#### Operands:</span>
+
+| Operand | Description |
+| :-----: | ----------- |
+| <span class="sb">`input`</span> | 1D tensor of Fixed-point number type values |
+| <span class="sb">`coefficient`</span> | 2D tensor of Fixed-point number type values |
+| <span class="sb">`scale`</span> | 1D tensor of Fixed-point number type values |
+
+<span class="gu">#### Results:</span>
+
+| Result | Description |
+| :----: | ----------- |
+| <span class="sb">`filtered`</span> | 1D tensor of Fixed-point number type values |
+
+
+
+<span class="gu">## Enums</span>
+
+<span class="gu">### EnvelopeStyle</span>
+
+<span class="ge">_The style of envelope operation_</span>
+
+<span class="gu">#### Cases:</span>
+
+| Symbol | Value | String |
+| :----: | :---: | ------ |
+| MeaAverage | <span class="sb">`0`</span> | ma |
+| RootMeanSquare | <span class="sb">`1`</span> | rms |
+</pre></div>
+</div>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

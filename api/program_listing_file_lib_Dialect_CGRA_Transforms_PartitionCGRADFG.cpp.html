@@ -1,0 +1,877 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Program Listing for File PartitionCGRADFG.cpp &mdash; picea 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/collapsible-lists/css/tree_view.css?v=a885cde7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js?v=73120307"></script>
+      <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js?v=660e4f45"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            picea
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Installation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../README.html">About the project</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#guides">Guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#related-projects">Related projects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#development-environment-nix">Development Environment (Nix)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#build-on-ubuntu-24-04-no-nix">Build on Ubuntu 24.04 (no Nix)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#gurobi-license">Gurobi license</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#installing">Installing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#run-the-tests">Run the tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#build-the-documentation">Build the documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#compiling-a-design">Compiling a design</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#running-a-design-on-the-board">Running a design on the board</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#exporting-a-profiled-application-to-mocasin">Exporting a profiled application to Mocasin</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Guides</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../guides/laksa.html">The FPGA Variant using LAKSA backend</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/cgra.html">The CGRA Variant</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">MLIR Dialects</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/Base2Ops.html">‘base2’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/CGRAOps.html">‘cgra’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/DFGOps.html">‘dfg’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/EmitHLSOps.html">‘emithls’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/FilterOps.html">‘filter’ Dialect</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Passes</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/PICEAConversionPasses.html">PICEA Conversion Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/CGRAPasses.html">CGRA Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/DFGPasses.html">DFG Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/EmitHLSPasses.html">Emit HLS Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/FuncExtPasses.html">Func Ext Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/LinalgExtPasses.html">Linalg Ext Passes</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">C++ API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="library_root.html">C++ API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">picea</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Program Listing for File PartitionCGRADFG.cpp</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/program_listing_file_lib_Dialect_CGRA_Transforms_PartitionCGRADFG.cpp.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="program-listing-for-file-partitioncgradfg-cpp">
+<span id="program-listing-file-lib-dialect-cgra-transforms-partitioncgradfg-cpp"></span><h1>Program Listing for File PartitionCGRADFG.cpp<a class="headerlink" href="#program-listing-for-file-partitioncgradfg-cpp" title="Link to this heading"></a></h1>
+<p>↰ <a class="reference internal" href="file_lib_Dialect_CGRA_Transforms_PartitionCGRADFG.cpp.html#file-lib-dialect-cgra-transforms-partitioncgradfg-cpp"><span class="std std-ref">Return to documentation for file</span></a> (<code class="docutils literal notranslate"><span class="pre">lib/Dialect/CGRA/Transforms/PartitionCGRADFG.cpp</span></code>)</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">"mlir/Dialect/Affine/IR/AffineOps.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"mlir/Dialect/Arith/IR/Arith.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"mlir/Dialect/Func/IR/FuncOps.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"mlir/Dialect/MemRef/IR/MemRef.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"mlir/IR/IRMapping.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"mlir/IR/Matchers.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"mlir/Pass/Pass.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"picea-mlir/Dialect/CGRA/Transforms/Passes.h"</span>
+
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"llvm/ADT/DenseMap.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"llvm/ADT/SetVector.h"</span>
+
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;functional&gt;</span>
+
+<span class="k">using</span><span class="w"> </span><span class="k">namespace</span><span class="w"> </span><span class="nn">mlir</span><span class="p">;</span>
+
+<span class="k">namespace</span><span class="w"> </span><span class="p">{</span>
+
+<span class="c1">// Required, not optional: without it `residual` has deploys of</span>
+<span class="c1">// 96/59/59/44/36/24 FUs, 7 of 11 over the 16-PE array and so Gurobi-INFEASIBLE;</span>
+<span class="c1">// with it, 48 deploys all &lt;= 13 FUs. Configuration boundaries are chosen here,</span>
+<span class="c1">// not implied by the program. See docs/TODO.md B2.</span>
+
+<span class="c1">// The STRELA budget (strela_pkg.sv + elastic-cgra configs/4x4_4i-n_4o-s.hjson):</span>
+<span class="c1">// one configuration streams at most 4 arrays in, 4 out, and places at most 16</span>
+<span class="c1">// FUs.</span>
+<span class="k">static</span><span class="w"> </span><span class="k">constexpr</span><span class="w"> </span><span class="kt">unsigned</span><span class="w"> </span><span class="n">kInputNodes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">4</span><span class="p">;</span>
+<span class="k">static</span><span class="w"> </span><span class="k">constexpr</span><span class="w"> </span><span class="kt">unsigned</span><span class="w"> </span><span class="n">kOutputNodes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">4</span><span class="p">;</span>
+
+<span class="c1">// A requantization chain is 20-81 arith ops against 16 PEs, so the mapper</span>
+<span class="c1">// rejects the nest outright. This pass cuts the body's DAG into segments that</span>
+<span class="c1">// each fit one configuration and emits one loop nest per segment over the SAME</span>
+<span class="c1">// iteration space; a value crossing a cut is staged through a temporary buffer,</span>
+<span class="c1">// the only mechanism available since the fabric cannot hold a value between</span>
+<span class="c1">// configurations.</span>
+<span class="c1">//</span>
+<span class="c1">//   for i: t = f(a[i]); out[i] = g(t)      // 20 FUs, does not fit</span>
+<span class="c1">//     =&gt;  for i: tmp[i] = f(a[i])          // segment 0</span>
+<span class="c1">//         for i: out[i] = g(tmp[i])        // segment 1</span>
+<span class="c1">//</span>
+<span class="c1">// A cut edge costs an output stream in the producing segment and an input</span>
+<span class="c1">// stream in the consuming one, so 4-in/4-out bounds cut WIDTH as the PE count</span>
+<span class="c1">// bounds segment HEIGHT. Segmentation is greedy in program order (already a</span>
+<span class="c1">// topological order).</span>
+<span class="c1">//</span>
+<span class="c1">// SCOPE: perfectly-nested, pure-parallel affine nests with a straight-line</span>
+<span class="c1">// body. Reductions are not handled; nests that already fit are untouched.</span>
+<span class="k">struct</span><span class="w"> </span><span class="nc">CGRAPartitionDFGPass</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">PassWrapper</span><span class="o">&lt;</span>
+<span class="w">                                  </span><span class="n">CGRAPartitionDFGPass</span><span class="p">,</span>
+<span class="w">                                  </span><span class="n">OperationPass</span><span class="o">&lt;</span><span class="n">func</span><span class="o">::</span><span class="n">FuncOp</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">    </span><span class="n">MLIR_DEFINE_EXPLICIT_INTERNAL_INLINE_TYPE_ID</span><span class="p">(</span><span class="n">CGRAPartitionDFGPass</span><span class="p">)</span>
+
+<span class="w">    </span><span class="n">CGRAPartitionDFGPass</span><span class="p">()</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">default</span><span class="p">;</span>
+<span class="w">    </span><span class="n">CGRAPartitionDFGPass</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">CGRAPartitionDFGPass</span><span class="w"> </span><span class="o">&amp;</span><span class="n">other</span><span class="p">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">PassWrapper</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+<span class="w">    </span><span class="p">{}</span>
+
+<span class="w">    </span><span class="n">StringRef</span><span class="w"> </span><span class="nf">getArgument</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">final</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="s">"partition-cgra-dfg"</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="n">StringRef</span><span class="w"> </span><span class="nf">getDescription</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">final</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="s">"Split a compute nest too large for one CGRA configuration into "</span>
+<span class="w">               </span><span class="s">"several nests staged through temporary buffers"</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="c1">// Placement headroom: a segment that uses all 16 PEs leaves the mapper</span>
+<span class="w">    </span><span class="c1">// nothing to route with, so the default keeps two free. Raise it to pack</span>
+<span class="w">    </span><span class="c1">// harder.</span>
+<span class="w">    </span><span class="n">Pass</span><span class="o">::</span><span class="n">Option</span><span class="o">&lt;</span><span class="kt">unsigned</span><span class="o">&gt;</span><span class="w"> </span><span class="n">maxFUs</span><span class="p">{</span>
+<span class="w">        </span><span class="o">*</span><span class="k">this</span><span class="p">,</span>
+<span class="w">        </span><span class="s">"max-fus"</span><span class="p">,</span>
+<span class="w">        </span><span class="n">llvm</span><span class="o">::</span><span class="n">cl</span><span class="o">::</span><span class="n">desc</span><span class="p">(</span><span class="s">"FUs allowed in one segment (fabric has 16 PEs)"</span><span class="p">),</span>
+<span class="w">        </span><span class="n">llvm</span><span class="o">::</span><span class="n">cl</span><span class="o">::</span><span class="n">init</span><span class="p">(</span><span class="mi">14</span><span class="p">)};</span>
+
+<span class="w">    </span><span class="c1">// Cutting a nest stages EVERY value crossing a cut through memory, one</span>
+<span class="w">    </span><span class="c1">// element per streamed element — so the scratch a cut costs is the nest's</span>
+<span class="w">    </span><span class="c1">// whole iteration count, not its output size. For a REDUCTION that is the</span>
+<span class="w">    </span><span class="c1">// output count times the reduction trip: tiny_kws' pointwise convolution</span>
+<span class="w">    </span><span class="c1">// streams 1x25x5x64x64 = 512 000 elements, i.e. 2 MB per slot on a machine</span>
+<span class="w">    </span><span class="c1">// with 928 KB of RAM. Accelerating one nest is not worth making the program</span>
+<span class="w">    </span><span class="c1">// unlinkable, so a nest whose stream exceeds this is left unpartitioned (it</span>
+<span class="w">    </span><span class="c1">// then runs on the host like any other non-streamable nest).</span>
+<span class="w">    </span><span class="n">Pass</span><span class="o">::</span><span class="n">Option</span><span class="o">&lt;</span><span class="kt">unsigned</span><span class="o">&gt;</span><span class="w"> </span><span class="n">maxTempElems</span><span class="p">{</span>
+<span class="w">        </span><span class="o">*</span><span class="k">this</span><span class="p">,</span>
+<span class="w">        </span><span class="s">"max-temp-elems"</span><span class="p">,</span>
+<span class="w">        </span><span class="n">llvm</span><span class="o">::</span><span class="n">cl</span><span class="o">::</span><span class="n">desc</span><span class="p">(</span>
+<span class="w">            </span><span class="s">"do not partition a nest whose stream exceeds this many "</span>
+<span class="w">            </span><span class="s">"elements — each cut would cost that much scratch"</span><span class="p">),</span>
+<span class="w">        </span><span class="n">llvm</span><span class="o">::</span><span class="n">cl</span><span class="o">::</span><span class="n">init</span><span class="p">(</span><span class="mi">65536</span><span class="p">)};</span>
+
+<span class="w">    </span><span class="c1">// A value crossing a cut normally costs a stream at BOTH ends. When it is</span>
+<span class="w">    </span><span class="c1">// cheap to recompute, recomputing it in the consumer is strictly better: it</span>
+<span class="w">    </span><span class="c1">// costs FUs (which the segment has) instead of streams (which are the</span>
+<span class="w">    </span><span class="c1">// scarce resource, and are what dead-ends the i64-multiply emulation — its</span>
+<span class="w">    </span><span class="c1">// half-word splits are one shift from a load, yet four of them are live</span>
+<span class="w">    </span><span class="c1">// across the whole chain). Outputs a segment may produce. The budget is 4</span>
+<span class="w">    </span><span class="c1">// OMNs, but a cut that uses ALL of them together with 3 inputs occupies 7</span>
+<span class="w">    </span><span class="c1">// of the 8 border nodes, and the placer then has no slack: residual_small's</span>
+<span class="w">    </span><span class="c1">// nest 40 (10 FUs, 3 in, 4 out) does not solve even with a 900 s Gurobi</span>
+<span class="w">    </span><span class="c1">// limit. Cutting one narrower costs a segment and maps in seconds.</span>
+<span class="w">    </span><span class="n">Pass</span><span class="o">::</span><span class="n">Option</span><span class="o">&lt;</span><span class="kt">unsigned</span><span class="o">&gt;</span><span class="w"> </span><span class="n">maxOuts</span><span class="p">{</span>
+<span class="w">        </span><span class="o">*</span><span class="k">this</span><span class="p">,</span>
+<span class="w">        </span><span class="s">"max-outs"</span><span class="p">,</span>
+<span class="w">        </span><span class="n">llvm</span><span class="o">::</span><span class="n">cl</span><span class="o">::</span><span class="n">desc</span><span class="p">(</span><span class="s">"output streams allowed in one segment (fabric has 4)"</span><span class="p">),</span>
+<span class="w">        </span><span class="n">llvm</span><span class="o">::</span><span class="n">cl</span><span class="o">::</span><span class="n">init</span><span class="p">(</span><span class="mi">3</span><span class="p">)};</span>
+
+<span class="w">    </span><span class="n">Pass</span><span class="o">::</span><span class="n">Option</span><span class="o">&lt;</span><span class="kt">unsigned</span><span class="o">&gt;</span><span class="w"> </span><span class="n">maxRemat</span><span class="p">{</span>
+<span class="w">        </span><span class="o">*</span><span class="k">this</span><span class="p">,</span>
+<span class="w">        </span><span class="s">"max-remat"</span><span class="p">,</span>
+<span class="w">        </span><span class="n">llvm</span><span class="o">::</span><span class="n">cl</span><span class="o">::</span><span class="n">desc</span><span class="p">(</span>
+<span class="w">            </span><span class="s">"FUs worth of backward slice to recompute rather than stage"</span><span class="p">),</span>
+<span class="w">        </span><span class="n">llvm</span><span class="o">::</span><span class="n">cl</span><span class="o">::</span><span class="n">init</span><span class="p">(</span><span class="mi">3</span><span class="p">)};</span>
+
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="nf">getDependentDialects</span><span class="p">(</span><span class="n">mlir</span><span class="o">::</span><span class="n">DialectRegistry</span><span class="w"> </span><span class="o">&amp;</span><span class="n">registry</span><span class="p">)</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">override</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="n">registry</span><span class="p">.</span><span class="n">insert</span><span class="o">&lt;</span>
+<span class="w">            </span><span class="n">affine</span><span class="o">::</span><span class="n">AffineDialect</span><span class="p">,</span>
+<span class="w">            </span><span class="n">memref</span><span class="o">::</span><span class="n">MemRefDialect</span><span class="p">,</span>
+<span class="w">            </span><span class="n">arith</span><span class="o">::</span><span class="n">ArithDialect</span><span class="o">&gt;</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="c1">// ---------------------------------------------------------------- cost</span>
+<span class="w">    </span><span class="c1">// model</span>
+
+<span class="w">    </span><span class="c1">// What the nest costs the fabric has to be counted the way</span>
+<span class="w">    </span><span class="c1">// --export-loop-dfg will EMIT it, not the way it reads in MLIR. The one op</span>
+<span class="w">    </span><span class="c1">// that is not 1:1 is arith.shrui: the fabric right shift is arithmetic</span>
+<span class="w">    </span><span class="c1">// only, so the exporter corrects it with an extra masking FU (see</span>
+<span class="w">    </span><span class="c1">// ExportLoopDFG's shrui handling). Undercounting here would hand the mapper</span>
+<span class="w">    </span><span class="c1">// a segment of 17 nodes.</span>
+<span class="w">    </span><span class="k">static</span><span class="w"> </span><span class="kt">unsigned</span><span class="w"> </span><span class="nf">fuCost</span><span class="p">(</span><span class="n">Operation</span><span class="o">*</span><span class="p">)</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="c1">// Charged the way --export-loop-dfg EMITS. The fabric shift is LOGICAL</span>
+<span class="w">        </span><span class="c1">// (FU_data_superpolyvalent.sv applies `&gt;&gt;&gt;` to an UNSIGNED operand), so</span>
+<span class="w">        </span><span class="c1">// arith.shrui costs 1 node — the hardware already zero-fills — while</span>
+<span class="w">        </span><span class="c1">// arith.shrsi costs 3, the exporter restoring the sign with</span>
+<span class="w">        </span><span class="c1">// ((x &gt;&gt;u n) ^ sb) - sb. Undercounting hands the mapper a 17-node</span>
+<span class="w">        </span><span class="c1">// segment against 16 PEs, which is what happened when the shift</span>
+<span class="w">        </span><span class="c1">// lowering was corrected. No arith.shrsi special case:</span>
+<span class="w">        </span><span class="c1">// --expand-fabric-ops has already turned it into real shift/xor/sub</span>
+<span class="w">        </span><span class="c1">// ops, so they are counted like anything else. Restating the cost here</span>
+<span class="w">        </span><span class="c1">// was one of three copies of the same fact, and they drifted.</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="k">static</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="nf">isFabricOp</span><span class="p">(</span><span class="n">Operation</span><span class="o">*</span><span class="w"> </span><span class="n">op</span><span class="p">)</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">isa</span><span class="o">&lt;</span>
+<span class="w">            </span><span class="n">arith</span><span class="o">::</span><span class="n">MulIOp</span><span class="p">,</span>
+<span class="w">            </span><span class="n">arith</span><span class="o">::</span><span class="n">AddIOp</span><span class="p">,</span>
+<span class="w">            </span><span class="n">arith</span><span class="o">::</span><span class="n">SubIOp</span><span class="p">,</span>
+<span class="w">            </span><span class="n">arith</span><span class="o">::</span><span class="n">CmpIOp</span><span class="p">,</span>
+<span class="w">            </span><span class="n">arith</span><span class="o">::</span><span class="n">SelectOp</span><span class="p">,</span>
+<span class="w">            </span><span class="n">arith</span><span class="o">::</span><span class="n">AndIOp</span><span class="p">,</span>
+<span class="w">            </span><span class="n">arith</span><span class="o">::</span><span class="n">OrIOp</span><span class="p">,</span>
+<span class="w">            </span><span class="n">arith</span><span class="o">::</span><span class="n">XOrIOp</span><span class="p">,</span>
+<span class="w">            </span><span class="n">arith</span><span class="o">::</span><span class="n">ShLIOp</span><span class="p">,</span>
+<span class="w">            </span><span class="n">arith</span><span class="o">::</span><span class="n">ShRSIOp</span><span class="p">,</span>
+<span class="w">            </span><span class="n">arith</span><span class="o">::</span><span class="n">ShRUIOp</span><span class="o">&gt;</span><span class="p">(</span><span class="n">op</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="c1">// ------------------------------------------------------------------ the</span>
+<span class="w">    </span><span class="c1">// nest</span>
+
+<span class="w">    </span><span class="k">struct</span><span class="w"> </span><span class="nc">Nest</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">SmallVector</span><span class="o">&lt;</span><span class="n">affine</span><span class="o">::</span><span class="n">AffineForOp</span><span class="o">&gt;</span><span class="w"> </span><span class="n">loops</span><span class="p">;</span><span class="w"> </span><span class="c1">// outermost .. innermost</span>
+<span class="w">        </span><span class="n">Block</span><span class="o">*</span><span class="w"> </span><span class="n">body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">nullptr</span><span class="p">;</span>
+<span class="w">        </span><span class="n">SmallVector</span><span class="o">&lt;</span><span class="n">Operation</span><span class="o">*&gt;</span><span class="w"> </span><span class="n">ops</span><span class="p">;</span><span class="w">               </span><span class="c1">// fabric ops, program order</span>
+<span class="w">        </span><span class="n">SmallVector</span><span class="o">&lt;</span><span class="n">affine</span><span class="o">::</span><span class="n">AffineStoreOp</span><span class="o">&gt;</span><span class="w"> </span><span class="n">stores</span><span class="p">;</span><span class="w"> </span><span class="c1">// in the same body</span>
+<span class="w">        </span><span class="kt">int64_t</span><span class="w"> </span><span class="n">elems</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span><span class="w">                         </span><span class="c1">// iteration-space size</span>
+<span class="w">    </span><span class="p">};</span>
+
+<span class="w">    </span><span class="c1">// A nest is a candidate when it is perfectly nested, every loop is a plain</span>
+<span class="w">    </span><span class="c1">// `0 to N step 1` with no iter_args (no reduction), and the innermost body</span>
+<span class="w">    </span><span class="c1">// is straight-line: loads, fabric arith, stores. Anything else — a nested</span>
+<span class="w">    </span><span class="c1">// region, a call, a division — and the cut would not be expressible as</span>
+<span class="w">    </span><span class="c1">// "same iteration space, fewer ops".</span>
+<span class="w">    </span><span class="k">static</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="nf">collect</span><span class="p">(</span><span class="n">affine</span><span class="o">::</span><span class="n">AffineForOp</span><span class="w"> </span><span class="n">root</span><span class="p">,</span><span class="w"> </span><span class="n">Nest</span><span class="w"> </span><span class="o">&amp;</span><span class="n">n</span><span class="p">)</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="n">affine</span><span class="o">::</span><span class="n">AffineForOp</span><span class="w"> </span><span class="n">cur</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">root</span><span class="p">;</span>
+<span class="w">        </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="nb">true</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">cur</span><span class="p">.</span><span class="n">getNumIterOperands</span><span class="p">()</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="o">!</span><span class="n">cur</span><span class="p">.</span><span class="n">hasConstantLowerBound</span><span class="p">()</span>
+<span class="w">                </span><span class="o">||</span><span class="w"> </span><span class="o">!</span><span class="n">cur</span><span class="p">.</span><span class="n">hasConstantUpperBound</span><span class="p">()</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">cur</span><span class="p">.</span><span class="n">getStepAsInt</span><span class="p">()</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">                </span><span class="o">||</span><span class="w"> </span><span class="n">cur</span><span class="p">.</span><span class="n">getConstantLowerBound</span><span class="p">()</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
+<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="w">            </span><span class="n">n</span><span class="p">.</span><span class="n">loops</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">cur</span><span class="p">);</span>
+<span class="w">            </span><span class="n">n</span><span class="p">.</span><span class="n">elems</span><span class="w"> </span><span class="o">*=</span><span class="w"> </span><span class="n">cur</span><span class="p">.</span><span class="n">getConstantUpperBound</span><span class="p">();</span>
+
+<span class="w">            </span><span class="n">Block</span><span class="o">*</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cur</span><span class="p">.</span><span class="n">getBody</span><span class="p">();</span>
+<span class="w">            </span><span class="c1">// Perfect nest: a single inner loop and nothing else.</span>
+<span class="w">            </span><span class="k">auto</span><span class="w"> </span><span class="n">inner</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">SmallVector</span><span class="o">&lt;</span><span class="n">affine</span><span class="o">::</span><span class="n">AffineForOp</span><span class="o">&gt;</span><span class="p">(</span>
+<span class="w">                </span><span class="n">b</span><span class="o">-&gt;</span><span class="n">getOps</span><span class="o">&lt;</span><span class="n">affine</span><span class="o">::</span><span class="n">AffineForOp</span><span class="o">&gt;</span><span class="p">());</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">inner</span><span class="p">.</span><span class="n">size</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="c1">// …and no stray computation beside it.</span>
+<span class="w">                </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">Operation</span><span class="w"> </span><span class="o">&amp;</span><span class="n">op</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">b</span><span class="o">-&gt;</span><span class="n">without_terminator</span><span class="p">())</span>
+<span class="w">                    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">&amp;</span><span class="n">op</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">inner</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="n">getOperation</span><span class="p">())</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="w">                </span><span class="n">cur</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">inner</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+<span class="w">                </span><span class="k">continue</span><span class="p">;</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">inner</span><span class="p">.</span><span class="n">empty</span><span class="p">())</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="w">            </span><span class="n">n</span><span class="p">.</span><span class="n">body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">b</span><span class="p">;</span>
+<span class="w">            </span><span class="k">break</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">Operation</span><span class="w"> </span><span class="o">&amp;</span><span class="n">op</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">n</span><span class="p">.</span><span class="n">body</span><span class="o">-&gt;</span><span class="n">without_terminator</span><span class="p">())</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">isFabricOp</span><span class="p">(</span><span class="o">&amp;</span><span class="n">op</span><span class="p">))</span>
+<span class="w">                </span><span class="n">n</span><span class="p">.</span><span class="n">ops</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="o">&amp;</span><span class="n">op</span><span class="p">);</span>
+<span class="w">            </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="n">st</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dyn_cast</span><span class="o">&lt;</span><span class="n">affine</span><span class="o">::</span><span class="n">AffineStoreOp</span><span class="o">&gt;</span><span class="p">(</span><span class="o">&amp;</span><span class="n">op</span><span class="p">))</span>
+<span class="w">                </span><span class="n">n</span><span class="p">.</span><span class="n">stores</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">st</span><span class="p">);</span>
+<span class="w">            </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">isa</span><span class="o">&lt;</span><span class="n">affine</span><span class="o">::</span><span class="n">AffineLoadOp</span><span class="p">,</span><span class="w"> </span><span class="n">arith</span><span class="o">::</span><span class="n">ConstantOp</span><span class="o">&gt;</span><span class="p">(</span><span class="o">&amp;</span><span class="n">op</span><span class="p">))</span>
+<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="o">!</span><span class="n">n</span><span class="p">.</span><span class="n">ops</span><span class="p">.</span><span class="n">empty</span><span class="p">()</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="o">!</span><span class="n">n</span><span class="p">.</span><span class="n">stores</span><span class="p">.</span><span class="n">empty</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="c1">// ------------------------------------------------------------</span>
+<span class="w">    </span><span class="c1">// rematerialisation</span>
+
+<span class="w">    </span><span class="c1">// Everything needed to recompute @p v inside a segment: the fabric ops of</span>
+<span class="w">    </span><span class="c1">// its backward slice (stopping at loads, constants and anything defined</span>
+<span class="w">    </span><span class="c1">// outside the nest) plus the loads that slice reads.</span>
+<span class="w">    </span><span class="k">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">sliceOf</span><span class="p">(</span>
+<span class="w">        </span><span class="n">Value</span><span class="w"> </span><span class="n">v</span><span class="p">,</span>
+<span class="w">        </span><span class="n">Block</span><span class="o">*</span><span class="w"> </span><span class="n">body</span><span class="p">,</span>
+<span class="w">        </span><span class="n">DenseSet</span><span class="o">&lt;</span><span class="n">Operation</span><span class="o">*&gt;</span><span class="w"> </span><span class="o">&amp;</span><span class="n">ops</span><span class="p">,</span>
+<span class="w">        </span><span class="n">DenseSet</span><span class="o">&lt;</span><span class="n">Operation</span><span class="o">*&gt;</span><span class="w"> </span><span class="o">&amp;</span><span class="n">loads</span><span class="p">)</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="n">Operation</span><span class="o">*</span><span class="w"> </span><span class="n">d</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">v</span><span class="p">.</span><span class="n">getDefiningOp</span><span class="p">();</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">d</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">d</span><span class="o">-&gt;</span><span class="n">getBlock</span><span class="p">()</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">body</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="p">;</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">isa</span><span class="o">&lt;</span><span class="n">affine</span><span class="o">::</span><span class="n">AffineLoadOp</span><span class="o">&gt;</span><span class="p">(</span><span class="n">d</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">loads</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">d</span><span class="p">);</span>
+<span class="w">            </span><span class="k">return</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">isFabricOp</span><span class="p">(</span><span class="n">d</span><span class="p">)</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="o">!</span><span class="n">ops</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">d</span><span class="p">).</span><span class="n">second</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="p">;</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">Value</span><span class="w"> </span><span class="n">o</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">d</span><span class="o">-&gt;</span><span class="n">getOperands</span><span class="p">())</span><span class="w"> </span><span class="n">sliceOf</span><span class="p">(</span><span class="n">o</span><span class="p">,</span><span class="w"> </span><span class="n">body</span><span class="p">,</span><span class="w"> </span><span class="n">ops</span><span class="p">,</span><span class="w"> </span><span class="n">loads</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="c1">// Cheap enough to recompute rather than stage?</span>
+<span class="w">    </span><span class="kt">bool</span><span class="w"> </span><span class="nf">isRemat</span><span class="p">(</span><span class="n">Value</span><span class="w"> </span><span class="n">v</span><span class="p">,</span><span class="w"> </span><span class="n">Block</span><span class="o">*</span><span class="w"> </span><span class="n">body</span><span class="p">,</span><span class="w"> </span><span class="kt">unsigned</span><span class="w"> </span><span class="n">budget</span><span class="p">)</span><span class="w"> </span><span class="k">const</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">v</span><span class="p">.</span><span class="n">getType</span><span class="p">().</span><span class="n">isInteger</span><span class="p">(</span><span class="mi">32</span><span class="p">))</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span><span class="w"> </span><span class="c1">// an i1 can NEVER be staged, so it must be recomputed</span>
+<span class="w">        </span><span class="n">DenseSet</span><span class="o">&lt;</span><span class="n">Operation</span><span class="o">*&gt;</span><span class="w"> </span><span class="n">ops</span><span class="p">,</span><span class="w"> </span><span class="n">loads</span><span class="p">;</span>
+<span class="w">        </span><span class="n">sliceOf</span><span class="p">(</span><span class="n">v</span><span class="p">,</span><span class="w"> </span><span class="n">body</span><span class="p">,</span><span class="w"> </span><span class="n">ops</span><span class="p">,</span><span class="w"> </span><span class="n">loads</span><span class="p">);</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">ops</span><span class="p">.</span><span class="n">empty</span><span class="p">())</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">unsigned</span><span class="w"> </span><span class="n">cost</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">Operation</span><span class="o">*</span><span class="w"> </span><span class="n">op</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">ops</span><span class="p">)</span><span class="w"> </span><span class="n">cost</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">fuCost</span><span class="p">(</span><span class="n">op</span><span class="p">);</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">cost</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">budget</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="c1">// ---------------------------------------------------------------</span>
+<span class="w">    </span><span class="c1">// scheduling</span>
+
+<span class="w">    </span><span class="c1">// Program order is a topological order of the DAG, but usually a BAD one to</span>
+<span class="w">    </span><span class="c1">// cut. The i64-multiply emulation is a set of parallel chains (the 16-bit</span>
+<span class="w">    </span><span class="c1">// splits of each operand, their four partial products, the carries);</span>
+<span class="w">    </span><span class="c1">// interleaved as the front-end emits them, every chain has a value in</span>
+<span class="w">    </span><span class="c1">// flight at every point, so a cut anywhere crosses far more than the 4</span>
+<span class="w">    </span><span class="c1">// edges the budget allows.</span>
+<span class="w">    </span><span class="c1">//</span>
+<span class="w">    </span><span class="c1">// Re-scheduling to keep the live set small fixes that: run one chain to its</span>
+<span class="w">    </span><span class="c1">// end before starting the next, so a cut has few values crossing it. This</span>
+<span class="w">    </span><span class="c1">// is the standard list-scheduling heuristic — at each step take the ready</span>
+<span class="w">    </span><span class="c1">// op that KILLS the most live values and creates the fewest — with program</span>
+<span class="w">    </span><span class="c1">// order as a stable tie-break, so a nest that is already in a good order</span>
+<span class="w">    </span><span class="c1">// comes out unchanged.</span>
+<span class="w">    </span><span class="k">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">scheduleForMinLive</span><span class="p">(</span><span class="n">Nest</span><span class="w"> </span><span class="o">&amp;</span><span class="n">n</span><span class="p">)</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="n">DenseMap</span><span class="o">&lt;</span><span class="n">Operation</span><span class="o">*</span><span class="p">,</span><span class="w"> </span><span class="kt">unsigned</span><span class="o">&gt;</span><span class="w"> </span><span class="n">idx</span><span class="p">;</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="n">op</span><span class="p">]</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">llvm</span><span class="o">::</span><span class="n">enumerate</span><span class="p">(</span><span class="n">n</span><span class="p">.</span><span class="n">ops</span><span class="p">))</span><span class="w"> </span><span class="n">idx</span><span class="p">[</span><span class="n">op</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">i</span><span class="p">;</span>
+
+<span class="w">        </span><span class="c1">// Remaining consumers of each op's result, counting stores.</span>
+<span class="w">        </span><span class="n">DenseMap</span><span class="o">&lt;</span><span class="n">Operation</span><span class="o">*</span><span class="p">,</span><span class="w"> </span><span class="kt">unsigned</span><span class="o">&gt;</span><span class="w"> </span><span class="n">remaining</span><span class="p">;</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">Operation</span><span class="o">*</span><span class="w"> </span><span class="n">op</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">n</span><span class="p">.</span><span class="n">ops</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="kt">unsigned</span><span class="w"> </span><span class="n">uses</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">            </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">Operation</span><span class="o">*</span><span class="w"> </span><span class="n">user</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">op</span><span class="o">-&gt;</span><span class="n">getResult</span><span class="p">(</span><span class="mi">0</span><span class="p">).</span><span class="n">getUsers</span><span class="p">())</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">idx</span><span class="p">.</span><span class="n">count</span><span class="p">(</span><span class="n">user</span><span class="p">)</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">isa</span><span class="o">&lt;</span><span class="n">affine</span><span class="o">::</span><span class="n">AffineStoreOp</span><span class="o">&gt;</span><span class="p">(</span><span class="n">user</span><span class="p">))</span><span class="w"> </span><span class="o">++</span><span class="n">uses</span><span class="p">;</span>
+<span class="w">            </span><span class="n">remaining</span><span class="p">[</span><span class="n">op</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">uses</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="n">DenseSet</span><span class="o">&lt;</span><span class="n">Operation</span><span class="o">*&gt;</span><span class="w"> </span><span class="n">done</span><span class="p">;</span>
+<span class="w">        </span><span class="n">SmallVector</span><span class="o">&lt;</span><span class="n">Operation</span><span class="o">*&gt;</span><span class="w"> </span><span class="n">order</span><span class="p">;</span>
+<span class="w">        </span><span class="n">order</span><span class="p">.</span><span class="n">reserve</span><span class="p">(</span><span class="n">n</span><span class="p">.</span><span class="n">ops</span><span class="p">.</span><span class="n">size</span><span class="p">());</span>
+<span class="w">        </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">order</span><span class="p">.</span><span class="n">size</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">n</span><span class="p">.</span><span class="n">ops</span><span class="p">.</span><span class="n">size</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">Operation</span><span class="o">*</span><span class="w"> </span><span class="n">best</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">nullptr</span><span class="p">;</span>
+<span class="w">            </span><span class="kt">int</span><span class="w"> </span><span class="n">bestScore</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">            </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">Operation</span><span class="o">*</span><span class="w"> </span><span class="n">op</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">n</span><span class="p">.</span><span class="n">ops</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">done</span><span class="p">.</span><span class="n">count</span><span class="p">(</span><span class="n">op</span><span class="p">))</span><span class="w"> </span><span class="k">continue</span><span class="p">;</span>
+<span class="w">                </span><span class="kt">bool</span><span class="w"> </span><span class="n">ready</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="w">                </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">Value</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">op</span><span class="o">-&gt;</span><span class="n">getOperands</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                    </span><span class="n">Operation</span><span class="o">*</span><span class="w"> </span><span class="n">d</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">v</span><span class="p">.</span><span class="n">getDefiningOp</span><span class="p">();</span>
+<span class="w">                    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">d</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">idx</span><span class="p">.</span><span class="n">count</span><span class="p">(</span><span class="n">d</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="o">!</span><span class="n">done</span><span class="p">.</span><span class="n">count</span><span class="p">(</span><span class="n">d</span><span class="p">))</span><span class="w"> </span><span class="n">ready</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">ready</span><span class="p">)</span><span class="w"> </span><span class="k">continue</span><span class="p">;</span>
+<span class="w">                </span><span class="c1">// Kills: operands whose last remaining consumer is this op.</span>
+<span class="w">                </span><span class="kt">int</span><span class="w"> </span><span class="n">kills</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">                </span><span class="n">DenseSet</span><span class="o">&lt;</span><span class="n">Operation</span><span class="o">*&gt;</span><span class="w"> </span><span class="n">seen</span><span class="p">;</span>
+<span class="w">                </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">Value</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">op</span><span class="o">-&gt;</span><span class="n">getOperands</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                    </span><span class="n">Operation</span><span class="o">*</span><span class="w"> </span><span class="n">d</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">v</span><span class="p">.</span><span class="n">getDefiningOp</span><span class="p">();</span>
+<span class="w">                    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">d</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">idx</span><span class="p">.</span><span class="n">count</span><span class="p">(</span><span class="n">d</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">seen</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">d</span><span class="p">).</span><span class="n">second</span>
+<span class="w">                        </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">remaining</span><span class="p">[</span><span class="n">d</span><span class="p">]</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span>
+<span class="w">                        </span><span class="o">++</span><span class="n">kills</span><span class="p">;</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">                </span><span class="kt">int</span><span class="w"> </span><span class="n">score</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">kills</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="p">(</span><span class="n">remaining</span><span class="p">[</span><span class="n">op</span><span class="p">]</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">best</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">score</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">bestScore</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                    </span><span class="n">best</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">op</span><span class="p">;</span>
+<span class="w">                    </span><span class="n">bestScore</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">score</span><span class="p">;</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="n">assert</span><span class="p">(</span><span class="n">best</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="s">"cycle in a straight-line body"</span><span class="p">);</span>
+<span class="w">            </span><span class="n">done</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">best</span><span class="p">);</span>
+<span class="w">            </span><span class="n">order</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">best</span><span class="p">);</span>
+<span class="w">            </span><span class="n">DenseSet</span><span class="o">&lt;</span><span class="n">Operation</span><span class="o">*&gt;</span><span class="w"> </span><span class="n">seen</span><span class="p">;</span>
+<span class="w">            </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">Value</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">best</span><span class="o">-&gt;</span><span class="n">getOperands</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">Operation</span><span class="o">*</span><span class="w"> </span><span class="n">d</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">v</span><span class="p">.</span><span class="n">getDefiningOp</span><span class="p">();</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">d</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">idx</span><span class="p">.</span><span class="n">count</span><span class="p">(</span><span class="n">d</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">seen</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">d</span><span class="p">).</span><span class="n">second</span><span class="p">)</span><span class="w"> </span><span class="o">--</span><span class="n">remaining</span><span class="p">[</span><span class="n">d</span><span class="p">];</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="n">n</span><span class="p">.</span><span class="n">ops</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">order</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="c1">// -------------------------------------------------------------</span>
+<span class="w">    </span><span class="c1">// segmentation</span>
+
+<span class="w">    </span><span class="k">struct</span><span class="w"> </span><span class="nc">Seg</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kt">unsigned</span><span class="w"> </span><span class="n">begin</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">end</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">        </span><span class="n">SmallVector</span><span class="o">&lt;</span><span class="n">Value</span><span class="o">&gt;</span><span class="w"> </span><span class="n">liveIn</span><span class="p">;</span><span class="w">  </span><span class="c1">// produced by an earlier segment</span>
+<span class="w">        </span><span class="n">SmallVector</span><span class="o">&lt;</span><span class="n">Value</span><span class="o">&gt;</span><span class="w"> </span><span class="n">liveOut</span><span class="p">;</span><span class="w"> </span><span class="c1">// needed by a later one</span>
+<span class="w">        </span><span class="n">SmallVector</span><span class="o">&lt;</span><span class="n">affine</span><span class="o">::</span><span class="n">AffineStoreOp</span><span class="o">&gt;</span><span class="w"> </span><span class="n">stores</span><span class="p">;</span>
+<span class="w">    </span><span class="p">};</span>
+
+<span class="w">    </span><span class="c1">// Distinct memory streams a load set needs. Two loads of the same memref</span>
+<span class="w">    </span><span class="c1">// through the same index map are one stream (the memory node walks it</span>
+<span class="w">    </span><span class="c1">// once); a different map is a different node.</span>
+<span class="w">    </span><span class="k">using</span><span class="w"> </span><span class="n">StreamKey</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">pair</span><span class="o">&lt;</span><span class="n">Value</span><span class="p">,</span><span class="w"> </span><span class="n">AffineMap</span><span class="o">&gt;</span><span class="p">;</span>
+
+<span class="w">    </span><span class="c1">// Cost of the candidate segment [begin,end), given where each value is</span>
+<span class="w">    </span><span class="c1">// defined. Returns false when it does not fit.</span>
+<span class="w">    </span><span class="kt">bool</span><span class="w"> </span><span class="nf">costOf</span><span class="p">(</span>
+<span class="w">        </span><span class="k">const</span><span class="w"> </span><span class="n">Nest</span><span class="w"> </span><span class="o">&amp;</span><span class="n">n</span><span class="p">,</span>
+<span class="w">        </span><span class="k">const</span><span class="w"> </span><span class="n">DenseMap</span><span class="o">&lt;</span><span class="n">Operation</span><span class="o">*</span><span class="p">,</span><span class="w"> </span><span class="kt">unsigned</span><span class="o">&gt;</span><span class="w"> </span><span class="o">&amp;</span><span class="n">pos</span><span class="p">,</span>
+<span class="w">        </span><span class="k">const</span><span class="w"> </span><span class="n">DenseMap</span><span class="o">&lt;</span><span class="n">affine</span><span class="o">::</span><span class="n">AffineStoreOp</span><span class="p">,</span><span class="w"> </span><span class="kt">unsigned</span><span class="o">&gt;</span><span class="w"> </span><span class="o">&amp;</span><span class="n">storeSeg</span><span class="p">,</span>
+<span class="w">        </span><span class="kt">unsigned</span><span class="w"> </span><span class="n">begin</span><span class="p">,</span>
+<span class="w">        </span><span class="kt">unsigned</span><span class="w"> </span><span class="n">end</span><span class="p">,</span>
+<span class="w">        </span><span class="n">Seg</span><span class="w"> </span><span class="o">&amp;</span><span class="n">out</span><span class="p">,</span>
+<span class="w">        </span><span class="kt">unsigned</span><span class="w"> </span><span class="n">rematBudget</span><span class="p">)</span><span class="w"> </span><span class="k">const</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="kt">unsigned</span><span class="w"> </span><span class="n">fus</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">        </span><span class="n">DenseSet</span><span class="o">&lt;</span><span class="n">StreamKey</span><span class="o">&gt;</span><span class="w"> </span><span class="n">loads</span><span class="p">;</span>
+<span class="w">        </span><span class="n">SetVector</span><span class="o">&lt;</span><span class="n">Value</span><span class="o">&gt;</span><span class="w"> </span><span class="n">tempIn</span><span class="p">;</span>
+<span class="w">        </span><span class="n">SetVector</span><span class="o">&lt;</span><span class="n">Value</span><span class="o">&gt;</span><span class="w"> </span><span class="n">remat</span><span class="p">;</span>
+
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">unsigned</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">begin</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">end</span><span class="p">;</span><span class="w"> </span><span class="o">++</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">Operation</span><span class="o">*</span><span class="w"> </span><span class="n">op</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">n</span><span class="p">.</span><span class="n">ops</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+<span class="w">            </span><span class="n">fus</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">fuCost</span><span class="p">(</span><span class="n">op</span><span class="p">);</span>
+<span class="w">            </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">Value</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">op</span><span class="o">-&gt;</span><span class="n">getOperands</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">Operation</span><span class="o">*</span><span class="w"> </span><span class="n">d</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">v</span><span class="p">.</span><span class="n">getDefiningOp</span><span class="p">();</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">d</span><span class="p">)</span><span class="w"> </span><span class="k">continue</span><span class="p">;</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="n">ld</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dyn_cast</span><span class="o">&lt;</span><span class="n">affine</span><span class="o">::</span><span class="n">AffineLoadOp</span><span class="o">&gt;</span><span class="p">(</span><span class="n">d</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">ld</span><span class="o">-&gt;</span><span class="n">getBlock</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">n</span><span class="p">.</span><span class="n">body</span><span class="p">)</span>
+<span class="w">                        </span><span class="n">loads</span><span class="p">.</span><span class="n">insert</span><span class="p">({</span><span class="n">ld</span><span class="p">.</span><span class="n">getMemRef</span><span class="p">(),</span><span class="w"> </span><span class="n">ld</span><span class="p">.</span><span class="n">getAffineMap</span><span class="p">()});</span>
+<span class="w">                </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span>
+<span class="w">                    </span><span class="k">auto</span><span class="w"> </span><span class="n">it</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">pos</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="n">d</span><span class="p">);</span>
+<span class="w">                    </span><span class="n">it</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">pos</span><span class="p">.</span><span class="n">end</span><span class="p">()</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">it</span><span class="o">-&gt;</span><span class="n">second</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">begin</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">isRemat</span><span class="p">(</span><span class="n">v</span><span class="p">,</span><span class="w"> </span><span class="n">n</span><span class="p">.</span><span class="n">body</span><span class="p">,</span><span class="w"> </span><span class="n">rematBudget</span><span class="p">))</span>
+<span class="w">                        </span><span class="n">remat</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span>
+<span class="w">                            </span><span class="n">v</span><span class="p">);</span><span class="w"> </span><span class="c1">// recompute here instead of reading a stream</span>
+<span class="w">                    </span><span class="k">else</span>
+<span class="w">                        </span><span class="n">tempIn</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span>
+<span class="w">                            </span><span class="n">v</span><span class="p">);</span><span class="w"> </span><span class="c1">// crosses a cut: read back from its temporary</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="c1">// Recomputed slices occupy FUs here and bring their own loads with</span>
+<span class="w">        </span><span class="c1">// them.</span>
+<span class="w">        </span><span class="n">DenseSet</span><span class="o">&lt;</span><span class="n">Operation</span><span class="o">*&gt;</span><span class="w"> </span><span class="n">rops</span><span class="p">,</span><span class="w"> </span><span class="n">rloads</span><span class="p">;</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">Value</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">remat</span><span class="p">)</span><span class="w"> </span><span class="n">sliceOf</span><span class="p">(</span><span class="n">v</span><span class="p">,</span><span class="w"> </span><span class="n">n</span><span class="p">.</span><span class="n">body</span><span class="p">,</span><span class="w"> </span><span class="n">rops</span><span class="p">,</span><span class="w"> </span><span class="n">rloads</span><span class="p">);</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">Operation</span><span class="o">*</span><span class="w"> </span><span class="n">op</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">rops</span><span class="p">)</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">llvm</span><span class="o">::</span><span class="n">is_contained</span><span class="p">(</span>
+<span class="w">                    </span><span class="n">ArrayRef</span><span class="o">&lt;</span><span class="n">Operation</span><span class="o">*&gt;</span><span class="p">(</span><span class="n">n</span><span class="p">.</span><span class="n">ops</span><span class="p">).</span><span class="n">slice</span><span class="p">(</span><span class="n">begin</span><span class="p">,</span><span class="w"> </span><span class="n">end</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">begin</span><span class="p">),</span>
+<span class="w">                    </span><span class="n">op</span><span class="p">))</span>
+<span class="w">                </span><span class="n">fus</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">fuCost</span><span class="p">(</span><span class="n">op</span><span class="p">);</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">Operation</span><span class="o">*</span><span class="w"> </span><span class="n">op</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">rloads</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">auto</span><span class="w"> </span><span class="n">ld</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cast</span><span class="o">&lt;</span><span class="n">affine</span><span class="o">::</span><span class="n">AffineLoadOp</span><span class="o">&gt;</span><span class="p">(</span><span class="n">op</span><span class="p">);</span>
+<span class="w">            </span><span class="n">loads</span><span class="p">.</span><span class="n">insert</span><span class="p">({</span><span class="n">ld</span><span class="p">.</span><span class="n">getMemRef</span><span class="p">(),</span><span class="w"> </span><span class="n">ld</span><span class="p">.</span><span class="n">getAffineMap</span><span class="p">()});</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">fus</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">maxFUs</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">loads</span><span class="p">.</span><span class="n">size</span><span class="p">()</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">tempIn</span><span class="p">.</span><span class="n">size</span><span class="p">()</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">kInputNodes</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+
+<span class="w">        </span><span class="c1">// Stores whose value this segment produces belong to it, and its</span>
+<span class="w">        </span><span class="c1">// live-outs are the values a later segment (or a later segment's store)</span>
+<span class="w">        </span><span class="c1">// still needs.</span>
+<span class="w">        </span><span class="n">SmallVector</span><span class="o">&lt;</span><span class="n">affine</span><span class="o">::</span><span class="n">AffineStoreOp</span><span class="o">&gt;</span><span class="w"> </span><span class="n">mine</span><span class="p">;</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="n">st</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">n</span><span class="p">.</span><span class="n">stores</span><span class="p">)</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="n">it</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">storeSeg</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="n">st</span><span class="p">);</span>
+<span class="w">                </span><span class="n">it</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">storeSeg</span><span class="p">.</span><span class="n">end</span><span class="p">()</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">it</span><span class="o">-&gt;</span><span class="n">second</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="n">begin</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">it</span><span class="o">-&gt;</span><span class="n">second</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">end</span><span class="p">)</span>
+<span class="w">                </span><span class="n">mine</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">st</span><span class="p">);</span>
+
+<span class="w">        </span><span class="n">SetVector</span><span class="o">&lt;</span><span class="n">Value</span><span class="o">&gt;</span><span class="w"> </span><span class="n">liveOut</span><span class="p">;</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">unsigned</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">begin</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">end</span><span class="p">;</span><span class="w"> </span><span class="o">++</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">Value</span><span class="w"> </span><span class="n">res</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">n</span><span class="p">.</span><span class="n">ops</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">-&gt;</span><span class="n">getResult</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">isRemat</span><span class="p">(</span><span class="n">res</span><span class="p">,</span><span class="w"> </span><span class="n">n</span><span class="p">.</span><span class="n">body</span><span class="p">,</span><span class="w"> </span><span class="n">rematBudget</span><span class="p">))</span>
+<span class="w">                </span><span class="k">continue</span><span class="p">;</span><span class="w"> </span><span class="c1">// a later segment recomputes it; it never goes to</span>
+<span class="w">                          </span><span class="c1">// memory</span>
+<span class="w">            </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">Operation</span><span class="o">*</span><span class="w"> </span><span class="n">user</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">res</span><span class="p">.</span><span class="n">getUsers</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="n">st</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dyn_cast</span><span class="o">&lt;</span><span class="n">affine</span><span class="o">::</span><span class="n">AffineStoreOp</span><span class="o">&gt;</span><span class="p">(</span><span class="n">user</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                    </span><span class="k">auto</span><span class="w"> </span><span class="n">it</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">storeSeg</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="n">st</span><span class="p">);</span>
+<span class="w">                    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">it</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">storeSeg</span><span class="p">.</span><span class="n">end</span><span class="p">()</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">it</span><span class="o">-&gt;</span><span class="n">second</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="n">end</span><span class="p">)</span>
+<span class="w">                        </span><span class="n">liveOut</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">res</span><span class="p">);</span>
+<span class="w">                    </span><span class="k">continue</span><span class="p">;</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">                </span><span class="k">auto</span><span class="w"> </span><span class="n">it</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">pos</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="n">user</span><span class="p">);</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">it</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">pos</span><span class="p">.</span><span class="n">end</span><span class="p">()</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">it</span><span class="o">-&gt;</span><span class="n">second</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="n">end</span><span class="p">)</span><span class="w"> </span><span class="n">liveOut</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">res</span><span class="p">);</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">liveOut</span><span class="p">.</span><span class="n">size</span><span class="p">()</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">mine</span><span class="p">.</span><span class="n">size</span><span class="p">()</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">maxOuts</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="w">        </span><span class="c1">// A cut edge becomes a memory stream, and the fabric streams 32-bit</span>
+<span class="w">        </span><span class="c1">// words. The i1 a compare produces cannot be staged, so a cut may not</span>
+<span class="w">        </span><span class="c1">// fall between a compare and the select that consumes it — the greedy</span>
+<span class="w">        </span><span class="c1">// simply takes a shorter segment instead.</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">Value</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">liveOut</span><span class="p">)</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">v</span><span class="p">.</span><span class="n">getType</span><span class="p">().</span><span class="n">isInteger</span><span class="p">(</span><span class="mi">32</span><span class="p">))</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+
+<span class="w">        </span><span class="n">out</span><span class="p">.</span><span class="n">begin</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">begin</span><span class="p">;</span>
+<span class="w">        </span><span class="n">out</span><span class="p">.</span><span class="n">end</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">end</span><span class="p">;</span>
+<span class="w">        </span><span class="n">out</span><span class="p">.</span><span class="n">liveIn</span><span class="p">.</span><span class="n">assign</span><span class="p">(</span><span class="n">tempIn</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span><span class="w"> </span><span class="n">tempIn</span><span class="p">.</span><span class="n">end</span><span class="p">());</span>
+<span class="w">        </span><span class="n">out</span><span class="p">.</span><span class="n">liveOut</span><span class="p">.</span><span class="n">assign</span><span class="p">(</span><span class="n">liveOut</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span><span class="w"> </span><span class="n">liveOut</span><span class="p">.</span><span class="n">end</span><span class="p">());</span>
+<span class="w">        </span><span class="n">out</span><span class="p">.</span><span class="n">stores</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">mine</span><span class="p">);</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="c1">// Whether a segment [i,j) fits depends only on i and j — "defined before i"</span>
+<span class="w">    </span><span class="c1">// and "used at or after j" are both properties of the fixed op order, not</span>
+<span class="w">    </span><span class="c1">// of where the earlier cuts fell. So the choice of cuts is a shortest-path</span>
+<span class="w">    </span><span class="c1">// problem on the positions 0..N, and solving it exactly costs no more than</span>
+<span class="w">    </span><span class="c1">// the greedy did: BFS finds a partition whenever one exists in this</span>
+<span class="w">    </span><span class="c1">// ordering, and finds the one with the FEWEST segments, which is what</span>
+<span class="w">    </span><span class="c1">// matters since each segment is a configuration with its own dispatch. A</span>
+<span class="w">    </span><span class="c1">// greedy walk, by contrast, dead-ends — taking the longest affordable</span>
+<span class="w">    </span><span class="c1">// segment leaves a 4-wide cut with no input budget left for the next</span>
+<span class="w">    </span><span class="c1">// segment's loads.</span>
+<span class="w">    </span><span class="kt">bool</span><span class="w"> </span><span class="nf">segment</span><span class="p">(</span>
+<span class="w">        </span><span class="k">const</span><span class="w"> </span><span class="n">Nest</span><span class="w"> </span><span class="o">&amp;</span><span class="n">n</span><span class="p">,</span>
+<span class="w">        </span><span class="n">SmallVectorImpl</span><span class="o">&lt;</span><span class="n">Seg</span><span class="o">&gt;</span><span class="w"> </span><span class="o">&amp;</span><span class="n">segs</span><span class="p">,</span>
+<span class="w">        </span><span class="kt">unsigned</span><span class="w"> </span><span class="o">&amp;</span><span class="n">stuckAt</span><span class="p">,</span>
+<span class="w">        </span><span class="kt">unsigned</span><span class="w"> </span><span class="o">&amp;</span><span class="n">stuckWidth</span><span class="p">,</span>
+<span class="w">        </span><span class="kt">unsigned</span><span class="w"> </span><span class="n">rematBudget</span><span class="p">)</span><span class="w"> </span><span class="k">const</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="n">DenseMap</span><span class="o">&lt;</span><span class="n">Operation</span><span class="o">*</span><span class="p">,</span><span class="w"> </span><span class="kt">unsigned</span><span class="o">&gt;</span><span class="w"> </span><span class="n">pos</span><span class="p">;</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="n">op</span><span class="p">]</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">llvm</span><span class="o">::</span><span class="n">enumerate</span><span class="p">(</span><span class="n">n</span><span class="p">.</span><span class="n">ops</span><span class="p">))</span><span class="w"> </span><span class="n">pos</span><span class="p">[</span><span class="n">op</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">i</span><span class="p">;</span>
+
+<span class="w">        </span><span class="c1">// A store runs in the segment that produces the value it writes.</span>
+<span class="w">        </span><span class="n">DenseMap</span><span class="o">&lt;</span><span class="n">affine</span><span class="o">::</span><span class="n">AffineStoreOp</span><span class="p">,</span><span class="w"> </span><span class="kt">unsigned</span><span class="o">&gt;</span><span class="w"> </span><span class="n">storeSeg</span><span class="p">;</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="n">st</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">n</span><span class="p">.</span><span class="n">stores</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">Operation</span><span class="o">*</span><span class="w"> </span><span class="n">d</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">st</span><span class="p">.</span><span class="n">getValueToStore</span><span class="p">().</span><span class="n">getDefiningOp</span><span class="p">();</span>
+<span class="w">            </span><span class="k">auto</span><span class="w"> </span><span class="n">it</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">d</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">pos</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="n">d</span><span class="p">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">pos</span><span class="p">.</span><span class="n">end</span><span class="p">();</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">it</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">pos</span><span class="p">.</span><span class="n">end</span><span class="p">())</span>
+<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span><span class="w"> </span><span class="c1">// storing a load or a constant: nothing to</span>
+<span class="w">                              </span><span class="c1">// partition</span>
+<span class="w">            </span><span class="n">storeSeg</span><span class="p">[</span><span class="n">st</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">it</span><span class="o">-&gt;</span><span class="n">second</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="kt">unsigned</span><span class="w"> </span><span class="n">N</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">n</span><span class="p">.</span><span class="n">ops</span><span class="p">.</span><span class="n">size</span><span class="p">();</span>
+<span class="w">        </span><span class="n">SmallVector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="w"> </span><span class="n">prev</span><span class="p">(</span><span class="n">N</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">-1</span><span class="p">);</span>
+<span class="w">        </span><span class="n">SmallVector</span><span class="o">&lt;</span><span class="kt">unsigned</span><span class="o">&gt;</span><span class="w"> </span><span class="n">dist</span><span class="p">(</span><span class="n">N</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="o">~</span><span class="mi">0u</span><span class="p">);</span>
+<span class="w">        </span><span class="n">SmallVector</span><span class="o">&lt;</span><span class="n">Seg</span><span class="o">&gt;</span><span class="w"> </span><span class="n">edge</span><span class="p">(</span><span class="n">N</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">);</span>
+<span class="w">        </span><span class="n">dist</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">        </span><span class="n">SmallVector</span><span class="o">&lt;</span><span class="kt">unsigned</span><span class="o">&gt;</span><span class="w"> </span><span class="n">queue</span><span class="p">{</span><span class="mi">0</span><span class="p">};</span>
+<span class="w">        </span><span class="kt">unsigned</span><span class="w"> </span><span class="n">qi</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">reached</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">        </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">qi</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">queue</span><span class="p">.</span><span class="n">size</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="kt">unsigned</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">queue</span><span class="p">[</span><span class="n">qi</span><span class="o">++</span><span class="p">];</span>
+<span class="w">            </span><span class="n">reached</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">max</span><span class="p">(</span><span class="n">reached</span><span class="p">,</span><span class="w"> </span><span class="n">i</span><span class="p">);</span>
+<span class="w">            </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">unsigned</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">N</span><span class="p">;</span><span class="w"> </span><span class="o">++</span><span class="n">j</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">dist</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="o">~</span><span class="mi">0u</span><span class="p">)</span><span class="w"> </span><span class="k">continue</span><span class="p">;</span>
+<span class="w">                </span><span class="n">Seg</span><span class="w"> </span><span class="n">cand</span><span class="p">;</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">costOf</span><span class="p">(</span><span class="n">n</span><span class="p">,</span><span class="w"> </span><span class="n">pos</span><span class="p">,</span><span class="w"> </span><span class="n">storeSeg</span><span class="p">,</span><span class="w"> </span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="n">j</span><span class="p">,</span><span class="w"> </span><span class="n">cand</span><span class="p">,</span><span class="w"> </span><span class="n">rematBudget</span><span class="p">))</span>
+<span class="w">                    </span><span class="k">continue</span><span class="p">;</span>
+<span class="w">                </span><span class="n">dist</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dist</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="w">                </span><span class="n">prev</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="n">i</span><span class="p">;</span>
+<span class="w">                </span><span class="n">edge</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">cand</span><span class="p">);</span>
+<span class="w">                </span><span class="n">queue</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">j</span><span class="p">);</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">dist</span><span class="p">[</span><span class="n">N</span><span class="p">]</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="o">~</span><span class="mi">0u</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">stuckAt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">reached</span><span class="p">;</span>
+<span class="w">            </span><span class="n">stuckWidth</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">unsigned</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">N</span><span class="p">;</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="kt">unsigned</span><span class="p">)</span><span class="n">prev</span><span class="p">[</span><span class="n">j</span><span class="p">])</span>
+<span class="w">            </span><span class="n">segs</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">edge</span><span class="p">[</span><span class="n">j</span><span class="p">]);</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">reverse</span><span class="p">(</span><span class="n">segs</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span><span class="w"> </span><span class="n">segs</span><span class="p">.</span><span class="n">end</span><span class="p">());</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="c1">// ---------------------------------------------------------------- emission</span>
+
+<span class="w">    </span><span class="c1">// Temporaries are indexed by the FLATTENED iteration space, so one 1-D</span>
+<span class="w">    </span><span class="c1">// buffer serves any nest shape and the pool can be shared between nests of</span>
+<span class="w">    </span><span class="c1">// different rank.</span>
+<span class="w">    </span><span class="k">static</span><span class="w"> </span><span class="n">AffineMap</span><span class="w"> </span><span class="nf">linearMap</span><span class="p">(</span><span class="n">Nest</span><span class="w"> </span><span class="o">&amp;</span><span class="n">n</span><span class="p">,</span><span class="w"> </span><span class="n">MLIRContext</span><span class="o">*</span><span class="w"> </span><span class="n">ctx</span><span class="p">)</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="kt">unsigned</span><span class="w"> </span><span class="n">r</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">n</span><span class="p">.</span><span class="n">loops</span><span class="p">.</span><span class="n">size</span><span class="p">();</span>
+<span class="w">        </span><span class="n">AffineExpr</span><span class="w"> </span><span class="n">e</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">getAffineConstantExpr</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">ctx</span><span class="p">);</span>
+<span class="w">        </span><span class="kt">int64_t</span><span class="w"> </span><span class="n">stride</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="n">r</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="o">--</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">e</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">e</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">getAffineDimExpr</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="n">ctx</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">stride</span><span class="p">;</span>
+<span class="w">            </span><span class="n">stride</span><span class="w"> </span><span class="o">*=</span><span class="w"> </span><span class="n">n</span><span class="p">.</span><span class="n">loops</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">getConstantUpperBound</span><span class="p">();</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">AffineMap</span><span class="o">::</span><span class="n">get</span><span class="p">(</span><span class="n">r</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">e</span><span class="p">,</span><span class="w"> </span><span class="n">ctx</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="c1">// `pool` is not passed: the caller has already resolved every live value to</span>
+<span class="w">    </span><span class="c1">// its slot in `slotOf`, which is all the rewrite needs.</span>
+<span class="w">    </span><span class="kt">void</span>
+<span class="w">    </span><span class="nf">rewrite</span><span class="p">(</span><span class="n">Nest</span><span class="w"> </span><span class="o">&amp;</span><span class="n">n</span><span class="p">,</span><span class="w"> </span><span class="n">ArrayRef</span><span class="o">&lt;</span><span class="n">Seg</span><span class="o">&gt;</span><span class="w"> </span><span class="n">segs</span><span class="p">,</span><span class="w"> </span><span class="n">DenseMap</span><span class="o">&lt;</span><span class="n">Value</span><span class="p">,</span><span class="w"> </span><span class="n">Value</span><span class="o">&gt;</span><span class="w"> </span><span class="o">&amp;</span><span class="n">slotOf</span><span class="p">)</span><span class="w"> </span><span class="k">const</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="n">MLIRContext</span><span class="o">*</span><span class="w"> </span><span class="n">ctx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">n</span><span class="p">.</span><span class="n">loops</span><span class="p">.</span><span class="n">front</span><span class="p">().</span><span class="n">getContext</span><span class="p">();</span>
+<span class="w">        </span><span class="n">Location</span><span class="w"> </span><span class="n">loc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">n</span><span class="p">.</span><span class="n">loops</span><span class="p">.</span><span class="n">front</span><span class="p">().</span><span class="n">getLoc</span><span class="p">();</span>
+<span class="w">        </span><span class="n">OpBuilder</span><span class="w"> </span><span class="n">b</span><span class="p">(</span><span class="n">n</span><span class="p">.</span><span class="n">loops</span><span class="p">.</span><span class="n">front</span><span class="p">());</span>
+<span class="w">        </span><span class="n">AffineMap</span><span class="w"> </span><span class="n">lin</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">linearMap</span><span class="p">(</span><span class="n">n</span><span class="p">,</span><span class="w"> </span><span class="n">ctx</span><span class="p">);</span>
+
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">Seg</span><span class="w"> </span><span class="o">&amp;</span><span class="n">seg</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">segs</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="c1">// Rebuild the loop shell over the same iteration space.</span>
+<span class="w">            </span><span class="n">IRMapping</span><span class="w"> </span><span class="n">m</span><span class="p">;</span>
+<span class="w">            </span><span class="n">SmallVector</span><span class="o">&lt;</span><span class="n">Value</span><span class="o">&gt;</span><span class="w"> </span><span class="n">ivs</span><span class="p">;</span>
+<span class="w">            </span><span class="n">Block</span><span class="o">*</span><span class="w"> </span><span class="n">inner</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">nullptr</span><span class="p">;</span>
+<span class="w">            </span><span class="n">OpBuilder</span><span class="w"> </span><span class="n">cur</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">b</span><span class="p">;</span>
+<span class="w">            </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">affine</span><span class="o">::</span><span class="n">AffineForOp</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">n</span><span class="p">.</span><span class="n">loops</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="k">auto</span><span class="w"> </span><span class="n">nf</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">affine</span><span class="o">::</span><span class="n">AffineForOp</span><span class="o">::</span><span class="n">create</span><span class="p">(</span>
+<span class="w">                    </span><span class="n">cur</span><span class="p">,</span>
+<span class="w">                    </span><span class="n">loc</span><span class="p">,</span>
+<span class="w">                    </span><span class="n">f</span><span class="p">.</span><span class="n">getConstantLowerBound</span><span class="p">(),</span>
+<span class="w">                    </span><span class="n">f</span><span class="p">.</span><span class="n">getConstantUpperBound</span><span class="p">(),</span>
+<span class="w">                    </span><span class="mi">1</span><span class="p">);</span>
+<span class="w">                </span><span class="n">m</span><span class="p">.</span><span class="n">map</span><span class="p">(</span><span class="n">f</span><span class="p">.</span><span class="n">getInductionVar</span><span class="p">(),</span><span class="w"> </span><span class="n">nf</span><span class="p">.</span><span class="n">getInductionVar</span><span class="p">());</span>
+<span class="w">                </span><span class="n">ivs</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">nf</span><span class="p">.</span><span class="n">getInductionVar</span><span class="p">());</span>
+<span class="w">                </span><span class="n">inner</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">nf</span><span class="p">.</span><span class="n">getBody</span><span class="p">();</span>
+<span class="w">                </span><span class="n">cur</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">OpBuilder</span><span class="o">::</span><span class="n">atBlockBegin</span><span class="p">(</span><span class="n">inner</span><span class="p">);</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="n">OpBuilder</span><span class="w"> </span><span class="n">ib</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">OpBuilder</span><span class="o">::</span><span class="n">atBlockBegin</span><span class="p">(</span><span class="n">inner</span><span class="p">);</span>
+
+<span class="w">            </span><span class="c1">// Read back everything that crossed the previous cut.</span>
+<span class="w">            </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">Value</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">seg</span><span class="p">.</span><span class="n">liveIn</span><span class="p">)</span>
+<span class="w">                </span><span class="n">m</span><span class="p">.</span><span class="n">map</span><span class="p">(</span>
+<span class="w">                    </span><span class="n">v</span><span class="p">,</span>
+<span class="w">                    </span><span class="n">affine</span><span class="o">::</span><span class="n">AffineLoadOp</span><span class="o">::</span><span class="n">create</span><span class="p">(</span><span class="n">ib</span><span class="p">,</span><span class="w"> </span><span class="n">loc</span><span class="p">,</span><span class="w"> </span><span class="n">slotOf</span><span class="p">[</span><span class="n">v</span><span class="p">],</span><span class="w"> </span><span class="n">lin</span><span class="p">,</span><span class="w"> </span><span class="n">ivs</span><span class="p">));</span>
+
+<span class="w">            </span><span class="c1">// Clone the segment, materialising each load the first time it is</span>
+<span class="w">            </span><span class="c1">// needed.</span>
+<span class="w">            </span><span class="n">std</span><span class="o">::</span><span class="n">function</span><span class="o">&lt;</span><span class="kt">void</span><span class="p">(</span><span class="n">Value</span><span class="p">)</span><span class="o">&gt;</span><span class="w"> </span><span class="n">ensure</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="o">&amp;</span><span class="p">](</span><span class="n">Value</span><span class="w"> </span><span class="n">v</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">m</span><span class="p">.</span><span class="n">lookupOrNull</span><span class="p">(</span><span class="n">v</span><span class="p">))</span><span class="w"> </span><span class="k">return</span><span class="p">;</span>
+<span class="w">                </span><span class="n">Operation</span><span class="o">*</span><span class="w"> </span><span class="n">d</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">v</span><span class="p">.</span><span class="n">getDefiningOp</span><span class="p">();</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">d</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="p">;</span>
+<span class="w">                </span><span class="c1">// Loads AND constants can live inside the body; each segment</span>
+<span class="w">                </span><span class="c1">// needs its own copy, since the original nest is erased at the</span>
+<span class="w">                </span><span class="c1">// end. A value defined OUTSIDE the nest (the usual place for</span>
+<span class="w">                </span><span class="c1">// constants) stays valid as it is.</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">d</span><span class="o">-&gt;</span><span class="n">getBlock</span><span class="p">()</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">n</span><span class="p">.</span><span class="n">body</span><span class="p">)</span>
+<span class="w">                    </span><span class="k">return</span><span class="p">;</span><span class="w"> </span><span class="c1">// defined outside the nest: still valid here</span>
+<span class="w">                </span><span class="c1">// Loads and constants get a private copy per segment; a fabric</span>
+<span class="w">                </span><span class="c1">// value that is not staged is recomputed, which means</span>
+<span class="w">                </span><span class="c1">// rebuilding its backward slice.</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">isa</span><span class="o">&lt;</span><span class="n">affine</span><span class="o">::</span><span class="n">AffineLoadOp</span><span class="p">,</span><span class="w"> </span><span class="n">arith</span><span class="o">::</span><span class="n">ConstantOp</span><span class="o">&gt;</span><span class="p">(</span><span class="n">d</span><span class="p">))</span>
+<span class="w">                    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">Value</span><span class="w"> </span><span class="n">o</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">d</span><span class="o">-&gt;</span><span class="n">getOperands</span><span class="p">())</span><span class="w"> </span><span class="n">ensure</span><span class="p">(</span><span class="n">o</span><span class="p">);</span>
+<span class="w">                </span><span class="n">m</span><span class="p">.</span><span class="n">map</span><span class="p">(</span><span class="n">v</span><span class="p">,</span><span class="w"> </span><span class="n">ib</span><span class="p">.</span><span class="n">clone</span><span class="p">(</span><span class="o">*</span><span class="n">d</span><span class="p">,</span><span class="w"> </span><span class="n">m</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">getResult</span><span class="p">(</span><span class="mi">0</span><span class="p">));</span>
+<span class="w">            </span><span class="p">};</span>
+<span class="w">            </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">unsigned</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">seg</span><span class="p">.</span><span class="n">begin</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">seg</span><span class="p">.</span><span class="n">end</span><span class="p">;</span><span class="w"> </span><span class="o">++</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">Value</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">n</span><span class="p">.</span><span class="n">ops</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">-&gt;</span><span class="n">getOperands</span><span class="p">())</span><span class="w"> </span><span class="n">ensure</span><span class="p">(</span><span class="n">v</span><span class="p">);</span>
+<span class="w">                </span><span class="n">ib</span><span class="p">.</span><span class="n">clone</span><span class="p">(</span><span class="o">*</span><span class="n">n</span><span class="p">.</span><span class="n">ops</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="w"> </span><span class="n">m</span><span class="p">);</span>
+<span class="w">            </span><span class="p">}</span>
+
+<span class="w">            </span><span class="c1">// Hand the cut edges to the next segment…</span>
+<span class="w">            </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">Value</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">seg</span><span class="p">.</span><span class="n">liveOut</span><span class="p">)</span>
+<span class="w">                </span><span class="n">affine</span><span class="o">::</span><span class="n">AffineStoreOp</span><span class="o">::</span><span class="n">create</span><span class="p">(</span>
+<span class="w">                    </span><span class="n">ib</span><span class="p">,</span>
+<span class="w">                    </span><span class="n">loc</span><span class="p">,</span>
+<span class="w">                    </span><span class="n">m</span><span class="p">.</span><span class="n">lookup</span><span class="p">(</span><span class="n">v</span><span class="p">),</span>
+<span class="w">                    </span><span class="n">slotOf</span><span class="p">[</span><span class="n">v</span><span class="p">],</span>
+<span class="w">                    </span><span class="n">lin</span><span class="p">,</span>
+<span class="w">                    </span><span class="n">ivs</span><span class="p">);</span>
+<span class="w">            </span><span class="c1">// …and write this segment's real outputs.</span>
+<span class="w">            </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="n">st</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">seg</span><span class="p">.</span><span class="n">stores</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">Value</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">st</span><span class="o">-&gt;</span><span class="n">getOperands</span><span class="p">())</span><span class="w"> </span><span class="n">ensure</span><span class="p">(</span><span class="n">v</span><span class="p">);</span>
+<span class="w">                </span><span class="n">ib</span><span class="p">.</span><span class="n">clone</span><span class="p">(</span><span class="o">*</span><span class="n">st</span><span class="p">.</span><span class="n">getOperation</span><span class="p">(),</span><span class="w"> </span><span class="n">m</span><span class="p">);</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="n">n</span><span class="p">.</span><span class="n">loops</span><span class="p">.</span><span class="n">front</span><span class="p">().</span><span class="n">erase</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="c1">// -------------------------------------------------------------------</span>
+<span class="w">    </span><span class="c1">// driver</span>
+
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="nf">runOnOperation</span><span class="p">()</span><span class="w"> </span><span class="k">override</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="n">func</span><span class="o">::</span><span class="n">FuncOp</span><span class="w"> </span><span class="n">fn</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">getOperation</span><span class="p">();</span>
+
+<span class="w">        </span><span class="n">SmallVector</span><span class="o">&lt;</span><span class="n">affine</span><span class="o">::</span><span class="n">AffineForOp</span><span class="o">&gt;</span><span class="w"> </span><span class="n">roots</span><span class="p">;</span>
+<span class="w">        </span><span class="n">fn</span><span class="p">.</span><span class="n">walk</span><span class="p">([</span><span class="o">&amp;</span><span class="p">](</span><span class="n">affine</span><span class="o">::</span><span class="n">AffineForOp</span><span class="w"> </span><span class="n">f</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">f</span><span class="o">-&gt;</span><span class="n">getParentOfType</span><span class="o">&lt;</span><span class="n">affine</span><span class="o">::</span><span class="n">AffineForOp</span><span class="o">&gt;</span><span class="p">())</span><span class="w"> </span><span class="n">roots</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">f</span><span class="p">);</span>
+<span class="w">        </span><span class="p">});</span>
+
+<span class="w">        </span><span class="c1">// Phase 1: decide what to split, and how big the temporary pool must</span>
+<span class="w">        </span><span class="c1">// be.</span>
+<span class="w">        </span><span class="k">struct</span><span class="w"> </span><span class="nc">Job</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">Nest</span><span class="w"> </span><span class="n">nest</span><span class="p">;</span>
+<span class="w">            </span><span class="n">SmallVector</span><span class="o">&lt;</span><span class="n">Seg</span><span class="o">&gt;</span><span class="w"> </span><span class="n">segs</span><span class="p">;</span>
+<span class="w">            </span><span class="kt">unsigned</span><span class="w"> </span><span class="n">peak</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">        </span><span class="p">};</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">Job</span><span class="o">&gt;</span><span class="w"> </span><span class="n">jobs</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">int64_t</span><span class="w"> </span><span class="n">poolElems</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">unsigned</span><span class="w"> </span><span class="n">poolSlots</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">affine</span><span class="o">::</span><span class="n">AffineForOp</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">roots</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">Job</span><span class="w"> </span><span class="n">j</span><span class="p">;</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">collect</span><span class="p">(</span><span class="n">root</span><span class="p">,</span><span class="w"> </span><span class="n">j</span><span class="p">.</span><span class="n">nest</span><span class="p">))</span><span class="w"> </span><span class="k">continue</span><span class="p">;</span>
+<span class="w">            </span><span class="c1">// Already one configuration? Leave it exactly as it is.</span>
+<span class="w">            </span><span class="kt">unsigned</span><span class="w"> </span><span class="n">fus</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">            </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">Operation</span><span class="o">*</span><span class="w"> </span><span class="n">op</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">j</span><span class="p">.</span><span class="n">nest</span><span class="p">.</span><span class="n">ops</span><span class="p">)</span><span class="w"> </span><span class="n">fus</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">fuCost</span><span class="p">(</span><span class="n">op</span><span class="p">);</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">fus</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">maxFUs</span><span class="p">)</span><span class="w"> </span><span class="k">continue</span><span class="p">;</span>
+<span class="w">            </span><span class="n">scheduleForMinLive</span><span class="p">(</span><span class="n">j</span><span class="p">.</span><span class="n">nest</span><span class="p">);</span>
+<span class="w">            </span><span class="c1">// Staging is the cheaper option when it fits — it costs streams,</span>
+<span class="w">            </span><span class="c1">// and a segment usually has spare FUs but not spare streams.</span>
+<span class="w">            </span><span class="c1">// Recomputing is the FALLBACK for nests whose live set is simply</span>
+<span class="w">            </span><span class="c1">// too wide to stage (the i64-multiply emulation keeps four</span>
+<span class="w">            </span><span class="c1">// half-word splits alive at once), so try the plain cut first and</span>
+<span class="w">            </span><span class="c1">// only pay FUs for recompute if it dead-ends.</span>
+<span class="w">            </span><span class="kt">unsigned</span><span class="w"> </span><span class="n">stuckAt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">stuckWidth</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">            </span><span class="kt">bool</span><span class="w"> </span><span class="n">ok</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">segment</span><span class="p">(</span><span class="n">j</span><span class="p">.</span><span class="n">nest</span><span class="p">,</span><span class="w"> </span><span class="n">j</span><span class="p">.</span><span class="n">segs</span><span class="p">,</span><span class="w"> </span><span class="n">stuckAt</span><span class="p">,</span><span class="w"> </span><span class="n">stuckWidth</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">ok</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">j</span><span class="p">.</span><span class="n">segs</span><span class="p">.</span><span class="n">size</span><span class="p">()</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">2</span>
+<span class="w">                </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">j</span><span class="p">.</span><span class="n">nest</span><span class="p">.</span><span class="n">elems</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="p">(</span><span class="kt">int64_t</span><span class="p">)</span><span class="n">maxTempElems</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">root</span><span class="p">.</span><span class="n">emitWarning</span><span class="p">(</span><span class="s">"partition-cgra-dfg: nest streams "</span><span class="p">)</span>
+<span class="w">                    </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">j</span><span class="p">.</span><span class="n">nest</span><span class="p">.</span><span class="n">elems</span>
+<span class="w">                    </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">" elements, so each cut would cost that much scratch "</span>
+<span class="w">                    </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"(budget "</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">maxTempElems</span><span class="p">.</span><span class="n">getValue</span><span class="p">()</span>
+<span class="w">                    </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"); left unpartitioned — raise max-temp-elems to allow "</span>
+<span class="w">                       </span><span class="s">"it"</span><span class="p">;</span>
+<span class="w">                </span><span class="k">continue</span><span class="p">;</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">ok</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">j</span><span class="p">.</span><span class="n">segs</span><span class="p">.</span><span class="n">size</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">j</span><span class="p">.</span><span class="n">segs</span><span class="p">.</span><span class="n">clear</span><span class="p">();</span>
+<span class="w">                </span><span class="n">ok</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">segment</span><span class="p">(</span><span class="n">j</span><span class="p">.</span><span class="n">nest</span><span class="p">,</span><span class="w"> </span><span class="n">j</span><span class="p">.</span><span class="n">segs</span><span class="p">,</span><span class="w"> </span><span class="n">stuckAt</span><span class="p">,</span><span class="w"> </span><span class="n">stuckWidth</span><span class="p">,</span><span class="w"> </span><span class="n">maxRemat</span><span class="p">);</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">ok</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">j</span><span class="p">.</span><span class="n">segs</span><span class="p">.</span><span class="n">size</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">root</span><span class="p">.</span><span class="n">emitWarning</span><span class="p">(</span><span class="s">"partition-cgra-dfg: body needs "</span><span class="p">)</span>
+<span class="w">                    </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">fus</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">" FUs (budget "</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">maxFUs</span><span class="p">.</span><span class="n">getValue</span><span class="p">()</span>
+<span class="w">                    </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">") but no affordable cut exists after op "</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">stuckAt</span>
+<span class="w">                    </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">" of "</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">j</span><span class="p">.</span><span class="n">nest</span><span class="p">.</span><span class="n">ops</span><span class="p">.</span><span class="n">size</span><span class="p">()</span>
+<span class="w">                    </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">" (every further cut exceeds the "</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">kInputNodes</span>
+<span class="w">                    </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"-input/"</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">kOutputNodes</span>
+<span class="w">                    </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"-output budget, or would carry a non-i32 value); left "</span>
+<span class="w">                       </span><span class="s">"on the host"</span><span class="p">;</span>
+<span class="w">                </span><span class="k">continue</span><span class="p">;</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="c1">// Slots live at once, by linear scan over the segments.</span>
+<span class="w">            </span><span class="kt">unsigned</span><span class="w"> </span><span class="n">live</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">peak</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">            </span><span class="n">DenseMap</span><span class="o">&lt;</span><span class="n">Value</span><span class="p">,</span><span class="w"> </span><span class="kt">unsigned</span><span class="o">&gt;</span><span class="w"> </span><span class="n">lastUse</span><span class="p">;</span>
+<span class="w">            </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="p">[</span><span class="n">si</span><span class="p">,</span><span class="w"> </span><span class="n">s</span><span class="p">]</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">llvm</span><span class="o">::</span><span class="n">enumerate</span><span class="p">(</span><span class="n">j</span><span class="p">.</span><span class="n">segs</span><span class="p">))</span>
+<span class="w">                </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">Value</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">s</span><span class="p">.</span><span class="n">liveIn</span><span class="p">)</span><span class="w"> </span><span class="n">lastUse</span><span class="p">[</span><span class="n">v</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">si</span><span class="p">;</span>
+<span class="w">            </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="p">[</span><span class="n">si</span><span class="p">,</span><span class="w"> </span><span class="n">s</span><span class="p">]</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">llvm</span><span class="o">::</span><span class="n">enumerate</span><span class="p">(</span><span class="n">j</span><span class="p">.</span><span class="n">segs</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">live</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">s</span><span class="p">.</span><span class="n">liveOut</span><span class="p">.</span><span class="n">size</span><span class="p">();</span>
+<span class="w">                </span><span class="n">peak</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">max</span><span class="p">(</span><span class="n">peak</span><span class="p">,</span><span class="w"> </span><span class="n">live</span><span class="p">);</span>
+<span class="w">                </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="o">&amp;</span><span class="n">kv</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">lastUse</span><span class="p">)</span>
+<span class="w">                    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">kv</span><span class="p">.</span><span class="n">second</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">si</span><span class="p">)</span><span class="w"> </span><span class="o">--</span><span class="n">live</span><span class="p">;</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="n">poolSlots</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">max</span><span class="p">(</span><span class="n">poolSlots</span><span class="p">,</span><span class="w"> </span><span class="n">peak</span><span class="p">);</span>
+<span class="w">            </span><span class="n">poolElems</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">max</span><span class="p">(</span><span class="n">poolElems</span><span class="p">,</span><span class="w"> </span><span class="n">j</span><span class="p">.</span><span class="n">nest</span><span class="p">.</span><span class="n">elems</span><span class="p">);</span>
+<span class="w">            </span><span class="n">j</span><span class="p">.</span><span class="n">peak</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">peak</span><span class="p">;</span>
+<span class="w">            </span><span class="n">jobs</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">j</span><span class="p">));</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">jobs</span><span class="p">.</span><span class="n">empty</span><span class="p">())</span><span class="w"> </span><span class="k">return</span><span class="p">;</span>
+
+<span class="w">        </span><span class="c1">// Phase 2: one shared pool for the whole function. Sizing it to the</span>
+<span class="w">        </span><span class="c1">// largest nest and reusing slots is what keeps this affordable — a</span>
+<span class="w">        </span><span class="c1">// private buffer per cut edge would multiply the network's activation</span>
+<span class="w">        </span><span class="c1">// memory several times over, and these boards have ~512 KB.</span>
+<span class="w">        </span><span class="n">OpBuilder</span><span class="w"> </span><span class="n">b</span><span class="p">(</span><span class="o">&amp;</span><span class="n">fn</span><span class="p">.</span><span class="n">getBody</span><span class="p">().</span><span class="n">front</span><span class="p">(),</span><span class="w"> </span><span class="n">fn</span><span class="p">.</span><span class="n">getBody</span><span class="p">().</span><span class="n">front</span><span class="p">().</span><span class="n">begin</span><span class="p">());</span>
+<span class="w">        </span><span class="c1">// Size each slot to the largest nest that actually REACHES it, not to</span>
+<span class="w">        </span><span class="c1">// the largest nest in the function. Slots are handed out greedily</span>
+<span class="w">        </span><span class="c1">// 0,1,2,…, so slot k is only ever touched by a nest needing more than k</span>
+<span class="w">        </span><span class="c1">// of them. One global size instead multiplies the biggest nest's stream</span>
+<span class="w">        </span><span class="c1">// by the deepest nest's slot count: on tiny_kws a single partitioned</span>
+<span class="w">        </span><span class="c1">// reduction streams 1x25x5x64x64 = 512 000 elements, and paying that</span>
+<span class="w">        </span><span class="c1">// for all 9 slots asked for 18.5 MB of pool against a 928 KB machine,</span>
+<span class="w">        </span><span class="c1">// when the nests that need 9 slots stream 8 000 elements each.</span>
+<span class="w">        </span><span class="n">SmallVector</span><span class="o">&lt;</span><span class="kt">int64_t</span><span class="o">&gt;</span><span class="w"> </span><span class="n">slotElems</span><span class="p">(</span><span class="n">poolSlots</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">Job</span><span class="w"> </span><span class="o">&amp;</span><span class="n">j</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">jobs</span><span class="p">)</span>
+<span class="w">            </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">unsigned</span><span class="w"> </span><span class="n">k</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">k</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">j</span><span class="p">.</span><span class="n">peak</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">k</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">poolSlots</span><span class="p">;</span><span class="w"> </span><span class="o">++</span><span class="n">k</span><span class="p">)</span>
+<span class="w">                </span><span class="n">slotElems</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">max</span><span class="p">(</span><span class="n">slotElems</span><span class="p">[</span><span class="n">k</span><span class="p">],</span><span class="w"> </span><span class="n">j</span><span class="p">.</span><span class="n">nest</span><span class="p">.</span><span class="n">elems</span><span class="p">);</span>
+<span class="w">        </span><span class="n">SmallVector</span><span class="o">&lt;</span><span class="n">Value</span><span class="o">&gt;</span><span class="w"> </span><span class="n">pool</span><span class="p">;</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">unsigned</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">poolSlots</span><span class="p">;</span><span class="w"> </span><span class="o">++</span><span class="n">i</span><span class="p">)</span>
+<span class="w">            </span><span class="n">pool</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span>
+<span class="w">                </span><span class="n">memref</span><span class="o">::</span><span class="n">AllocOp</span><span class="o">::</span><span class="n">create</span><span class="p">(</span>
+<span class="w">                    </span><span class="n">b</span><span class="p">,</span>
+<span class="w">                    </span><span class="n">fn</span><span class="p">.</span><span class="n">getLoc</span><span class="p">(),</span>
+<span class="w">                    </span><span class="n">MemRefType</span><span class="o">::</span><span class="n">get</span><span class="p">({</span><span class="n">slotElems</span><span class="p">[</span><span class="n">i</span><span class="p">]},</span><span class="w"> </span><span class="n">b</span><span class="p">.</span><span class="n">getI32Type</span><span class="p">())));</span>
+
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">Job</span><span class="w"> </span><span class="o">&amp;</span><span class="n">j</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">jobs</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="c1">// Assign slots: a temporary is live from the segment that writes it</span>
+<span class="w">            </span><span class="c1">// to the last segment that reads it, so slots can be recycled down</span>
+<span class="w">            </span><span class="c1">// the chain.</span>
+<span class="w">            </span><span class="n">DenseMap</span><span class="o">&lt;</span><span class="n">Value</span><span class="p">,</span><span class="w"> </span><span class="n">Value</span><span class="o">&gt;</span><span class="w"> </span><span class="n">slotOf</span><span class="p">;</span>
+<span class="w">            </span><span class="n">DenseMap</span><span class="o">&lt;</span><span class="n">Value</span><span class="p">,</span><span class="w"> </span><span class="kt">unsigned</span><span class="o">&gt;</span><span class="w"> </span><span class="n">lastUse</span><span class="p">;</span>
+<span class="w">            </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="p">[</span><span class="n">si</span><span class="p">,</span><span class="w"> </span><span class="n">s</span><span class="p">]</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">llvm</span><span class="o">::</span><span class="n">enumerate</span><span class="p">(</span><span class="n">j</span><span class="p">.</span><span class="n">segs</span><span class="p">))</span>
+<span class="w">                </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">Value</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">s</span><span class="p">.</span><span class="n">liveIn</span><span class="p">)</span><span class="w"> </span><span class="n">lastUse</span><span class="p">[</span><span class="n">v</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">si</span><span class="p">;</span>
+<span class="w">            </span><span class="n">SmallVector</span><span class="o">&lt;</span><span class="kt">bool</span><span class="o">&gt;</span><span class="w"> </span><span class="n">busy</span><span class="p">(</span><span class="n">pool</span><span class="p">.</span><span class="n">size</span><span class="p">(),</span><span class="w"> </span><span class="nb">false</span><span class="p">);</span>
+<span class="w">            </span><span class="n">SmallVector</span><span class="o">&lt;</span><span class="n">Value</span><span class="o">&gt;</span><span class="w"> </span><span class="n">freeAt</span><span class="p">;</span><span class="w"> </span><span class="c1">// value occupying each slot</span>
+<span class="w">            </span><span class="n">freeAt</span><span class="p">.</span><span class="n">resize</span><span class="p">(</span><span class="n">pool</span><span class="p">.</span><span class="n">size</span><span class="p">());</span>
+<span class="w">            </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="p">[</span><span class="n">si</span><span class="p">,</span><span class="w"> </span><span class="n">s</span><span class="p">]</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">llvm</span><span class="o">::</span><span class="n">enumerate</span><span class="p">(</span><span class="n">j</span><span class="p">.</span><span class="n">segs</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">Value</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">s</span><span class="p">.</span><span class="n">liveOut</span><span class="p">)</span>
+<span class="w">                    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">unsigned</span><span class="w"> </span><span class="n">k</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">k</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">pool</span><span class="p">.</span><span class="n">size</span><span class="p">();</span><span class="w"> </span><span class="o">++</span><span class="n">k</span><span class="p">)</span>
+<span class="w">                        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">busy</span><span class="p">[</span><span class="n">k</span><span class="p">])</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                            </span><span class="n">busy</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="w">                            </span><span class="n">freeAt</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">v</span><span class="p">;</span>
+<span class="w">                            </span><span class="n">slotOf</span><span class="p">[</span><span class="n">v</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">pool</span><span class="p">[</span><span class="n">k</span><span class="p">];</span>
+<span class="w">                            </span><span class="k">break</span><span class="p">;</span>
+<span class="w">                        </span><span class="p">}</span>
+<span class="w">                </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">unsigned</span><span class="w"> </span><span class="n">k</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">k</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">pool</span><span class="p">.</span><span class="n">size</span><span class="p">();</span><span class="w"> </span><span class="o">++</span><span class="n">k</span><span class="p">)</span>
+<span class="w">                    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">busy</span><span class="p">[</span><span class="n">k</span><span class="p">])</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                        </span><span class="k">auto</span><span class="w"> </span><span class="n">it</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">lastUse</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="n">freeAt</span><span class="p">[</span><span class="n">k</span><span class="p">]);</span>
+<span class="w">                        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">it</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">lastUse</span><span class="p">.</span><span class="n">end</span><span class="p">()</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">it</span><span class="o">-&gt;</span><span class="n">second</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">si</span><span class="p">)</span>
+<span class="w">                            </span><span class="n">busy</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="w">                    </span><span class="p">}</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="n">rewrite</span><span class="p">(</span><span class="n">j</span><span class="p">.</span><span class="n">nest</span><span class="p">,</span><span class="w"> </span><span class="n">j</span><span class="p">.</span><span class="n">segs</span><span class="p">,</span><span class="w"> </span><span class="n">slotOf</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">};</span>
+<span class="p">}</span><span class="w"> </span><span class="c1">// namespace</span>
+
+<span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">mlir</span><span class="o">::</span><span class="n">Pass</span><span class="o">&gt;</span><span class="w"> </span><span class="n">mlir</span><span class="o">::</span><span class="n">cgra</span><span class="o">::</span><span class="n">createCGRAPartitionDFGPass</span><span class="p">()</span>
+<span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">make_unique</span><span class="o">&lt;</span><span class="n">CGRAPartitionDFGPass</span><span class="o">&gt;</span><span class="p">();</span><span class="w"> </span><span class="p">}</span>
+</pre></div>
+</div>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,320 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Program Listing for File EmitHLSToVivadoTcl.cpp &mdash; picea 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/collapsible-lists/css/tree_view.css?v=a885cde7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js?v=73120307"></script>
+      <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js?v=660e4f45"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            picea
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Installation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../README.html">About the project</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#guides">Guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#related-projects">Related projects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#development-environment-nix">Development Environment (Nix)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#build-on-ubuntu-24-04-no-nix">Build on Ubuntu 24.04 (no Nix)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#gurobi-license">Gurobi license</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#installing">Installing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#run-the-tests">Run the tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#build-the-documentation">Build the documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#compiling-a-design">Compiling a design</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#running-a-design-on-the-board">Running a design on the board</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#exporting-a-profiled-application-to-mocasin">Exporting a profiled application to Mocasin</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Guides</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../guides/laksa.html">The FPGA Variant using LAKSA backend</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/cgra.html">The CGRA Variant</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">MLIR Dialects</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/Base2Ops.html">‘base2’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/CGRAOps.html">‘cgra’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/DFGOps.html">‘dfg’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/EmitHLSOps.html">‘emithls’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/FilterOps.html">‘filter’ Dialect</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Passes</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/PICEAConversionPasses.html">PICEA Conversion Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/CGRAPasses.html">CGRA Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/DFGPasses.html">DFG Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/EmitHLSPasses.html">Emit HLS Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/FuncExtPasses.html">Func Ext Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/LinalgExtPasses.html">Linalg Ext Passes</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">C++ API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="library_root.html">C++ API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">picea</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Program Listing for File EmitHLSToVivadoTcl.cpp</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/program_listing_file_lib_Target_EmitHLSToVivadoTcl_EmitHLSToVivadoTcl.cpp.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="program-listing-for-file-emithlstovivadotcl-cpp">
+<span id="program-listing-file-lib-target-emithlstovivadotcl-emithlstovivadotcl-cpp"></span><h1>Program Listing for File EmitHLSToVivadoTcl.cpp<a class="headerlink" href="#program-listing-for-file-emithlstovivadotcl-cpp" title="Link to this heading"></a></h1>
+<p>↰ <a class="reference internal" href="file_lib_Target_EmitHLSToVivadoTcl_EmitHLSToVivadoTcl.cpp.html#file-lib-target-emithlstovivadotcl-emithlstovivadotcl-cpp"><span class="std std-ref">Return to documentation for file</span></a> (<code class="docutils literal notranslate"><span class="pre">lib/Target/EmitHLSToVivadoTcl/EmitHLSToVivadoTcl.cpp</span></code>)</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="c1">// Implementation of translation EmitHLSToVivadoTcl</span>
+<span class="c1">//</span>
+<span class="c1">// @file</span>
+<span class="c1">// @author     Jiahong Bi (jiahong.bi@tu-dresden.de)</span>
+
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"picea-mlir/Dialect/EmitHLS/IR/EmitHLS.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"picea-mlir/Target/EmitHLSToVivadoTcl/VivadoTclEmitter.h"</span>
+
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"llvm/Support/CommandLine.h"</span>
+
+<span class="k">using</span><span class="w"> </span><span class="k">namespace</span><span class="w"> </span><span class="nn">mlir</span><span class="p">;</span>
+<span class="k">using</span><span class="w"> </span><span class="k">namespace</span><span class="w"> </span><span class="nn">mlir</span><span class="o">::</span><span class="nn">emithls</span><span class="p">;</span>
+
+<span class="k">namespace</span><span class="w"> </span><span class="p">{</span>
+
+<span class="n">llvm</span><span class="o">::</span><span class="n">cl</span><span class="o">::</span><span class="n">opt</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span><span class="w"> </span><span class="n">clVivadoTargetDevice</span><span class="p">(</span>
+<span class="w">    </span><span class="s">"vivado-target-device"</span><span class="p">,</span>
+<span class="w">    </span><span class="n">llvm</span><span class="o">::</span><span class="n">cl</span><span class="o">::</span><span class="n">desc</span><span class="p">(</span>
+<span class="w">        </span><span class="s">"Target part passed to Vivado's create_project in the generated "</span>
+<span class="w">        </span><span class="s">"run_vivado.tcl"</span><span class="p">),</span>
+<span class="w">    </span><span class="n">llvm</span><span class="o">::</span><span class="n">cl</span><span class="o">::</span><span class="n">init</span><span class="p">(</span><span class="s">"xck26-sfvc784-2LV-c"</span><span class="p">));</span>
+
+<span class="p">}</span><span class="w"> </span><span class="c1">// namespace</span>
+
+<span class="c1">// Finds the function marked as the design's top function, i.e. the one whose</span>
+<span class="c1">// body contains a PragmaTopInterfaceOp. Its symbol name doubles as the</span>
+<span class="c1">// Vivado project name and the HLS IP's VLNV/cell name.</span>
+<span class="k">static</span><span class="w"> </span><span class="n">FailureOr</span><span class="o">&lt;</span><span class="n">FuncOp</span><span class="o">&gt;</span><span class="w"> </span><span class="n">findTopFunc</span><span class="p">(</span><span class="n">ModuleOp</span><span class="w"> </span><span class="n">moduleOp</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">FuncOp</span><span class="w"> </span><span class="n">topFunc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">nullptr</span><span class="p">;</span>
+<span class="w">    </span><span class="k">auto</span><span class="w"> </span><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">moduleOp</span><span class="p">.</span><span class="n">walk</span><span class="p">([</span><span class="o">&amp;</span><span class="p">](</span><span class="n">PragmaTopInterfaceOp</span><span class="w"> </span><span class="n">topInterfaceOp</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">FuncOp</span><span class="w"> </span><span class="n">funcOp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">topInterfaceOp</span><span class="o">-&gt;</span><span class="n">getParentOfType</span><span class="o">&lt;</span><span class="n">FuncOp</span><span class="o">&gt;</span><span class="p">();</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">funcOp</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">topFunc</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">WalkResult</span><span class="o">::</span><span class="n">interrupt</span><span class="p">();</span>
+<span class="w">        </span><span class="n">topFunc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">funcOp</span><span class="p">;</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">WalkResult</span><span class="o">::</span><span class="n">advance</span><span class="p">();</span>
+<span class="w">    </span><span class="p">});</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">result</span><span class="p">.</span><span class="n">wasInterrupted</span><span class="p">()</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="o">!</span><span class="n">topFunc</span><span class="p">)</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">moduleOp</span><span class="o">-&gt;</span><span class="n">emitError</span><span class="p">(</span>
+<span class="w">            </span><span class="s">"expected exactly one function containing a top_interface "</span>
+<span class="w">            </span><span class="s">"pragma"</span><span class="p">);</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">topFunc</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c1">//===----------------------------------------------------------------------===//</span>
+<span class="c1">// Translation entry point</span>
+<span class="c1">//===----------------------------------------------------------------------===//</span>
+
+<span class="n">LogicalResult</span><span class="w"> </span><span class="n">emithls</span><span class="o">::</span><span class="n">translateEmitHLSToVivadoTcl</span><span class="p">(</span><span class="n">ModuleOp</span><span class="w"> </span><span class="n">op</span><span class="p">,</span><span class="w"> </span><span class="n">raw_ostream</span><span class="w"> </span><span class="o">&amp;</span><span class="n">os</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">FailureOr</span><span class="o">&lt;</span><span class="n">FuncOp</span><span class="o">&gt;</span><span class="w"> </span><span class="n">topFunc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">findTopFunc</span><span class="p">(</span><span class="n">op</span><span class="p">);</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">failed</span><span class="p">(</span><span class="n">topFunc</span><span class="p">))</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">failure</span><span class="p">();</span>
+<span class="w">    </span><span class="n">StringRef</span><span class="w"> </span><span class="n">projectName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">topFunc</span><span class="o">-&gt;</span><span class="n">getSymName</span><span class="p">();</span>
+<span class="w">    </span><span class="kt">unsigned</span><span class="w"> </span><span class="n">numArgs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">topFunc</span><span class="o">-&gt;</span><span class="n">getNumArguments</span><span class="p">();</span>
+
+<span class="w">    </span><span class="n">os</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"set project_name </span><span class="se">\"</span><span class="s">"</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">projectName</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"</span><span class="se">\"\n</span><span class="s">"</span>
+<span class="w">       </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"set project_dir </span><span class="se">\"</span><span class="s">./vivado_project/</span><span class="se">\"\n</span><span class="s">"</span>
+<span class="w">       </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"set project_path </span><span class="se">\"</span><span class="s">$project_dir/$project_name.xpr</span><span class="se">\"\n</span><span class="s">"</span>
+<span class="w">       </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"set target_device </span><span class="se">\"</span><span class="s">"</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">clVivadoTargetDevice</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"</span><span class="se">\"\n</span><span class="s">"</span>
+<span class="w">       </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"set ip_repo_dir </span><span class="se">\"</span><span class="s">./hls_project</span><span class="se">\"\n</span><span class="s">"</span>
+<span class="w">       </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"if {[file exists $project_dir]} {</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">       </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"  puts </span><span class="se">\"</span><span class="s">INFO: Project directory exists.</span><span class="se">\"\n</span><span class="s">"</span>
+<span class="w">       </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"  exit 1</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">       </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"}</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">       </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"puts </span><span class="se">\"</span><span class="s">INFO: Creating a new project...</span><span class="se">\"\n</span><span class="s">"</span>
+<span class="w">       </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"create_project $project_name $project_dir -part $target_device</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">       </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"set_property part $target_device [current_project]</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">       </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"set_property default_lib xil_defaultlib [current_project]</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">       </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"set_property target_language Verilog [current_project]</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">       </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"if {[file exists $ip_repo_dir]} {</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">       </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"  puts </span><span class="se">\"</span><span class="s">INFO: Adding IP repository: $ip_repo_dir</span><span class="se">\"\n</span><span class="s">"</span>
+<span class="w">       </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"  set_property ip_repo_paths $ip_repo_dir [current_project]</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">       </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"} else {</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">       </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"  puts </span><span class="se">\"</span><span class="s">WARNING: IP repository directory $ip_repo_dir does not "</span>
+<span class="w">          </span><span class="s">"exist!</span><span class="se">\"\n</span><span class="s">"</span>
+<span class="w">       </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"  exit 1</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">       </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"}</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">       </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"set bd_name </span><span class="se">\"</span><span class="s">${project_name}_bd</span><span class="se">\"\n</span><span class="s">"</span>
+<span class="w">       </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"puts </span><span class="se">\"</span><span class="s">INFO: Creating block design: $bd_name</span><span class="se">\"\n</span><span class="s">"</span>
+<span class="w">       </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"create_bd_design $bd_name</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">       </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"puts </span><span class="se">\"</span><span class="s">INFO: Adding Zynq MPSoC to the block design</span><span class="se">\"\n</span><span class="s">"</span>
+<span class="w">       </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"set zynq_mpsoc [create_bd_cell -type ip -vlnv "</span>
+<span class="w">          </span><span class="s">"xilinx.com:ip:zynq_ultra_ps_e:3.5 zynq_mpsoc]</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">       </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"puts </span><span class="se">\"</span><span class="s">INFO: Applying board preset to Zynq MPSoC</span><span class="se">\"\n</span><span class="s">"</span>
+<span class="w">       </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"apply_bd_automation -rule xilinx.com:bd_rule:zynq_ultra_ps_e "</span>
+<span class="w">          </span><span class="s">"-config {apply_board_preset </span><span class="se">\"</span><span class="s">1</span><span class="se">\"</span><span class="s">} $zynq_mpsoc</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">       </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"set_property CONFIG.PSU__FPGA_PL0_ENABLE {1} $zynq_mpsoc</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">       </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"set_property CONFIG.PSU__USE__M_AXI_GP0 {1} $zynq_mpsoc</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">       </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"set_property CONFIG.PSU__USE__M_AXI_GP1 {0} $zynq_mpsoc</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">       </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"set_property CONFIG.PSU__USE__M_AXI_GP2 {0} $zynq_mpsoc</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">       </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"set_property CONFIG.PSU__USE__S_AXI_GP0 {1} $zynq_mpsoc</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">       </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"set_property CONFIG.PSU__CRL_APB__PL0_REF_CTRL__FREQMHZ {100} "</span>
+<span class="w">          </span><span class="s">"$zynq_mpsoc</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">       </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"puts </span><span class="se">\"</span><span class="s">INFO: Adding HLS IP kernel to the block design</span><span class="se">\"\n</span><span class="s">"</span>
+<span class="w">       </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"create_bd_cell -type ip -vlnv xilinx.com:hls:"</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">projectName</span>
+<span class="w">       </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">":1.0 "</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">projectName</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">       </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"apply_bd_automation -rule xilinx.com:bd_rule:axi4 -config { "</span>
+<span class="w">          </span><span class="s">"Clk_master {Auto} Clk_slave {Auto} Clk_xbar {Auto} Master "</span>
+<span class="w">          </span><span class="s">"{/zynq_mpsoc/M_AXI_HPM0_FPD} Slave {/"</span>
+<span class="w">       </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">projectName</span>
+<span class="w">       </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"/s_axi_control} ddr_seg {Auto} intc_ip {New AXI SmartConnect} "</span>
+<span class="w">          </span><span class="s">"master_apm {0}}  [get_bd_intf_pins "</span>
+<span class="w">       </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">projectName</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"/s_axi_control]</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+
+<span class="w">    </span><span class="c1">// Each top-function argument becomes an m_axi_gmem_argN master port on the</span>
+<span class="w">    </span><span class="c1">// HLS IP, which needs to be wired to the Zynq's HPC0 slave port. Automating</span>
+<span class="w">    </span><span class="c1">// the first one enables Zynq's S_AXI_HPC0_FPD slave port and creates a new</span>
+<span class="w">    </span><span class="c1">// AXI SmartConnect. Every subsequent one reuses that same SmartConnect,</span>
+<span class="w">    </span><span class="c1">// automating the HLS IP's own port instead since the Zynq side is already</span>
+<span class="w">    </span><span class="c1">// wired up.</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">unsigned</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">numArgs</span><span class="p">;</span><span class="w"> </span><span class="o">++</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">os</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"apply_bd_automation -rule xilinx.com:bd_rule:axi4 -config { "</span>
+<span class="w">              </span><span class="s">"Clk_master {Auto} Clk_slave {Auto} Clk_xbar {Auto} Master {/"</span>
+<span class="w">           </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">projectName</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"/m_axi_gmem_arg"</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">i</span>
+<span class="w">           </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"} Slave {/zynq_mpsoc/S_AXI_HPC0_FPD} ddr_seg {Auto} intc_ip {"</span><span class="p">;</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">i</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
+<span class="w">            </span><span class="n">os</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"New AXI SmartConnect"</span><span class="p">;</span>
+<span class="w">        </span><span class="k">else</span>
+<span class="w">            </span><span class="n">os</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"/axi_smc_1"</span><span class="p">;</span>
+<span class="w">        </span><span class="n">os</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"} master_apm {0}} [get_bd_intf_pins "</span><span class="p">;</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">i</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
+<span class="w">            </span><span class="n">os</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"zynq_mpsoc/S_AXI_HPC0_FPD"</span><span class="p">;</span>
+<span class="w">        </span><span class="k">else</span>
+<span class="w">            </span><span class="n">os</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">projectName</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"/m_axi_gmem_arg"</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">i</span><span class="p">;</span>
+<span class="w">        </span><span class="n">os</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"]</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="n">os</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"puts </span><span class="se">\"</span><span class="s">INFO: Validating block design: $bd_name</span><span class="se">\"\n</span><span class="s">"</span>
+<span class="w">       </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"if {[catch {validate_bd_design} result]} {</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">       </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"    puts </span><span class="se">\"</span><span class="s">Block design validation failed: $result</span><span class="se">\"\n</span><span class="s">"</span>
+<span class="w">       </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"    exit 1</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">       </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"}</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">       </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"puts </span><span class="se">\"</span><span class="s">INFO: Validating succeeded</span><span class="se">\"\n</span><span class="s">"</span>
+<span class="w">       </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"regenerate_bd_layout</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">       </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"save_bd_design</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">       </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"puts </span><span class="se">\"</span><span class="s">INFO: Closing block design: $bd_name</span><span class="se">\"\n</span><span class="s">"</span>
+<span class="w">       </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"make_wrapper -files [get_files "</span>
+<span class="w">          </span><span class="s">"</span><span class="se">\"</span><span class="s">$project_dir/$project_name.srcs/sources_1/bd/$bd_name/"</span>
+<span class="w">          </span><span class="s">"$bd_name.bd</span><span class="se">\"</span><span class="s">] -top</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">       </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"set wrapper_path "</span>
+<span class="w">          </span><span class="s">"</span><span class="se">\"</span><span class="s">$project_dir/$project_name.srcs/sources_1/bd/$bd_name/hdl/"</span>
+<span class="w">          </span><span class="s">"${bd_name}_wrapper.v</span><span class="se">\"\n</span><span class="s">"</span>
+<span class="w">       </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"add_files $wrapper_path</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">       </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"set_property top </span><span class="se">\"</span><span class="s">${bd_name}_wrapper</span><span class="se">\"</span><span class="s"> [get_filesets sources_1]</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">       </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"set max_cores [get_param general.maxThreads]</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">       </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"puts </span><span class="se">\"</span><span class="s">INFO: Using up to $max_cores threads for synthesis and "</span>
+<span class="w">          </span><span class="s">"implementation.</span><span class="se">\"\n</span><span class="s">"</span>
+<span class="w">       </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"puts </span><span class="se">\"</span><span class="s">INFO: Running Synthesis...</span><span class="se">\"\n</span><span class="s">"</span>
+<span class="w">       </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"launch_runs synth_1 -jobs $max_cores</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">       </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"wait_on_run synth_1</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">       </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"set synth_status [get_property STATUS [get_runs synth_1]]</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">       </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"if {![string match </span><span class="se">\"</span><span class="s">*Complete!*</span><span class="se">\"</span><span class="s"> $synth_status]} {</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">       </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"    puts </span><span class="se">\"</span><span class="s">ERROR: Synthesis failed with status: $synth_status</span><span class="se">\"\n</span><span class="s">"</span>
+<span class="w">       </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"    exit 1</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">       </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"}</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">       </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"puts </span><span class="se">\"</span><span class="s">INFO: Synthesis completed successfully</span><span class="se">\"\n</span><span class="s">"</span>
+<span class="w">       </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"puts </span><span class="se">\"</span><span class="s">INFO: Running Implementation...</span><span class="se">\"\n</span><span class="s">"</span>
+<span class="w">       </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"reset_run impl_1</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">       </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"launch_runs impl_1 -to_step write_bitstream -jobs $max_cores</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">       </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"wait_on_run impl_1</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">       </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"set impl_status [get_property STATUS [get_runs impl_1]]</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">       </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"if {![string match </span><span class="se">\"</span><span class="s">*Complete!*</span><span class="se">\"</span><span class="s"> $impl_status]} {</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">       </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"    puts </span><span class="se">\"</span><span class="s">ERROR: Implementation failed with status: "</span>
+<span class="w">          </span><span class="s">"$impl_status</span><span class="se">\"\n</span><span class="s">"</span>
+<span class="w">       </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"    exit 1</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">       </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"}</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">       </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"puts </span><span class="se">\"</span><span class="s">INFO: Implementation completed successfully</span><span class="se">\"\n</span><span class="s">"</span>
+<span class="w">       </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"puts </span><span class="se">\"</span><span class="s">INFO: Exporting hardware with bitstream</span><span class="se">\"\n</span><span class="s">"</span>
+<span class="w">       </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"write_hw_platform -fixed -include_bit -force -file "</span>
+<span class="w">          </span><span class="s">"$project_dir/${project_name}_bd.xsa</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">       </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"exit</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">success</span><span class="p">();</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

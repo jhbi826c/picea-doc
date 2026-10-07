@@ -1,0 +1,457 @@
+
+.. _program_listing_file_include_picea-mlir_Dialect_CGRA_Transforms_CGRAAnalysisUtils.h:
+
+Program Listing for File CGRAAnalysisUtils.h
+============================================
+
+|exhale_lsh| :ref:`Return to documentation for file <file_include_picea-mlir_Dialect_CGRA_Transforms_CGRAAnalysisUtils.h>` (``include/picea-mlir/Dialect/CGRA/Transforms/CGRAAnalysisUtils.h``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. code-block:: cpp
+
+   
+   
+   #pragma once
+   
+   #include "mlir/Dialect/Affine/IR/AffineOps.h"
+   #include "mlir/Dialect/Arith/IR/Arith.h"
+   #include "mlir/Dialect/Func/IR/FuncOps.h"
+   #include "mlir/Dialect/LLVMIR/LLVMDialect.h"
+   #include "mlir/Dialect/Math/IR/Math.h"
+   #include "mlir/Dialect/MemRef/IR/MemRef.h"
+   #include "mlir/Dialect/SCF/IR/SCF.h"
+   #include "mlir/IR/Matchers.h"
+   #include "mlir/IR/Region.h"
+   #include "mlir/IR/TypeUtilities.h"
+   
+   #include "llvm/ADT/APInt.h"
+   #include "llvm/ADT/SmallPtrSet.h"
+   #include "llvm/ADT/SmallVector.h"
+   
+   #include <functional>
+   #include <optional>
+   
+   namespace mlir::cgra {
+   
+   struct Pow2Divisor {
+       unsigned k;    
+       bool negative; 
+   };
+   
+   inline std::optional<Pow2Divisor> fabricPow2Divisor(mlir::Operation* op)
+   {
+       if (!mlir::isa<
+               mlir::arith::DivSIOp,
+               mlir::arith::DivUIOp,
+               mlir::arith::RemSIOp,
+               mlir::arith::RemUIOp,
+               mlir::arith::CeilDivSIOp,
+               mlir::arith::CeilDivUIOp,
+               mlir::arith::FloorDivSIOp>(op))
+           return std::nullopt;
+       auto ity = mlir::dyn_cast<mlir::IntegerType>(op->getOperand(1).getType());
+       if (!ity || ity.getWidth() < 2) return std::nullopt;
+   
+       llvm::APInt c;
+       if (!mlir::matchPattern(op->getOperand(1), mlir::m_ConstantInt(&c))
+           || c.isZero())
+           return std::nullopt;
+   
+       const bool isSigned = mlir::isa<
+           mlir::arith::DivSIOp,
+           mlir::arith::RemSIOp,
+           mlir::arith::CeilDivSIOp,
+           mlir::arith::FloorDivSIOp>(op);
+       if (!isSigned) {
+           if (!c.isPowerOf2()) return std::nullopt;
+           return Pow2Divisor{c.logBase2(), false};
+       }
+       if (c.isMinSignedValue()) return std::nullopt;
+       const bool neg = c.isNegative();
+       llvm::APInt m = neg ? -c : c;
+       if (!m.isPowerOf2()) return std::nullopt;
+       if (neg
+           && mlir::isa<mlir::arith::CeilDivSIOp, mlir::arith::FloorDivSIOp>(op))
+           return std::nullopt;
+       return Pow2Divisor{m.logBase2(), neg};
+   }
+   
+   inline bool isFabricExpandableMathOp(mlir::Operation* op)
+   {
+       if (!mlir::isa<
+               mlir::math::AbsIOp,
+               mlir::math::CtPopOp,
+               mlir::math::CountLeadingZerosOp,
+               mlir::math::CountTrailingZerosOp>(op))
+           return false;
+       auto ity = mlir::dyn_cast<mlir::IntegerType>(op->getResultTypes()[0]);
+       if (!ity) return false;
+       return mlir::isa<mlir::math::AbsIOp>(op) ? ity.getWidth() >= 2
+                                                : ity.getWidth() == 32;
+   }
+   
+   enum class FabricOpSupport {
+       Ok, 
+       Unlowerable, 
+       Unknown      
+   };
+   
+   inline bool opTouchesFloat(mlir::Operation* op)
+   {
+       auto isF = [](mlir::Type t) {
+           return mlir::isa<mlir::FloatType>(mlir::getElementTypeOrSelf(t));
+       };
+       for (mlir::Type t : op->getOperandTypes())
+           if (isF(t)) return true;
+       for (mlir::Type t : op->getResultTypes())
+           if (isF(t)) return true;
+       return false;
+   }
+   
+   inline FabricOpSupport classifyFabricOp(mlir::Operation* op)
+   {
+       using namespace mlir;
+   
+       // Nothing the CGRA flow can lower to a fabric op. Floating point has no
+       // fabric datapath, and calls cannot be placed on a PE.
+       if (opTouchesFloat(op)) return FabricOpSupport::Unlowerable;
+       if (isa<func::CallOp, func::CallIndirectOp>(op))
+           return FabricOpSupport::Unlowerable;
+   
+       // Divide / remainder: there is no divide FU, but a POWER-OF-TWO CONSTANT
+       // divisor needs none — `--expand-fabric-ops` rewrites it into shifts and
+       // masks. Any other divisor would need a multiply-high magic-number sequence
+       // that does not fit a configuration, so it stays unlowerable. The predicate
+       // is shared with the expansion (@ref fabricPow2Divisor) so the two can
+       // never disagree and offload a divide that is then left in place.
+       if (isa<arith::DivSIOp,
+               arith::DivUIOp,
+               arith::RemSIOp,
+               arith::RemUIOp,
+               arith::CeilDivSIOp,
+               arith::CeilDivUIOp,
+               arith::FloorDivSIOp>(op))
+           return fabricPow2Divisor(op) ? FabricOpSupport::Ok
+                                        : FabricOpSupport::Unlowerable;
+   
+       // `math`: the integer intrinsics `--expand-fabric-ops` expands into ALU
+       // sequences are fine (absi is 3 ops; the bit counts are the SWAR chains,
+       // which need `--partition-cgra-dfg` to fit but do map). Everything else in
+       // the dialect is floating point and has no datapath.
+       if (op->getDialect() && op->getDialect()->getNamespace() == "math")
+           return isFabricExpandableMathOp(op) ? FabricOpSupport::Ok
+                                               : FabricOpSupport::Unlowerable;
+   
+       // Loop / conditional / memory control and constants — not datapath ops.
+       if (isa<affine::AffineForOp,
+               affine::AffineIfOp,
+               affine::AffineLoadOp,
+               affine::AffineStoreOp,
+               affine::AffineYieldOp,
+               affine::AffineApplyOp,
+               affine::AffineMinOp,
+               affine::AffineMaxOp,
+               scf::YieldOp,
+               memref::LoadOp,
+               memref::StoreOp,
+               memref::GetGlobalOp,
+               arith::ConstantOp>(op))
+           return FabricOpSupport::Ok;
+   
+       // An `scf.if` is control flow the datapath cannot execute, so it only
+       // survives as far as the mapper if a transform removed it first:
+       // `--predicated-store-to-select` rewrites the store-guard form (no results)
+       // and if-converts a VALUE-PRODUCING one whose arms are pure. A
+       // value-producing `scf.if` still standing here is neither — its arms have
+       // side effects, or it was not run — and `--export-loop-dfg` emits no node
+       // for it, so the value it yields would silently vanish from the DFG. Flag
+       // it rather than promise it maps (this classification used to accept every
+       // `scf.if` unconditionally).
+       if (auto ifOp = dyn_cast<scf::IfOp>(op))
+           return ifOp.getNumResults() == 0 ? FabricOpSupport::Ok
+                                            : FabricOpSupport::Unknown;
+       if (op->hasTrait<OpTrait::IsTerminator>())
+           return FabricOpSupport::Ok; // cgra.yield and friends
+   
+       // Integer compare: the fabric comparator only realises SIGNED `>0` and
+       // `==0` against zero. `--normalize-cgra-compare` reduces
+       // slt/sle/sgt/sge/eq/ne to that, and reduces the unsigned ordered
+       // predicates too by flipping the sign bit of both operands first. An
+       // unsigned compare therefore only survives to here if normalize could not
+       // rewrite it (non-integer operands, or the pass was not run) — it would
+       // reach the mapper unmappable, so flag it
+       // (@ref Unknown → a warning).
+       if (auto cmp = dyn_cast<arith::CmpIOp>(op)) {
+           switch (cmp.getPredicate()) {
+           case arith::CmpIPredicate::ult:
+           case arith::CmpIPredicate::ule:
+           case arith::CmpIPredicate::ugt:
+           case arith::CmpIPredicate::uge: return FabricOpSupport::Unknown;
+           default: return FabricOpSupport::Ok;
+           }
+       }
+   
+       // Fabric-native FU ops, plus the ones a CGRA transform lowers onto them:
+       //   max/min   -> --affine-to-cgra          (cmp + select)
+       //   ext/trunc -> --legalize-to-i32 removed / --export-loop-dfg passthrough
+       //   i4/i8/i16/i64 arith is the SAME op type at another width, legalized to
+       //   i32.
+       if (isa<arith::AddIOp,
+               arith::SubIOp,
+               arith::MulIOp,
+               arith::AndIOp,
+               arith::OrIOp,
+               arith::XOrIOp,
+               arith::ShLIOp,
+               arith::ShRSIOp,
+               arith::ShRUIOp,
+               arith::SelectOp,
+               arith::MaxSIOp,
+               arith::MaxUIOp,
+               arith::MinSIOp,
+               arith::MinUIOp,
+               arith::ExtSIOp,
+               arith::ExtUIOp,
+               arith::TruncIOp,
+               arith::IndexCastOp,
+               arith::IndexCastUIOp>(op))
+           return FabricOpSupport::Ok;
+   
+       return FabricOpSupport::Unknown;
+   }
+   
+   inline bool
+   hasBackpressureCycle(mlir::affine::AffineForOp loop, unsigned bufferDepth = 2)
+   {
+       using namespace mlir;
+       llvm::DenseMap<Value, unsigned> depth; // distance from a load
+       llvm::SmallVector<Operation*, 32> ops;
+       loop.walk([&](Operation* op) {
+           if (isa<affine::AffineLoadOp>(op)) {
+               depth[op->getResult(0)] = 0;
+               ops.push_back(op);
+           } else if (
+               op->getNumResults() == 1
+               && isa<arith::ArithDialect>(op->getDialect()))
+               ops.push_back(op);
+       });
+       // Plain op depth: --expand-fabric-ops has already turned an arith.shrsi
+       // into the real shift/xor/sub sequence, so an MLIR op IS a fabric FU here.
+       // While the expansion lived in the exporter this had to weight by a private
+       // cost table, and that copy drifted — a depth-3 skew read as depth 1 and
+       // the analysis missed the very configurations it was written for.
+       for (Operation* op : ops) {
+           if (isa<affine::AffineLoadOp>(op)) continue;
+           unsigned d = 0;
+           bool known = false;
+           for (Value v : op->getOperands()) {
+               auto it = depth.find(v);
+               if (it != depth.end()) {
+                   d = std::max(d, it->second);
+                   known = true;
+               }
+           }
+           if (known) depth[op->getResult(0)] = d + 1;
+       }
+       // Root of a value: the load its longest path starts from.
+       std::function<Value(Value)> root = [&](Value v) -> Value {
+           Operation* def = v.getDefiningOp();
+           if (!def || isa<affine::AffineLoadOp>(def)) return v;
+           Value best;
+           unsigned bd = 0;
+           for (Value o : def->getOperands()) {
+               auto it = depth.find(o);
+               if (it != depth.end() && (!best || it->second >= bd)) {
+                   best = o;
+                   bd = it->second;
+               }
+           }
+           return best ? root(best) : v;
+       };
+       // "short source waits on long root" edges, only where the skew exceeds the
+       // buffer.
+       llvm::DenseMap<Value, llvm::SmallVector<Value, 4>> waits;
+       for (Operation* op : ops) {
+           if (op->getNumOperands() < 2) continue;
+           SmallVector<Value, 4> in;
+           for (Value v : op->getOperands())
+               if (depth.count(v)) in.push_back(v);
+           if (in.size() < 2) continue;
+           for (unsigned a = 0; a < in.size(); ++a)
+               for (unsigned b = 0; b < in.size(); ++b) {
+                   if (a == b) continue;
+                   unsigned da = depth[in[a]], db = depth[in[b]];
+                   if (db < da && da - db >= bufferDepth)
+                       waits[root(in[b])].push_back(
+                           root(in[a])); // short waits on long
+               }
+       }
+       // Cycle?
+       llvm::DenseSet<Value> visiting, done;
+       std::function<bool(Value)> dfs = [&](Value v) -> bool {
+           if (visiting.count(v)) return true;
+           if (done.count(v)) return false;
+           visiting.insert(v);
+           for (Value n : waits.lookup(v))
+               if (dfs(n)) return true;
+           visiting.erase(v);
+           done.insert(v);
+           return false;
+       };
+       for (auto &kv : waits)
+           if (dfs(kv.first)) return true;
+       return false;
+   }
+   
+   inline bool hasFabricArith(mlir::affine::AffineForOp loop)
+   {
+       bool found = false;
+       loop.walk([&](mlir::Operation* op) {
+           if (mlir::isa<
+                   mlir::arith::MulIOp,
+                   mlir::arith::AddIOp,
+                   mlir::arith::SubIOp,
+                   mlir::arith::CmpIOp,
+                   mlir::arith::SelectOp,
+                   mlir::arith::AndIOp,
+                   mlir::arith::OrIOp,
+                   mlir::arith::XOrIOp,
+                   mlir::arith::ShLIOp,
+                   mlir::arith::ShRSIOp,
+                   mlir::arith::ShRUIOp>(op))
+               found = true;
+       });
+       return found;
+   }
+   
+   inline bool hasHostCall(mlir::affine::AffineForOp loop)
+   {
+       bool found = false;
+       loop.walk([&](mlir::LLVM::CallOp) { found = true; });
+       return found;
+   }
+   
+   inline bool isFabricStreamable(mlir::affine::AffineForOp loop)
+   {
+       mlir::affine::AffineForOp root = loop;
+       while (auto p = root->template getParentOfType<mlir::affine::AffineForOp>())
+           root = p;
+       llvm::SmallPtrSet<mlir::Value, 8> storeIVs;
+       root.walk([&](mlir::affine::AffineStoreOp st) {
+           for (mlir::Value o : st.getMapOperands()) storeIVs.insert(o);
+       });
+       // The INNERMOST loop whose IV never indexes a store is the REDUCTION
+       // dimension, mapping to the FU accumulator (delay_value = its trip count).
+       // Every OUTER IV must index a store, so each stream base is a function of
+       // the outer IVs.
+       bool ok = true;
+       bool hasReduction = false;
+       mlir::affine::AffineForOp innermost;
+       root.walk([&](mlir::affine::AffineForOp f) {
+           if (!f.hasConstantLowerBound() || !f.hasConstantUpperBound())
+               ok = false;
+           bool hasInnerFor = false;
+           f.getBody()->walk(
+               [&](mlir::affine::AffineForOp) { hasInnerFor = true; });
+           if (!hasInnerFor)
+               innermost =
+                   f; // deepest loop of a (perfect) nest = the streamed dimension
+           if (!storeIVs.contains(f.getInductionVar())) {
+               // ...unless the loop runs EXACTLY ONCE: its body executes a single
+               // time, so it is not a reduction dimension (TOSA emits a 1x1
+               // pointwise convolution as `for kh<1, kw<1, c<64`).
+               // --promote-accumulator makes the same allowance; the two must
+               // agree.
+               bool unitTrip =
+                   f.hasConstantLowerBound() && f.hasConstantUpperBound()
+                   && f.getStepAsInt() > 0
+                   && f.getConstantUpperBound() > f.getConstantLowerBound()
+                   && (f.getConstantUpperBound() - f.getConstantLowerBound()
+                       + f.getStepAsInt() - 1)
+                              / f.getStepAsInt()
+                          == 1;
+               if (!unitTrip) {
+                   // Reduction IV — allowed only if `f` is an INNERMOST (leaf)
+                   // loop, i.e. its body contains no further affine.for. Then it
+                   // maps to the FU accumulator and the driver walks the outer
+                   // (store-indexing) loops per output.
+                   hasReduction = true;
+                   if (hasInnerFor) ok = false;
+               }
+           }
+       });
+       // The fabric accumulator always starts from zero, so a reduction with a
+       // non-zero seed must stay on the CPU unless --split-reduction-bias has
+       // rewritten it into a zero-seeded reduction plus an elementwise bias.
+       if (ok) {
+           root.walk([&](mlir::affine::AffineForOp f) {
+               for (mlir::Value init : f.getInits()) {
+                   llvm::APInt seed;
+                   if (!mlir::matchPattern(init, mlir::m_ConstantInt(&seed))
+                       || !seed.isZero())
+                       ok = false;
+               }
+           });
+       }
+       // A pure-elementwise nest is a single 1-D stream, so every load must
+       // advance with the innermost IV; a loop-invariant coefficient load cannot
+       // be broadcast.
+       if (ok && !hasReduction && innermost) {
+           mlir::Value innerIV = innermost.getInductionVar();
+           // Collect every IV of the nest: a 1-D descriptor is (addr, stride,
+           // size) and the memory node walks it ONCE — `input_memory_node.sv`
+           // stops at input_size_i and does NOT wrap. So a streamed load's address
+           // has to advance across the WHOLE dispatch, which means every IV must
+           // appear in its index.
+           root.walk([&](mlir::affine::AffineLoadOp ld) {
+               bool refsInner = false;
+               for (mlir::Value o : ld.getMapOperands())
+                   if (o == innerIV) refsInner = true;
+               if (!refsInner) ok = false;
+           });
+       }
+       return ok;
+   }
+   
+   inline int64_t
+   productOfConstantTripCounts(mlir::Region &r, bool* allConst = nullptr)
+   {
+       int64_t size = 1;
+       bool ok = true;
+       r.walk([&](mlir::affine::AffineForOp forOp) {
+           if (forOp.hasConstantUpperBound() && forOp.hasConstantLowerBound())
+               size *=
+                   forOp.getConstantUpperBound() - forOp.getConstantLowerBound();
+           else
+               ok = false;
+       });
+       if (allConst) *allConst = ok;
+       return ok ? size : 0;
+   }
+   
+   inline llvm::SmallVector<int64_t> perfectNestTripCounts(mlir::Region &r)
+   {
+       llvm::SmallVector<int64_t> counts;
+       mlir::affine::AffineForOp cur;
+       for (mlir::Operation &op : r.front())
+           if (auto f = mlir::dyn_cast<mlir::affine::AffineForOp>(&op)) {
+               cur = f;
+               break;
+           }
+       while (cur) {
+           if (!cur.hasConstantUpperBound() || !cur.hasConstantLowerBound()) break;
+           counts.push_back(
+               cur.getConstantUpperBound() - cur.getConstantLowerBound());
+           mlir::affine::AffineForOp next;
+           for (mlir::Operation &op : cur.getBody()->getOperations())
+               if (auto f = mlir::dyn_cast<mlir::affine::AffineForOp>(&op)) {
+                   next = f;
+                   break;
+               }
+           cur = next;
+       }
+       return counts;
+   }
+   
+   } // namespace mlir::cgra

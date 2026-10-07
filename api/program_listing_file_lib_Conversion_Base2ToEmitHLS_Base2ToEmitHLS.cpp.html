@@ -1,0 +1,631 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Program Listing for File Base2ToEmitHLS.cpp &mdash; picea 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/collapsible-lists/css/tree_view.css?v=a885cde7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js?v=73120307"></script>
+      <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js?v=660e4f45"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            picea
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Installation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../README.html">About the project</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#guides">Guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#related-projects">Related projects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#development-environment-nix">Development Environment (Nix)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#build-on-ubuntu-24-04-no-nix">Build on Ubuntu 24.04 (no Nix)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#gurobi-license">Gurobi license</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#installing">Installing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#run-the-tests">Run the tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#build-the-documentation">Build the documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#compiling-a-design">Compiling a design</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#running-a-design-on-the-board">Running a design on the board</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#exporting-a-profiled-application-to-mocasin">Exporting a profiled application to Mocasin</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Guides</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../guides/laksa.html">The FPGA Variant using LAKSA backend</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/cgra.html">The CGRA Variant</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">MLIR Dialects</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/Base2Ops.html">‘base2’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/CGRAOps.html">‘cgra’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/DFGOps.html">‘dfg’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/EmitHLSOps.html">‘emithls’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/FilterOps.html">‘filter’ Dialect</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Passes</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/PICEAConversionPasses.html">PICEA Conversion Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/CGRAPasses.html">CGRA Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/DFGPasses.html">DFG Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/EmitHLSPasses.html">Emit HLS Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/FuncExtPasses.html">Func Ext Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/LinalgExtPasses.html">Linalg Ext Passes</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">C++ API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="library_root.html">C++ API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">picea</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Program Listing for File Base2ToEmitHLS.cpp</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/program_listing_file_lib_Conversion_Base2ToEmitHLS_Base2ToEmitHLS.cpp.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="program-listing-for-file-base2toemithls-cpp">
+<span id="program-listing-file-lib-conversion-base2toemithls-base2toemithls-cpp"></span><h1>Program Listing for File Base2ToEmitHLS.cpp<a class="headerlink" href="#program-listing-for-file-base2toemithls-cpp" title="Link to this heading"></a></h1>
+<p>↰ <a class="reference internal" href="file_lib_Conversion_Base2ToEmitHLS_Base2ToEmitHLS.cpp.html#file-lib-conversion-base2toemithls-base2toemithls-cpp"><span class="std std-ref">Return to documentation for file</span></a> (<code class="docutils literal notranslate"><span class="pre">lib/Conversion/Base2ToEmitHLS/Base2ToEmitHLS.cpp</span></code>)</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">"picea-mlir/Conversion/Base2ToEmitHLS/Base2ToEmitHLS.h"</span>
+
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"picea-mlir/Dialect/Base2/IR/Base2.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"picea-mlir/Dialect/DFG/IR/DFG.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"picea-mlir/Dialect/EmitHLS/IR/EmitHLS.h"</span>
+
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"llvm/ADT/DenseMap.h"</span>
+
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;llvm/Support/Debug.h&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;optional&gt;</span>
+
+<span class="cp">#define DEBUG_TYPE "base2-to-emithls"</span>
+<span class="cp">#define PICEA_DEBUG(X)                                                         \</span>
+<span class="cp">    LLVM_DEBUG(llvm::dbgs() &lt;&lt; "[base2-to-emithls] "; X; llvm::dbgs() &lt;&lt; "\n")</span>
+
+<span class="k">namespace</span><span class="w"> </span><span class="nn">mlir</span><span class="w"> </span><span class="p">{</span>
+<span class="cp">#define GEN_PASS_DEF_CONVERTBASE2TOEMITHLS</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"picea-mlir/Conversion/Passes.h.inc"</span>
+<span class="p">}</span><span class="w"> </span><span class="c1">// namespace mlir</span>
+
+<span class="k">using</span><span class="w"> </span><span class="k">namespace</span><span class="w"> </span><span class="nn">mlir</span><span class="p">;</span>
+<span class="k">using</span><span class="w"> </span><span class="k">namespace</span><span class="w"> </span><span class="nn">mlir</span><span class="o">::</span><span class="nn">emithls</span><span class="p">;</span>
+
+<span class="k">namespace</span><span class="w"> </span><span class="p">{</span>
+
+<span class="k">using</span><span class="w"> </span><span class="n">BP</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">base2</span><span class="o">::</span><span class="n">OrderingPredicate</span><span class="p">;</span>
+<span class="c1">// Converts a base2::FixedType to the equivalent emithls::FixedType</span>
+<span class="k">static</span><span class="w"> </span><span class="n">Type</span><span class="w"> </span><span class="nf">convertFixedType</span><span class="p">(</span><span class="n">base2</span><span class="o">::</span><span class="n">FixedType</span><span class="w"> </span><span class="n">type</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="kt">int64_t</span><span class="w"> </span><span class="n">integerBits</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">type</span><span class="p">.</span><span class="n">getIntegerBits</span><span class="p">();</span>
+<span class="w">    </span><span class="kt">int64_t</span><span class="w"> </span><span class="n">fractionalBits</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">type</span><span class="p">.</span><span class="n">getFractionalBits</span><span class="p">();</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">emithls</span><span class="o">::</span><span class="n">FixedType</span><span class="o">::</span><span class="n">get</span><span class="p">(</span>
+<span class="w">        </span><span class="n">type</span><span class="p">.</span><span class="n">getContext</span><span class="p">(),</span>
+<span class="w">        </span><span class="cm">/*totalBits=*/</span><span class="mi">1</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">integerBits</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">fractionalBits</span><span class="p">,</span>
+<span class="w">        </span><span class="cm">/*intBits=*/</span><span class="mi">1</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">integerBits</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="c1">// Maps a base2::OrderingPredicate to the equivalent emithls::CmpPredicate</span>
+<span class="k">static</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;</span><span class="n">CmpPredicate</span><span class="o">&gt;</span>
+<span class="n">convertPredicate</span><span class="p">(</span><span class="n">base2</span><span class="o">::</span><span class="n">OrderingPredicate</span><span class="w"> </span><span class="n">predicate</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">static</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">DenseMap</span><span class="o">&lt;</span><span class="n">BP</span><span class="p">,</span><span class="w"> </span><span class="n">CmpPredicate</span><span class="o">&gt;</span><span class="w"> </span><span class="n">predicateMap</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="p">{</span><span class="w">          </span><span class="n">BP</span><span class="o">::</span><span class="n">OrderedAndEqual</span><span class="p">,</span><span class="w"> </span><span class="n">CmpPredicate</span><span class="o">::</span><span class="n">eq</span><span class="p">},</span>
+<span class="w">        </span><span class="p">{</span><span class="w">         </span><span class="n">BP</span><span class="o">::</span><span class="n">UnorderedOrEqual</span><span class="p">,</span><span class="w"> </span><span class="n">CmpPredicate</span><span class="o">::</span><span class="n">eq</span><span class="p">},</span>
+<span class="w">        </span><span class="p">{</span><span class="w">        </span><span class="n">BP</span><span class="o">::</span><span class="n">OrderedAndUnequal</span><span class="p">,</span><span class="w"> </span><span class="n">CmpPredicate</span><span class="o">::</span><span class="n">ne</span><span class="p">},</span>
+<span class="w">        </span><span class="p">{</span><span class="w">       </span><span class="n">BP</span><span class="o">::</span><span class="n">UnorderedOrUnequal</span><span class="p">,</span><span class="w"> </span><span class="n">CmpPredicate</span><span class="o">::</span><span class="n">ne</span><span class="p">},</span>
+<span class="w">        </span><span class="p">{</span><span class="w">        </span><span class="n">BP</span><span class="o">::</span><span class="n">OrderedAndGreater</span><span class="p">,</span><span class="w"> </span><span class="n">CmpPredicate</span><span class="o">::</span><span class="n">gt</span><span class="p">},</span>
+<span class="w">        </span><span class="p">{</span><span class="w">       </span><span class="n">BP</span><span class="o">::</span><span class="n">UnorderedOrGreater</span><span class="p">,</span><span class="w"> </span><span class="n">CmpPredicate</span><span class="o">::</span><span class="n">gt</span><span class="p">},</span>
+<span class="w">        </span><span class="p">{</span><span class="w"> </span><span class="n">BP</span><span class="o">::</span><span class="n">OrderedAndGreaterOrEqual</span><span class="p">,</span><span class="w"> </span><span class="n">CmpPredicate</span><span class="o">::</span><span class="n">ge</span><span class="p">},</span>
+<span class="w">        </span><span class="p">{</span><span class="n">BP</span><span class="o">::</span><span class="n">UnorderedOrGreaterOrEqual</span><span class="p">,</span><span class="w"> </span><span class="n">CmpPredicate</span><span class="o">::</span><span class="n">ge</span><span class="p">},</span>
+<span class="w">        </span><span class="p">{</span><span class="w">           </span><span class="n">BP</span><span class="o">::</span><span class="n">OrderedAndLess</span><span class="p">,</span><span class="w"> </span><span class="n">CmpPredicate</span><span class="o">::</span><span class="n">lt</span><span class="p">},</span>
+<span class="w">        </span><span class="p">{</span><span class="w">          </span><span class="n">BP</span><span class="o">::</span><span class="n">UnorderedOrLess</span><span class="p">,</span><span class="w"> </span><span class="n">CmpPredicate</span><span class="o">::</span><span class="n">lt</span><span class="p">},</span>
+<span class="w">        </span><span class="p">{</span><span class="w">    </span><span class="n">BP</span><span class="o">::</span><span class="n">OrderedAndLessOrEqual</span><span class="p">,</span><span class="w"> </span><span class="n">CmpPredicate</span><span class="o">::</span><span class="n">le</span><span class="p">},</span>
+<span class="w">        </span><span class="p">{</span><span class="w">   </span><span class="n">BP</span><span class="o">::</span><span class="n">UnorderedOrLessOrEqual</span><span class="p">,</span><span class="w"> </span><span class="n">CmpPredicate</span><span class="o">::</span><span class="n">le</span><span class="p">},</span>
+<span class="w">    </span><span class="p">};</span>
+
+<span class="w">    </span><span class="k">auto</span><span class="w"> </span><span class="n">it</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">predicateMap</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="n">predicate</span><span class="p">);</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">it</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">predicateMap</span><span class="p">.</span><span class="n">end</span><span class="p">())</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">nullopt</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">it</span><span class="o">-&gt;</span><span class="n">second</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c1">// Converts the type wrapped by a TypeAttr-valued attribute. Such as ops</span>
+<span class="c1">// (dfg.process, dfg.region, emithls.func) redundantly encode their</span>
+<span class="c1">// port/argument/result types in a function_type attribute</span>
+<span class="k">static</span><span class="w"> </span><span class="n">Attribute</span>
+<span class="nf">convertNamedAttrType</span><span class="p">(</span><span class="n">NamedAttribute</span><span class="w"> </span><span class="n">attr</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">TypeConverter</span><span class="w"> </span><span class="o">&amp;</span><span class="n">converter</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">auto</span><span class="w"> </span><span class="n">typeAttr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dyn_cast</span><span class="o">&lt;</span><span class="n">TypeAttr</span><span class="o">&gt;</span><span class="p">(</span><span class="n">attr</span><span class="p">.</span><span class="n">getValue</span><span class="p">());</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">typeAttr</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">attr</span><span class="p">.</span><span class="n">getValue</span><span class="p">();</span>
+
+<span class="w">    </span><span class="n">Type</span><span class="w"> </span><span class="n">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">typeAttr</span><span class="p">.</span><span class="n">getValue</span><span class="p">();</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="n">funcTy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dyn_cast</span><span class="o">&lt;</span><span class="n">FunctionType</span><span class="o">&gt;</span><span class="p">(</span><span class="n">type</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">SmallVector</span><span class="o">&lt;</span><span class="n">Type</span><span class="o">&gt;</span><span class="w"> </span><span class="n">inputs</span><span class="p">,</span><span class="w"> </span><span class="n">results</span><span class="p">;</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">failed</span><span class="p">(</span><span class="n">converter</span><span class="p">.</span><span class="n">convertTypes</span><span class="p">(</span><span class="n">funcTy</span><span class="p">.</span><span class="n">getInputs</span><span class="p">(),</span><span class="w"> </span><span class="n">inputs</span><span class="p">)))</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="nb">nullptr</span><span class="p">;</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">failed</span><span class="p">(</span><span class="n">converter</span><span class="p">.</span><span class="n">convertTypes</span><span class="p">(</span><span class="n">funcTy</span><span class="p">.</span><span class="n">getResults</span><span class="p">(),</span><span class="w"> </span><span class="n">results</span><span class="p">)))</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="nb">nullptr</span><span class="p">;</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">TypeAttr</span><span class="o">::</span><span class="n">get</span><span class="p">(</span>
+<span class="w">            </span><span class="n">FunctionType</span><span class="o">::</span><span class="n">get</span><span class="p">(</span><span class="n">funcTy</span><span class="p">.</span><span class="n">getContext</span><span class="p">(),</span><span class="w"> </span><span class="n">inputs</span><span class="p">,</span><span class="w"> </span><span class="n">results</span><span class="p">));</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="n">Type</span><span class="w"> </span><span class="n">newType</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">converter</span><span class="p">.</span><span class="n">convertType</span><span class="p">(</span><span class="n">type</span><span class="p">);</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">newType</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="nb">nullptr</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">TypeAttr</span><span class="o">::</span><span class="n">get</span><span class="p">(</span><span class="n">newType</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="k">struct</span><span class="w"> </span><span class="nc">ConvertConstant</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">OpConversionPattern</span><span class="o">&lt;</span><span class="n">base2</span><span class="o">::</span><span class="n">ConstantOp</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">using</span><span class="w"> </span><span class="n">OpConversionPattern</span><span class="o">::</span><span class="n">OpConversionPattern</span><span class="p">;</span>
+
+<span class="w">    </span><span class="n">LogicalResult</span><span class="w"> </span><span class="nf">matchAndRewrite</span><span class="p">(</span>
+<span class="w">        </span><span class="n">base2</span><span class="o">::</span><span class="n">ConstantOp</span><span class="w"> </span><span class="n">op</span><span class="p">,</span>
+<span class="w">        </span><span class="n">base2</span><span class="o">::</span><span class="n">ConstantOpAdaptor</span><span class="p">,</span>
+<span class="w">        </span><span class="n">ConversionPatternRewriter</span><span class="w"> </span><span class="o">&amp;</span><span class="n">rewriter</span><span class="p">)</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">override</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="n">PICEA_DEBUG</span><span class="p">(</span><span class="n">llvm</span><span class="o">::</span><span class="n">dbgs</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"Rewriting constsant at "</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">op</span><span class="p">.</span><span class="n">getLoc</span><span class="p">());</span>
+<span class="w">        </span><span class="c1">// A compile-time constant with a shaped (memref/tensor) type is</span>
+<span class="w">        </span><span class="c1">// represented as an emithls.array, not a memref: emithls.variable</span>
+<span class="w">        </span><span class="c1">// does not support memref-typed initial values, and HLS constant</span>
+<span class="w">        </span><span class="c1">// arrays are plain C arrays anyway.</span>
+<span class="w">        </span><span class="n">Type</span><span class="w"> </span><span class="n">newType</span><span class="p">;</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="n">shapedTy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dyn_cast</span><span class="o">&lt;</span><span class="n">ShapedType</span><span class="o">&gt;</span><span class="p">(</span><span class="n">op</span><span class="p">.</span><span class="n">getType</span><span class="p">()))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">Type</span><span class="w"> </span><span class="n">newElem</span><span class="w"> </span><span class="o">=</span>
+<span class="w">                </span><span class="n">getTypeConverter</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">convertType</span><span class="p">(</span><span class="n">shapedTy</span><span class="p">.</span><span class="n">getElementType</span><span class="p">());</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">newElem</span><span class="p">)</span>
+<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="n">rewriter</span><span class="p">.</span><span class="n">notifyMatchFailure</span><span class="p">(</span>
+<span class="w">                    </span><span class="n">op</span><span class="p">,</span>
+<span class="w">                    </span><span class="s">"element type could not be converted"</span><span class="p">);</span>
+<span class="w">            </span><span class="n">newType</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ArrayType</span><span class="o">::</span><span class="n">get</span><span class="p">(</span><span class="n">shapedTy</span><span class="p">.</span><span class="n">getShape</span><span class="p">(),</span><span class="w"> </span><span class="n">newElem</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">newType</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">getTypeConverter</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">convertType</span><span class="p">(</span><span class="n">op</span><span class="p">.</span><span class="n">getType</span><span class="p">());</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">newType</span><span class="p">)</span>
+<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="n">rewriter</span><span class="p">.</span><span class="n">notifyMatchFailure</span><span class="p">(</span>
+<span class="w">                    </span><span class="n">op</span><span class="p">,</span>
+<span class="w">                    </span><span class="s">"result type could not be converted"</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="c1">// Reinterpret the bit pattern(s) of the constant under the converted</span>
+<span class="w">        </span><span class="c1">// type; only the FixedType parameterization changes, the underlying</span>
+<span class="w">        </span><span class="c1">// bits are untouched.</span>
+<span class="w">        </span><span class="n">Attribute</span><span class="w"> </span><span class="n">newValue</span><span class="p">;</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="n">bitsAttr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dyn_cast</span><span class="o">&lt;</span><span class="n">base2</span><span class="o">::</span><span class="n">BitSequenceAttr</span><span class="o">&gt;</span><span class="p">(</span><span class="n">op</span><span class="p">.</span><span class="n">getValue</span><span class="p">()))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="n">fixedTy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dyn_cast</span><span class="o">&lt;</span><span class="n">FixedType</span><span class="o">&gt;</span><span class="p">(</span><span class="n">newType</span><span class="p">))</span>
+<span class="w">                </span><span class="n">newValue</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">FixedAttr</span><span class="o">::</span><span class="n">get</span><span class="p">(</span><span class="n">fixedTy</span><span class="p">,</span><span class="w"> </span><span class="n">bitsAttr</span><span class="p">.</span><span class="n">getValue</span><span class="p">());</span>
+<span class="w">            </span><span class="k">else</span>
+<span class="w">                </span><span class="n">newValue</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">op</span><span class="p">.</span><span class="n">getValueAttr</span><span class="p">();</span>
+<span class="w">        </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span>
+<span class="w">            </span><span class="k">auto</span><span class="w"> </span><span class="n">denseAttr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dyn_cast</span><span class="o">&lt;</span><span class="n">base2</span><span class="o">::</span><span class="n">DenseBitsAttr</span><span class="o">&gt;</span><span class="p">(</span><span class="n">op</span><span class="p">.</span><span class="n">getValue</span><span class="p">()))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">auto</span><span class="w"> </span><span class="n">newShapedTy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cast</span><span class="o">&lt;</span><span class="n">ShapedType</span><span class="o">&gt;</span><span class="p">(</span><span class="n">newType</span><span class="p">);</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">isa</span><span class="o">&lt;</span><span class="n">FixedType</span><span class="o">&gt;</span><span class="p">(</span><span class="n">newShapedTy</span><span class="p">.</span><span class="n">getElementType</span><span class="p">()))</span>
+<span class="w">                </span><span class="n">newValue</span><span class="w"> </span><span class="o">=</span>
+<span class="w">                    </span><span class="n">DenseFixedAttr</span><span class="o">::</span><span class="n">get</span><span class="p">(</span><span class="n">newShapedTy</span><span class="p">,</span><span class="w"> </span><span class="n">denseAttr</span><span class="p">.</span><span class="n">getData</span><span class="p">());</span>
+<span class="w">            </span><span class="k">else</span>
+<span class="w">                </span><span class="n">newValue</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">op</span><span class="p">.</span><span class="n">getValueAttr</span><span class="p">();</span>
+<span class="w">        </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">newValue</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">op</span><span class="p">.</span><span class="n">getValueAttr</span><span class="p">();</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="k">auto</span><span class="w"> </span><span class="n">varOp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">rewriter</span><span class="p">.</span><span class="n">replaceOpWithNewOp</span><span class="o">&lt;</span><span class="n">VariableOp</span><span class="o">&gt;</span><span class="p">(</span>
+<span class="w">            </span><span class="n">op</span><span class="p">,</span>
+<span class="w">            </span><span class="n">newType</span><span class="p">,</span>
+<span class="w">            </span><span class="n">newValue</span><span class="p">,</span>
+<span class="w">            </span><span class="cm">/*is_const=*/</span><span class="nb">true</span><span class="p">);</span>
+<span class="w">        </span><span class="n">PICEA_DEBUG</span><span class="p">(</span>
+<span class="w">            </span><span class="n">llvm</span><span class="o">::</span><span class="n">dbgs</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"  Replaced with a constant variable "</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">varOp</span><span class="p">);</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">success</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">};</span>
+
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span><span class="w"> </span><span class="nc">OpFrom</span><span class="p">,</span><span class="w"> </span><span class="k">typename</span><span class="w"> </span><span class="nc">OpTo</span><span class="o">&gt;</span>
+<span class="k">struct</span><span class="w"> </span><span class="nc">ConvertBinaryOp</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">OpConversionPattern</span><span class="o">&lt;</span><span class="n">OpFrom</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">using</span><span class="w"> </span><span class="n">OpConversionPattern</span><span class="o">&lt;</span><span class="n">OpFrom</span><span class="o">&gt;::</span><span class="n">OpConversionPattern</span><span class="p">;</span>
+
+<span class="w">    </span><span class="n">LogicalResult</span><span class="w"> </span><span class="nf">matchAndRewrite</span><span class="p">(</span>
+<span class="w">        </span><span class="n">OpFrom</span><span class="w"> </span><span class="n">op</span><span class="p">,</span>
+<span class="w">        </span><span class="k">typename</span><span class="w"> </span><span class="nc">OpFrom</span><span class="o">::</span><span class="n">Adaptor</span><span class="p">,</span>
+<span class="w">        </span><span class="n">ConversionPatternRewriter</span><span class="w"> </span><span class="o">&amp;</span><span class="n">rewriter</span><span class="p">)</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">override</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="n">PICEA_DEBUG</span><span class="p">(</span>
+<span class="w">            </span><span class="n">llvm</span><span class="o">::</span><span class="n">dbgs</span><span class="p">()</span>
+<span class="w">            </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"Rewriting "</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">op</span><span class="o">-&gt;</span><span class="n">getName</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">" at "</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">op</span><span class="p">.</span><span class="n">getLoc</span><span class="p">());</span>
+<span class="w">        </span><span class="n">rewriter</span><span class="p">.</span><span class="n">replaceOpWithNewOp</span><span class="o">&lt;</span><span class="n">OpTo</span><span class="o">&gt;</span><span class="p">(</span><span class="n">op</span><span class="p">,</span><span class="w"> </span><span class="n">op</span><span class="p">.</span><span class="n">getLhs</span><span class="p">(),</span><span class="w"> </span><span class="n">op</span><span class="p">.</span><span class="n">getRhs</span><span class="p">());</span>
+<span class="w">        </span><span class="n">PICEA_DEBUG</span><span class="p">(</span>
+<span class="w">            </span><span class="n">llvm</span><span class="o">::</span><span class="n">dbgs</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"  Replaced with equivalent emithls operation."</span><span class="p">);</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">success</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">};</span>
+
+<span class="k">struct</span><span class="w"> </span><span class="nc">ConvertCast</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">OpConversionPattern</span><span class="o">&lt;</span><span class="n">base2</span><span class="o">::</span><span class="n">ArithCastOp</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">using</span><span class="w"> </span><span class="n">OpConversionPattern</span><span class="o">::</span><span class="n">OpConversionPattern</span><span class="p">;</span>
+
+<span class="w">    </span><span class="n">LogicalResult</span><span class="w"> </span><span class="nf">matchAndRewrite</span><span class="p">(</span>
+<span class="w">        </span><span class="n">base2</span><span class="o">::</span><span class="n">ArithCastOp</span><span class="w"> </span><span class="n">op</span><span class="p">,</span>
+<span class="w">        </span><span class="n">base2</span><span class="o">::</span><span class="n">ArithCastOpAdaptor</span><span class="p">,</span>
+<span class="w">        </span><span class="n">ConversionPatternRewriter</span><span class="w"> </span><span class="o">&amp;</span><span class="n">rewriter</span><span class="p">)</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">override</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="n">PICEA_DEBUG</span><span class="p">(</span>
+<span class="w">            </span><span class="n">llvm</span><span class="o">::</span><span class="n">dbgs</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"Rewriting cast operation at "</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">op</span><span class="p">.</span><span class="n">getLoc</span><span class="p">());</span>
+<span class="w">        </span><span class="n">Type</span><span class="w"> </span><span class="n">newType</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">getTypeConverter</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">convertType</span><span class="p">(</span><span class="n">op</span><span class="p">.</span><span class="n">getTo</span><span class="p">().</span><span class="n">getType</span><span class="p">());</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">newType</span><span class="p">)</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="n">rewriter</span><span class="p">.</span><span class="n">notifyMatchFailure</span><span class="p">(</span>
+<span class="w">                </span><span class="n">op</span><span class="p">,</span>
+<span class="w">                </span><span class="s">"result type could not be converted"</span><span class="p">);</span>
+
+<span class="w">        </span><span class="n">rewriter</span><span class="p">.</span><span class="n">replaceOpWithNewOp</span><span class="o">&lt;</span><span class="n">ArithCastOp</span><span class="o">&gt;</span><span class="p">(</span><span class="n">op</span><span class="p">,</span><span class="w"> </span><span class="n">newType</span><span class="p">,</span><span class="w"> </span><span class="n">op</span><span class="p">.</span><span class="n">getFrom</span><span class="p">());</span>
+<span class="w">        </span><span class="n">PICEA_DEBUG</span><span class="p">(</span><span class="n">llvm</span><span class="o">::</span><span class="n">dbgs</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"  Replaced with equivalent emithls cast."</span><span class="p">);</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">success</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">};</span>
+
+<span class="k">struct</span><span class="w"> </span><span class="nc">ConvertCompare</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">OpConversionPattern</span><span class="o">&lt;</span><span class="n">base2</span><span class="o">::</span><span class="n">ArithCmpOp</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">using</span><span class="w"> </span><span class="n">OpConversionPattern</span><span class="o">::</span><span class="n">OpConversionPattern</span><span class="p">;</span>
+
+<span class="w">    </span><span class="n">LogicalResult</span><span class="w"> </span><span class="nf">matchAndRewrite</span><span class="p">(</span>
+<span class="w">        </span><span class="n">base2</span><span class="o">::</span><span class="n">ArithCmpOp</span><span class="w"> </span><span class="n">op</span><span class="p">,</span>
+<span class="w">        </span><span class="n">base2</span><span class="o">::</span><span class="n">ArithCmpOpAdaptor</span><span class="p">,</span>
+<span class="w">        </span><span class="n">ConversionPatternRewriter</span><span class="w"> </span><span class="o">&amp;</span><span class="n">rewriter</span><span class="p">)</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">override</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="n">PICEA_DEBUG</span><span class="p">(</span><span class="n">llvm</span><span class="o">::</span><span class="n">dbgs</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"Rewriting compare at "</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">op</span><span class="p">.</span><span class="n">getLoc</span><span class="p">());</span>
+<span class="w">        </span><span class="c1">// These predicates only distinguish ordered/unordered (NaN) operands,</span>
+<span class="w">        </span><span class="c1">// which base2 values never are, so they fold to a plain boolean</span>
+<span class="w">        </span><span class="c1">// constant rather than a relational comparison.</span>
+<span class="w">        </span><span class="k">switch</span><span class="w"> </span><span class="p">(</span><span class="n">op</span><span class="p">.</span><span class="n">getPredicate</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">case</span><span class="w"> </span><span class="no">BP</span><span class="o">::</span><span class="no">Falsum</span><span class="p">:</span>
+<span class="w">        </span><span class="k">case</span><span class="w"> </span><span class="no">BP</span><span class="o">::</span><span class="no">Unordered</span><span class="p">:</span>
+<span class="w">            </span><span class="n">rewriter</span><span class="p">.</span><span class="n">replaceOpWithNewOp</span><span class="o">&lt;</span><span class="n">VariableOp</span><span class="o">&gt;</span><span class="p">(</span>
+<span class="w">                </span><span class="n">op</span><span class="p">,</span>
+<span class="w">                </span><span class="n">rewriter</span><span class="p">.</span><span class="n">getI1Type</span><span class="p">(),</span>
+<span class="w">                </span><span class="n">rewriter</span><span class="p">.</span><span class="n">getBoolAttr</span><span class="p">(</span><span class="nb">false</span><span class="p">),</span>
+<span class="w">                </span><span class="cm">/*is_const=*/</span><span class="nb">true</span><span class="p">);</span>
+<span class="w">            </span><span class="n">PICEA_DEBUG</span><span class="p">(</span>
+<span class="w">                </span><span class="n">llvm</span><span class="o">::</span><span class="n">dbgs</span><span class="p">()</span>
+<span class="w">                </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"  Folded always-false compare into a constant variable."</span><span class="p">);</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="n">success</span><span class="p">();</span>
+<span class="w">        </span><span class="k">case</span><span class="w"> </span><span class="no">BP</span><span class="o">::</span><span class="no">Verum</span><span class="p">:</span>
+<span class="w">        </span><span class="k">case</span><span class="w"> </span><span class="no">BP</span><span class="o">::</span><span class="no">Ordered</span><span class="p">:</span>
+<span class="w">            </span><span class="n">rewriter</span><span class="p">.</span><span class="n">replaceOpWithNewOp</span><span class="o">&lt;</span><span class="n">VariableOp</span><span class="o">&gt;</span><span class="p">(</span>
+<span class="w">                </span><span class="n">op</span><span class="p">,</span>
+<span class="w">                </span><span class="n">rewriter</span><span class="p">.</span><span class="n">getI1Type</span><span class="p">(),</span>
+<span class="w">                </span><span class="n">rewriter</span><span class="p">.</span><span class="n">getBoolAttr</span><span class="p">(</span><span class="nb">true</span><span class="p">),</span>
+<span class="w">                </span><span class="cm">/*is_const=*/</span><span class="nb">true</span><span class="p">);</span>
+<span class="w">            </span><span class="n">PICEA_DEBUG</span><span class="p">(</span>
+<span class="w">                </span><span class="n">llvm</span><span class="o">::</span><span class="n">dbgs</span><span class="p">()</span>
+<span class="w">                </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"  Folded always-true compare at into a constant variable."</span><span class="p">);</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="n">success</span><span class="p">();</span>
+<span class="w">        </span><span class="k">default</span><span class="o">:</span><span class="w"> </span><span class="k">break</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="k">auto</span><span class="w"> </span><span class="n">predicate</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">convertPredicate</span><span class="p">(</span><span class="n">op</span><span class="p">.</span><span class="n">getPredicate</span><span class="p">());</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">predicate</span><span class="p">)</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="n">rewriter</span><span class="p">.</span><span class="n">notifyMatchFailure</span><span class="p">(</span><span class="n">op</span><span class="p">,</span><span class="w"> </span><span class="s">"unsupported predicate"</span><span class="p">);</span>
+
+<span class="w">        </span><span class="n">rewriter</span><span class="p">.</span><span class="n">replaceOpWithNewOp</span><span class="o">&lt;</span><span class="n">ArithCmpOp</span><span class="o">&gt;</span><span class="p">(</span>
+<span class="w">            </span><span class="n">op</span><span class="p">,</span>
+<span class="w">            </span><span class="o">*</span><span class="n">predicate</span><span class="p">,</span>
+<span class="w">            </span><span class="n">op</span><span class="p">.</span><span class="n">getLhs</span><span class="p">(),</span>
+<span class="w">            </span><span class="n">op</span><span class="p">.</span><span class="n">getRhs</span><span class="p">());</span>
+<span class="w">        </span><span class="n">PICEA_DEBUG</span><span class="p">(</span>
+<span class="w">            </span><span class="n">llvm</span><span class="o">::</span><span class="n">dbgs</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"  Replaced with equivalent emithls comparison."</span><span class="p">);</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">success</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">};</span>
+
+<span class="k">struct</span><span class="w"> </span><span class="nc">ConvertSelect</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">OpConversionPattern</span><span class="o">&lt;</span><span class="n">base2</span><span class="o">::</span><span class="n">ArithSelectOp</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">using</span><span class="w"> </span><span class="n">OpConversionPattern</span><span class="o">::</span><span class="n">OpConversionPattern</span><span class="p">;</span>
+
+<span class="w">    </span><span class="n">LogicalResult</span><span class="w"> </span><span class="nf">matchAndRewrite</span><span class="p">(</span>
+<span class="w">        </span><span class="n">base2</span><span class="o">::</span><span class="n">ArithSelectOp</span><span class="w"> </span><span class="n">op</span><span class="p">,</span>
+<span class="w">        </span><span class="n">base2</span><span class="o">::</span><span class="n">ArithSelectOpAdaptor</span><span class="p">,</span>
+<span class="w">        </span><span class="n">ConversionPatternRewriter</span><span class="w"> </span><span class="o">&amp;</span><span class="n">rewriter</span><span class="p">)</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">override</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="n">PICEA_DEBUG</span><span class="p">(</span>
+<span class="w">            </span><span class="n">llvm</span><span class="o">::</span><span class="n">dbgs</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"Rewriting select operation at "</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">op</span><span class="p">.</span><span class="n">getLoc</span><span class="p">());</span>
+<span class="w">        </span><span class="n">rewriter</span><span class="p">.</span><span class="n">replaceOpWithNewOp</span><span class="o">&lt;</span><span class="n">ArithSelectOp</span><span class="o">&gt;</span><span class="p">(</span>
+<span class="w">            </span><span class="n">op</span><span class="p">,</span>
+<span class="w">            </span><span class="n">op</span><span class="p">.</span><span class="n">getCondition</span><span class="p">(),</span>
+<span class="w">            </span><span class="n">op</span><span class="p">.</span><span class="n">getTrueValue</span><span class="p">(),</span>
+<span class="w">            </span><span class="n">op</span><span class="p">.</span><span class="n">getFalseValue</span><span class="p">());</span>
+<span class="w">        </span><span class="n">PICEA_DEBUG</span><span class="p">(</span>
+<span class="w">            </span><span class="n">llvm</span><span class="o">::</span><span class="n">dbgs</span><span class="p">()</span>
+<span class="w">            </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"  Replaced with equivalent emithls arithmetic select."</span><span class="p">);</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">success</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">};</span>
+
+<span class="c1">// Rewrites any non-base2 operation whose operand/result/block-argument or</span>
+<span class="c1">// TypeAttr-encoded types still mention a base2 type.</span>
+<span class="k">struct</span><span class="w"> </span><span class="nc">LegalizeCarrierOp</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">ConversionPattern</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">LegalizeCarrierOp</span><span class="p">(</span><span class="n">TypeConverter</span><span class="w"> </span><span class="o">&amp;</span><span class="n">converter</span><span class="p">,</span><span class="w"> </span><span class="n">MLIRContext</span><span class="o">*</span><span class="w"> </span><span class="n">context</span><span class="p">)</span>
+<span class="w">            </span><span class="o">:</span><span class="w"> </span><span class="n">ConversionPattern</span><span class="p">(</span>
+<span class="w">                  </span><span class="n">converter</span><span class="p">,</span>
+<span class="w">                  </span><span class="n">Pattern</span><span class="o">::</span><span class="n">MatchAnyOpTypeTag</span><span class="p">(),</span>
+<span class="w">                  </span><span class="cm">/*benefit=*/</span><span class="mi">0</span><span class="p">,</span>
+<span class="w">                  </span><span class="n">context</span><span class="p">)</span><span class="w"> </span><span class="p">{};</span>
+
+<span class="w">    </span><span class="n">LogicalResult</span><span class="w"> </span><span class="nf">matchAndRewrite</span><span class="p">(</span>
+<span class="w">        </span><span class="n">Operation</span><span class="o">*</span><span class="w"> </span><span class="n">op</span><span class="p">,</span>
+<span class="w">        </span><span class="n">ArrayRef</span><span class="o">&lt;</span><span class="n">Value</span><span class="o">&gt;</span><span class="w"> </span><span class="n">operands</span><span class="p">,</span>
+<span class="w">        </span><span class="n">ConversionPatternRewriter</span><span class="w"> </span><span class="o">&amp;</span><span class="n">rewriter</span><span class="p">)</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">override</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="c1">// base2 ops are semantically rewritten by the dedicated patterns</span>
+<span class="w">        </span><span class="c1">// above, not just type-legalized in place.</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">isa</span><span class="o">&lt;</span><span class="n">base2</span><span class="o">::</span><span class="n">Base2Dialect</span><span class="o">&gt;</span><span class="p">(</span><span class="n">op</span><span class="o">-&gt;</span><span class="n">getDialect</span><span class="p">()))</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">failure</span><span class="p">();</span>
+
+<span class="w">        </span><span class="k">const</span><span class="w"> </span><span class="n">TypeConverter</span><span class="o">*</span><span class="w"> </span><span class="n">converter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">getTypeConverter</span><span class="p">();</span>
+
+<span class="w">        </span><span class="n">SmallVector</span><span class="o">&lt;</span><span class="n">Type</span><span class="o">&gt;</span><span class="w"> </span><span class="n">newResultTypes</span><span class="p">;</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">failed</span><span class="p">(</span>
+<span class="w">                </span><span class="n">converter</span><span class="o">-&gt;</span><span class="n">convertTypes</span><span class="p">(</span><span class="n">op</span><span class="o">-&gt;</span><span class="n">getResultTypes</span><span class="p">(),</span><span class="w"> </span><span class="n">newResultTypes</span><span class="p">)))</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="n">rewriter</span><span class="p">.</span><span class="n">notifyMatchFailure</span><span class="p">(</span>
+<span class="w">                </span><span class="n">op</span><span class="p">,</span>
+<span class="w">                </span><span class="s">"result types could not be converted"</span><span class="p">);</span>
+
+<span class="w">        </span><span class="n">SmallVector</span><span class="o">&lt;</span><span class="n">NamedAttribute</span><span class="o">&gt;</span><span class="w"> </span><span class="n">newAttrs</span><span class="p">;</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">NamedAttribute</span><span class="w"> </span><span class="n">attr</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">op</span><span class="o">-&gt;</span><span class="n">getAttrs</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">Attribute</span><span class="w"> </span><span class="n">newValue</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">convertNamedAttrType</span><span class="p">(</span><span class="n">attr</span><span class="p">,</span><span class="w"> </span><span class="o">*</span><span class="n">converter</span><span class="p">);</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">newValue</span><span class="p">)</span>
+<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="n">rewriter</span><span class="p">.</span><span class="n">notifyMatchFailure</span><span class="p">(</span>
+<span class="w">                    </span><span class="n">op</span><span class="p">,</span>
+<span class="w">                    </span><span class="s">"attribute type could not be converted"</span><span class="p">);</span>
+<span class="w">            </span><span class="n">newAttrs</span><span class="p">.</span><span class="n">emplace_back</span><span class="p">(</span><span class="n">attr</span><span class="p">.</span><span class="n">getName</span><span class="p">(),</span><span class="w"> </span><span class="n">newValue</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="n">OperationState</span><span class="w"> </span><span class="n">state</span><span class="p">(</span>
+<span class="w">            </span><span class="n">op</span><span class="o">-&gt;</span><span class="n">getLoc</span><span class="p">(),</span>
+<span class="w">            </span><span class="n">op</span><span class="o">-&gt;</span><span class="n">getName</span><span class="p">(),</span>
+<span class="w">            </span><span class="n">operands</span><span class="p">,</span>
+<span class="w">            </span><span class="n">newResultTypes</span><span class="p">,</span>
+<span class="w">            </span><span class="n">newAttrs</span><span class="p">,</span>
+<span class="w">            </span><span class="n">op</span><span class="o">-&gt;</span><span class="n">getSuccessors</span><span class="p">());</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">unsigned</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">e</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">op</span><span class="o">-&gt;</span><span class="n">getNumRegions</span><span class="p">();</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">e</span><span class="p">;</span><span class="w"> </span><span class="o">++</span><span class="n">i</span><span class="p">)</span>
+<span class="w">            </span><span class="n">state</span><span class="p">.</span><span class="n">addRegion</span><span class="p">();</span>
+
+<span class="w">        </span><span class="n">Operation</span><span class="o">*</span><span class="w"> </span><span class="n">newOp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">rewriter</span><span class="p">.</span><span class="n">create</span><span class="p">(</span><span class="n">state</span><span class="p">);</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">unsigned</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">e</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">op</span><span class="o">-&gt;</span><span class="n">getNumRegions</span><span class="p">();</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">e</span><span class="p">;</span><span class="w"> </span><span class="o">++</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">Region</span><span class="w"> </span><span class="o">&amp;</span><span class="n">oldRegion</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">op</span><span class="o">-&gt;</span><span class="n">getRegion</span><span class="p">(</span><span class="n">i</span><span class="p">);</span>
+<span class="w">            </span><span class="n">Region</span><span class="w"> </span><span class="o">&amp;</span><span class="n">newRegion</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">newOp</span><span class="o">-&gt;</span><span class="n">getRegion</span><span class="p">(</span><span class="n">i</span><span class="p">);</span>
+<span class="w">            </span><span class="n">rewriter</span><span class="p">.</span><span class="n">inlineRegionBefore</span><span class="p">(</span><span class="n">oldRegion</span><span class="p">,</span><span class="w"> </span><span class="n">newRegion</span><span class="p">,</span><span class="w"> </span><span class="n">newRegion</span><span class="p">.</span><span class="n">end</span><span class="p">());</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">failed</span><span class="p">(</span><span class="n">rewriter</span><span class="p">.</span><span class="n">convertRegionTypes</span><span class="p">(</span><span class="o">&amp;</span><span class="n">newRegion</span><span class="p">,</span><span class="w"> </span><span class="o">*</span><span class="n">converter</span><span class="p">)))</span>
+<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="n">failure</span><span class="p">();</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="n">PICEA_DEBUG</span><span class="p">(</span>
+<span class="w">            </span><span class="n">llvm</span><span class="o">::</span><span class="n">dbgs</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"Legalized types of "</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">op</span><span class="o">-&gt;</span><span class="n">getName</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">" at "</span>
+<span class="w">                         </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">op</span><span class="o">-&gt;</span><span class="n">getLoc</span><span class="p">());</span>
+<span class="w">        </span><span class="n">rewriter</span><span class="p">.</span><span class="n">replaceOp</span><span class="p">(</span><span class="n">op</span><span class="p">,</span><span class="w"> </span><span class="n">newOp</span><span class="o">-&gt;</span><span class="n">getResults</span><span class="p">());</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">success</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">};</span>
+
+<span class="p">}</span><span class="w"> </span><span class="c1">// namespace</span>
+
+<span class="kt">void</span><span class="w"> </span><span class="n">mlir</span><span class="o">::</span><span class="n">populateBase2ToEmitHLSConversionPatterns</span><span class="p">(</span>
+<span class="w">    </span><span class="n">TypeConverter</span><span class="w"> </span><span class="o">&amp;</span><span class="n">typeConverter</span><span class="p">,</span>
+<span class="w">    </span><span class="n">RewritePatternSet</span><span class="w"> </span><span class="o">&amp;</span><span class="n">patterns</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">patterns</span><span class="p">.</span><span class="n">add</span><span class="o">&lt;</span><span class="n">ConvertConstant</span><span class="o">&gt;</span><span class="p">(</span><span class="n">typeConverter</span><span class="p">,</span><span class="w"> </span><span class="n">patterns</span><span class="p">.</span><span class="n">getContext</span><span class="p">());</span>
+<span class="w">    </span><span class="n">patterns</span><span class="p">.</span><span class="n">add</span><span class="o">&lt;</span><span class="n">ConvertBinaryOp</span><span class="o">&lt;</span><span class="n">base2</span><span class="o">::</span><span class="n">ArithAddOp</span><span class="p">,</span><span class="w"> </span><span class="n">ArithAddOp</span><span class="o">&gt;&gt;</span><span class="p">(</span>
+<span class="w">        </span><span class="n">typeConverter</span><span class="p">,</span>
+<span class="w">        </span><span class="n">patterns</span><span class="p">.</span><span class="n">getContext</span><span class="p">());</span>
+<span class="w">    </span><span class="n">patterns</span><span class="p">.</span><span class="n">add</span><span class="o">&lt;</span><span class="n">ConvertBinaryOp</span><span class="o">&lt;</span><span class="n">base2</span><span class="o">::</span><span class="n">ArithSubOp</span><span class="p">,</span><span class="w"> </span><span class="n">ArithSubOp</span><span class="o">&gt;&gt;</span><span class="p">(</span>
+<span class="w">        </span><span class="n">typeConverter</span><span class="p">,</span>
+<span class="w">        </span><span class="n">patterns</span><span class="p">.</span><span class="n">getContext</span><span class="p">());</span>
+<span class="w">    </span><span class="n">patterns</span><span class="p">.</span><span class="n">add</span><span class="o">&lt;</span><span class="n">ConvertBinaryOp</span><span class="o">&lt;</span><span class="n">base2</span><span class="o">::</span><span class="n">ArithMulOp</span><span class="p">,</span><span class="w"> </span><span class="n">ArithMulOp</span><span class="o">&gt;&gt;</span><span class="p">(</span>
+<span class="w">        </span><span class="n">typeConverter</span><span class="p">,</span>
+<span class="w">        </span><span class="n">patterns</span><span class="p">.</span><span class="n">getContext</span><span class="p">());</span>
+<span class="w">    </span><span class="n">patterns</span><span class="p">.</span><span class="n">add</span><span class="o">&lt;</span><span class="n">ConvertBinaryOp</span><span class="o">&lt;</span><span class="n">base2</span><span class="o">::</span><span class="n">ArithDivOp</span><span class="p">,</span><span class="w"> </span><span class="n">ArithDivOp</span><span class="o">&gt;&gt;</span><span class="p">(</span>
+<span class="w">        </span><span class="n">typeConverter</span><span class="p">,</span>
+<span class="w">        </span><span class="n">patterns</span><span class="p">.</span><span class="n">getContext</span><span class="p">());</span>
+<span class="w">    </span><span class="n">patterns</span><span class="p">.</span><span class="n">add</span><span class="o">&lt;</span><span class="n">ConvertBinaryOp</span><span class="o">&lt;</span><span class="n">base2</span><span class="o">::</span><span class="n">ArithRemOp</span><span class="p">,</span><span class="w"> </span><span class="n">ArithRemOp</span><span class="o">&gt;&gt;</span><span class="p">(</span>
+<span class="w">        </span><span class="n">typeConverter</span><span class="p">,</span>
+<span class="w">        </span><span class="n">patterns</span><span class="p">.</span><span class="n">getContext</span><span class="p">());</span>
+<span class="w">    </span><span class="n">patterns</span><span class="p">.</span><span class="n">add</span><span class="o">&lt;</span><span class="n">ConvertBinaryOp</span><span class="o">&lt;</span><span class="n">base2</span><span class="o">::</span><span class="n">ArithAndOp</span><span class="p">,</span><span class="w"> </span><span class="n">ArithAndOp</span><span class="o">&gt;&gt;</span><span class="p">(</span>
+<span class="w">        </span><span class="n">typeConverter</span><span class="p">,</span>
+<span class="w">        </span><span class="n">patterns</span><span class="p">.</span><span class="n">getContext</span><span class="p">());</span>
+<span class="w">    </span><span class="n">patterns</span><span class="p">.</span><span class="n">add</span><span class="o">&lt;</span><span class="n">ConvertBinaryOp</span><span class="o">&lt;</span><span class="n">base2</span><span class="o">::</span><span class="n">ArithOrOp</span><span class="p">,</span><span class="w"> </span><span class="n">ArithOrOp</span><span class="o">&gt;&gt;</span><span class="p">(</span>
+<span class="w">        </span><span class="n">typeConverter</span><span class="p">,</span>
+<span class="w">        </span><span class="n">patterns</span><span class="p">.</span><span class="n">getContext</span><span class="p">());</span>
+<span class="w">    </span><span class="n">patterns</span><span class="p">.</span><span class="n">add</span><span class="o">&lt;</span><span class="n">ConvertBinaryOp</span><span class="o">&lt;</span><span class="n">base2</span><span class="o">::</span><span class="n">ArithShlOp</span><span class="p">,</span><span class="w"> </span><span class="n">ArithShlOp</span><span class="o">&gt;&gt;</span><span class="p">(</span>
+<span class="w">        </span><span class="n">typeConverter</span><span class="p">,</span>
+<span class="w">        </span><span class="n">patterns</span><span class="p">.</span><span class="n">getContext</span><span class="p">());</span>
+<span class="w">    </span><span class="n">patterns</span><span class="p">.</span><span class="n">add</span><span class="o">&lt;</span><span class="n">ConvertBinaryOp</span><span class="o">&lt;</span><span class="n">base2</span><span class="o">::</span><span class="n">ArithShrOp</span><span class="p">,</span><span class="w"> </span><span class="n">ArithShrOp</span><span class="o">&gt;&gt;</span><span class="p">(</span>
+<span class="w">        </span><span class="n">typeConverter</span><span class="p">,</span>
+<span class="w">        </span><span class="n">patterns</span><span class="p">.</span><span class="n">getContext</span><span class="p">());</span>
+<span class="w">    </span><span class="n">patterns</span><span class="p">.</span><span class="n">add</span><span class="o">&lt;</span><span class="n">ConvertBinaryOp</span><span class="o">&lt;</span><span class="n">base2</span><span class="o">::</span><span class="n">ArithMinOp</span><span class="p">,</span><span class="w"> </span><span class="n">ArithMinOp</span><span class="o">&gt;&gt;</span><span class="p">(</span>
+<span class="w">        </span><span class="n">typeConverter</span><span class="p">,</span>
+<span class="w">        </span><span class="n">patterns</span><span class="p">.</span><span class="n">getContext</span><span class="p">());</span>
+<span class="w">    </span><span class="n">patterns</span><span class="p">.</span><span class="n">add</span><span class="o">&lt;</span><span class="n">ConvertBinaryOp</span><span class="o">&lt;</span><span class="n">base2</span><span class="o">::</span><span class="n">ArithMaxOp</span><span class="p">,</span><span class="w"> </span><span class="n">ArithMaxOp</span><span class="o">&gt;&gt;</span><span class="p">(</span>
+<span class="w">        </span><span class="n">typeConverter</span><span class="p">,</span>
+<span class="w">        </span><span class="n">patterns</span><span class="p">.</span><span class="n">getContext</span><span class="p">());</span>
+<span class="w">    </span><span class="n">patterns</span><span class="p">.</span><span class="n">add</span><span class="o">&lt;</span><span class="n">ConvertCast</span><span class="o">&gt;</span><span class="p">(</span><span class="n">typeConverter</span><span class="p">,</span><span class="w"> </span><span class="n">patterns</span><span class="p">.</span><span class="n">getContext</span><span class="p">());</span>
+<span class="w">    </span><span class="n">patterns</span><span class="p">.</span><span class="n">add</span><span class="o">&lt;</span><span class="n">ConvertCompare</span><span class="o">&gt;</span><span class="p">(</span><span class="n">typeConverter</span><span class="p">,</span><span class="w"> </span><span class="n">patterns</span><span class="p">.</span><span class="n">getContext</span><span class="p">());</span>
+<span class="w">    </span><span class="n">patterns</span><span class="p">.</span><span class="n">add</span><span class="o">&lt;</span><span class="n">ConvertSelect</span><span class="o">&gt;</span><span class="p">(</span><span class="n">typeConverter</span><span class="p">,</span><span class="w"> </span><span class="n">patterns</span><span class="p">.</span><span class="n">getContext</span><span class="p">());</span>
+<span class="w">    </span><span class="n">patterns</span><span class="p">.</span><span class="n">add</span><span class="o">&lt;</span><span class="n">LegalizeCarrierOp</span><span class="o">&gt;</span><span class="p">(</span><span class="n">typeConverter</span><span class="p">,</span><span class="w"> </span><span class="n">patterns</span><span class="p">.</span><span class="n">getContext</span><span class="p">());</span>
+<span class="p">}</span>
+
+<span class="k">namespace</span><span class="w"> </span><span class="p">{</span>
+<span class="k">struct</span><span class="w"> </span><span class="nc">ConvertBase2ToEmitHLSPass</span>
+<span class="w">        </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">impl</span><span class="o">::</span><span class="n">ConvertBase2ToEmitHLSBase</span><span class="o">&lt;</span><span class="n">ConvertBase2ToEmitHLSPass</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="nf">runOnOperation</span><span class="p">()</span><span class="w"> </span><span class="k">final</span><span class="p">;</span>
+<span class="p">};</span>
+<span class="p">}</span><span class="w"> </span><span class="c1">// namespace</span>
+
+<span class="n">Base2ToEmitHLSTypeConverter</span><span class="o">::</span><span class="n">Base2ToEmitHLSTypeConverter</span><span class="p">()</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">addConversion</span><span class="p">([](</span><span class="n">Type</span><span class="w"> </span><span class="n">type</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">type</span><span class="p">;</span><span class="w"> </span><span class="p">});</span>
+<span class="w">    </span><span class="n">addConversion</span><span class="p">([](</span><span class="n">base2</span><span class="o">::</span><span class="n">FixedType</span><span class="w"> </span><span class="n">type</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">convertFixedType</span><span class="p">(</span><span class="n">type</span><span class="p">);</span><span class="w"> </span><span class="p">});</span>
+
+<span class="w">    </span><span class="c1">// Carrier types: containers that may wrap a (nested) base2 type and need</span>
+<span class="w">    </span><span class="c1">// their element/base type re-derived through this same converter.</span>
+<span class="w">    </span><span class="n">addConversion</span><span class="p">([</span><span class="k">this</span><span class="p">](</span><span class="n">MemRefType</span><span class="w"> </span><span class="n">type</span><span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">Type</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">Type</span><span class="w"> </span><span class="n">newElem</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">convertType</span><span class="p">(</span><span class="n">type</span><span class="p">.</span><span class="n">getElementType</span><span class="p">());</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">newElem</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="nb">nullptr</span><span class="p">;</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">newElem</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">type</span><span class="p">.</span><span class="n">getElementType</span><span class="p">())</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">type</span><span class="p">;</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">MemRefType</span><span class="o">::</span><span class="n">get</span><span class="p">(</span>
+<span class="w">            </span><span class="n">type</span><span class="p">.</span><span class="n">getShape</span><span class="p">(),</span>
+<span class="w">            </span><span class="n">newElem</span><span class="p">,</span>
+<span class="w">            </span><span class="n">type</span><span class="p">.</span><span class="n">getLayout</span><span class="p">(),</span>
+<span class="w">            </span><span class="n">type</span><span class="p">.</span><span class="n">getMemorySpace</span><span class="p">());</span>
+<span class="w">    </span><span class="p">});</span>
+<span class="w">    </span><span class="n">addConversion</span><span class="p">([</span><span class="k">this</span><span class="p">](</span><span class="n">ArrayType</span><span class="w"> </span><span class="n">type</span><span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">Type</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">Type</span><span class="w"> </span><span class="n">newElem</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">convertType</span><span class="p">(</span><span class="n">type</span><span class="p">.</span><span class="n">getElementType</span><span class="p">());</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">newElem</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="nb">nullptr</span><span class="p">;</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">newElem</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">type</span><span class="p">.</span><span class="n">getElementType</span><span class="p">())</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">type</span><span class="p">;</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">ArrayType</span><span class="o">::</span><span class="n">get</span><span class="p">(</span><span class="n">type</span><span class="p">.</span><span class="n">getShape</span><span class="p">(),</span><span class="w"> </span><span class="n">newElem</span><span class="p">);</span>
+<span class="w">    </span><span class="p">});</span>
+<span class="w">    </span><span class="n">addConversion</span><span class="p">([</span><span class="k">this</span><span class="p">](</span><span class="n">StreamType</span><span class="w"> </span><span class="n">type</span><span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">Type</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">Type</span><span class="w"> </span><span class="n">newElem</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">convertType</span><span class="p">(</span><span class="n">type</span><span class="p">.</span><span class="n">getElementType</span><span class="p">());</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">newElem</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="nb">nullptr</span><span class="p">;</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">newElem</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">type</span><span class="p">.</span><span class="n">getElementType</span><span class="p">())</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">type</span><span class="p">;</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">StreamType</span><span class="o">::</span><span class="n">get</span><span class="p">(</span><span class="n">type</span><span class="p">.</span><span class="n">getContext</span><span class="p">(),</span><span class="w"> </span><span class="n">newElem</span><span class="p">);</span>
+<span class="w">    </span><span class="p">});</span>
+<span class="w">    </span><span class="n">addConversion</span><span class="p">([</span><span class="k">this</span><span class="p">](</span><span class="n">PointerType</span><span class="w"> </span><span class="n">type</span><span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">Type</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">Type</span><span class="w"> </span><span class="n">newElem</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">convertType</span><span class="p">(</span><span class="n">type</span><span class="p">.</span><span class="n">getElementType</span><span class="p">());</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">newElem</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="nb">nullptr</span><span class="p">;</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">newElem</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">type</span><span class="p">.</span><span class="n">getElementType</span><span class="p">())</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">type</span><span class="p">;</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">PointerType</span><span class="o">::</span><span class="n">get</span><span class="p">(</span><span class="n">type</span><span class="p">.</span><span class="n">getContext</span><span class="p">(),</span><span class="w"> </span><span class="n">newElem</span><span class="p">);</span>
+<span class="w">    </span><span class="p">});</span>
+<span class="w">    </span><span class="n">addConversion</span><span class="p">([</span><span class="k">this</span><span class="p">](</span><span class="n">dfg</span><span class="o">::</span><span class="n">InputType</span><span class="w"> </span><span class="n">type</span><span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">Type</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">Type</span><span class="w"> </span><span class="n">newElem</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">convertType</span><span class="p">(</span><span class="n">type</span><span class="p">.</span><span class="n">getElementType</span><span class="p">());</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">newElem</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="nb">nullptr</span><span class="p">;</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">newElem</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">type</span><span class="p">.</span><span class="n">getElementType</span><span class="p">())</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">type</span><span class="p">;</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">dfg</span><span class="o">::</span><span class="n">InputType</span><span class="o">::</span><span class="n">get</span><span class="p">(</span><span class="n">type</span><span class="p">.</span><span class="n">getShape</span><span class="p">(),</span><span class="w"> </span><span class="n">newElem</span><span class="p">);</span>
+<span class="w">    </span><span class="p">});</span>
+<span class="w">    </span><span class="n">addConversion</span><span class="p">([</span><span class="k">this</span><span class="p">](</span><span class="n">dfg</span><span class="o">::</span><span class="n">OutputType</span><span class="w"> </span><span class="n">type</span><span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">Type</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">Type</span><span class="w"> </span><span class="n">newElem</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">convertType</span><span class="p">(</span><span class="n">type</span><span class="p">.</span><span class="n">getElementType</span><span class="p">());</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">newElem</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="nb">nullptr</span><span class="p">;</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">newElem</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">type</span><span class="p">.</span><span class="n">getElementType</span><span class="p">())</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">type</span><span class="p">;</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">dfg</span><span class="o">::</span><span class="n">OutputType</span><span class="o">::</span><span class="n">get</span><span class="p">(</span><span class="n">type</span><span class="p">.</span><span class="n">getShape</span><span class="p">(),</span><span class="w"> </span><span class="n">newElem</span><span class="p">);</span>
+<span class="w">    </span><span class="p">});</span>
+
+<span class="w">    </span><span class="c1">// Bridges values that were converted (base2 -&gt; emithls) but must still</span>
+<span class="w">    </span><span class="c1">// feed, or be fed by, an operation that has not been legalized yet at the</span>
+<span class="w">    </span><span class="c1">// point the driver needs the value.</span>
+<span class="w">    </span><span class="k">auto</span><span class="w"> </span><span class="n">materializeCast</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[](</span><span class="n">OpBuilder</span><span class="w"> </span><span class="o">&amp;</span><span class="n">builder</span><span class="p">,</span>
+<span class="w">                              </span><span class="n">Type</span><span class="w"> </span><span class="n">resultType</span><span class="p">,</span>
+<span class="w">                              </span><span class="n">ValueRange</span><span class="w"> </span><span class="n">inputs</span><span class="p">,</span>
+<span class="w">                              </span><span class="n">Location</span><span class="w"> </span><span class="n">loc</span><span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">Value</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">inputs</span><span class="p">.</span><span class="n">size</span><span class="p">()</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">Value</span><span class="p">();</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">UnrealizedConversionCastOp</span><span class="o">::</span><span class="n">create</span><span class="p">(</span>
+<span class="w">                   </span><span class="n">builder</span><span class="p">,</span>
+<span class="w">                   </span><span class="n">loc</span><span class="p">,</span>
+<span class="w">                   </span><span class="n">resultType</span><span class="p">,</span>
+<span class="w">                   </span><span class="n">inputs</span><span class="p">)</span>
+<span class="w">            </span><span class="p">.</span><span class="n">getResult</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+<span class="w">    </span><span class="p">};</span>
+<span class="w">    </span><span class="n">addSourceMaterialization</span><span class="p">(</span><span class="n">materializeCast</span><span class="p">);</span>
+<span class="w">    </span><span class="n">addTargetMaterialization</span><span class="p">(</span><span class="n">materializeCast</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">void</span><span class="w"> </span><span class="n">ConvertBase2ToEmitHLSPass</span><span class="o">::</span><span class="n">runOnOperation</span><span class="p">()</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">ConversionTarget</span><span class="w"> </span><span class="nf">target</span><span class="p">(</span><span class="n">getContext</span><span class="p">());</span>
+<span class="w">    </span><span class="n">RewritePatternSet</span><span class="w"> </span><span class="nf">patterns</span><span class="p">(</span><span class="o">&amp;</span><span class="n">getContext</span><span class="p">());</span>
+
+<span class="w">    </span><span class="n">Base2ToEmitHLSTypeConverter</span><span class="w"> </span><span class="n">converter</span><span class="p">;</span>
+
+<span class="w">    </span><span class="n">populateBase2ToEmitHLSConversionPatterns</span><span class="p">(</span><span class="n">converter</span><span class="p">,</span><span class="w"> </span><span class="n">patterns</span><span class="p">);</span>
+
+<span class="w">    </span><span class="n">target</span><span class="p">.</span><span class="n">addIllegalDialect</span><span class="o">&lt;</span><span class="n">base2</span><span class="o">::</span><span class="n">Base2Dialect</span><span class="o">&gt;</span><span class="p">();</span>
+<span class="w">    </span><span class="n">target</span><span class="p">.</span><span class="n">markUnknownOpDynamicallyLegal</span><span class="p">([</span><span class="o">&amp;</span><span class="n">converter</span><span class="p">](</span><span class="n">Operation</span><span class="o">*</span><span class="w"> </span><span class="n">op</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="c1">// An operation is legal once none of its operand/result types, block</span>
+<span class="w">        </span><span class="c1">// argument types, or TypeAttr-encoded attributes still mention a base2</span>
+<span class="w">        </span><span class="c1">// type.</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">converter</span><span class="p">.</span><span class="n">isLegal</span><span class="p">(</span><span class="n">op</span><span class="p">))</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">Region</span><span class="w"> </span><span class="o">&amp;</span><span class="n">region</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">op</span><span class="o">-&gt;</span><span class="n">getRegions</span><span class="p">())</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">converter</span><span class="p">.</span><span class="n">isLegal</span><span class="p">(</span><span class="o">&amp;</span><span class="n">region</span><span class="p">))</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">NamedAttribute</span><span class="w"> </span><span class="n">attr</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">op</span><span class="o">-&gt;</span><span class="n">getAttrs</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">auto</span><span class="w"> </span><span class="n">typeAttr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dyn_cast</span><span class="o">&lt;</span><span class="n">TypeAttr</span><span class="o">&gt;</span><span class="p">(</span><span class="n">attr</span><span class="p">.</span><span class="n">getValue</span><span class="p">());</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">typeAttr</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="o">!</span><span class="n">converter</span><span class="p">.</span><span class="n">isLegal</span><span class="p">(</span><span class="n">typeAttr</span><span class="p">.</span><span class="n">getValue</span><span class="p">()))</span>
+<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="w">    </span><span class="p">});</span>
+
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">failed</span><span class="p">(</span><span class="n">applyPartialConversion</span><span class="p">(</span>
+<span class="w">            </span><span class="n">getOperation</span><span class="p">(),</span>
+<span class="w">            </span><span class="n">target</span><span class="p">,</span>
+<span class="w">            </span><span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">patterns</span><span class="p">))))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">signalPassFailure</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">Pass</span><span class="o">&gt;</span><span class="w"> </span><span class="n">mlir</span><span class="o">::</span><span class="n">createConvertBase2ToEmitHLSPass</span><span class="p">()</span>
+<span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">make_unique</span><span class="o">&lt;</span><span class="n">ConvertBase2ToEmitHLSPass</span><span class="o">&gt;</span><span class="p">();</span><span class="w"> </span><span class="p">}</span>
+</pre></div>
+</div>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,212 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Program Listing for File EmitHLSToLaksaHeader.cpp &mdash; picea 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/collapsible-lists/css/tree_view.css?v=a885cde7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js?v=73120307"></script>
+      <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js?v=660e4f45"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            picea
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Installation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../README.html">About the project</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#guides">Guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#related-projects">Related projects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#development-environment-nix">Development Environment (Nix)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#build-on-ubuntu-24-04-no-nix">Build on Ubuntu 24.04 (no Nix)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#gurobi-license">Gurobi license</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#installing">Installing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#run-the-tests">Run the tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#build-the-documentation">Build the documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#compiling-a-design">Compiling a design</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#running-a-design-on-the-board">Running a design on the board</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#exporting-a-profiled-application-to-mocasin">Exporting a profiled application to Mocasin</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Guides</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../guides/laksa.html">The FPGA Variant using LAKSA backend</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/cgra.html">The CGRA Variant</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">MLIR Dialects</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/Base2Ops.html">‘base2’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/CGRAOps.html">‘cgra’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/DFGOps.html">‘dfg’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/EmitHLSOps.html">‘emithls’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/FilterOps.html">‘filter’ Dialect</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Passes</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/PICEAConversionPasses.html">PICEA Conversion Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/CGRAPasses.html">CGRA Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/DFGPasses.html">DFG Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/EmitHLSPasses.html">Emit HLS Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/FuncExtPasses.html">Func Ext Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/LinalgExtPasses.html">Linalg Ext Passes</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">C++ API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="library_root.html">C++ API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">picea</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Program Listing for File EmitHLSToLaksaHeader.cpp</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/program_listing_file_lib_Target_EmitHLSToLaksaHeader_EmitHLSToLaksaHeader.cpp.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="program-listing-for-file-emithlstolaksaheader-cpp">
+<span id="program-listing-file-lib-target-emithlstolaksaheader-emithlstolaksaheader-cpp"></span><h1>Program Listing for File EmitHLSToLaksaHeader.cpp<a class="headerlink" href="#program-listing-for-file-emithlstolaksaheader-cpp" title="Link to this heading"></a></h1>
+<p>↰ <a class="reference internal" href="file_lib_Target_EmitHLSToLaksaHeader_EmitHLSToLaksaHeader.cpp.html#file-lib-target-emithlstolaksaheader-emithlstolaksaheader-cpp"><span class="std std-ref">Return to documentation for file</span></a> (<code class="docutils literal notranslate"><span class="pre">lib/Target/EmitHLSToLaksaHeader/EmitHLSToLaksaHeader.cpp</span></code>)</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="c1">// Implementation of translation EmitHLSToLaksaHeader</span>
+<span class="c1">//</span>
+<span class="c1">// @file</span>
+<span class="c1">// @author     Jiahong Bi (jiahong.bi@tu-dresden.de)</span>
+
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"picea-mlir/Target/EmitHLSToLaksaHeader/LaksaHeaderEmitter.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"picea-mlir/Target/LaksaCommon/BufferInfo.h"</span>
+
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"llvm/ADT/STLExtras.h"</span>
+
+<span class="k">using</span><span class="w"> </span><span class="k">namespace</span><span class="w"> </span><span class="nn">mlir</span><span class="p">;</span>
+<span class="k">using</span><span class="w"> </span><span class="k">namespace</span><span class="w"> </span><span class="nn">mlir</span><span class="o">::</span><span class="nn">emithls</span><span class="p">;</span>
+
+<span class="c1">//===----------------------------------------------------------------------===//</span>
+<span class="c1">// Translation entry point</span>
+<span class="c1">//===----------------------------------------------------------------------===//</span>
+
+<span class="n">LogicalResult</span>
+<span class="nf">emithls::translateEmitHLSToLaksaHeader</span><span class="p">(</span><span class="n">ModuleOp</span><span class="w"> </span><span class="n">op</span><span class="p">,</span><span class="w"> </span><span class="n">raw_ostream</span><span class="w"> </span><span class="o">&amp;</span><span class="n">os</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">FailureOr</span><span class="o">&lt;</span><span class="n">FuncOp</span><span class="o">&gt;</span><span class="w"> </span><span class="n">topFunc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">findLaksaTopFunc</span><span class="p">(</span><span class="n">op</span><span class="p">);</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">failed</span><span class="p">(</span><span class="n">topFunc</span><span class="p">))</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">failure</span><span class="p">();</span>
+<span class="w">    </span><span class="n">SmallVector</span><span class="o">&lt;</span><span class="n">LaksaBufferInfo</span><span class="o">&gt;</span><span class="w"> </span><span class="n">buffers</span><span class="p">;</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">failed</span><span class="p">(</span><span class="n">collectLaksaBufferInfos</span><span class="p">(</span><span class="o">*</span><span class="n">topFunc</span><span class="p">,</span><span class="w"> </span><span class="n">buffers</span><span class="p">)))</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">failure</span><span class="p">();</span>
+
+<span class="w">    </span><span class="n">StringRef</span><span class="w"> </span><span class="n">designName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">topFunc</span><span class="o">-&gt;</span><span class="n">getSymName</span><span class="p">();</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">prefix</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">getLaksaMacroPrefix</span><span class="p">(</span><span class="n">designName</span><span class="p">);</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">guard</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">prefix</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">"_LAKSA_CONFIG_H"</span><span class="p">;</span>
+
+<span class="w">    </span><span class="n">os</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"// Generated by resin -t emithls-to-laksa-header.</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">       </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"// Buffer sizes and AXI-Lite register offsets for '"</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">designName</span>
+<span class="w">       </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"', matching the</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">       </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"// argument layout expected by laksa.h's IOCTL_START_KERNEL.</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">       </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"#ifndef "</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">guard</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">       </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"#define "</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">guard</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"</span><span class="se">\n\n</span><span class="s">"</span>
+<span class="w">       </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"#define "</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">prefix</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"_NUM_ARGS "</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">buffers</span><span class="p">.</span><span class="n">size</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"</span><span class="se">\n\n</span><span class="s">"</span>
+<span class="w">       </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"#define "</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">prefix</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"_CTRL_OFFSET 0x00 /* ap_ctrl */</span><span class="se">\n\n</span><span class="s">"</span><span class="p">;</span>
+
+<span class="w">    </span><span class="c1">// Register offsets follow Vitis HLS's fixed AXI-Lite control layout for</span>
+<span class="w">    </span><span class="c1">// m_axi arguments: ap_ctrl/gie/ier/isr occupy 0x00-0x0c, then each</span>
+<span class="w">    </span><span class="c1">// 64-bit pointer argument gets a 0xc-byte slot starting at 0x10 (low</span>
+<span class="w">    </span><span class="c1">// word, high word, one reserved word).</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="p">[</span><span class="n">idx</span><span class="p">,</span><span class="w"> </span><span class="n">info</span><span class="p">]</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">llvm</span><span class="o">::</span><span class="n">enumerate</span><span class="p">(</span><span class="n">buffers</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kt">unsigned</span><span class="w"> </span><span class="n">lowOffset</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mh">0x10</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">idx</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mh">0xc</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">unsigned</span><span class="w"> </span><span class="n">highOffset</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">lowOffset</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mh">0x4</span><span class="p">;</span>
+<span class="w">        </span><span class="n">StringRef</span><span class="w"> </span><span class="n">direction</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">info</span><span class="p">.</span><span class="n">isReadByKernel</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">info</span><span class="p">.</span><span class="n">isWrittenByKernel</span>
+<span class="w">                                  </span><span class="o">?</span><span class="w"> </span><span class="s">"input/output"</span>
+<span class="w">                              </span><span class="o">:</span><span class="w"> </span><span class="n">info</span><span class="p">.</span><span class="n">isReadByKernel</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="s">"input"</span>
+<span class="w">                                                    </span><span class="o">:</span><span class="w"> </span><span class="s">"output"</span><span class="p">;</span>
+
+<span class="w">        </span><span class="n">os</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"/* arg"</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">idx</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">": "</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">direction</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">" buffer, "</span>
+<span class="w">           </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">info</span><span class="p">.</span><span class="n">numElements</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">" x "</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">info</span><span class="p">.</span><span class="n">elementBits</span>
+<span class="w">           </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"-bit elements */</span><span class="se">\n</span><span class="s">"</span>
+<span class="w">           </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"#define "</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">prefix</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"_ARG"</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">idx</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"_LOW_OFFSET  0x"</span><span class="p">;</span>
+<span class="w">        </span><span class="n">os</span><span class="p">.</span><span class="n">write_hex</span><span class="p">(</span><span class="n">lowOffset</span><span class="p">);</span>
+<span class="w">        </span><span class="n">os</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"</span><span class="se">\n</span><span class="s">#define "</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">prefix</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"_ARG"</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">idx</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"_HIGH_OFFSET 0x"</span><span class="p">;</span>
+<span class="w">        </span><span class="n">os</span><span class="p">.</span><span class="n">write_hex</span><span class="p">(</span><span class="n">highOffset</span><span class="p">);</span>
+<span class="w">        </span><span class="n">os</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"</span><span class="se">\n</span><span class="s">#define "</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">prefix</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"_ARG"</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">idx</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"_SIZE        "</span>
+<span class="w">           </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">info</span><span class="p">.</span><span class="n">getSizeInBytes</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">" /* bytes */</span><span class="se">\n\n</span><span class="s">"</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="n">os</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"#endif /* "</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">guard</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">" */</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">success</span><span class="p">();</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

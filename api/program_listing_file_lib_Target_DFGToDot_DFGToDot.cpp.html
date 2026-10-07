@@ -1,0 +1,534 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Program Listing for File DFGToDot.cpp &mdash; picea 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/collapsible-lists/css/tree_view.css?v=a885cde7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js?v=73120307"></script>
+      <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js?v=660e4f45"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            picea
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Installation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../README.html">About the project</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#guides">Guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#related-projects">Related projects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#development-environment-nix">Development Environment (Nix)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#build-on-ubuntu-24-04-no-nix">Build on Ubuntu 24.04 (no Nix)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#gurobi-license">Gurobi license</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#installing">Installing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#run-the-tests">Run the tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#build-the-documentation">Build the documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#compiling-a-design">Compiling a design</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#running-a-design-on-the-board">Running a design on the board</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#exporting-a-profiled-application-to-mocasin">Exporting a profiled application to Mocasin</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Guides</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../guides/laksa.html">The FPGA Variant using LAKSA backend</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/cgra.html">The CGRA Variant</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">MLIR Dialects</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/Base2Ops.html">‘base2’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/CGRAOps.html">‘cgra’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/DFGOps.html">‘dfg’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/EmitHLSOps.html">‘emithls’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/FilterOps.html">‘filter’ Dialect</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Passes</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/PICEAConversionPasses.html">PICEA Conversion Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/CGRAPasses.html">CGRA Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/DFGPasses.html">DFG Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/EmitHLSPasses.html">Emit HLS Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/FuncExtPasses.html">Func Ext Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/LinalgExtPasses.html">Linalg Ext Passes</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">C++ API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="library_root.html">C++ API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">picea</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Program Listing for File DFGToDot.cpp</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/program_listing_file_lib_Target_DFGToDot_DFGToDot.cpp.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="program-listing-for-file-dfgtodot-cpp">
+<span id="program-listing-file-lib-target-dfgtodot-dfgtodot-cpp"></span><h1>Program Listing for File DFGToDot.cpp<a class="headerlink" href="#program-listing-for-file-dfgtodot-cpp" title="Link to this heading"></a></h1>
+<p>↰ <a class="reference internal" href="file_lib_Target_DFGToDot_DFGToDot.cpp.html#file-lib-target-dfgtodot-dfgtodot-cpp"><span class="std std-ref">Return to documentation for file</span></a> (<code class="docutils literal notranslate"><span class="pre">lib/Target/DFGToDot/DFGToDot.cpp</span></code>)</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">"mlir/IR/BuiltinOps.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"mlir/IR/Operation.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"mlir/IR/Value.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"mlir/Support/IndentedOstream.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"mlir/Support/LLVM.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"mlir/Support/LogicalResult.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"picea-mlir/Dialect/DFG/IR/DFGOps.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"picea-mlir/IR/LaksaAttributes.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"picea-mlir/Target/DFGToDot/DotEmitter.h"</span>
+
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"llvm/ADT/DenseMap.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"llvm/ADT/STLExtras.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"llvm/ADT/SmallVector.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"llvm/Support/raw_ostream.h"</span>
+
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;algorithm&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;map&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;sstream&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;string&gt;</span>
+
+<span class="k">using</span><span class="w"> </span><span class="k">namespace</span><span class="w"> </span><span class="nn">mlir</span><span class="p">;</span>
+<span class="k">using</span><span class="w"> </span><span class="k">namespace</span><span class="w"> </span><span class="nn">mlir</span><span class="o">::</span><span class="nn">dfg</span><span class="p">;</span>
+
+<span class="k">namespace</span><span class="w"> </span><span class="p">{</span>
+
+<span class="k">constexpr</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="n">kDotNodeName</span><span class="w"> </span><span class="o">=</span>
+<span class="w">    </span><span class="sa">R</span><span class="s">"</span><span class="dl">(</span><span class="s">{{GraphName}}_{{GraphNumber}}_{{NodeName}}_{{NodeNumber}}</span><span class="dl">)</span><span class="s">"</span><span class="p">;</span>
+<span class="k">constexpr</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="n">kDotNode</span><span class="w"> </span><span class="o">=</span>
+<span class="w">    </span><span class="sa">R</span><span class="s">"</span><span class="dl">(</span><span class="s">{{GraphName}}_{{GraphNumber}}_{{NodeName}}_{{NodeNumber}} [label="{{NodeName}}", shape=box];</span>
+<span class="dl">)</span><span class="s">"</span><span class="p">;</span>
+<span class="k">constexpr</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="n">kDotSubgraph</span><span class="w"> </span><span class="o">=</span>
+<span class="w">    </span><span class="sa">R</span><span class="s">"</span><span class="dl">(</span><span class="s">subgraph cluster_{{GraphName}}_{{GraphNumber}} {</span>
+<span class="s">  label="{{GraphName}}";</span>
+<span class="s">{{Content}}</span>
+<span class="s">}</span>
+<span class="dl">)</span><span class="s">"</span><span class="p">;</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">DotEmitter</span><span class="w"> </span><span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+<span class="w">    </span><span class="n">LogicalResult</span><span class="w"> </span><span class="n">emitGraph</span><span class="p">(</span><span class="n">ModuleOp</span><span class="w"> </span><span class="k">module</span><span class="p">,</span><span class="w"> </span><span class="n">raw_ostream</span><span class="w"> </span><span class="o">&amp;</span><span class="n">os</span><span class="p">);</span>
+
+<span class="k">private</span><span class="o">:</span>
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="n">getGraph</span><span class="p">(</span><span class="n">ModuleOp</span><span class="w"> </span><span class="k">module</span><span class="p">);</span>
+
+<span class="w">    </span><span class="k">static</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span>
+<span class="w">    </span><span class="nf">replaceAll</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">str</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="o">&amp;</span><span class="n">from</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="o">&amp;</span><span class="n">to</span><span class="p">)</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="kt">size_t</span><span class="w"> </span><span class="n">start_pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">        </span><span class="k">while</span><span class="w"> </span><span class="p">((</span><span class="n">start_pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">str</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="n">from</span><span class="p">,</span><span class="w"> </span><span class="n">start_pos</span><span class="p">))</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">::</span><span class="n">npos</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">str</span><span class="p">.</span><span class="n">replace</span><span class="p">(</span><span class="n">start_pos</span><span class="p">,</span><span class="w"> </span><span class="n">from</span><span class="p">.</span><span class="n">length</span><span class="p">(),</span><span class="w"> </span><span class="n">to</span><span class="p">);</span>
+<span class="w">            </span><span class="n">start_pos</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">to</span><span class="p">.</span><span class="n">length</span><span class="p">();</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">str</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="k">static</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="nf">indentContent</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="o">&amp;</span><span class="n">content</span><span class="p">)</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">indented</span><span class="p">;</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">istringstream</span><span class="w"> </span><span class="n">iss</span><span class="p">(</span><span class="n">content</span><span class="p">);</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">line</span><span class="p">;</span>
+<span class="w">        </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">getline</span><span class="p">(</span><span class="n">iss</span><span class="p">,</span><span class="w"> </span><span class="n">line</span><span class="p">))</span><span class="w"> </span><span class="n">indented</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="s">"  "</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">line</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">"</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">indented</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="k">static</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="nf">removeBlankLines</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="o">&amp;</span><span class="n">input</span><span class="p">)</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">stringstream</span><span class="w"> </span><span class="n">ss</span><span class="p">(</span><span class="n">input</span><span class="p">);</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">line</span><span class="p">;</span>
+<span class="w">        </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">result</span><span class="p">;</span>
+<span class="w">        </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">getline</span><span class="p">(</span><span class="n">ss</span><span class="p">,</span><span class="w"> </span><span class="n">line</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="kt">bool</span><span class="w"> </span><span class="n">isBlank</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">all_of</span><span class="p">(</span><span class="n">line</span><span class="p">.</span><span class="n">begin</span><span class="p">(),</span><span class="w"> </span><span class="n">line</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span><span class="w"> </span><span class="p">[](</span><span class="kt">char</span><span class="w"> </span><span class="n">c</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">isspace</span><span class="p">(</span><span class="n">c</span><span class="p">);</span>
+<span class="w">            </span><span class="p">});</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">isBlank</span><span class="p">)</span><span class="w"> </span><span class="n">result</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">line</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="sc">'\n'</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">result</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">map</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span><span class="w"> </span><span class="n">dotNodeNameMap</span><span class="p">;</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">map</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span><span class="w"> </span><span class="n">dotNodeMap</span><span class="p">;</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">map</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">,</span><span class="w"> </span><span class="kt">unsigned</span><span class="o">&gt;</span><span class="w"> </span><span class="n">dotNodeNumMap</span><span class="p">;</span>
+<span class="w">    </span><span class="n">llvm</span><span class="o">::</span><span class="n">DenseMap</span><span class="o">&lt;</span><span class="n">Operation</span><span class="o">*</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span><span class="w"> </span><span class="n">dotNodeOpMap</span><span class="p">;</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">map</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span><span class="w"> </span><span class="n">dotGraphMap</span><span class="p">;</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">map</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">,</span><span class="w"> </span><span class="kt">unsigned</span><span class="o">&gt;</span><span class="w"> </span><span class="n">dotGraphNumMap</span><span class="p">;</span>
+<span class="w">    </span><span class="c1">// Maps subgraph name → output port dot node names (data flows OUT of</span>
+<span class="w">    </span><span class="c1">// subgraph)</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">map</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">,</span><span class="w"> </span><span class="n">SmallVector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="n">dotSubgraphOutPortMap</span><span class="p">;</span>
+<span class="w">    </span><span class="c1">// Maps subgraph name → input port dot node names (data flows INTO subgraph)</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">map</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">,</span><span class="w"> </span><span class="n">SmallVector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="n">dotSubgraphInPortMap</span><span class="p">;</span>
+<span class="w">    </span><span class="n">llvm</span><span class="o">::</span><span class="n">DenseMap</span><span class="o">&lt;</span><span class="n">Operation</span><span class="o">*</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span><span class="w"> </span><span class="n">dotSubgraphNameMap</span><span class="p">;</span>
+<span class="w">    </span><span class="n">llvm</span><span class="o">::</span><span class="n">DenseMap</span><span class="o">&lt;</span><span class="n">Value</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span><span class="w"> </span><span class="n">graphPortMap</span><span class="p">;</span>
+<span class="w">    </span><span class="n">SmallVector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span><span class="w"> </span><span class="n">topGraphs</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="p">}</span><span class="w"> </span><span class="c1">// namespace</span>
+
+<span class="kt">void</span><span class="w"> </span><span class="n">DotEmitter</span><span class="o">::</span><span class="n">getGraph</span><span class="p">(</span><span class="n">ModuleOp</span><span class="w"> </span><span class="k">module</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="o">&amp;</span><span class="n">opi</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">module</span><span class="p">.</span><span class="n">getBodyRegion</span><span class="p">().</span><span class="n">front</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="n">graphOp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dyn_cast</span><span class="o">&lt;</span><span class="n">GraphInterface</span><span class="o">&gt;</span><span class="p">(</span><span class="n">opi</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">auto</span><span class="w"> </span><span class="n">graphOpAsNode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cast</span><span class="o">&lt;</span><span class="n">NodeInterface</span><span class="o">&gt;</span><span class="p">(</span><span class="n">opi</span><span class="p">);</span>
+<span class="w">            </span><span class="k">auto</span><span class="w"> </span><span class="n">graphName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">graphOp</span><span class="p">.</span><span class="n">getGraphName</span><span class="p">();</span>
+<span class="w">            </span><span class="k">auto</span><span class="w"> </span><span class="n">isSubGraph</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">graphOp</span><span class="p">.</span><span class="n">isSubGraph</span><span class="p">();</span>
+<span class="w">            </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="nf">graphStr</span><span class="p">(</span><span class="n">kDotSubgraph</span><span class="p">);</span>
+<span class="w">            </span><span class="n">graphStr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">replaceAll</span><span class="p">(</span><span class="n">graphStr</span><span class="p">,</span><span class="w"> </span><span class="s">"{{GraphName}}"</span><span class="p">,</span><span class="w"> </span><span class="n">graphName</span><span class="p">);</span>
+<span class="w">            </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">graphContentStr</span><span class="p">;</span>
+
+<span class="w">            </span><span class="c1">// Input ports: data flows INTO the graph from outside.</span>
+<span class="w">            </span><span class="n">SmallVector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span><span class="w"> </span><span class="n">outputPortsStr</span><span class="p">;</span>
+<span class="w">            </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">unsigned</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">graphOpAsNode</span><span class="p">.</span><span class="n">getNumInputPorts</span><span class="p">();</span><span class="w"> </span><span class="o">++</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">inPortStr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"in_"</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">to_string</span><span class="p">(</span><span class="n">i</span><span class="p">);</span>
+<span class="w">                </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">inGraphPortStr</span><span class="w"> </span><span class="o">=</span>
+<span class="w">                    </span><span class="n">graphName</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">"_{{GraphNumber}}_"</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">inPortStr</span><span class="p">;</span>
+<span class="w">                </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">inPortNodeStr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">inGraphPortStr</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">" [label=</span><span class="se">\"</span><span class="s">"</span>
+<span class="w">                                            </span><span class="o">+</span><span class="w"> </span><span class="n">inPortStr</span>
+<span class="w">                                            </span><span class="o">+</span><span class="w"> </span><span class="s">"</span><span class="se">\"</span><span class="s">, shape=ellipse];</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+<span class="w">                </span><span class="k">auto</span><span class="w"> </span><span class="n">inPort</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">graphOpAsNode</span><span class="p">.</span><span class="n">getInputPort</span><span class="p">(</span><span class="n">i</span><span class="p">);</span>
+<span class="w">                </span><span class="n">graphContentStr</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">indentContent</span><span class="p">(</span><span class="n">inPortNodeStr</span><span class="p">);</span>
+<span class="w">                </span><span class="n">graphPortMap</span><span class="p">.</span><span class="n">insert</span><span class="p">({</span><span class="n">inPort</span><span class="p">,</span><span class="w"> </span><span class="n">inGraphPortStr</span><span class="p">});</span>
+<span class="w">                </span><span class="n">outputPortsStr</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">inGraphPortStr</span><span class="p">);</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">isSubGraph</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="k">auto</span><span class="w"> </span><span class="n">subGraphNameStr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">graphName</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">"_{{GraphNumber}}"</span><span class="p">;</span>
+<span class="w">                </span><span class="n">dotSubgraphInPortMap</span><span class="p">.</span><span class="n">insert</span><span class="p">({</span><span class="n">subGraphNameStr</span><span class="p">,</span><span class="w"> </span><span class="n">outputPortsStr</span><span class="p">});</span>
+<span class="w">            </span><span class="p">}</span>
+
+<span class="w">            </span><span class="c1">// Source rank grouping for input ports</span>
+<span class="w">            </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">graphSourceNodes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"{rank=source;{{SourceNodes}}}</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+<span class="w">            </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">sourceNodesStr</span><span class="p">;</span>
+<span class="w">            </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="n">inPort</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">graphOpAsNode</span><span class="p">.</span><span class="n">getInputPorts</span><span class="p">())</span>
+<span class="w">                </span><span class="n">sourceNodesStr</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="p">(</span><span class="s">" "</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">graphPortMap</span><span class="p">[</span><span class="n">inPort</span><span class="p">]</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">";"</span><span class="p">);</span>
+<span class="w">            </span><span class="n">graphContentStr</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">indentContent</span><span class="p">(</span><span class="n">replaceAll</span><span class="p">(</span>
+<span class="w">                </span><span class="n">graphSourceNodes</span><span class="p">,</span>
+<span class="w">                </span><span class="s">"{{SourceNodes}}"</span><span class="p">,</span>
+<span class="w">                </span><span class="n">sourceNodesStr</span><span class="p">));</span>
+
+<span class="w">            </span><span class="c1">// Output ports: data flows OUT of the graph to the parent.</span>
+<span class="w">            </span><span class="n">SmallVector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span><span class="w"> </span><span class="n">inputPortsStr</span><span class="p">;</span>
+<span class="w">            </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">unsigned</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">graphOpAsNode</span><span class="p">.</span><span class="n">getNumOutputPorts</span><span class="p">();</span><span class="w"> </span><span class="o">++</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">outPortStr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"out_"</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">to_string</span><span class="p">(</span><span class="n">i</span><span class="p">);</span>
+<span class="w">                </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">outGraphPortStr</span><span class="w"> </span><span class="o">=</span>
+<span class="w">                    </span><span class="n">graphName</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">"_{{GraphNumber}}_"</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">outPortStr</span><span class="p">;</span>
+<span class="w">                </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">outPortNodeStr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">outGraphPortStr</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">" [label=</span><span class="se">\"</span><span class="s">"</span>
+<span class="w">                                             </span><span class="o">+</span><span class="w"> </span><span class="n">outPortStr</span>
+<span class="w">                                             </span><span class="o">+</span><span class="w"> </span><span class="s">"</span><span class="se">\"</span><span class="s">, shape=ellipse];</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+<span class="w">                </span><span class="k">auto</span><span class="w"> </span><span class="n">outPort</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">graphOpAsNode</span><span class="p">.</span><span class="n">getOutputPort</span><span class="p">(</span><span class="n">i</span><span class="p">);</span>
+<span class="w">                </span><span class="n">graphContentStr</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">indentContent</span><span class="p">(</span><span class="n">outPortNodeStr</span><span class="p">);</span>
+<span class="w">                </span><span class="n">graphPortMap</span><span class="p">.</span><span class="n">insert</span><span class="p">({</span><span class="n">outPort</span><span class="p">,</span><span class="w"> </span><span class="n">outGraphPortStr</span><span class="p">});</span>
+<span class="w">                </span><span class="n">inputPortsStr</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">outGraphPortStr</span><span class="p">);</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">isSubGraph</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="k">auto</span><span class="w"> </span><span class="n">subGraphNameStr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">graphName</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">"_{{GraphNumber}}"</span><span class="p">;</span>
+<span class="w">                </span><span class="n">dotSubgraphOutPortMap</span><span class="p">.</span><span class="n">insert</span><span class="p">({</span><span class="n">subGraphNameStr</span><span class="p">,</span><span class="w"> </span><span class="n">inputPortsStr</span><span class="p">});</span>
+<span class="w">            </span><span class="p">}</span>
+
+<span class="w">            </span><span class="c1">// Sink rank grouping for output ports</span>
+<span class="w">            </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">graphSinkNodes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"{rank=sink;{{SinkNodes}}}</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+<span class="w">            </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">sinkNodesStr</span><span class="p">;</span>
+<span class="w">            </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="n">outPort</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">graphOpAsNode</span><span class="p">.</span><span class="n">getOutputPorts</span><span class="p">())</span>
+<span class="w">                </span><span class="n">sinkNodesStr</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="p">(</span><span class="s">" "</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">graphPortMap</span><span class="p">[</span><span class="n">outPort</span><span class="p">]</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">";"</span><span class="p">);</span>
+<span class="w">            </span><span class="n">graphContentStr</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">indentContent</span><span class="p">(</span>
+<span class="w">                </span><span class="n">replaceAll</span><span class="p">(</span><span class="n">graphSinkNodes</span><span class="p">,</span><span class="w"> </span><span class="s">"{{SinkNodes}}"</span><span class="p">,</span><span class="w"> </span><span class="n">sinkNodesStr</span><span class="p">));</span>
+
+<span class="w">            </span><span class="c1">// Internal nodes (instantiate ops)</span>
+<span class="w">            </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="n">graphContent</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">graphOp</span><span class="p">.</span><span class="n">getGraphNodes</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="k">auto</span><span class="w"> </span><span class="n">graphContentNode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cast</span><span class="o">&lt;</span><span class="n">NodeInterface</span><span class="o">&gt;</span><span class="p">(</span><span class="n">graphContent</span><span class="p">);</span>
+<span class="w">                </span><span class="k">auto</span><span class="w"> </span><span class="n">graphContentNodeName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">graphContentNode</span><span class="p">.</span><span class="n">getNodeName</span><span class="p">();</span>
+<span class="w">                </span><span class="k">auto</span><span class="w"> </span><span class="n">graphContentNodeStr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dotNodeMap</span><span class="p">[</span><span class="n">graphContentNodeName</span><span class="p">];</span>
+<span class="w">                </span><span class="k">auto</span><span class="w"> </span><span class="n">graphContentNodeNameStr</span><span class="w"> </span><span class="o">=</span>
+<span class="w">                    </span><span class="n">dotNodeNameMap</span><span class="p">[</span><span class="n">graphContentNodeName</span><span class="p">];</span>
+<span class="w">                </span><span class="k">auto</span><span class="w"> </span><span class="n">graphContentNodeNumber</span><span class="w"> </span><span class="o">=</span>
+<span class="w">                    </span><span class="n">dotNodeNumMap</span><span class="p">[</span><span class="n">graphContentNodeNameStr</span><span class="p">]</span><span class="o">++</span><span class="p">;</span>
+<span class="w">                </span><span class="n">graphContentNodeNameStr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">replaceAll</span><span class="p">(</span>
+<span class="w">                    </span><span class="n">graphContentNodeNameStr</span><span class="p">,</span>
+<span class="w">                    </span><span class="s">"{{GraphName}}"</span><span class="p">,</span>
+<span class="w">                    </span><span class="n">graphName</span><span class="p">);</span>
+<span class="w">                </span><span class="n">graphContentNodeNameStr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">replaceAll</span><span class="p">(</span>
+<span class="w">                    </span><span class="n">graphContentNodeNameStr</span><span class="p">,</span>
+<span class="w">                    </span><span class="s">"{{NodeNumber}}"</span><span class="p">,</span>
+<span class="w">                    </span><span class="n">std</span><span class="o">::</span><span class="n">to_string</span><span class="p">(</span><span class="n">graphContentNodeNumber</span><span class="p">));</span>
+<span class="w">                </span><span class="n">graphContentNodeStr</span><span class="w"> </span><span class="o">=</span>
+<span class="w">                    </span><span class="n">replaceAll</span><span class="p">(</span><span class="n">graphContentNodeStr</span><span class="p">,</span><span class="w"> </span><span class="s">"{{GraphName}}"</span><span class="p">,</span><span class="w"> </span><span class="n">graphName</span><span class="p">);</span>
+<span class="w">                </span><span class="n">graphContentNodeStr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">replaceAll</span><span class="p">(</span>
+<span class="w">                    </span><span class="n">graphContentNodeStr</span><span class="p">,</span>
+<span class="w">                    </span><span class="s">"{{NodeNumber}}"</span><span class="p">,</span>
+<span class="w">                    </span><span class="n">std</span><span class="o">::</span><span class="n">to_string</span><span class="p">(</span><span class="n">graphContentNodeNumber</span><span class="p">));</span>
+<span class="w">                </span><span class="n">graphContentStr</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">indentContent</span><span class="p">(</span><span class="n">graphContentNodeStr</span><span class="p">);</span>
+<span class="w">                </span><span class="n">dotNodeOpMap</span><span class="p">.</span><span class="n">insert</span><span class="p">({</span><span class="n">graphContent</span><span class="p">,</span><span class="w"> </span><span class="n">graphContentNodeNameStr</span><span class="p">});</span>
+<span class="w">            </span><span class="p">}</span>
+
+<span class="w">            </span><span class="c1">// Embedded subgraphs</span>
+<span class="w">            </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="n">graphContent</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">graphOp</span><span class="p">.</span><span class="n">getGraphSubGs</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="k">auto</span><span class="w"> </span><span class="n">graphContentSubgraph</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cast</span><span class="o">&lt;</span><span class="n">GraphInterface</span><span class="o">&gt;</span><span class="p">(</span><span class="n">graphContent</span><span class="p">);</span>
+<span class="w">                </span><span class="k">auto</span><span class="w"> </span><span class="n">graphContentSubgraphName</span><span class="w"> </span><span class="o">=</span>
+<span class="w">                    </span><span class="n">graphContentSubgraph</span><span class="p">.</span><span class="n">getGraphName</span><span class="p">();</span>
+<span class="w">                </span><span class="k">auto</span><span class="w"> </span><span class="n">graphContentSubgraphNumber</span><span class="w"> </span><span class="o">=</span>
+<span class="w">                    </span><span class="n">dotGraphNumMap</span><span class="p">[</span><span class="n">graphContentSubgraphName</span><span class="p">]</span><span class="o">++</span><span class="p">;</span>
+<span class="w">                </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">graphContentSubgraphStr</span><span class="w"> </span><span class="o">=</span>
+<span class="w">                    </span><span class="n">dotGraphMap</span><span class="p">[</span><span class="n">graphContentSubgraphName</span><span class="p">];</span>
+<span class="w">                </span><span class="n">graphContentSubgraphStr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">replaceAll</span><span class="p">(</span>
+<span class="w">                    </span><span class="n">graphContentSubgraphStr</span><span class="p">,</span>
+<span class="w">                    </span><span class="s">"{{GraphNumber}}"</span><span class="p">,</span>
+<span class="w">                    </span><span class="n">std</span><span class="o">::</span><span class="n">to_string</span><span class="p">(</span><span class="n">graphContentSubgraphNumber</span><span class="p">));</span>
+<span class="w">                </span><span class="n">graphContentStr</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">graphContentSubgraphStr</span><span class="p">;</span>
+<span class="w">                </span><span class="n">dotSubgraphNameMap</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span>
+<span class="w">                    </span><span class="p">{</span><span class="n">graphContent</span><span class="p">,</span>
+<span class="w">                     </span><span class="n">graphContentSubgraphName</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">"_"</span>
+<span class="w">                         </span><span class="o">+</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">to_string</span><span class="p">(</span><span class="n">graphContentSubgraphNumber</span><span class="p">)});</span>
+
+<span class="w">                </span><span class="c1">// Instantiate port maps for this embedded subgraph.</span>
+<span class="w">                </span><span class="c1">// Iterate over a snapshot to safely insert new entries.</span>
+<span class="w">                </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="p">[</span><span class="n">key</span><span class="p">,</span><span class="w"> </span><span class="n">ports</span><span class="p">]</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">dotSubgraphInPortMap</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">key</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">graphContentSubgraphName</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">"_{{GraphNumber}}"</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                        </span><span class="k">auto</span><span class="w"> </span><span class="n">newName</span><span class="w"> </span><span class="o">=</span>
+<span class="w">                            </span><span class="n">graphContentSubgraphName</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">"_"</span>
+<span class="w">                            </span><span class="o">+</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">to_string</span><span class="p">(</span><span class="n">graphContentSubgraphNumber</span><span class="p">);</span>
+<span class="w">                        </span><span class="n">SmallVector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span><span class="w"> </span><span class="n">newPorts</span><span class="p">;</span>
+<span class="w">                        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="o">&amp;</span><span class="n">port</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">ports</span><span class="p">)</span>
+<span class="w">                            </span><span class="n">newPorts</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">replaceAll</span><span class="p">(</span>
+<span class="w">                                </span><span class="n">port</span><span class="p">,</span>
+<span class="w">                                </span><span class="s">"{{GraphNumber}}"</span><span class="p">,</span>
+<span class="w">                                </span><span class="n">std</span><span class="o">::</span><span class="n">to_string</span><span class="p">(</span><span class="n">graphContentSubgraphNumber</span><span class="p">)));</span>
+<span class="w">                        </span><span class="n">dotSubgraphInPortMap</span><span class="p">.</span><span class="n">insert</span><span class="p">({</span><span class="n">newName</span><span class="p">,</span><span class="w"> </span><span class="n">newPorts</span><span class="p">});</span>
+<span class="w">                    </span><span class="p">}</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">                </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="p">[</span><span class="n">key</span><span class="p">,</span><span class="w"> </span><span class="n">ports</span><span class="p">]</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">dotSubgraphOutPortMap</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">key</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">graphContentSubgraphName</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">"_{{GraphNumber}}"</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                        </span><span class="k">auto</span><span class="w"> </span><span class="n">newName</span><span class="w"> </span><span class="o">=</span>
+<span class="w">                            </span><span class="n">graphContentSubgraphName</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">"_"</span>
+<span class="w">                            </span><span class="o">+</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">to_string</span><span class="p">(</span><span class="n">graphContentSubgraphNumber</span><span class="p">);</span>
+<span class="w">                        </span><span class="n">SmallVector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span><span class="w"> </span><span class="n">newPorts</span><span class="p">;</span>
+<span class="w">                        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="o">&amp;</span><span class="n">port</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">ports</span><span class="p">)</span>
+<span class="w">                            </span><span class="n">newPorts</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">replaceAll</span><span class="p">(</span>
+<span class="w">                                </span><span class="n">port</span><span class="p">,</span>
+<span class="w">                                </span><span class="s">"{{GraphNumber}}"</span><span class="p">,</span>
+<span class="w">                                </span><span class="n">std</span><span class="o">::</span><span class="n">to_string</span><span class="p">(</span><span class="n">graphContentSubgraphNumber</span><span class="p">)));</span>
+<span class="w">                        </span><span class="n">dotSubgraphOutPortMap</span><span class="p">.</span><span class="n">insert</span><span class="p">({</span><span class="n">newName</span><span class="p">,</span><span class="w"> </span><span class="n">newPorts</span><span class="p">});</span>
+<span class="w">                    </span><span class="p">}</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">            </span><span class="p">}</span>
+
+<span class="w">            </span><span class="c1">// Channel edges.</span>
+<span class="w">            </span><span class="c1">// ChannelOp: input_port (result 0, DFGInputType) = write end,</span>
+<span class="w">            </span><span class="c1">//            output_port (result 1, DFGOutputType) = read end.</span>
+<span class="w">            </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="n">graphContent</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">graphOp</span><span class="p">.</span><span class="n">getGraphEdges</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="k">auto</span><span class="w"> </span><span class="n">channelOp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cast</span><span class="o">&lt;</span><span class="n">ChannelOp</span><span class="o">&gt;</span><span class="p">(</span><span class="n">graphContent</span><span class="p">);</span>
+<span class="w">                </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">graphContentEdgeStr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"{{INPUT}} -&gt; {{OUTPUT}};"</span><span class="p">;</span>
+
+<span class="w">                </span><span class="c1">// Producer: user of input_port (write end)</span>
+<span class="w">                </span><span class="k">auto</span><span class="w"> </span><span class="n">inConnection</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">channelOp</span><span class="p">.</span><span class="n">getInputConnectedOp</span><span class="p">();</span>
+<span class="w">                </span><span class="n">Value</span><span class="w"> </span><span class="n">inChanVal</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">channelOp</span><span class="p">.</span><span class="n">getInputPort</span><span class="p">();</span>
+<span class="w">                </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">edgeInputStr</span><span class="p">;</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">isa</span><span class="o">&lt;</span><span class="n">GraphInterface</span><span class="o">&gt;</span><span class="p">(</span><span class="n">inConnection</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                    </span><span class="k">auto</span><span class="w"> </span><span class="n">subGraphNameStr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dotSubgraphNameMap</span><span class="p">[</span><span class="n">inConnection</span><span class="p">];</span>
+<span class="w">                    </span><span class="k">auto</span><span class="w"> </span><span class="n">subGraphOutPorts</span><span class="w"> </span><span class="o">=</span>
+<span class="w">                        </span><span class="n">dotSubgraphOutPortMap</span><span class="p">[</span><span class="n">subGraphNameStr</span><span class="p">];</span>
+<span class="w">                    </span><span class="k">auto</span><span class="w"> </span><span class="n">inConnectionAsNode</span><span class="w"> </span><span class="o">=</span>
+<span class="w">                        </span><span class="n">dyn_cast</span><span class="o">&lt;</span><span class="n">NodeInterface</span><span class="o">&gt;</span><span class="p">(</span><span class="n">inConnection</span><span class="p">);</span>
+<span class="w">                    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="p">[</span><span class="n">outPort</span><span class="p">,</span><span class="w"> </span><span class="n">outPortName</span><span class="p">]</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">llvm</span><span class="o">::</span><span class="n">zip</span><span class="p">(</span>
+<span class="w">                             </span><span class="n">inConnectionAsNode</span><span class="p">.</span><span class="n">getOutputPorts</span><span class="p">(),</span>
+<span class="w">                             </span><span class="n">subGraphOutPorts</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">outPort</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">inChanVal</span><span class="p">)</span><span class="w"> </span><span class="n">edgeInputStr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">outPortName</span><span class="p">;</span>
+<span class="w">                    </span><span class="p">}</span>
+<span class="w">                </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                    </span><span class="n">edgeInputStr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dotNodeOpMap</span><span class="p">[</span><span class="n">inConnection</span><span class="p">];</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">                </span><span class="n">graphContentEdgeStr</span><span class="w"> </span><span class="o">=</span>
+<span class="w">                    </span><span class="n">replaceAll</span><span class="p">(</span><span class="n">graphContentEdgeStr</span><span class="p">,</span><span class="w"> </span><span class="s">"{{INPUT}}"</span><span class="p">,</span><span class="w"> </span><span class="n">edgeInputStr</span><span class="p">);</span>
+
+<span class="w">                </span><span class="c1">// Consumer: user of output_port (read end)</span>
+<span class="w">                </span><span class="k">auto</span><span class="w"> </span><span class="n">outConnection</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">channelOp</span><span class="p">.</span><span class="n">getOutputConnectedOp</span><span class="p">();</span>
+<span class="w">                </span><span class="n">Value</span><span class="w"> </span><span class="n">outChanVal</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">channelOp</span><span class="p">.</span><span class="n">getOutputPort</span><span class="p">();</span>
+<span class="w">                </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">edgeOutputStr</span><span class="p">;</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">isa</span><span class="o">&lt;</span><span class="n">GraphInterface</span><span class="o">&gt;</span><span class="p">(</span><span class="n">outConnection</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                    </span><span class="k">auto</span><span class="w"> </span><span class="n">subGraphNameStr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dotSubgraphNameMap</span><span class="p">[</span><span class="n">outConnection</span><span class="p">];</span>
+<span class="w">                    </span><span class="k">auto</span><span class="w"> </span><span class="n">subGraphInPorts</span><span class="w"> </span><span class="o">=</span>
+<span class="w">                        </span><span class="n">dotSubgraphInPortMap</span><span class="p">[</span><span class="n">subGraphNameStr</span><span class="p">];</span>
+<span class="w">                    </span><span class="k">auto</span><span class="w"> </span><span class="n">outConnectionAsNode</span><span class="w"> </span><span class="o">=</span>
+<span class="w">                        </span><span class="n">dyn_cast</span><span class="o">&lt;</span><span class="n">NodeInterface</span><span class="o">&gt;</span><span class="p">(</span><span class="n">outConnection</span><span class="p">);</span>
+<span class="w">                    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="p">[</span><span class="n">inPort</span><span class="p">,</span><span class="w"> </span><span class="n">inPortName</span><span class="p">]</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">llvm</span><span class="o">::</span><span class="n">zip</span><span class="p">(</span>
+<span class="w">                             </span><span class="n">outConnectionAsNode</span><span class="p">.</span><span class="n">getInputPorts</span><span class="p">(),</span>
+<span class="w">                             </span><span class="n">subGraphInPorts</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">inPort</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">outChanVal</span><span class="p">)</span><span class="w"> </span><span class="n">edgeOutputStr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">inPortName</span><span class="p">;</span>
+<span class="w">                    </span><span class="p">}</span>
+<span class="w">                </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                    </span><span class="n">edgeOutputStr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dotNodeOpMap</span><span class="p">[</span><span class="n">outConnection</span><span class="p">];</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">                </span><span class="n">graphContentEdgeStr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">replaceAll</span><span class="p">(</span>
+<span class="w">                    </span><span class="n">graphContentEdgeStr</span><span class="p">,</span>
+<span class="w">                    </span><span class="s">"{{OUTPUT}}"</span><span class="p">,</span>
+<span class="w">                    </span><span class="n">edgeOutputStr</span><span class="p">);</span>
+<span class="w">                </span><span class="n">graphContentStr</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">indentContent</span><span class="p">(</span><span class="n">graphContentEdgeStr</span><span class="p">);</span>
+<span class="w">            </span><span class="p">}</span>
+
+<span class="w">            </span><span class="c1">// Region port edges.</span>
+<span class="w">            </span><span class="c1">// Draw edges for all graphs (not just subgraphs).</span>
+<span class="w">            </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="n">inPort</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">graphOpAsNode</span><span class="p">.</span><span class="n">getInputPorts</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">inPort</span><span class="p">.</span><span class="n">use_empty</span><span class="p">())</span><span class="w"> </span><span class="k">continue</span><span class="p">;</span>
+<span class="w">                </span><span class="k">auto</span><span class="w"> </span><span class="n">inputStr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">graphPortMap</span><span class="p">[</span><span class="n">inPort</span><span class="p">];</span>
+<span class="w">                </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="o">&amp;</span><span class="n">use</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">inPort</span><span class="p">.</span><span class="n">getUses</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                    </span><span class="k">auto</span><span class="w"> </span><span class="n">inPortUser</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">use</span><span class="p">.</span><span class="n">getOwner</span><span class="p">();</span>
+<span class="w">                    </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">outputStr</span><span class="p">;</span>
+<span class="w">                    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">isa</span><span class="o">&lt;</span><span class="n">GraphInterface</span><span class="o">&gt;</span><span class="p">(</span><span class="n">inPortUser</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                        </span><span class="k">auto</span><span class="w"> </span><span class="n">subGraphNameStr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dotSubgraphNameMap</span><span class="p">[</span><span class="n">inPortUser</span><span class="p">];</span>
+<span class="w">                        </span><span class="k">auto</span><span class="w"> </span><span class="n">subGraphInPorts</span><span class="w"> </span><span class="o">=</span>
+<span class="w">                            </span><span class="n">dotSubgraphInPortMap</span><span class="p">[</span><span class="n">subGraphNameStr</span><span class="p">];</span>
+<span class="w">                        </span><span class="k">auto</span><span class="w"> </span><span class="n">asNode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dyn_cast</span><span class="o">&lt;</span><span class="n">NodeInterface</span><span class="o">&gt;</span><span class="p">(</span><span class="n">inPortUser</span><span class="p">);</span>
+<span class="w">                        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="p">[</span><span class="n">port</span><span class="p">,</span><span class="w"> </span><span class="n">portName</span><span class="p">]</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">llvm</span><span class="o">::</span><span class="n">zip</span><span class="p">(</span>
+<span class="w">                                 </span><span class="n">asNode</span><span class="p">.</span><span class="n">getInputPorts</span><span class="p">(),</span>
+<span class="w">                                 </span><span class="n">subGraphInPorts</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">port</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">inPort</span><span class="p">)</span><span class="w"> </span><span class="n">outputStr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">portName</span><span class="p">;</span>
+<span class="w">                        </span><span class="p">}</span>
+<span class="w">                    </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">isa</span><span class="o">&lt;</span><span class="n">NodeInterface</span><span class="o">&gt;</span><span class="p">(</span><span class="n">inPortUser</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                        </span><span class="n">outputStr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dotNodeOpMap</span><span class="p">[</span><span class="n">inPortUser</span><span class="p">];</span>
+<span class="w">                    </span><span class="p">}</span>
+<span class="w">                    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">outputStr</span><span class="p">.</span><span class="n">empty</span><span class="p">())</span>
+<span class="w">                        </span><span class="n">graphContentStr</span><span class="w"> </span><span class="o">+=</span>
+<span class="w">                            </span><span class="n">indentContent</span><span class="p">(</span><span class="n">inputStr</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">" -&gt; "</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">outputStr</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">";"</span><span class="p">);</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="n">outPort</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">graphOpAsNode</span><span class="p">.</span><span class="n">getOutputPorts</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">outPort</span><span class="p">.</span><span class="n">use_empty</span><span class="p">())</span><span class="w"> </span><span class="k">continue</span><span class="p">;</span>
+<span class="w">                </span><span class="k">auto</span><span class="w"> </span><span class="n">outputStr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">graphPortMap</span><span class="p">[</span><span class="n">outPort</span><span class="p">];</span>
+<span class="w">                </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="o">&amp;</span><span class="n">use</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">outPort</span><span class="p">.</span><span class="n">getUses</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                    </span><span class="k">auto</span><span class="w"> </span><span class="n">outPortUser</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">use</span><span class="p">.</span><span class="n">getOwner</span><span class="p">();</span>
+<span class="w">                    </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">inputStr</span><span class="p">;</span>
+<span class="w">                    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">isa</span><span class="o">&lt;</span><span class="n">GraphInterface</span><span class="o">&gt;</span><span class="p">(</span><span class="n">outPortUser</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                        </span><span class="k">auto</span><span class="w"> </span><span class="n">subGraphNameStr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dotSubgraphNameMap</span><span class="p">[</span><span class="n">outPortUser</span><span class="p">];</span>
+<span class="w">                        </span><span class="k">auto</span><span class="w"> </span><span class="n">subGraphOutPorts</span><span class="w"> </span><span class="o">=</span>
+<span class="w">                            </span><span class="n">dotSubgraphOutPortMap</span><span class="p">[</span><span class="n">subGraphNameStr</span><span class="p">];</span>
+<span class="w">                        </span><span class="k">auto</span><span class="w"> </span><span class="n">asNode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dyn_cast</span><span class="o">&lt;</span><span class="n">NodeInterface</span><span class="o">&gt;</span><span class="p">(</span><span class="n">outPortUser</span><span class="p">);</span>
+<span class="w">                        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="p">[</span><span class="n">port</span><span class="p">,</span><span class="w"> </span><span class="n">portName</span><span class="p">]</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">llvm</span><span class="o">::</span><span class="n">zip</span><span class="p">(</span>
+<span class="w">                                 </span><span class="n">asNode</span><span class="p">.</span><span class="n">getOutputPorts</span><span class="p">(),</span>
+<span class="w">                                 </span><span class="n">subGraphOutPorts</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">port</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">outPort</span><span class="p">)</span><span class="w"> </span><span class="n">inputStr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">portName</span><span class="p">;</span>
+<span class="w">                        </span><span class="p">}</span>
+<span class="w">                    </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">isa</span><span class="o">&lt;</span><span class="n">NodeInterface</span><span class="o">&gt;</span><span class="p">(</span><span class="n">outPortUser</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                        </span><span class="n">inputStr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dotNodeOpMap</span><span class="p">[</span><span class="n">outPortUser</span><span class="p">];</span>
+<span class="w">                    </span><span class="p">}</span>
+<span class="w">                    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">inputStr</span><span class="p">.</span><span class="n">empty</span><span class="p">())</span>
+<span class="w">                        </span><span class="n">graphContentStr</span><span class="w"> </span><span class="o">+=</span>
+<span class="w">                            </span><span class="n">indentContent</span><span class="p">(</span><span class="n">inputStr</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">" -&gt; "</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">outputStr</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">";"</span><span class="p">);</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">            </span><span class="p">}</span>
+
+<span class="w">            </span><span class="c1">// Save the graph template</span>
+<span class="w">            </span><span class="n">graphStr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">indentContent</span><span class="p">(</span>
+<span class="w">                </span><span class="n">replaceAll</span><span class="p">(</span><span class="n">graphStr</span><span class="p">,</span><span class="w"> </span><span class="s">"{{Content}}"</span><span class="p">,</span><span class="w"> </span><span class="n">graphContentStr</span><span class="p">));</span>
+<span class="w">            </span><span class="n">dotGraphMap</span><span class="p">.</span><span class="n">insert</span><span class="p">({</span><span class="n">graphName</span><span class="p">,</span><span class="w"> </span><span class="n">graphStr</span><span class="p">});</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">opi</span><span class="p">.</span><span class="n">hasAttr</span><span class="p">(</span><span class="n">picea</span><span class="o">::</span><span class="n">kRootAttrName</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">topGraphs</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span>
+<span class="w">                    </span><span class="n">replaceAll</span><span class="p">(</span><span class="n">graphStr</span><span class="p">,</span><span class="w"> </span><span class="s">"{{GraphNumber}}"</span><span class="p">,</span><span class="w"> </span><span class="s">"0"</span><span class="p">));</span>
+<span class="w">            </span><span class="p">}</span>
+
+<span class="w">        </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="n">nodeOp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dyn_cast</span><span class="o">&lt;</span><span class="n">NodeInterface</span><span class="o">&gt;</span><span class="p">(</span><span class="n">opi</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="c1">// Module-level node definitions (ProcessOp, OperatorOp)</span>
+<span class="w">            </span><span class="k">auto</span><span class="w"> </span><span class="n">nodeName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">nodeOp</span><span class="p">.</span><span class="n">getNodeName</span><span class="p">();</span>
+<span class="w">            </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="nf">nodeStr</span><span class="p">(</span><span class="n">kDotNode</span><span class="p">);</span>
+<span class="w">            </span><span class="n">nodeStr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">replaceAll</span><span class="p">(</span><span class="n">nodeStr</span><span class="p">,</span><span class="w"> </span><span class="s">"{{NodeName}}"</span><span class="p">,</span><span class="w"> </span><span class="n">nodeName</span><span class="p">);</span>
+<span class="w">            </span><span class="n">dotNodeMap</span><span class="p">.</span><span class="n">insert</span><span class="p">({</span><span class="n">nodeName</span><span class="p">,</span><span class="w"> </span><span class="n">nodeStr</span><span class="p">});</span>
+<span class="w">            </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="nf">nodeNameStr</span><span class="p">(</span><span class="n">kDotNodeName</span><span class="p">);</span>
+<span class="w">            </span><span class="n">nodeNameStr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">replaceAll</span><span class="p">(</span><span class="n">nodeNameStr</span><span class="p">,</span><span class="w"> </span><span class="s">"{{NodeName}}"</span><span class="p">,</span><span class="w"> </span><span class="n">nodeName</span><span class="p">);</span>
+<span class="w">            </span><span class="n">dotNodeNameMap</span><span class="p">.</span><span class="n">insert</span><span class="p">({</span><span class="n">nodeName</span><span class="p">,</span><span class="w"> </span><span class="n">nodeNameStr</span><span class="p">});</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="n">LogicalResult</span><span class="w"> </span><span class="n">DotEmitter</span><span class="o">::</span><span class="n">emitGraph</span><span class="p">(</span><span class="n">ModuleOp</span><span class="w"> </span><span class="k">module</span><span class="p">,</span><span class="w"> </span><span class="n">raw_ostream</span><span class="w"> </span><span class="o">&amp;</span><span class="n">os</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">getGraph</span><span class="p">(</span><span class="k">module</span><span class="p">);</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="n">graph</span><span class="p">]</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">llvm</span><span class="o">::</span><span class="n">enumerate</span><span class="p">(</span><span class="n">topGraphs</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">raw_indented_ostream</span><span class="w"> </span><span class="nf">ios</span><span class="p">(</span><span class="n">os</span><span class="p">);</span>
+<span class="w">        </span><span class="n">os</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"digraph G_"</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">" {</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+<span class="w">        </span><span class="n">ios</span><span class="p">.</span><span class="n">indent</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"rankdir=LR;</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+<span class="w">        </span><span class="n">os</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">removeBlankLines</span><span class="p">(</span><span class="n">graph</span><span class="p">);</span>
+<span class="w">        </span><span class="n">ios</span><span class="p">.</span><span class="n">unindent</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"}</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">success</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="n">LogicalResult</span><span class="w"> </span><span class="n">dfg</span><span class="o">::</span><span class="n">translateDFGToDot</span><span class="p">(</span><span class="n">Operation</span><span class="o">*</span><span class="w"> </span><span class="n">op</span><span class="p">,</span><span class="w"> </span><span class="n">raw_ostream</span><span class="w"> </span><span class="o">&amp;</span><span class="n">os</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">auto</span><span class="w"> </span><span class="k">module</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dyn_cast</span><span class="o">&lt;</span><span class="n">ModuleOp</span><span class="o">&gt;</span><span class="p">(</span><span class="n">op</span><span class="p">);</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="k">module</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">op</span><span class="o">-&gt;</span><span class="n">emitError</span><span class="p">(</span><span class="s">"expected builtin.module op"</span><span class="p">);</span>
+<span class="w">    </span><span class="n">DotEmitter</span><span class="w"> </span><span class="n">emitter</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">emitter</span><span class="p">.</span><span class="n">emitGraph</span><span class="p">(</span><span class="k">module</span><span class="p">,</span><span class="w"> </span><span class="n">os</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

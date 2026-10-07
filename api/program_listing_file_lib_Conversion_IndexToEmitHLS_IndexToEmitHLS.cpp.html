@@ -1,0 +1,360 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Program Listing for File IndexToEmitHLS.cpp &mdash; picea 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/collapsible-lists/css/tree_view.css?v=a885cde7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js?v=73120307"></script>
+      <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js?v=660e4f45"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            picea
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Installation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../README.html">About the project</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#guides">Guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#related-projects">Related projects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#development-environment-nix">Development Environment (Nix)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#build-on-ubuntu-24-04-no-nix">Build on Ubuntu 24.04 (no Nix)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#gurobi-license">Gurobi license</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#installing">Installing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#run-the-tests">Run the tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#build-the-documentation">Build the documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#compiling-a-design">Compiling a design</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#running-a-design-on-the-board">Running a design on the board</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#exporting-a-profiled-application-to-mocasin">Exporting a profiled application to Mocasin</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Guides</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../guides/laksa.html">The FPGA Variant using LAKSA backend</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/cgra.html">The CGRA Variant</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">MLIR Dialects</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/Base2Ops.html">‘base2’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/CGRAOps.html">‘cgra’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/DFGOps.html">‘dfg’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/EmitHLSOps.html">‘emithls’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/FilterOps.html">‘filter’ Dialect</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Passes</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/PICEAConversionPasses.html">PICEA Conversion Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/CGRAPasses.html">CGRA Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/DFGPasses.html">DFG Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/EmitHLSPasses.html">Emit HLS Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/FuncExtPasses.html">Func Ext Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/LinalgExtPasses.html">Linalg Ext Passes</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">C++ API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="library_root.html">C++ API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">picea</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Program Listing for File IndexToEmitHLS.cpp</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/program_listing_file_lib_Conversion_IndexToEmitHLS_IndexToEmitHLS.cpp.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="program-listing-for-file-indextoemithls-cpp">
+<span id="program-listing-file-lib-conversion-indextoemithls-indextoemithls-cpp"></span><h1>Program Listing for File IndexToEmitHLS.cpp<a class="headerlink" href="#program-listing-for-file-indextoemithls-cpp" title="Link to this heading"></a></h1>
+<p>↰ <a class="reference internal" href="file_lib_Conversion_IndexToEmitHLS_IndexToEmitHLS.cpp.html#file-lib-conversion-indextoemithls-indextoemithls-cpp"><span class="std std-ref">Return to documentation for file</span></a> (<code class="docutils literal notranslate"><span class="pre">lib/Conversion/IndexToEmitHLS/IndexToEmitHLS.cpp</span></code>)</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">"picea-mlir/Conversion/IndexToEmitHLS/IndexToEmitHLS.h"</span>
+
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"mlir/Dialect/Index/IR/IndexOps.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"mlir/IR/PatternMatch.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"picea-mlir/Dialect/EmitHLS/IR/EmitHLS.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"picea-mlir/Dialect/EmitHLS/IR/EmitHLSOps.h"</span>
+
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;llvm/Support/Debug.h&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;mlir/Dialect/Index/IR/IndexDialect.h&gt;</span>
+
+<span class="cp">#define DEBUG_TYPE "index-to-emithls"</span>
+<span class="cp">#define PICEA_DEBUG(X)                                                         \</span>
+<span class="cp">    LLVM_DEBUG(llvm::dbgs() &lt;&lt; "[index-to-emithls] "; X; llvm::dbgs() &lt;&lt; "\n")</span>
+
+<span class="k">namespace</span><span class="w"> </span><span class="nn">mlir</span><span class="w"> </span><span class="p">{</span>
+<span class="cp">#define GEN_PASS_DEF_CONVERTINDEXTOEMITHLS</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"picea-mlir/Conversion/Passes.h.inc"</span>
+<span class="p">}</span><span class="w"> </span><span class="c1">// namespace mlir</span>
+
+<span class="k">using</span><span class="w"> </span><span class="k">namespace</span><span class="w"> </span><span class="nn">mlir</span><span class="p">;</span>
+<span class="k">using</span><span class="w"> </span><span class="k">namespace</span><span class="w"> </span><span class="nn">mlir</span><span class="o">::</span><span class="nn">emithls</span><span class="p">;</span>
+
+<span class="k">namespace</span><span class="w"> </span><span class="p">{</span>
+<span class="k">struct</span><span class="w"> </span><span class="nc">ConstantVariable</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">OpConversionPattern</span><span class="o">&lt;</span><span class="n">index</span><span class="o">::</span><span class="n">ConstantOp</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">    </span><span class="k">using</span><span class="w"> </span><span class="n">OpConversionPattern</span><span class="o">&lt;</span><span class="n">index</span><span class="o">::</span><span class="n">ConstantOp</span><span class="o">&gt;::</span><span class="n">OpConversionPattern</span><span class="p">;</span>
+
+<span class="w">    </span><span class="n">ConstantVariable</span><span class="p">(</span><span class="n">TypeConverter</span><span class="w"> </span><span class="o">&amp;</span><span class="n">typeConverter</span><span class="p">,</span><span class="w"> </span><span class="n">MLIRContext</span><span class="o">*</span><span class="w"> </span><span class="n">context</span><span class="p">)</span>
+<span class="w">            </span><span class="o">:</span><span class="w"> </span><span class="n">OpConversionPattern</span><span class="o">&lt;</span><span class="n">index</span><span class="o">::</span><span class="n">ConstantOp</span><span class="o">&gt;</span><span class="p">(</span><span class="n">typeConverter</span><span class="p">,</span><span class="w"> </span><span class="n">context</span><span class="p">)</span><span class="w"> </span><span class="p">{};</span>
+
+<span class="w">    </span><span class="n">LogicalResult</span><span class="w"> </span><span class="nf">matchAndRewrite</span><span class="p">(</span>
+<span class="w">        </span><span class="n">index</span><span class="o">::</span><span class="n">ConstantOp</span><span class="w"> </span><span class="n">op</span><span class="p">,</span>
+<span class="w">        </span><span class="n">index</span><span class="o">::</span><span class="n">ConstantOpAdaptor</span><span class="p">,</span>
+<span class="w">        </span><span class="n">ConversionPatternRewriter</span><span class="w"> </span><span class="o">&amp;</span><span class="n">rewriter</span><span class="p">)</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">override</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="n">rewriter</span><span class="p">.</span><span class="n">replaceOpWithNewOp</span><span class="o">&lt;</span><span class="n">emithls</span><span class="o">::</span><span class="n">VariableOp</span><span class="o">&gt;</span><span class="p">(</span>
+<span class="w">            </span><span class="n">op</span><span class="p">,</span>
+<span class="w">            </span><span class="n">op</span><span class="p">.</span><span class="n">getType</span><span class="p">(),</span>
+<span class="w">            </span><span class="cm">/*init*/</span><span class="w"> </span><span class="n">op</span><span class="p">.</span><span class="n">getValueAttr</span><span class="p">(),</span>
+<span class="w">            </span><span class="cm">/*is_const*/</span><span class="w"> </span><span class="nb">true</span><span class="p">);</span>
+<span class="w">        </span><span class="n">PICEA_DEBUG</span><span class="p">(</span>
+<span class="w">            </span><span class="n">llvm</span><span class="o">::</span><span class="n">dbgs</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"Replaced constant with a constant variable."</span><span class="p">);</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">success</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">};</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span><span class="w"> </span><span class="nc">OpFrom</span><span class="p">,</span><span class="w"> </span><span class="k">typename</span><span class="w"> </span><span class="nc">OpTo</span><span class="o">&gt;</span>
+<span class="k">struct</span><span class="w"> </span><span class="nc">ConvertBinaryOp</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">OpConversionPattern</span><span class="o">&lt;</span><span class="n">OpFrom</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">using</span><span class="w"> </span><span class="n">OpConversionPattern</span><span class="o">&lt;</span><span class="n">OpFrom</span><span class="o">&gt;::</span><span class="n">OpConversionPattern</span><span class="p">;</span>
+
+<span class="w">    </span><span class="n">ConvertBinaryOp</span><span class="p">(</span><span class="n">TypeConverter</span><span class="w"> </span><span class="o">&amp;</span><span class="n">typeConverter</span><span class="p">,</span><span class="w"> </span><span class="n">MLIRContext</span><span class="o">*</span><span class="w"> </span><span class="n">context</span><span class="p">)</span>
+<span class="w">            </span><span class="o">:</span><span class="w"> </span><span class="n">OpConversionPattern</span><span class="o">&lt;</span><span class="n">OpFrom</span><span class="o">&gt;</span><span class="p">(</span><span class="n">typeConverter</span><span class="p">,</span><span class="w"> </span><span class="n">context</span><span class="p">)</span><span class="w"> </span><span class="p">{};</span>
+
+<span class="w">    </span><span class="n">LogicalResult</span><span class="w"> </span><span class="nf">matchAndRewrite</span><span class="p">(</span>
+<span class="w">        </span><span class="n">OpFrom</span><span class="w"> </span><span class="n">op</span><span class="p">,</span>
+<span class="w">        </span><span class="k">typename</span><span class="w"> </span><span class="nc">OpFrom</span><span class="o">::</span><span class="n">Adaptor</span><span class="p">,</span>
+<span class="w">        </span><span class="n">ConversionPatternRewriter</span><span class="w"> </span><span class="o">&amp;</span><span class="n">rewriter</span><span class="p">)</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">override</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="n">rewriter</span><span class="p">.</span><span class="n">replaceOpWithNewOp</span><span class="o">&lt;</span><span class="n">OpTo</span><span class="o">&gt;</span><span class="p">(</span><span class="n">op</span><span class="p">,</span><span class="w"> </span><span class="n">op</span><span class="p">.</span><span class="n">getLhs</span><span class="p">(),</span><span class="w"> </span><span class="n">op</span><span class="p">.</span><span class="n">getRhs</span><span class="p">());</span>
+<span class="w">        </span><span class="n">PICEA_DEBUG</span><span class="p">(</span>
+<span class="w">            </span><span class="n">llvm</span><span class="o">::</span><span class="n">dbgs</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"Replaced "</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">op</span><span class="o">-&gt;</span><span class="n">getName</span><span class="p">()</span>
+<span class="w">                         </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">" with equivalent emithls operation."</span><span class="p">);</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">success</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">};</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span><span class="w"> </span><span class="nc">OpFrom</span><span class="p">,</span><span class="w"> </span><span class="k">typename</span><span class="w"> </span><span class="nc">OpTo</span><span class="o">&gt;</span>
+<span class="k">struct</span><span class="w"> </span><span class="nc">ConvertCast</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">OpConversionPattern</span><span class="o">&lt;</span><span class="n">OpFrom</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">using</span><span class="w"> </span><span class="n">OpConversionPattern</span><span class="o">&lt;</span><span class="n">OpFrom</span><span class="o">&gt;::</span><span class="n">OpConversionPattern</span><span class="p">;</span>
+
+<span class="w">    </span><span class="n">ConvertCast</span><span class="p">(</span><span class="n">TypeConverter</span><span class="w"> </span><span class="o">&amp;</span><span class="n">typeConverter</span><span class="p">,</span><span class="w"> </span><span class="n">MLIRContext</span><span class="o">*</span><span class="w"> </span><span class="n">context</span><span class="p">)</span>
+<span class="w">            </span><span class="o">:</span><span class="w"> </span><span class="n">OpConversionPattern</span><span class="o">&lt;</span><span class="n">OpFrom</span><span class="o">&gt;</span><span class="p">(</span><span class="n">typeConverter</span><span class="p">,</span><span class="w"> </span><span class="n">context</span><span class="p">)</span><span class="w"> </span><span class="p">{};</span>
+
+<span class="w">    </span><span class="n">LogicalResult</span><span class="w"> </span><span class="nf">matchAndRewrite</span><span class="p">(</span>
+<span class="w">        </span><span class="n">OpFrom</span><span class="w"> </span><span class="n">op</span><span class="p">,</span>
+<span class="w">        </span><span class="k">typename</span><span class="w"> </span><span class="nc">OpFrom</span><span class="o">::</span><span class="n">Adaptor</span><span class="p">,</span>
+<span class="w">        </span><span class="n">ConversionPatternRewriter</span><span class="w"> </span><span class="o">&amp;</span><span class="n">rewriter</span><span class="p">)</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">override</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="n">rewriter</span><span class="p">.</span><span class="n">replaceOpWithNewOp</span><span class="o">&lt;</span><span class="n">OpTo</span><span class="o">&gt;</span><span class="p">(</span>
+<span class="w">            </span><span class="n">op</span><span class="p">,</span>
+<span class="w">            </span><span class="n">op</span><span class="p">.</span><span class="n">getOutput</span><span class="p">().</span><span class="n">getType</span><span class="p">(),</span>
+<span class="w">            </span><span class="n">op</span><span class="p">.</span><span class="n">getInput</span><span class="p">());</span>
+<span class="w">        </span><span class="n">PICEA_DEBUG</span><span class="p">(</span>
+<span class="w">            </span><span class="n">llvm</span><span class="o">::</span><span class="n">dbgs</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"Replaced "</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">op</span><span class="o">-&gt;</span><span class="n">getName</span><span class="p">()</span>
+<span class="w">                         </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">" with equivalent emithls operation."</span><span class="p">);</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">success</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">};</span>
+<span class="k">struct</span><span class="w"> </span><span class="nc">ConvertCompare</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">OpConversionPattern</span><span class="o">&lt;</span><span class="n">index</span><span class="o">::</span><span class="n">CmpOp</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">using</span><span class="w"> </span><span class="n">OpConversionPattern</span><span class="o">&lt;</span><span class="n">index</span><span class="o">::</span><span class="n">CmpOp</span><span class="o">&gt;::</span><span class="n">OpConversionPattern</span><span class="p">;</span>
+
+<span class="w">    </span><span class="n">LogicalResult</span><span class="w"> </span><span class="nf">matchAndRewrite</span><span class="p">(</span>
+<span class="w">        </span><span class="n">index</span><span class="o">::</span><span class="n">CmpOp</span><span class="w"> </span><span class="n">op</span><span class="p">,</span>
+<span class="w">        </span><span class="n">index</span><span class="o">::</span><span class="n">CmpOpAdaptor</span><span class="p">,</span>
+<span class="w">        </span><span class="n">ConversionPatternRewriter</span><span class="w"> </span><span class="o">&amp;</span><span class="n">rewriter</span><span class="p">)</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">override</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="c1">// Create map from index predicate to emithls</span>
+<span class="w">        </span><span class="k">using</span><span class="w"> </span><span class="n">IP</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">index</span><span class="o">::</span><span class="n">IndexCmpPredicate</span><span class="p">;</span>
+<span class="w">        </span><span class="k">using</span><span class="w"> </span><span class="n">EP</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">emithls</span><span class="o">::</span><span class="n">CmpPredicate</span><span class="p">;</span>
+<span class="w">        </span><span class="k">static</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">DenseMap</span><span class="o">&lt;</span><span class="n">IP</span><span class="p">,</span><span class="w"> </span><span class="n">EP</span><span class="o">&gt;</span><span class="w"> </span><span class="n">predMap</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="p">{</span><span class="w"> </span><span class="n">IP</span><span class="o">::</span><span class="n">EQ</span><span class="p">,</span><span class="w"> </span><span class="n">EP</span><span class="o">::</span><span class="n">eq</span><span class="p">},</span>
+<span class="w">            </span><span class="p">{</span><span class="w"> </span><span class="n">IP</span><span class="o">::</span><span class="n">NE</span><span class="p">,</span><span class="w"> </span><span class="n">EP</span><span class="o">::</span><span class="n">ne</span><span class="p">},</span>
+<span class="w">            </span><span class="p">{</span><span class="n">IP</span><span class="o">::</span><span class="n">SLT</span><span class="p">,</span><span class="w"> </span><span class="n">EP</span><span class="o">::</span><span class="n">lt</span><span class="p">},</span>
+<span class="w">            </span><span class="p">{</span><span class="n">IP</span><span class="o">::</span><span class="n">ULT</span><span class="p">,</span><span class="w"> </span><span class="n">EP</span><span class="o">::</span><span class="n">lt</span><span class="p">},</span>
+<span class="w">            </span><span class="p">{</span><span class="n">IP</span><span class="o">::</span><span class="n">SLE</span><span class="p">,</span><span class="w"> </span><span class="n">EP</span><span class="o">::</span><span class="n">le</span><span class="p">},</span>
+<span class="w">            </span><span class="p">{</span><span class="n">IP</span><span class="o">::</span><span class="n">ULE</span><span class="p">,</span><span class="w"> </span><span class="n">EP</span><span class="o">::</span><span class="n">le</span><span class="p">},</span>
+<span class="w">            </span><span class="p">{</span><span class="n">IP</span><span class="o">::</span><span class="n">SGT</span><span class="p">,</span><span class="w"> </span><span class="n">EP</span><span class="o">::</span><span class="n">gt</span><span class="p">},</span>
+<span class="w">            </span><span class="p">{</span><span class="n">IP</span><span class="o">::</span><span class="n">UGT</span><span class="p">,</span><span class="w"> </span><span class="n">EP</span><span class="o">::</span><span class="n">gt</span><span class="p">},</span>
+<span class="w">            </span><span class="p">{</span><span class="n">IP</span><span class="o">::</span><span class="n">SGE</span><span class="p">,</span><span class="w"> </span><span class="n">EP</span><span class="o">::</span><span class="n">ge</span><span class="p">},</span>
+<span class="w">            </span><span class="p">{</span><span class="n">IP</span><span class="o">::</span><span class="n">UGE</span><span class="p">,</span><span class="w"> </span><span class="n">EP</span><span class="o">::</span><span class="n">ge</span><span class="p">},</span>
+<span class="w">        </span><span class="p">};</span>
+
+<span class="w">        </span><span class="k">auto</span><span class="w"> </span><span class="n">it</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">predMap</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="n">op</span><span class="p">.</span><span class="n">getPred</span><span class="p">());</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">it</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">predMap</span><span class="p">.</span><span class="n">end</span><span class="p">())</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="n">rewriter</span><span class="p">.</span><span class="n">notifyMatchFailure</span><span class="p">(</span><span class="n">op</span><span class="p">,</span><span class="w"> </span><span class="s">"unsupported predicate"</span><span class="p">);</span>
+<span class="w">        </span><span class="n">rewriter</span><span class="p">.</span><span class="n">replaceOpWithNewOp</span><span class="o">&lt;</span><span class="n">ArithCmpOp</span><span class="o">&gt;</span><span class="p">(</span>
+<span class="w">            </span><span class="n">op</span><span class="p">,</span>
+<span class="w">            </span><span class="n">it</span><span class="o">-&gt;</span><span class="n">second</span><span class="p">,</span>
+<span class="w">            </span><span class="n">op</span><span class="p">.</span><span class="n">getLhs</span><span class="p">(),</span>
+<span class="w">            </span><span class="n">op</span><span class="p">.</span><span class="n">getRhs</span><span class="p">());</span>
+<span class="w">        </span><span class="n">PICEA_DEBUG</span><span class="p">(</span>
+<span class="w">            </span><span class="n">llvm</span><span class="o">::</span><span class="n">dbgs</span><span class="p">()</span>
+<span class="w">            </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"Replaced compare operation with equivalent emithls operation."</span><span class="p">);</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">success</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">};</span>
+<span class="p">}</span><span class="w"> </span><span class="c1">// namespace</span>
+
+<span class="kt">void</span><span class="w"> </span><span class="n">mlir</span><span class="o">::</span><span class="n">populateIndexToEmitHLSConversionPatterns</span><span class="p">(</span>
+<span class="w">    </span><span class="n">TypeConverter</span><span class="w"> </span><span class="o">&amp;</span><span class="n">typeConverter</span><span class="p">,</span>
+<span class="w">    </span><span class="n">RewritePatternSet</span><span class="w"> </span><span class="o">&amp;</span><span class="n">patterns</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">patterns</span><span class="p">.</span><span class="n">add</span><span class="o">&lt;</span><span class="n">ConstantVariable</span><span class="o">&gt;</span><span class="p">(</span><span class="n">typeConverter</span><span class="p">,</span><span class="w"> </span><span class="n">patterns</span><span class="p">.</span><span class="n">getContext</span><span class="p">());</span>
+<span class="w">    </span><span class="n">patterns</span><span class="p">.</span><span class="n">add</span><span class="o">&lt;</span><span class="n">ConvertBinaryOp</span><span class="o">&lt;</span><span class="n">index</span><span class="o">::</span><span class="n">AddOp</span><span class="p">,</span><span class="w"> </span><span class="n">emithls</span><span class="o">::</span><span class="n">ArithAddOp</span><span class="o">&gt;&gt;</span><span class="p">(</span>
+<span class="w">        </span><span class="n">typeConverter</span><span class="p">,</span>
+<span class="w">        </span><span class="n">patterns</span><span class="p">.</span><span class="n">getContext</span><span class="p">());</span>
+<span class="w">    </span><span class="n">patterns</span><span class="p">.</span><span class="n">add</span><span class="o">&lt;</span><span class="n">ConvertBinaryOp</span><span class="o">&lt;</span><span class="n">index</span><span class="o">::</span><span class="n">SubOp</span><span class="p">,</span><span class="w"> </span><span class="n">emithls</span><span class="o">::</span><span class="n">ArithSubOp</span><span class="o">&gt;&gt;</span><span class="p">(</span>
+<span class="w">        </span><span class="n">typeConverter</span><span class="p">,</span>
+<span class="w">        </span><span class="n">patterns</span><span class="p">.</span><span class="n">getContext</span><span class="p">());</span>
+<span class="w">    </span><span class="n">patterns</span><span class="p">.</span><span class="n">add</span><span class="o">&lt;</span><span class="n">ConvertBinaryOp</span><span class="o">&lt;</span><span class="n">index</span><span class="o">::</span><span class="n">MulOp</span><span class="p">,</span><span class="w"> </span><span class="n">emithls</span><span class="o">::</span><span class="n">ArithMulOp</span><span class="o">&gt;&gt;</span><span class="p">(</span>
+<span class="w">        </span><span class="n">typeConverter</span><span class="p">,</span>
+<span class="w">        </span><span class="n">patterns</span><span class="p">.</span><span class="n">getContext</span><span class="p">());</span>
+<span class="w">    </span><span class="n">patterns</span><span class="p">.</span><span class="n">add</span><span class="o">&lt;</span><span class="n">ConvertBinaryOp</span><span class="o">&lt;</span><span class="n">index</span><span class="o">::</span><span class="n">RemUOp</span><span class="p">,</span><span class="w"> </span><span class="n">emithls</span><span class="o">::</span><span class="n">ArithRemOp</span><span class="o">&gt;&gt;</span><span class="p">(</span>
+<span class="w">        </span><span class="n">typeConverter</span><span class="p">,</span>
+<span class="w">        </span><span class="n">patterns</span><span class="p">.</span><span class="n">getContext</span><span class="p">());</span>
+<span class="w">    </span><span class="n">patterns</span><span class="p">.</span><span class="n">add</span><span class="o">&lt;</span><span class="n">ConvertBinaryOp</span><span class="o">&lt;</span><span class="n">index</span><span class="o">::</span><span class="n">RemSOp</span><span class="p">,</span><span class="w"> </span><span class="n">emithls</span><span class="o">::</span><span class="n">ArithRemOp</span><span class="o">&gt;&gt;</span><span class="p">(</span>
+<span class="w">        </span><span class="n">typeConverter</span><span class="p">,</span>
+<span class="w">        </span><span class="n">patterns</span><span class="p">.</span><span class="n">getContext</span><span class="p">());</span>
+<span class="w">    </span><span class="n">patterns</span><span class="p">.</span><span class="n">add</span><span class="o">&lt;</span><span class="n">ConvertBinaryOp</span><span class="o">&lt;</span><span class="n">index</span><span class="o">::</span><span class="n">ShlOp</span><span class="p">,</span><span class="w"> </span><span class="n">emithls</span><span class="o">::</span><span class="n">ArithShlOp</span><span class="o">&gt;&gt;</span><span class="p">(</span>
+<span class="w">        </span><span class="n">typeConverter</span><span class="p">,</span>
+<span class="w">        </span><span class="n">patterns</span><span class="p">.</span><span class="n">getContext</span><span class="p">());</span>
+<span class="w">    </span><span class="n">patterns</span><span class="p">.</span><span class="n">add</span><span class="o">&lt;</span><span class="n">ConvertBinaryOp</span><span class="o">&lt;</span><span class="n">index</span><span class="o">::</span><span class="n">ShrUOp</span><span class="p">,</span><span class="w"> </span><span class="n">emithls</span><span class="o">::</span><span class="n">ArithShrOp</span><span class="o">&gt;&gt;</span><span class="p">(</span>
+<span class="w">        </span><span class="n">typeConverter</span><span class="p">,</span>
+<span class="w">        </span><span class="n">patterns</span><span class="p">.</span><span class="n">getContext</span><span class="p">());</span>
+<span class="w">    </span><span class="n">patterns</span><span class="p">.</span><span class="n">add</span><span class="o">&lt;</span><span class="n">ConvertBinaryOp</span><span class="o">&lt;</span><span class="n">index</span><span class="o">::</span><span class="n">ShrSOp</span><span class="p">,</span><span class="w"> </span><span class="n">emithls</span><span class="o">::</span><span class="n">ArithShrOp</span><span class="o">&gt;&gt;</span><span class="p">(</span>
+<span class="w">        </span><span class="n">typeConverter</span><span class="p">,</span>
+<span class="w">        </span><span class="n">patterns</span><span class="p">.</span><span class="n">getContext</span><span class="p">());</span>
+<span class="w">    </span><span class="n">patterns</span><span class="p">.</span><span class="n">add</span><span class="o">&lt;</span><span class="n">ConvertBinaryOp</span><span class="o">&lt;</span><span class="n">index</span><span class="o">::</span><span class="n">MaxSOp</span><span class="p">,</span><span class="w"> </span><span class="n">emithls</span><span class="o">::</span><span class="n">ArithMaxOp</span><span class="o">&gt;&gt;</span><span class="p">(</span>
+<span class="w">        </span><span class="n">typeConverter</span><span class="p">,</span>
+<span class="w">        </span><span class="n">patterns</span><span class="p">.</span><span class="n">getContext</span><span class="p">());</span>
+<span class="w">    </span><span class="n">patterns</span><span class="p">.</span><span class="n">add</span><span class="o">&lt;</span><span class="n">ConvertBinaryOp</span><span class="o">&lt;</span><span class="n">index</span><span class="o">::</span><span class="n">MaxUOp</span><span class="p">,</span><span class="w"> </span><span class="n">emithls</span><span class="o">::</span><span class="n">ArithMaxOp</span><span class="o">&gt;&gt;</span><span class="p">(</span>
+<span class="w">        </span><span class="n">typeConverter</span><span class="p">,</span>
+<span class="w">        </span><span class="n">patterns</span><span class="p">.</span><span class="n">getContext</span><span class="p">());</span>
+<span class="w">    </span><span class="n">patterns</span><span class="p">.</span><span class="n">add</span><span class="o">&lt;</span><span class="n">ConvertBinaryOp</span><span class="o">&lt;</span><span class="n">index</span><span class="o">::</span><span class="n">MinSOp</span><span class="p">,</span><span class="w"> </span><span class="n">emithls</span><span class="o">::</span><span class="n">ArithMinOp</span><span class="o">&gt;&gt;</span><span class="p">(</span>
+<span class="w">        </span><span class="n">typeConverter</span><span class="p">,</span>
+<span class="w">        </span><span class="n">patterns</span><span class="p">.</span><span class="n">getContext</span><span class="p">());</span>
+<span class="w">    </span><span class="n">patterns</span><span class="p">.</span><span class="n">add</span><span class="o">&lt;</span><span class="n">ConvertBinaryOp</span><span class="o">&lt;</span><span class="n">index</span><span class="o">::</span><span class="n">MinUOp</span><span class="p">,</span><span class="w"> </span><span class="n">emithls</span><span class="o">::</span><span class="n">ArithMinOp</span><span class="o">&gt;&gt;</span><span class="p">(</span>
+<span class="w">        </span><span class="n">typeConverter</span><span class="p">,</span>
+<span class="w">        </span><span class="n">patterns</span><span class="p">.</span><span class="n">getContext</span><span class="p">());</span>
+<span class="w">    </span><span class="n">patterns</span><span class="p">.</span><span class="n">add</span><span class="o">&lt;</span><span class="n">ConvertBinaryOp</span><span class="o">&lt;</span><span class="n">index</span><span class="o">::</span><span class="n">AndOp</span><span class="p">,</span><span class="w"> </span><span class="n">emithls</span><span class="o">::</span><span class="n">ArithAndOp</span><span class="o">&gt;&gt;</span><span class="p">(</span>
+<span class="w">        </span><span class="n">typeConverter</span><span class="p">,</span>
+<span class="w">        </span><span class="n">patterns</span><span class="p">.</span><span class="n">getContext</span><span class="p">());</span>
+<span class="w">    </span><span class="n">patterns</span><span class="p">.</span><span class="n">add</span><span class="o">&lt;</span><span class="n">ConvertBinaryOp</span><span class="o">&lt;</span><span class="n">index</span><span class="o">::</span><span class="n">OrOp</span><span class="p">,</span><span class="w"> </span><span class="n">emithls</span><span class="o">::</span><span class="n">ArithOrOp</span><span class="o">&gt;&gt;</span><span class="p">(</span>
+<span class="w">        </span><span class="n">typeConverter</span><span class="p">,</span>
+<span class="w">        </span><span class="n">patterns</span><span class="p">.</span><span class="n">getContext</span><span class="p">());</span>
+<span class="w">    </span><span class="n">patterns</span><span class="p">.</span><span class="n">add</span><span class="o">&lt;</span><span class="n">ConvertCast</span><span class="o">&lt;</span><span class="n">index</span><span class="o">::</span><span class="n">CastUOp</span><span class="p">,</span><span class="w"> </span><span class="n">emithls</span><span class="o">::</span><span class="n">ArithCastOp</span><span class="o">&gt;&gt;</span><span class="p">(</span>
+<span class="w">        </span><span class="n">typeConverter</span><span class="p">,</span>
+<span class="w">        </span><span class="n">patterns</span><span class="p">.</span><span class="n">getContext</span><span class="p">());</span>
+<span class="w">    </span><span class="n">patterns</span><span class="p">.</span><span class="n">add</span><span class="o">&lt;</span><span class="n">ConvertCast</span><span class="o">&lt;</span><span class="n">index</span><span class="o">::</span><span class="n">CastSOp</span><span class="p">,</span><span class="w"> </span><span class="n">emithls</span><span class="o">::</span><span class="n">ArithCastOp</span><span class="o">&gt;&gt;</span><span class="p">(</span>
+<span class="w">        </span><span class="n">typeConverter</span><span class="p">,</span>
+<span class="w">        </span><span class="n">patterns</span><span class="p">.</span><span class="n">getContext</span><span class="p">());</span>
+<span class="w">    </span><span class="n">patterns</span><span class="p">.</span><span class="n">add</span><span class="o">&lt;</span><span class="n">ConvertCompare</span><span class="o">&gt;</span><span class="p">(</span><span class="n">typeConverter</span><span class="p">,</span><span class="w"> </span><span class="n">patterns</span><span class="p">.</span><span class="n">getContext</span><span class="p">());</span>
+<span class="p">}</span>
+
+<span class="k">namespace</span><span class="w"> </span><span class="p">{</span>
+<span class="k">struct</span><span class="w"> </span><span class="nc">ConvertIndexToEmitHLSPass</span>
+<span class="w">        </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">impl</span><span class="o">::</span><span class="n">ConvertIndexToEmitHLSBase</span><span class="o">&lt;</span><span class="n">ConvertIndexToEmitHLSPass</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="nf">runOnOperation</span><span class="p">()</span><span class="w"> </span><span class="k">final</span><span class="p">;</span>
+<span class="p">};</span>
+<span class="p">}</span><span class="w"> </span><span class="c1">// namespace</span>
+
+<span class="kt">void</span><span class="w"> </span><span class="n">ConvertIndexToEmitHLSPass</span><span class="o">::</span><span class="n">runOnOperation</span><span class="p">()</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">ConversionTarget</span><span class="w"> </span><span class="nf">target</span><span class="p">(</span><span class="n">getContext</span><span class="p">());</span>
+<span class="w">    </span><span class="n">RewritePatternSet</span><span class="w"> </span><span class="nf">patterns</span><span class="p">(</span><span class="o">&amp;</span><span class="n">getContext</span><span class="p">());</span>
+
+<span class="w">    </span><span class="n">TypeConverter</span><span class="w"> </span><span class="n">converter</span><span class="p">;</span>
+<span class="w">    </span><span class="n">converter</span><span class="p">.</span><span class="n">addConversion</span><span class="p">([</span><span class="o">&amp;</span><span class="p">](</span><span class="n">Type</span><span class="w"> </span><span class="n">type</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">type</span><span class="p">;</span><span class="w"> </span><span class="p">});</span>
+
+<span class="w">    </span><span class="n">populateIndexToEmitHLSConversionPatterns</span><span class="p">(</span><span class="n">converter</span><span class="p">,</span><span class="w"> </span><span class="n">patterns</span><span class="p">);</span>
+
+<span class="w">    </span><span class="n">target</span><span class="p">.</span><span class="n">addLegalDialect</span><span class="o">&lt;</span><span class="n">EmitHLSDialect</span><span class="o">&gt;</span><span class="p">();</span>
+<span class="w">    </span><span class="n">target</span><span class="p">.</span><span class="n">addIllegalDialect</span><span class="o">&lt;</span><span class="n">index</span><span class="o">::</span><span class="n">IndexDialect</span><span class="o">&gt;</span><span class="p">();</span>
+<span class="w">    </span><span class="n">target</span><span class="p">.</span><span class="n">markUnknownOpDynamicallyLegal</span><span class="p">([](</span><span class="n">Operation</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span><span class="w"> </span><span class="p">});</span>
+
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">failed</span><span class="p">(</span><span class="n">applyPartialConversion</span><span class="p">(</span>
+<span class="w">            </span><span class="n">getOperation</span><span class="p">(),</span>
+<span class="w">            </span><span class="n">target</span><span class="p">,</span>
+<span class="w">            </span><span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">patterns</span><span class="p">))))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">signalPassFailure</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">Pass</span><span class="o">&gt;</span><span class="w"> </span><span class="n">mlir</span><span class="o">::</span><span class="n">createConvertIndexToEmitHLSPass</span><span class="p">()</span>
+<span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">make_unique</span><span class="o">&lt;</span><span class="n">ConvertIndexToEmitHLSPass</span><span class="o">&gt;</span><span class="p">();</span><span class="w"> </span><span class="p">}</span>
+</pre></div>
+</div>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

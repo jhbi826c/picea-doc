@@ -1,0 +1,42 @@
+
+.. _program_listing_file_build_include_picea-mlir_Dialect_CGRA_IR_CGRABase.h.inc:
+
+Program Listing for File CGRABase.h.inc
+=======================================
+
+|exhale_lsh| :ref:`Return to documentation for file <file_build_include_picea-mlir_Dialect_CGRA_IR_CGRABase.h.inc>` (``build/include/picea-mlir/Dialect/CGRA/IR/CGRABase.h.inc``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. code-block:: cpp
+
+   /*===- TableGen'erated file -------------------------------------*- C++ -*-===*\
+   |*                                                                            *|
+   |* Dialect Declarations                                                       *|
+   |*                                                                            *|
+   |* Automatically generated file, do not edit!                                 *|
+   |* From: CGRAOps.td                                                           *|
+   |*                                                                            *|
+   \*===----------------------------------------------------------------------===*/
+   
+   namespace mlir::cgra {
+   
+   class CGRADialect : public ::mlir::Dialect {
+     explicit CGRADialect(::mlir::MLIRContext *context);
+   
+     void initialize();
+     friend class ::mlir::MLIRContext;
+   public:
+     ~CGRADialect() override;
+     static constexpr ::llvm::StringLiteral getDialectNamespace() {
+       return ::llvm::StringLiteral("cgra");
+     }
+   
+     ::mlir::Operation *materializeConstant(::mlir::OpBuilder &builder,
+                                            ::mlir::Attribute value,
+                                            ::mlir::Type type,
+                                            ::mlir::Location loc) override;
+   };
+   
+   } // namespace mlir::cgra
+   MLIR_DECLARE_EXPLICIT_TYPE_ID(::mlir::cgra::CGRADialect)

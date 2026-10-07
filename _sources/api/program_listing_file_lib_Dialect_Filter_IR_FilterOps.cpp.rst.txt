@@ -1,0 +1,315 @@
+
+.. _program_listing_file_lib_Dialect_Filter_IR_FilterOps.cpp:
+
+Program Listing for File FilterOps.cpp
+======================================
+
+|exhale_lsh| :ref:`Return to documentation for file <file_lib_Dialect_Filter_IR_FilterOps.cpp>` (``lib/Dialect/Filter/IR/FilterOps.cpp``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. code-block:: cpp
+
+   
+   
+   #include "picea-mlir/Dialect/Filter/IR/FilterOps.h"
+   
+   #include "mlir/IR/Builders.h"
+   #include "mlir/IR/BuiltinTypes.h"
+   #include "mlir/IR/OpDefinition.h"
+   #include "mlir/IR/Operation.h"
+   #include "mlir/IR/TypeUtilities.h"
+   #include "mlir/Transforms/InliningUtils.h"
+   #include "picea-mlir/Dialect/Filter/IR/FilterBase.h"
+   #include "picea-mlir/Dialect/Filter/IR/FilterTypes.h"
+   
+   #include <cstdint>
+   #include <llvm/ADT/StringRef.h>
+   #include <llvm/Support/LogicalResult.h>
+   #include <mlir/IR/OpImplementation.h>
+   #include <mlir/IR/OperationSupport.h>
+   #include <mlir/Support/LLVM.h>
+   
+   using namespace mlir;
+   using namespace mlir::filter;
+   
+   //===- Generated implementation -------------------------------------------===//
+   
+   #define GET_OP_CLASSES
+   #include "picea-mlir/Dialect/Filter/IR/FilterOps.cpp.inc"
+   
+   //===----------------------------------------------------------------------===//
+   
+   //===----------------------------------------------------------------------===//
+   // FIROp
+   //===----------------------------------------------------------------------===//
+   
+   void FIROp::getAsmResultNames(function_ref<void(Value, StringRef)> setNameFn)
+   {
+       Block* block = getOperation()->getBlock();
+       int count = 0;
+   
+       for (auto &opi : *block) {
+           if (&opi == getOperation()) break;
+           if (opi.getName() == getOperation()->getName()) ++count;
+       }
+   
+       setNameFn(getResult(), "fir_" + std::to_string(count));
+   }
+   
+   void FIROp::build(
+       OpBuilder &,
+       OperationState &state,
+       Value input,
+       Value coefficient)
+   {
+       state.addOperands({input, coefficient});
+       state.addTypes(input.getType());
+   }
+   
+   ParseResult FIROp::parse(OpAsmParser &parser, OperationState &state)
+   {
+       OpAsmParser::UnresolvedOperand input, coefficient;
+       Type inputType, coefficientType;
+   
+       if (parser.parseOperand(input) || parser.parseKeyword("coeff")
+           || parser.parseEqual() || parser.parseOperand(coefficient))
+           return failure();
+   
+       if (parser.parseColon() || parser.parseType(inputType) || parser.parseLess()
+           || parser.parseArrow() || parser.parseType(coefficientType))
+           return failure();
+   
+       if (parser.resolveOperands(
+               {input, coefficient},
+               {inputType, coefficientType},
+               parser.getCurrentLocation(),
+               state.operands))
+           return failure();
+       state.addTypes(inputType);
+   
+       return success();
+   }
+   
+   void FIROp::print(OpAsmPrinter &p)
+   {
+       p << " " << getInput() << " coeff=" << getCoefficient();
+       p << " : " << getType() << " <-> " << getCoefficient().getType();
+   }
+   
+   //===----------------------------------------------------------------------===//
+   // SOSOp
+   //===----------------------------------------------------------------------===//
+   
+   void SOSOp::getAsmResultNames(function_ref<void(Value, StringRef)> setNameFn)
+   {
+       Block* block = getOperation()->getBlock();
+       int count = 0;
+   
+       for (auto &opi : *block) {
+           if (&opi == getOperation()) break;
+           if (opi.getName() == getOperation()->getName()) ++count;
+       }
+   
+       setNameFn(getResult(), "sos_" + std::to_string(count));
+   }
+   
+   void SOSOp::build(
+       OpBuilder &,
+       OperationState &state,
+       Value input,
+       Value coefficient,
+       Value scale)
+   {
+       state.addOperands({input, coefficient});
+       if (scale) state.addOperands(scale);
+       state.addTypes(input.getType());
+   }
+   
+   ParseResult SOSOp::parse(OpAsmParser &parser, OperationState &state)
+   {
+       OpAsmParser::UnresolvedOperand input, coefficient, scale;
+       Type inputType, coefficientType, scaleType;
+       bool hasScale = false;
+   
+       if (parser.parseOperand(input) || parser.parseKeyword("coeff")
+           || parser.parseEqual() || parser.parseOperand(coefficient))
+           return failure();
+       if (succeeded(parser.parseOptionalKeyword("scale"))) {
+           hasScale = true;
+           if (parser.parseEqual() || parser.parseOperand(scale)) return failure();
+       }
+   
+       if (parser.parseColon() || parser.parseType(inputType) || parser.parseLess()
+           || parser.parseArrow() || parser.parseType(coefficientType))
+           return failure();
+       if (hasScale) {
+           if (parser.parseComma() || parser.parseType(scaleType))
+               return failure();
+       }
+   
+       if (parser.resolveOperands(
+               {input, coefficient},
+               {inputType, coefficientType},
+               parser.getCurrentLocation(),
+               state.operands))
+           return failure();
+       if (hasScale) {
+           if (parser.resolveOperand(scale, scaleType, state.operands))
+               return failure();
+       }
+       state.addTypes(inputType);
+   
+       return success();
+   }
+   
+   void SOSOp::print(OpAsmPrinter &p)
+   {
+       p << " " << getInput() << " coeff=" << getCoefficient();
+       if (getScale()) p << " scale=" << getScale();
+       p << " : " << getType() << " <-> " << getCoefficient().getType();
+       if (getScale()) p << ", " << getScale().getType();
+   }
+   
+   LogicalResult SOSOp::verify()
+   {
+       auto coefficient = getCoefficient();
+       auto coefficientType = coefficient.getType();
+       if (coefficientType.getDimSize(1) != 5)
+           return emitOpError("expect [b0, b1, b2, a1, a2] for each section");
+   
+       auto scale = getScale();
+       if (scale) {
+           auto scaleType = scale.getType();
+           if (scaleType.getDimSize(0) != coefficientType.getDimSize(0) + 1)
+               return emitOpError("expect \"section+1\" number of scales");
+       }
+   
+       return success();
+   }
+   
+   //===----------------------------------------------------------------------===//
+   // EnvelopeOp
+   //===----------------------------------------------------------------------===//
+   
+   void EnvelopeOp::getAsmResultNames(
+       function_ref<void(Value, StringRef)> setNameFn)
+   {
+       Block* block = getOperation()->getBlock();
+       int count = 0;
+   
+       for (auto &opi : *block) {
+           if (&opi == getOperation()) break;
+           if (opi.getName() == getOperation()->getName()) ++count;
+       }
+   
+       setNameFn(getResult(), "envelope_" + std::to_string(count));
+   }
+   
+   void EnvelopeOp::build(
+       OpBuilder &builder,
+       OperationState &state,
+       Value input,
+       Type filteredType,
+       int32_t windowSize,
+       int32_t step,
+       EnvelopeStyle style)
+   {
+       state.addOperands(input);
+       state.addAttribute(
+           getWindowSizeAttrName(state.name),
+           builder.getI32IntegerAttr(windowSize));
+       state.addAttribute(
+           getStepAttrName(state.name),
+           builder.getI32IntegerAttr(step));
+       state.addAttribute(
+           getStyleAttrName(state.name),
+           EnvelopeStyleAttr::get(builder.getContext(), style));
+       state.addTypes(filteredType);
+   }
+   
+   ParseResult EnvelopeOp::parse(OpAsmParser &parser, OperationState &state)
+   {
+       OpAsmParser::UnresolvedOperand input;
+       int32_t windowSize, step;
+       StringRef styleStr;
+       Type inputType, filteredType;
+   
+       if (parser.parseOperand(input) || parser.parseLBrace()
+           || parser.parseKeyword("window_size") || parser.parseEqual()
+           || parser.parseInteger(windowSize) || parser.parseComma()
+           || parser.parseKeyword("step") || parser.parseEqual()
+           || parser.parseInteger(step) || parser.parseRBrace()
+           || parser.parseKeyword("style") || parser.parseEqual()
+           || parser.parseKeyword(&styleStr))
+           return failure();
+   
+       auto style = symbolizeEnvelopeStyle(styleStr);
+       if (!style.has_value())
+           return parser.emitError(parser.getNameLoc(), "unknown envelope style");
+   
+       if (parser.parseColon() || parser.parseType(inputType)
+           || parser.parseArrow() || parser.parseType(filteredType))
+           return failure();
+   
+       if (parser.resolveOperand(input, inputType, state.operands))
+           return failure();
+       state.addAttribute(
+           getWindowSizeAttrName(state.name),
+           parser.getBuilder().getI32IntegerAttr(windowSize));
+       state.addAttribute(
+           getStepAttrName(state.name),
+           parser.getBuilder().getI32IntegerAttr(step));
+       state.addAttribute(
+           getStyleAttrName(state.name),
+           EnvelopeStyleAttr::get(parser.getContext(), style.value()));
+       state.addTypes(filteredType);
+   
+       return success();
+   }
+   
+   void EnvelopeOp::print(OpAsmPrinter &p)
+   {
+       p << " " << getInput() << " { window_size=" << getWindowSize() << ", "
+         << " step=" << getStep() << " }";
+       p << " style=" << stringifyEnvelopeStyle(getStyle());
+       p << " : " << getInput().getType() << " -> " << getType();
+   }
+   
+   LogicalResult EnvelopeOp::verify()
+   {
+       int64_t windowSize = getWindowSize();
+       int64_t step = getStep();
+   
+       if (windowSize <= 0)
+           return emitOpError("window_size must be positive, got ") << windowSize;
+       if (step <= 0) return emitOpError("step must be positive, got ") << step;
+   
+       int64_t inputSize = getInput().getType().getDimSize(0);
+       int64_t filteredSize = getFiltered().getType().getDimSize(0);
+   
+       if (windowSize > inputSize)
+           return emitOpError("window_size (")
+                  << windowSize << ") exceeds input size (" << inputSize << ")";
+   
+       int64_t expectedSize = (inputSize - windowSize) / step + 1;
+       if (filteredSize != expectedSize)
+           return emitOpError("output size (")
+                  << filteredSize << ") does not match expected (" << expectedSize
+                  << ") for input_size=" << inputSize
+                  << ", window_size=" << windowSize << ", step=" << step;
+   
+       return success();
+   }
+   
+   //===----------------------------------------------------------------------===//
+   // FilterDialect
+   //===----------------------------------------------------------------------===//
+   
+   void FilterDialect::registerOps()
+   {
+       addOperations<
+   #define GET_OP_LIST
+   #include "picea-mlir/Dialect/Filter/IR/FilterOps.cpp.inc"
+           >();
+   }

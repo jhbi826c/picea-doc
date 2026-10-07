@@ -1,0 +1,370 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>‘filter’ Dialect &mdash; picea 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/collapsible-lists/css/tree_view.css?v=a885cde7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js?v=73120307"></script>
+      <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js?v=660e4f45"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="PICEA Conversion Passes" href="../Passes/PICEAConversionPasses.html" />
+    <link rel="prev" title="‘emithls’ Dialect" href="EmitHLSOps.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            picea
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Installation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../README.html">About the project</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#guides">Guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#related-projects">Related projects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#development-environment-nix">Development Environment (Nix)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#build-on-ubuntu-24-04-no-nix">Build on Ubuntu 24.04 (no Nix)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#gurobi-license">Gurobi license</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#installing">Installing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#run-the-tests">Run the tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#build-the-documentation">Build the documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#compiling-a-design">Compiling a design</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#running-a-design-on-the-board">Running a design on the board</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#exporting-a-profiled-application-to-mocasin">Exporting a profiled application to Mocasin</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Guides</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../guides/laksa.html">The FPGA Variant using LAKSA backend</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/cgra.html">The CGRA Variant</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">MLIR Dialects</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="Base2Ops.html">‘base2’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="CGRAOps.html">‘cgra’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="DFGOps.html">‘dfg’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="EmitHLSOps.html">‘emithls’ Dialect</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">‘filter’ Dialect</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#operations">Operations</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#filter-envelope-filter-envelopeop"><code class="docutils literal notranslate"><span class="pre">filter.envelope</span></code> (filter::EnvelopeOp)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#attributes">Attributes:</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#operands">Operands:</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#results">Results:</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#filter-fir-filter-firop"><code class="docutils literal notranslate"><span class="pre">filter.fir</span></code> (filter::FIROp)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id1">Operands:</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id2">Results:</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#filter-sos-filter-sosop"><code class="docutils literal notranslate"><span class="pre">filter.sos</span></code> (filter::SOSOp)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id3">Operands:</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id4">Results:</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#enums">Enums</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#envelopestyle">EnvelopeStyle</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#cases">Cases:</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Passes</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/PICEAConversionPasses.html">PICEA Conversion Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/CGRAPasses.html">CGRA Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/DFGPasses.html">DFG Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/EmitHLSPasses.html">Emit HLS Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/FuncExtPasses.html">Func Ext Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/LinalgExtPasses.html">Linalg Ext Passes</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">C++ API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../api/library_root.html">C++ API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">picea</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">‘filter’ Dialect</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/Dialects/FilterOps.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <!-- Autogenerated by mlir-tblgen; don't manually edit -->
+<section id="filter-dialect">
+<h1>‘filter’ Dialect<a class="headerlink" href="#filter-dialect" title="Link to this heading"></a></h1>
+<p>The <code class="docutils literal notranslate"><span class="pre">filter</span></code> dialect groups together a set of operations that are
+DSP filters used in the DPE use case, which includes FIR, IIR and
+a few sampling functions.</p>
+<section id="operations">
+<h2>Operations<a class="headerlink" href="#operations" title="Link to this heading"></a></h2>
+<section id="filter-envelope-filter-envelopeop">
+<h3><code class="docutils literal notranslate"><span class="pre">filter.envelope</span></code> (filter::EnvelopeOp)<a class="headerlink" href="#filter-envelope-filter-envelopeop" title="Link to this heading"></a></h3>
+<p><em>Defines an envelope filter with specific style.</em></p>
+<p>The <code class="docutils literal notranslate"><span class="pre">envelope</span></code> operation computes an envelope of the <code class="docutils literal notranslate"><span class="pre">input</span></code> signal
+using a sliding-window pooling strategy. The window advances by <code class="docutils literal notranslate"><span class="pre">step</span></code>
+samples at a time, and each window of <code class="docutils literal notranslate"><span class="pre">window_size</span></code> samples is reduced
+according to <code class="docutils literal notranslate"><span class="pre">style</span></code> (e.g., MA, RMS). The output size is
+<code class="docutils literal notranslate"><span class="pre">(input_size</span> <span class="pre">-</span> <span class="pre">window_size)</span> <span class="pre">/</span> <span class="pre">step</span> <span class="pre">+</span> <span class="pre">1</span></code>.
+Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="n">env_0</span> <span class="o">=</span> <span class="nb">filter</span><span class="o">.</span><span class="n">envelope</span> <span class="o">%</span><span class="nb">input</span> <span class="p">{</span> <span class="n">window_size</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="mi">8</span> <span class="p">}</span>
+    <span class="n">style</span><span class="o">=</span><span class="n">rms</span> <span class="p">:</span> <span class="n">tensor</span><span class="o">&lt;</span><span class="mi">256</span><span class="n">xf32</span><span class="o">&gt;</span> <span class="o">-&gt;</span> <span class="n">tensor</span><span class="o">&lt;</span><span class="mi">31</span><span class="n">xf32</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<p>Traits: <code class="docutils literal notranslate"><span class="pre">SameOperandsAndResultElementType</span></code></p>
+<p>Interfaces: <code class="docutils literal notranslate"><span class="pre">OpAsmOpInterface</span></code></p>
+<section id="attributes">
+<h4>Attributes:<a class="headerlink" href="#attributes" title="Link to this heading"></a></h4>
+<table>
+<tr><th>Attribute</th><th>MLIR Type</th><th>Description</th></tr>
+<tr><td><code>window_size</code></td><td>::mlir::IntegerAttr</td><td>32-bit signless integer attribute</td></tr>
+<tr><td><code>step</code></td><td>::mlir::IntegerAttr</td><td>32-bit signless integer attribute</td></tr>
+<tr><td><code>style</code></td><td>::mlir::filter::EnvelopeStyleAttr</td><td>The style of envelope operation</td></tr>
+</table>
+</section>
+<section id="operands">
+<h4>Operands:<a class="headerlink" href="#operands" title="Link to this heading"></a></h4>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head text-center"><p>Operand</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">input</span></code></p></td>
+<td><p>1D tensor of Fixed-point number type values</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="results">
+<h4>Results:<a class="headerlink" href="#results" title="Link to this heading"></a></h4>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head text-center"><p>Result</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">filtered</span></code></p></td>
+<td><p>1D tensor of Fixed-point number type values</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="filter-fir-filter-firop">
+<h3><code class="docutils literal notranslate"><span class="pre">filter.fir</span></code> (filter::FIROp)<a class="headerlink" href="#filter-fir-filter-firop" title="Link to this heading"></a></h3>
+<p><em>Defines an 1-D FIR filter.</em></p>
+<p>The <code class="docutils literal notranslate"><span class="pre">fir</span></code> operation computes a 1-D finite impulse response (FIR) filter
+by convolving the <code class="docutils literal notranslate"><span class="pre">input</span></code> signal with the <code class="docutils literal notranslate"><span class="pre">coefficient</span></code> vector.
+The result <code class="docutils literal notranslate"><span class="pre">filtered</span></code> has the same type as <code class="docutils literal notranslate"><span class="pre">input</span></code>.
+Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="n">fir_0</span> <span class="o">=</span> <span class="nb">filter</span><span class="o">.</span><span class="n">fir</span> <span class="o">%</span><span class="nb">input</span> <span class="n">coeff</span><span class="o">=%</span><span class="n">coeff</span>
+    <span class="p">:</span> <span class="n">tensor</span><span class="o">&lt;</span><span class="n">Nxtype</span><span class="o">&gt;</span> <span class="o">&lt;-&gt;</span> <span class="n">tensor</span><span class="o">&lt;</span><span class="n">Mxtype</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<p>Traits: <code class="docutils literal notranslate"><span class="pre">SameOperandsAndResultElementType</span></code></p>
+<p>Interfaces: <code class="docutils literal notranslate"><span class="pre">OpAsmOpInterface</span></code></p>
+<section id="id1">
+<h4>Operands:<a class="headerlink" href="#id1" title="Link to this heading"></a></h4>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head text-center"><p>Operand</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">input</span></code></p></td>
+<td><p>1D tensor of Fixed-point number type values</p></td>
+</tr>
+<tr class="row-odd"><td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">coefficient</span></code></p></td>
+<td><p>1D tensor of Fixed-point number type values</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="id2">
+<h4>Results:<a class="headerlink" href="#id2" title="Link to this heading"></a></h4>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head text-center"><p>Result</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">filtered</span></code></p></td>
+<td><p>1D tensor of Fixed-point number type values</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="filter-sos-filter-sosop">
+<h3><code class="docutils literal notranslate"><span class="pre">filter.sos</span></code> (filter::SOSOp)<a class="headerlink" href="#filter-sos-filter-sosop" title="Link to this heading"></a></h3>
+<p><em>Defines a second-order-section IIR filter.</em></p>
+<p>The <code class="docutils literal notranslate"><span class="pre">sos</span></code> operation computes an infinite impulse response (IIR) filter
+as a cascade of second-order sections (biquad stages).
+Each row of <code class="docutils literal notranslate"><span class="pre">coefficient</span></code> holds five values <code class="docutils literal notranslate"><span class="pre">[b0,</span> <span class="pre">b1,</span> <span class="pre">b2,</span> <span class="pre">a1,</span> <span class="pre">a2]</span></code>
+for one section. The optional <code class="docutils literal notranslate"><span class="pre">scale</span></code> vector supplies
+<code class="docutils literal notranslate"><span class="pre">num_sections</span> <span class="pre">+</span> <span class="pre">1</span></code> gain factors applied before the first section,
+between consecutive sections, and after the last section.
+The result <code class="docutils literal notranslate"><span class="pre">filtered</span></code> has the same type as <code class="docutils literal notranslate"><span class="pre">input</span></code>.
+Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="n">sos_0</span> <span class="o">=</span> <span class="nb">filter</span><span class="o">.</span><span class="n">sos</span> <span class="o">%</span><span class="nb">input</span> <span class="n">coeff</span><span class="o">=%</span><span class="n">coeff</span>
+    <span class="p">:</span> <span class="n">tensor</span><span class="o">&lt;</span><span class="n">Nxtype</span><span class="o">&gt;</span> <span class="o">&lt;-&gt;</span> <span class="n">tensor</span><span class="o">&lt;</span><span class="n">Sx5xtype</span><span class="o">&gt;</span>
+<span class="o">%</span><span class="n">sos_1</span> <span class="o">=</span> <span class="nb">filter</span><span class="o">.</span><span class="n">sos</span> <span class="o">%</span><span class="nb">input</span> <span class="n">coeff</span><span class="o">=%</span><span class="n">coeff</span> <span class="n">scale</span><span class="o">=%</span><span class="n">scale</span>
+    <span class="p">:</span> <span class="n">tensor</span><span class="o">&lt;</span><span class="n">Nxtype</span><span class="o">&gt;</span> <span class="o">&lt;-&gt;</span> <span class="n">tensor</span><span class="o">&lt;</span><span class="n">Sx5xtype</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">tensor</span><span class="o">&lt;</span><span class="p">(</span><span class="n">S</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="n">xtype</span><span class="o">&gt;</span>
+</pre></div>
+</div>
+<p>Traits: <code class="docutils literal notranslate"><span class="pre">SameOperandsAndResultElementType</span></code></p>
+<p>Interfaces: <code class="docutils literal notranslate"><span class="pre">OpAsmOpInterface</span></code></p>
+<section id="id3">
+<h4>Operands:<a class="headerlink" href="#id3" title="Link to this heading"></a></h4>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head text-center"><p>Operand</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">input</span></code></p></td>
+<td><p>1D tensor of Fixed-point number type values</p></td>
+</tr>
+<tr class="row-odd"><td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">coefficient</span></code></p></td>
+<td><p>2D tensor of Fixed-point number type values</p></td>
+</tr>
+<tr class="row-even"><td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">scale</span></code></p></td>
+<td><p>1D tensor of Fixed-point number type values</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="id4">
+<h4>Results:<a class="headerlink" href="#id4" title="Link to this heading"></a></h4>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head text-center"><p>Result</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">filtered</span></code></p></td>
+<td><p>1D tensor of Fixed-point number type values</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+</section>
+<section id="enums">
+<h2>Enums<a class="headerlink" href="#enums" title="Link to this heading"></a></h2>
+<section id="envelopestyle">
+<h3>EnvelopeStyle<a class="headerlink" href="#envelopestyle" title="Link to this heading"></a></h3>
+<p><em>The style of envelope operation</em></p>
+<section id="cases">
+<h4>Cases:<a class="headerlink" href="#cases" title="Link to this heading"></a></h4>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head text-center"><p>Symbol</p></th>
+<th class="head text-center"><p>Value</p></th>
+<th class="head"><p>String</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-center"><p>MeaAverage</p></td>
+<td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">0</span></code></p></td>
+<td><p>ma</p></td>
+</tr>
+<tr class="row-odd"><td class="text-center"><p>RootMeanSquare</p></td>
+<td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">1</span></code></p></td>
+<td><p>rms</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="EmitHLSOps.html" class="btn btn-neutral float-left" title="‘emithls’ Dialect" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../Passes/PICEAConversionPasses.html" class="btn btn-neutral float-right" title="PICEA Conversion Passes" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

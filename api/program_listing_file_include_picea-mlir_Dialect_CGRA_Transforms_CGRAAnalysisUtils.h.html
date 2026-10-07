@@ -1,0 +1,590 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Program Listing for File CGRAAnalysisUtils.h &mdash; picea 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/collapsible-lists/css/tree_view.css?v=a885cde7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js?v=73120307"></script>
+      <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js?v=660e4f45"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            picea
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Installation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../README.html">About the project</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#guides">Guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#related-projects">Related projects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#development-environment-nix">Development Environment (Nix)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#build-on-ubuntu-24-04-no-nix">Build on Ubuntu 24.04 (no Nix)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#gurobi-license">Gurobi license</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#installing">Installing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#run-the-tests">Run the tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#build-the-documentation">Build the documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#compiling-a-design">Compiling a design</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#running-a-design-on-the-board">Running a design on the board</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#exporting-a-profiled-application-to-mocasin">Exporting a profiled application to Mocasin</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Guides</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../guides/laksa.html">The FPGA Variant using LAKSA backend</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/cgra.html">The CGRA Variant</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">MLIR Dialects</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/Base2Ops.html">‘base2’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/CGRAOps.html">‘cgra’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/DFGOps.html">‘dfg’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/EmitHLSOps.html">‘emithls’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/FilterOps.html">‘filter’ Dialect</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Passes</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/PICEAConversionPasses.html">PICEA Conversion Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/CGRAPasses.html">CGRA Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/DFGPasses.html">DFG Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/EmitHLSPasses.html">Emit HLS Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/FuncExtPasses.html">Func Ext Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/LinalgExtPasses.html">Linalg Ext Passes</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">C++ API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="library_root.html">C++ API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">picea</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Program Listing for File CGRAAnalysisUtils.h</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/program_listing_file_include_picea-mlir_Dialect_CGRA_Transforms_CGRAAnalysisUtils.h.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="program-listing-for-file-cgraanalysisutils-h">
+<span id="program-listing-file-include-picea-mlir-dialect-cgra-transforms-cgraanalysisutils-h"></span><h1>Program Listing for File CGRAAnalysisUtils.h<a class="headerlink" href="#program-listing-for-file-cgraanalysisutils-h" title="Link to this heading"></a></h1>
+<p>↰ <a class="reference internal" href="file_include_picea-mlir_Dialect_CGRA_Transforms_CGRAAnalysisUtils.h.html#file-include-picea-mlir-dialect-cgra-transforms-cgraanalysisutils-h"><span class="std std-ref">Return to documentation for file</span></a> (<code class="docutils literal notranslate"><span class="pre">include/picea-mlir/Dialect/CGRA/Transforms/CGRAAnalysisUtils.h</span></code>)</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#pragma once</span>
+
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"mlir/Dialect/Affine/IR/AffineOps.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"mlir/Dialect/Arith/IR/Arith.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"mlir/Dialect/Func/IR/FuncOps.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"mlir/Dialect/LLVMIR/LLVMDialect.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"mlir/Dialect/Math/IR/Math.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"mlir/Dialect/MemRef/IR/MemRef.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"mlir/Dialect/SCF/IR/SCF.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"mlir/IR/Matchers.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"mlir/IR/Region.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"mlir/IR/TypeUtilities.h"</span>
+
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"llvm/ADT/APInt.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"llvm/ADT/SmallPtrSet.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"llvm/ADT/SmallVector.h"</span>
+
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;functional&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;optional&gt;</span>
+
+<span class="k">namespace</span><span class="w"> </span><span class="nn">mlir</span><span class="o">::</span><span class="nn">cgra</span><span class="w"> </span><span class="p">{</span>
+
+<span class="k">struct</span><span class="w"> </span><span class="nc">Pow2Divisor</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kt">unsigned</span><span class="w"> </span><span class="n">k</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">bool</span><span class="w"> </span><span class="n">negative</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="kr">inline</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;</span><span class="n">Pow2Divisor</span><span class="o">&gt;</span><span class="w"> </span><span class="n">fabricPow2Divisor</span><span class="p">(</span><span class="n">mlir</span><span class="o">::</span><span class="n">Operation</span><span class="o">*</span><span class="w"> </span><span class="n">op</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">mlir</span><span class="o">::</span><span class="n">isa</span><span class="o">&lt;</span>
+<span class="w">            </span><span class="n">mlir</span><span class="o">::</span><span class="n">arith</span><span class="o">::</span><span class="n">DivSIOp</span><span class="p">,</span>
+<span class="w">            </span><span class="n">mlir</span><span class="o">::</span><span class="n">arith</span><span class="o">::</span><span class="n">DivUIOp</span><span class="p">,</span>
+<span class="w">            </span><span class="n">mlir</span><span class="o">::</span><span class="n">arith</span><span class="o">::</span><span class="n">RemSIOp</span><span class="p">,</span>
+<span class="w">            </span><span class="n">mlir</span><span class="o">::</span><span class="n">arith</span><span class="o">::</span><span class="n">RemUIOp</span><span class="p">,</span>
+<span class="w">            </span><span class="n">mlir</span><span class="o">::</span><span class="n">arith</span><span class="o">::</span><span class="n">CeilDivSIOp</span><span class="p">,</span>
+<span class="w">            </span><span class="n">mlir</span><span class="o">::</span><span class="n">arith</span><span class="o">::</span><span class="n">CeilDivUIOp</span><span class="p">,</span>
+<span class="w">            </span><span class="n">mlir</span><span class="o">::</span><span class="n">arith</span><span class="o">::</span><span class="n">FloorDivSIOp</span><span class="o">&gt;</span><span class="p">(</span><span class="n">op</span><span class="p">))</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">nullopt</span><span class="p">;</span>
+<span class="w">    </span><span class="k">auto</span><span class="w"> </span><span class="n">ity</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mlir</span><span class="o">::</span><span class="n">dyn_cast</span><span class="o">&lt;</span><span class="n">mlir</span><span class="o">::</span><span class="n">IntegerType</span><span class="o">&gt;</span><span class="p">(</span><span class="n">op</span><span class="o">-&gt;</span><span class="n">getOperand</span><span class="p">(</span><span class="mi">1</span><span class="p">).</span><span class="n">getType</span><span class="p">());</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">ity</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">ity</span><span class="p">.</span><span class="n">getWidth</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">nullopt</span><span class="p">;</span>
+
+<span class="w">    </span><span class="n">llvm</span><span class="o">::</span><span class="n">APInt</span><span class="w"> </span><span class="n">c</span><span class="p">;</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">mlir</span><span class="o">::</span><span class="n">matchPattern</span><span class="p">(</span><span class="n">op</span><span class="o">-&gt;</span><span class="n">getOperand</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span><span class="w"> </span><span class="n">mlir</span><span class="o">::</span><span class="n">m_ConstantInt</span><span class="p">(</span><span class="o">&amp;</span><span class="n">c</span><span class="p">))</span>
+<span class="w">        </span><span class="o">||</span><span class="w"> </span><span class="n">c</span><span class="p">.</span><span class="n">isZero</span><span class="p">())</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">nullopt</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">isSigned</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mlir</span><span class="o">::</span><span class="n">isa</span><span class="o">&lt;</span>
+<span class="w">        </span><span class="n">mlir</span><span class="o">::</span><span class="n">arith</span><span class="o">::</span><span class="n">DivSIOp</span><span class="p">,</span>
+<span class="w">        </span><span class="n">mlir</span><span class="o">::</span><span class="n">arith</span><span class="o">::</span><span class="n">RemSIOp</span><span class="p">,</span>
+<span class="w">        </span><span class="n">mlir</span><span class="o">::</span><span class="n">arith</span><span class="o">::</span><span class="n">CeilDivSIOp</span><span class="p">,</span>
+<span class="w">        </span><span class="n">mlir</span><span class="o">::</span><span class="n">arith</span><span class="o">::</span><span class="n">FloorDivSIOp</span><span class="o">&gt;</span><span class="p">(</span><span class="n">op</span><span class="p">);</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">isSigned</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">c</span><span class="p">.</span><span class="n">isPowerOf2</span><span class="p">())</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">nullopt</span><span class="p">;</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">Pow2Divisor</span><span class="p">{</span><span class="n">c</span><span class="p">.</span><span class="n">logBase2</span><span class="p">(),</span><span class="w"> </span><span class="nb">false</span><span class="p">};</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">c</span><span class="p">.</span><span class="n">isMinSignedValue</span><span class="p">())</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">nullopt</span><span class="p">;</span>
+<span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">neg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">c</span><span class="p">.</span><span class="n">isNegative</span><span class="p">();</span>
+<span class="w">    </span><span class="n">llvm</span><span class="o">::</span><span class="n">APInt</span><span class="w"> </span><span class="n">m</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">neg</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="o">-</span><span class="n">c</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">c</span><span class="p">;</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">m</span><span class="p">.</span><span class="n">isPowerOf2</span><span class="p">())</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">nullopt</span><span class="p">;</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">neg</span>
+<span class="w">        </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">mlir</span><span class="o">::</span><span class="n">isa</span><span class="o">&lt;</span><span class="n">mlir</span><span class="o">::</span><span class="n">arith</span><span class="o">::</span><span class="n">CeilDivSIOp</span><span class="p">,</span><span class="w"> </span><span class="n">mlir</span><span class="o">::</span><span class="n">arith</span><span class="o">::</span><span class="n">FloorDivSIOp</span><span class="o">&gt;</span><span class="p">(</span><span class="n">op</span><span class="p">))</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">nullopt</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">Pow2Divisor</span><span class="p">{</span><span class="n">m</span><span class="p">.</span><span class="n">logBase2</span><span class="p">(),</span><span class="w"> </span><span class="n">neg</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="kr">inline</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">isFabricExpandableMathOp</span><span class="p">(</span><span class="n">mlir</span><span class="o">::</span><span class="n">Operation</span><span class="o">*</span><span class="w"> </span><span class="n">op</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">mlir</span><span class="o">::</span><span class="n">isa</span><span class="o">&lt;</span>
+<span class="w">            </span><span class="n">mlir</span><span class="o">::</span><span class="n">math</span><span class="o">::</span><span class="n">AbsIOp</span><span class="p">,</span>
+<span class="w">            </span><span class="n">mlir</span><span class="o">::</span><span class="n">math</span><span class="o">::</span><span class="n">CtPopOp</span><span class="p">,</span>
+<span class="w">            </span><span class="n">mlir</span><span class="o">::</span><span class="n">math</span><span class="o">::</span><span class="n">CountLeadingZerosOp</span><span class="p">,</span>
+<span class="w">            </span><span class="n">mlir</span><span class="o">::</span><span class="n">math</span><span class="o">::</span><span class="n">CountTrailingZerosOp</span><span class="o">&gt;</span><span class="p">(</span><span class="n">op</span><span class="p">))</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="w">    </span><span class="k">auto</span><span class="w"> </span><span class="n">ity</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mlir</span><span class="o">::</span><span class="n">dyn_cast</span><span class="o">&lt;</span><span class="n">mlir</span><span class="o">::</span><span class="n">IntegerType</span><span class="o">&gt;</span><span class="p">(</span><span class="n">op</span><span class="o">-&gt;</span><span class="n">getResultTypes</span><span class="p">()[</span><span class="mi">0</span><span class="p">]);</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">ity</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">mlir</span><span class="o">::</span><span class="n">isa</span><span class="o">&lt;</span><span class="n">mlir</span><span class="o">::</span><span class="n">math</span><span class="o">::</span><span class="n">AbsIOp</span><span class="o">&gt;</span><span class="p">(</span><span class="n">op</span><span class="p">)</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">ity</span><span class="p">.</span><span class="n">getWidth</span><span class="p">()</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">2</span>
+<span class="w">                                             </span><span class="o">:</span><span class="w"> </span><span class="n">ity</span><span class="p">.</span><span class="n">getWidth</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">32</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">enum</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">FabricOpSupport</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">Ok</span><span class="p">,</span>
+<span class="w">    </span><span class="n">Unlowerable</span><span class="p">,</span>
+<span class="w">    </span><span class="n">Unknown</span>
+<span class="p">};</span>
+
+<span class="kr">inline</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="nf">opTouchesFloat</span><span class="p">(</span><span class="n">mlir</span><span class="o">::</span><span class="n">Operation</span><span class="o">*</span><span class="w"> </span><span class="n">op</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">auto</span><span class="w"> </span><span class="n">isF</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[](</span><span class="n">mlir</span><span class="o">::</span><span class="n">Type</span><span class="w"> </span><span class="n">t</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">mlir</span><span class="o">::</span><span class="n">isa</span><span class="o">&lt;</span><span class="n">mlir</span><span class="o">::</span><span class="n">FloatType</span><span class="o">&gt;</span><span class="p">(</span><span class="n">mlir</span><span class="o">::</span><span class="n">getElementTypeOrSelf</span><span class="p">(</span><span class="n">t</span><span class="p">));</span>
+<span class="w">    </span><span class="p">};</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">mlir</span><span class="o">::</span><span class="n">Type</span><span class="w"> </span><span class="n">t</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">op</span><span class="o">-&gt;</span><span class="n">getOperandTypes</span><span class="p">())</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">isF</span><span class="p">(</span><span class="n">t</span><span class="p">))</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">mlir</span><span class="o">::</span><span class="n">Type</span><span class="w"> </span><span class="n">t</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">op</span><span class="o">-&gt;</span><span class="n">getResultTypes</span><span class="p">())</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">isF</span><span class="p">(</span><span class="n">t</span><span class="p">))</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kr">inline</span><span class="w"> </span><span class="n">FabricOpSupport</span><span class="w"> </span><span class="nf">classifyFabricOp</span><span class="p">(</span><span class="n">mlir</span><span class="o">::</span><span class="n">Operation</span><span class="o">*</span><span class="w"> </span><span class="n">op</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">using</span><span class="w"> </span><span class="k">namespace</span><span class="w"> </span><span class="nn">mlir</span><span class="p">;</span>
+
+<span class="w">    </span><span class="c1">// Nothing the CGRA flow can lower to a fabric op. Floating point has no</span>
+<span class="w">    </span><span class="c1">// fabric datapath, and calls cannot be placed on a PE.</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">opTouchesFloat</span><span class="p">(</span><span class="n">op</span><span class="p">))</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">FabricOpSupport</span><span class="o">::</span><span class="n">Unlowerable</span><span class="p">;</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">isa</span><span class="o">&lt;</span><span class="n">func</span><span class="o">::</span><span class="n">CallOp</span><span class="p">,</span><span class="w"> </span><span class="n">func</span><span class="o">::</span><span class="n">CallIndirectOp</span><span class="o">&gt;</span><span class="p">(</span><span class="n">op</span><span class="p">))</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">FabricOpSupport</span><span class="o">::</span><span class="n">Unlowerable</span><span class="p">;</span>
+
+<span class="w">    </span><span class="c1">// Divide / remainder: there is no divide FU, but a POWER-OF-TWO CONSTANT</span>
+<span class="w">    </span><span class="c1">// divisor needs none — `--expand-fabric-ops` rewrites it into shifts and</span>
+<span class="w">    </span><span class="c1">// masks. Any other divisor would need a multiply-high magic-number sequence</span>
+<span class="w">    </span><span class="c1">// that does not fit a configuration, so it stays unlowerable. The predicate</span>
+<span class="w">    </span><span class="c1">// is shared with the expansion (@ref fabricPow2Divisor) so the two can</span>
+<span class="w">    </span><span class="c1">// never disagree and offload a divide that is then left in place.</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">isa</span><span class="o">&lt;</span><span class="n">arith</span><span class="o">::</span><span class="n">DivSIOp</span><span class="p">,</span>
+<span class="w">            </span><span class="n">arith</span><span class="o">::</span><span class="n">DivUIOp</span><span class="p">,</span>
+<span class="w">            </span><span class="n">arith</span><span class="o">::</span><span class="n">RemSIOp</span><span class="p">,</span>
+<span class="w">            </span><span class="n">arith</span><span class="o">::</span><span class="n">RemUIOp</span><span class="p">,</span>
+<span class="w">            </span><span class="n">arith</span><span class="o">::</span><span class="n">CeilDivSIOp</span><span class="p">,</span>
+<span class="w">            </span><span class="n">arith</span><span class="o">::</span><span class="n">CeilDivUIOp</span><span class="p">,</span>
+<span class="w">            </span><span class="n">arith</span><span class="o">::</span><span class="n">FloorDivSIOp</span><span class="o">&gt;</span><span class="p">(</span><span class="n">op</span><span class="p">))</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">fabricPow2Divisor</span><span class="p">(</span><span class="n">op</span><span class="p">)</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">FabricOpSupport</span><span class="o">::</span><span class="n">Ok</span>
+<span class="w">                                     </span><span class="o">:</span><span class="w"> </span><span class="n">FabricOpSupport</span><span class="o">::</span><span class="n">Unlowerable</span><span class="p">;</span>
+
+<span class="w">    </span><span class="c1">// `math`: the integer intrinsics `--expand-fabric-ops` expands into ALU</span>
+<span class="w">    </span><span class="c1">// sequences are fine (absi is 3 ops; the bit counts are the SWAR chains,</span>
+<span class="w">    </span><span class="c1">// which need `--partition-cgra-dfg` to fit but do map). Everything else in</span>
+<span class="w">    </span><span class="c1">// the dialect is floating point and has no datapath.</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">op</span><span class="o">-&gt;</span><span class="n">getDialect</span><span class="p">()</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">op</span><span class="o">-&gt;</span><span class="n">getDialect</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">getNamespace</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s">"math"</span><span class="p">)</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">isFabricExpandableMathOp</span><span class="p">(</span><span class="n">op</span><span class="p">)</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">FabricOpSupport</span><span class="o">::</span><span class="n">Ok</span>
+<span class="w">                                            </span><span class="o">:</span><span class="w"> </span><span class="n">FabricOpSupport</span><span class="o">::</span><span class="n">Unlowerable</span><span class="p">;</span>
+
+<span class="w">    </span><span class="c1">// Loop / conditional / memory control and constants — not datapath ops.</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">isa</span><span class="o">&lt;</span><span class="n">affine</span><span class="o">::</span><span class="n">AffineForOp</span><span class="p">,</span>
+<span class="w">            </span><span class="n">affine</span><span class="o">::</span><span class="n">AffineIfOp</span><span class="p">,</span>
+<span class="w">            </span><span class="n">affine</span><span class="o">::</span><span class="n">AffineLoadOp</span><span class="p">,</span>
+<span class="w">            </span><span class="n">affine</span><span class="o">::</span><span class="n">AffineStoreOp</span><span class="p">,</span>
+<span class="w">            </span><span class="n">affine</span><span class="o">::</span><span class="n">AffineYieldOp</span><span class="p">,</span>
+<span class="w">            </span><span class="n">affine</span><span class="o">::</span><span class="n">AffineApplyOp</span><span class="p">,</span>
+<span class="w">            </span><span class="n">affine</span><span class="o">::</span><span class="n">AffineMinOp</span><span class="p">,</span>
+<span class="w">            </span><span class="n">affine</span><span class="o">::</span><span class="n">AffineMaxOp</span><span class="p">,</span>
+<span class="w">            </span><span class="n">scf</span><span class="o">::</span><span class="n">YieldOp</span><span class="p">,</span>
+<span class="w">            </span><span class="n">memref</span><span class="o">::</span><span class="n">LoadOp</span><span class="p">,</span>
+<span class="w">            </span><span class="n">memref</span><span class="o">::</span><span class="n">StoreOp</span><span class="p">,</span>
+<span class="w">            </span><span class="n">memref</span><span class="o">::</span><span class="n">GetGlobalOp</span><span class="p">,</span>
+<span class="w">            </span><span class="n">arith</span><span class="o">::</span><span class="n">ConstantOp</span><span class="o">&gt;</span><span class="p">(</span><span class="n">op</span><span class="p">))</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">FabricOpSupport</span><span class="o">::</span><span class="n">Ok</span><span class="p">;</span>
+
+<span class="w">    </span><span class="c1">// An `scf.if` is control flow the datapath cannot execute, so it only</span>
+<span class="w">    </span><span class="c1">// survives as far as the mapper if a transform removed it first:</span>
+<span class="w">    </span><span class="c1">// `--predicated-store-to-select` rewrites the store-guard form (no results)</span>
+<span class="w">    </span><span class="c1">// and if-converts a VALUE-PRODUCING one whose arms are pure. A</span>
+<span class="w">    </span><span class="c1">// value-producing `scf.if` still standing here is neither — its arms have</span>
+<span class="w">    </span><span class="c1">// side effects, or it was not run — and `--export-loop-dfg` emits no node</span>
+<span class="w">    </span><span class="c1">// for it, so the value it yields would silently vanish from the DFG. Flag</span>
+<span class="w">    </span><span class="c1">// it rather than promise it maps (this classification used to accept every</span>
+<span class="w">    </span><span class="c1">// `scf.if` unconditionally).</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="n">ifOp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dyn_cast</span><span class="o">&lt;</span><span class="n">scf</span><span class="o">::</span><span class="n">IfOp</span><span class="o">&gt;</span><span class="p">(</span><span class="n">op</span><span class="p">))</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">ifOp</span><span class="p">.</span><span class="n">getNumResults</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">FabricOpSupport</span><span class="o">::</span><span class="n">Ok</span>
+<span class="w">                                         </span><span class="o">:</span><span class="w"> </span><span class="n">FabricOpSupport</span><span class="o">::</span><span class="n">Unknown</span><span class="p">;</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">op</span><span class="o">-&gt;</span><span class="n">hasTrait</span><span class="o">&lt;</span><span class="n">OpTrait</span><span class="o">::</span><span class="n">IsTerminator</span><span class="o">&gt;</span><span class="p">())</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">FabricOpSupport</span><span class="o">::</span><span class="n">Ok</span><span class="p">;</span><span class="w"> </span><span class="c1">// cgra.yield and friends</span>
+
+<span class="w">    </span><span class="c1">// Integer compare: the fabric comparator only realises SIGNED `&gt;0` and</span>
+<span class="w">    </span><span class="c1">// `==0` against zero. `--normalize-cgra-compare` reduces</span>
+<span class="w">    </span><span class="c1">// slt/sle/sgt/sge/eq/ne to that, and reduces the unsigned ordered</span>
+<span class="w">    </span><span class="c1">// predicates too by flipping the sign bit of both operands first. An</span>
+<span class="w">    </span><span class="c1">// unsigned compare therefore only survives to here if normalize could not</span>
+<span class="w">    </span><span class="c1">// rewrite it (non-integer operands, or the pass was not run) — it would</span>
+<span class="w">    </span><span class="c1">// reach the mapper unmappable, so flag it</span>
+<span class="w">    </span><span class="c1">// (@ref Unknown → a warning).</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="n">cmp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dyn_cast</span><span class="o">&lt;</span><span class="n">arith</span><span class="o">::</span><span class="n">CmpIOp</span><span class="o">&gt;</span><span class="p">(</span><span class="n">op</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">switch</span><span class="w"> </span><span class="p">(</span><span class="n">cmp</span><span class="p">.</span><span class="n">getPredicate</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">case</span><span class="w"> </span><span class="no">arith</span><span class="o">::</span><span class="no">CmpIPredicate</span><span class="o">::</span><span class="no">ult</span><span class="p">:</span>
+<span class="w">        </span><span class="k">case</span><span class="w"> </span><span class="no">arith</span><span class="o">::</span><span class="no">CmpIPredicate</span><span class="o">::</span><span class="no">ule</span><span class="p">:</span>
+<span class="w">        </span><span class="k">case</span><span class="w"> </span><span class="no">arith</span><span class="o">::</span><span class="no">CmpIPredicate</span><span class="o">::</span><span class="no">ugt</span><span class="p">:</span>
+<span class="w">        </span><span class="k">case</span><span class="w"> </span><span class="no">arith</span><span class="o">::</span><span class="no">CmpIPredicate</span><span class="o">::</span><span class="no">uge</span><span class="p">:</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">FabricOpSupport</span><span class="o">::</span><span class="n">Unknown</span><span class="p">;</span>
+<span class="w">        </span><span class="k">default</span><span class="o">:</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">FabricOpSupport</span><span class="o">::</span><span class="n">Ok</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="c1">// Fabric-native FU ops, plus the ones a CGRA transform lowers onto them:</span>
+<span class="w">    </span><span class="c1">//   max/min   -&gt; --affine-to-cgra          (cmp + select)</span>
+<span class="w">    </span><span class="c1">//   ext/trunc -&gt; --legalize-to-i32 removed / --export-loop-dfg passthrough</span>
+<span class="w">    </span><span class="c1">//   i4/i8/i16/i64 arith is the SAME op type at another width, legalized to</span>
+<span class="w">    </span><span class="c1">//   i32.</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">isa</span><span class="o">&lt;</span><span class="n">arith</span><span class="o">::</span><span class="n">AddIOp</span><span class="p">,</span>
+<span class="w">            </span><span class="n">arith</span><span class="o">::</span><span class="n">SubIOp</span><span class="p">,</span>
+<span class="w">            </span><span class="n">arith</span><span class="o">::</span><span class="n">MulIOp</span><span class="p">,</span>
+<span class="w">            </span><span class="n">arith</span><span class="o">::</span><span class="n">AndIOp</span><span class="p">,</span>
+<span class="w">            </span><span class="n">arith</span><span class="o">::</span><span class="n">OrIOp</span><span class="p">,</span>
+<span class="w">            </span><span class="n">arith</span><span class="o">::</span><span class="n">XOrIOp</span><span class="p">,</span>
+<span class="w">            </span><span class="n">arith</span><span class="o">::</span><span class="n">ShLIOp</span><span class="p">,</span>
+<span class="w">            </span><span class="n">arith</span><span class="o">::</span><span class="n">ShRSIOp</span><span class="p">,</span>
+<span class="w">            </span><span class="n">arith</span><span class="o">::</span><span class="n">ShRUIOp</span><span class="p">,</span>
+<span class="w">            </span><span class="n">arith</span><span class="o">::</span><span class="n">SelectOp</span><span class="p">,</span>
+<span class="w">            </span><span class="n">arith</span><span class="o">::</span><span class="n">MaxSIOp</span><span class="p">,</span>
+<span class="w">            </span><span class="n">arith</span><span class="o">::</span><span class="n">MaxUIOp</span><span class="p">,</span>
+<span class="w">            </span><span class="n">arith</span><span class="o">::</span><span class="n">MinSIOp</span><span class="p">,</span>
+<span class="w">            </span><span class="n">arith</span><span class="o">::</span><span class="n">MinUIOp</span><span class="p">,</span>
+<span class="w">            </span><span class="n">arith</span><span class="o">::</span><span class="n">ExtSIOp</span><span class="p">,</span>
+<span class="w">            </span><span class="n">arith</span><span class="o">::</span><span class="n">ExtUIOp</span><span class="p">,</span>
+<span class="w">            </span><span class="n">arith</span><span class="o">::</span><span class="n">TruncIOp</span><span class="p">,</span>
+<span class="w">            </span><span class="n">arith</span><span class="o">::</span><span class="n">IndexCastOp</span><span class="p">,</span>
+<span class="w">            </span><span class="n">arith</span><span class="o">::</span><span class="n">IndexCastUIOp</span><span class="o">&gt;</span><span class="p">(</span><span class="n">op</span><span class="p">))</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">FabricOpSupport</span><span class="o">::</span><span class="n">Ok</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">FabricOpSupport</span><span class="o">::</span><span class="n">Unknown</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kr">inline</span><span class="w"> </span><span class="kt">bool</span>
+<span class="n">hasBackpressureCycle</span><span class="p">(</span><span class="n">mlir</span><span class="o">::</span><span class="n">affine</span><span class="o">::</span><span class="n">AffineForOp</span><span class="w"> </span><span class="n">loop</span><span class="p">,</span><span class="w"> </span><span class="kt">unsigned</span><span class="w"> </span><span class="n">bufferDepth</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">using</span><span class="w"> </span><span class="k">namespace</span><span class="w"> </span><span class="nn">mlir</span><span class="p">;</span>
+<span class="w">    </span><span class="n">llvm</span><span class="o">::</span><span class="n">DenseMap</span><span class="o">&lt;</span><span class="n">Value</span><span class="p">,</span><span class="w"> </span><span class="kt">unsigned</span><span class="o">&gt;</span><span class="w"> </span><span class="n">depth</span><span class="p">;</span><span class="w"> </span><span class="c1">// distance from a load</span>
+<span class="w">    </span><span class="n">llvm</span><span class="o">::</span><span class="n">SmallVector</span><span class="o">&lt;</span><span class="n">Operation</span><span class="o">*</span><span class="p">,</span><span class="w"> </span><span class="mi">32</span><span class="o">&gt;</span><span class="w"> </span><span class="n">ops</span><span class="p">;</span>
+<span class="w">    </span><span class="n">loop</span><span class="p">.</span><span class="n">walk</span><span class="p">([</span><span class="o">&amp;</span><span class="p">](</span><span class="n">Operation</span><span class="o">*</span><span class="w"> </span><span class="n">op</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">isa</span><span class="o">&lt;</span><span class="n">affine</span><span class="o">::</span><span class="n">AffineLoadOp</span><span class="o">&gt;</span><span class="p">(</span><span class="n">op</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">depth</span><span class="p">[</span><span class="n">op</span><span class="o">-&gt;</span><span class="n">getResult</span><span class="p">(</span><span class="mi">0</span><span class="p">)]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">            </span><span class="n">ops</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">op</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span>
+<span class="w">            </span><span class="n">op</span><span class="o">-&gt;</span><span class="n">getNumResults</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">            </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">isa</span><span class="o">&lt;</span><span class="n">arith</span><span class="o">::</span><span class="n">ArithDialect</span><span class="o">&gt;</span><span class="p">(</span><span class="n">op</span><span class="o">-&gt;</span><span class="n">getDialect</span><span class="p">()))</span>
+<span class="w">            </span><span class="n">ops</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">op</span><span class="p">);</span>
+<span class="w">    </span><span class="p">});</span>
+<span class="w">    </span><span class="c1">// Plain op depth: --expand-fabric-ops has already turned an arith.shrsi</span>
+<span class="w">    </span><span class="c1">// into the real shift/xor/sub sequence, so an MLIR op IS a fabric FU here.</span>
+<span class="w">    </span><span class="c1">// While the expansion lived in the exporter this had to weight by a private</span>
+<span class="w">    </span><span class="c1">// cost table, and that copy drifted — a depth-3 skew read as depth 1 and</span>
+<span class="w">    </span><span class="c1">// the analysis missed the very configurations it was written for.</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">Operation</span><span class="o">*</span><span class="w"> </span><span class="n">op</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">ops</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">isa</span><span class="o">&lt;</span><span class="n">affine</span><span class="o">::</span><span class="n">AffineLoadOp</span><span class="o">&gt;</span><span class="p">(</span><span class="n">op</span><span class="p">))</span><span class="w"> </span><span class="k">continue</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">unsigned</span><span class="w"> </span><span class="n">d</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">known</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">Value</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">op</span><span class="o">-&gt;</span><span class="n">getOperands</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">auto</span><span class="w"> </span><span class="n">it</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">depth</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="n">v</span><span class="p">);</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">it</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">depth</span><span class="p">.</span><span class="n">end</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">d</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">max</span><span class="p">(</span><span class="n">d</span><span class="p">,</span><span class="w"> </span><span class="n">it</span><span class="o">-&gt;</span><span class="n">second</span><span class="p">);</span>
+<span class="w">                </span><span class="n">known</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">known</span><span class="p">)</span><span class="w"> </span><span class="n">depth</span><span class="p">[</span><span class="n">op</span><span class="o">-&gt;</span><span class="n">getResult</span><span class="p">(</span><span class="mi">0</span><span class="p">)]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">d</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="c1">// Root of a value: the load its longest path starts from.</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">function</span><span class="o">&lt;</span><span class="n">Value</span><span class="p">(</span><span class="n">Value</span><span class="p">)</span><span class="o">&gt;</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="o">&amp;</span><span class="p">](</span><span class="n">Value</span><span class="w"> </span><span class="n">v</span><span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">Value</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">Operation</span><span class="o">*</span><span class="w"> </span><span class="n">def</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">v</span><span class="p">.</span><span class="n">getDefiningOp</span><span class="p">();</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">def</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">isa</span><span class="o">&lt;</span><span class="n">affine</span><span class="o">::</span><span class="n">AffineLoadOp</span><span class="o">&gt;</span><span class="p">(</span><span class="n">def</span><span class="p">))</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">v</span><span class="p">;</span>
+<span class="w">        </span><span class="n">Value</span><span class="w"> </span><span class="n">best</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">unsigned</span><span class="w"> </span><span class="n">bd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">Value</span><span class="w"> </span><span class="n">o</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">def</span><span class="o">-&gt;</span><span class="n">getOperands</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">auto</span><span class="w"> </span><span class="n">it</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">depth</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="n">o</span><span class="p">);</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">it</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">depth</span><span class="p">.</span><span class="n">end</span><span class="p">()</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">best</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">it</span><span class="o">-&gt;</span><span class="n">second</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="n">bd</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">best</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">o</span><span class="p">;</span>
+<span class="w">                </span><span class="n">bd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">it</span><span class="o">-&gt;</span><span class="n">second</span><span class="p">;</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">best</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">root</span><span class="p">(</span><span class="n">best</span><span class="p">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">v</span><span class="p">;</span>
+<span class="w">    </span><span class="p">};</span>
+<span class="w">    </span><span class="c1">// "short source waits on long root" edges, only where the skew exceeds the</span>
+<span class="w">    </span><span class="c1">// buffer.</span>
+<span class="w">    </span><span class="n">llvm</span><span class="o">::</span><span class="n">DenseMap</span><span class="o">&lt;</span><span class="n">Value</span><span class="p">,</span><span class="w"> </span><span class="n">llvm</span><span class="o">::</span><span class="n">SmallVector</span><span class="o">&lt;</span><span class="n">Value</span><span class="p">,</span><span class="w"> </span><span class="mi">4</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="n">waits</span><span class="p">;</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">Operation</span><span class="o">*</span><span class="w"> </span><span class="n">op</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">ops</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">op</span><span class="o">-&gt;</span><span class="n">getNumOperands</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="k">continue</span><span class="p">;</span>
+<span class="w">        </span><span class="n">SmallVector</span><span class="o">&lt;</span><span class="n">Value</span><span class="p">,</span><span class="w"> </span><span class="mi">4</span><span class="o">&gt;</span><span class="w"> </span><span class="n">in</span><span class="p">;</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">Value</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">op</span><span class="o">-&gt;</span><span class="n">getOperands</span><span class="p">())</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">depth</span><span class="p">.</span><span class="n">count</span><span class="p">(</span><span class="n">v</span><span class="p">))</span><span class="w"> </span><span class="n">in</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">v</span><span class="p">);</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">in</span><span class="p">.</span><span class="n">size</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="k">continue</span><span class="p">;</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">unsigned</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">in</span><span class="p">.</span><span class="n">size</span><span class="p">();</span><span class="w"> </span><span class="o">++</span><span class="n">a</span><span class="p">)</span>
+<span class="w">            </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">unsigned</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">in</span><span class="p">.</span><span class="n">size</span><span class="p">();</span><span class="w"> </span><span class="o">++</span><span class="n">b</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">a</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">b</span><span class="p">)</span><span class="w"> </span><span class="k">continue</span><span class="p">;</span>
+<span class="w">                </span><span class="kt">unsigned</span><span class="w"> </span><span class="n">da</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">depth</span><span class="p">[</span><span class="n">in</span><span class="p">[</span><span class="n">a</span><span class="p">]],</span><span class="w"> </span><span class="n">db</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">depth</span><span class="p">[</span><span class="n">in</span><span class="p">[</span><span class="n">b</span><span class="p">]];</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">db</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">da</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">da</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">db</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="n">bufferDepth</span><span class="p">)</span>
+<span class="w">                    </span><span class="n">waits</span><span class="p">[</span><span class="n">root</span><span class="p">(</span><span class="n">in</span><span class="p">[</span><span class="n">b</span><span class="p">])].</span><span class="n">push_back</span><span class="p">(</span>
+<span class="w">                        </span><span class="n">root</span><span class="p">(</span><span class="n">in</span><span class="p">[</span><span class="n">a</span><span class="p">]));</span><span class="w"> </span><span class="c1">// short waits on long</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="c1">// Cycle?</span>
+<span class="w">    </span><span class="n">llvm</span><span class="o">::</span><span class="n">DenseSet</span><span class="o">&lt;</span><span class="n">Value</span><span class="o">&gt;</span><span class="w"> </span><span class="n">visiting</span><span class="p">,</span><span class="w"> </span><span class="n">done</span><span class="p">;</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">function</span><span class="o">&lt;</span><span class="kt">bool</span><span class="p">(</span><span class="n">Value</span><span class="p">)</span><span class="o">&gt;</span><span class="w"> </span><span class="n">dfs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="o">&amp;</span><span class="p">](</span><span class="n">Value</span><span class="w"> </span><span class="n">v</span><span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">visiting</span><span class="p">.</span><span class="n">count</span><span class="p">(</span><span class="n">v</span><span class="p">))</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">done</span><span class="p">.</span><span class="n">count</span><span class="p">(</span><span class="n">v</span><span class="p">))</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="w">        </span><span class="n">visiting</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">v</span><span class="p">);</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">Value</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">waits</span><span class="p">.</span><span class="n">lookup</span><span class="p">(</span><span class="n">v</span><span class="p">))</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">dfs</span><span class="p">(</span><span class="n">n</span><span class="p">))</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="w">        </span><span class="n">visiting</span><span class="p">.</span><span class="n">erase</span><span class="p">(</span><span class="n">v</span><span class="p">);</span>
+<span class="w">        </span><span class="n">done</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">v</span><span class="p">);</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="w">    </span><span class="p">};</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="o">&amp;</span><span class="n">kv</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">waits</span><span class="p">)</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">dfs</span><span class="p">(</span><span class="n">kv</span><span class="p">.</span><span class="n">first</span><span class="p">))</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kr">inline</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">hasFabricArith</span><span class="p">(</span><span class="n">mlir</span><span class="o">::</span><span class="n">affine</span><span class="o">::</span><span class="n">AffineForOp</span><span class="w"> </span><span class="n">loop</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="kt">bool</span><span class="w"> </span><span class="n">found</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="w">    </span><span class="n">loop</span><span class="p">.</span><span class="n">walk</span><span class="p">([</span><span class="o">&amp;</span><span class="p">](</span><span class="n">mlir</span><span class="o">::</span><span class="n">Operation</span><span class="o">*</span><span class="w"> </span><span class="n">op</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">mlir</span><span class="o">::</span><span class="n">isa</span><span class="o">&lt;</span>
+<span class="w">                </span><span class="n">mlir</span><span class="o">::</span><span class="n">arith</span><span class="o">::</span><span class="n">MulIOp</span><span class="p">,</span>
+<span class="w">                </span><span class="n">mlir</span><span class="o">::</span><span class="n">arith</span><span class="o">::</span><span class="n">AddIOp</span><span class="p">,</span>
+<span class="w">                </span><span class="n">mlir</span><span class="o">::</span><span class="n">arith</span><span class="o">::</span><span class="n">SubIOp</span><span class="p">,</span>
+<span class="w">                </span><span class="n">mlir</span><span class="o">::</span><span class="n">arith</span><span class="o">::</span><span class="n">CmpIOp</span><span class="p">,</span>
+<span class="w">                </span><span class="n">mlir</span><span class="o">::</span><span class="n">arith</span><span class="o">::</span><span class="n">SelectOp</span><span class="p">,</span>
+<span class="w">                </span><span class="n">mlir</span><span class="o">::</span><span class="n">arith</span><span class="o">::</span><span class="n">AndIOp</span><span class="p">,</span>
+<span class="w">                </span><span class="n">mlir</span><span class="o">::</span><span class="n">arith</span><span class="o">::</span><span class="n">OrIOp</span><span class="p">,</span>
+<span class="w">                </span><span class="n">mlir</span><span class="o">::</span><span class="n">arith</span><span class="o">::</span><span class="n">XOrIOp</span><span class="p">,</span>
+<span class="w">                </span><span class="n">mlir</span><span class="o">::</span><span class="n">arith</span><span class="o">::</span><span class="n">ShLIOp</span><span class="p">,</span>
+<span class="w">                </span><span class="n">mlir</span><span class="o">::</span><span class="n">arith</span><span class="o">::</span><span class="n">ShRSIOp</span><span class="p">,</span>
+<span class="w">                </span><span class="n">mlir</span><span class="o">::</span><span class="n">arith</span><span class="o">::</span><span class="n">ShRUIOp</span><span class="o">&gt;</span><span class="p">(</span><span class="n">op</span><span class="p">))</span>
+<span class="w">            </span><span class="n">found</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="w">    </span><span class="p">});</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">found</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kr">inline</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">hasHostCall</span><span class="p">(</span><span class="n">mlir</span><span class="o">::</span><span class="n">affine</span><span class="o">::</span><span class="n">AffineForOp</span><span class="w"> </span><span class="n">loop</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="kt">bool</span><span class="w"> </span><span class="n">found</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="w">    </span><span class="n">loop</span><span class="p">.</span><span class="n">walk</span><span class="p">([</span><span class="o">&amp;</span><span class="p">](</span><span class="n">mlir</span><span class="o">::</span><span class="n">LLVM</span><span class="o">::</span><span class="n">CallOp</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">found</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span><span class="w"> </span><span class="p">});</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">found</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kr">inline</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">isFabricStreamable</span><span class="p">(</span><span class="n">mlir</span><span class="o">::</span><span class="n">affine</span><span class="o">::</span><span class="n">AffineForOp</span><span class="w"> </span><span class="n">loop</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">mlir</span><span class="o">::</span><span class="n">affine</span><span class="o">::</span><span class="n">AffineForOp</span><span class="w"> </span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">loop</span><span class="p">;</span>
+<span class="w">    </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">root</span><span class="o">-&gt;</span><span class="k">template</span><span class="w"> </span><span class="n">getParentOfType</span><span class="o">&lt;</span><span class="n">mlir</span><span class="o">::</span><span class="n">affine</span><span class="o">::</span><span class="n">AffineForOp</span><span class="o">&gt;</span><span class="p">())</span>
+<span class="w">        </span><span class="n">root</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">p</span><span class="p">;</span>
+<span class="w">    </span><span class="n">llvm</span><span class="o">::</span><span class="n">SmallPtrSet</span><span class="o">&lt;</span><span class="n">mlir</span><span class="o">::</span><span class="n">Value</span><span class="p">,</span><span class="w"> </span><span class="mi">8</span><span class="o">&gt;</span><span class="w"> </span><span class="n">storeIVs</span><span class="p">;</span>
+<span class="w">    </span><span class="n">root</span><span class="p">.</span><span class="n">walk</span><span class="p">([</span><span class="o">&amp;</span><span class="p">](</span><span class="n">mlir</span><span class="o">::</span><span class="n">affine</span><span class="o">::</span><span class="n">AffineStoreOp</span><span class="w"> </span><span class="n">st</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">mlir</span><span class="o">::</span><span class="n">Value</span><span class="w"> </span><span class="n">o</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">st</span><span class="p">.</span><span class="n">getMapOperands</span><span class="p">())</span><span class="w"> </span><span class="n">storeIVs</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">o</span><span class="p">);</span>
+<span class="w">    </span><span class="p">});</span>
+<span class="w">    </span><span class="c1">// The INNERMOST loop whose IV never indexes a store is the REDUCTION</span>
+<span class="w">    </span><span class="c1">// dimension, mapping to the FU accumulator (delay_value = its trip count).</span>
+<span class="w">    </span><span class="c1">// Every OUTER IV must index a store, so each stream base is a function of</span>
+<span class="w">    </span><span class="c1">// the outer IVs.</span>
+<span class="w">    </span><span class="kt">bool</span><span class="w"> </span><span class="n">ok</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">bool</span><span class="w"> </span><span class="n">hasReduction</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="w">    </span><span class="n">mlir</span><span class="o">::</span><span class="n">affine</span><span class="o">::</span><span class="n">AffineForOp</span><span class="w"> </span><span class="n">innermost</span><span class="p">;</span>
+<span class="w">    </span><span class="n">root</span><span class="p">.</span><span class="n">walk</span><span class="p">([</span><span class="o">&amp;</span><span class="p">](</span><span class="n">mlir</span><span class="o">::</span><span class="n">affine</span><span class="o">::</span><span class="n">AffineForOp</span><span class="w"> </span><span class="n">f</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">f</span><span class="p">.</span><span class="n">hasConstantLowerBound</span><span class="p">()</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="o">!</span><span class="n">f</span><span class="p">.</span><span class="n">hasConstantUpperBound</span><span class="p">())</span>
+<span class="w">            </span><span class="n">ok</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">hasInnerFor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="w">        </span><span class="n">f</span><span class="p">.</span><span class="n">getBody</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">walk</span><span class="p">(</span>
+<span class="w">            </span><span class="p">[</span><span class="o">&amp;</span><span class="p">](</span><span class="n">mlir</span><span class="o">::</span><span class="n">affine</span><span class="o">::</span><span class="n">AffineForOp</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">hasInnerFor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span><span class="w"> </span><span class="p">});</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">hasInnerFor</span><span class="p">)</span>
+<span class="w">            </span><span class="n">innermost</span><span class="w"> </span><span class="o">=</span>
+<span class="w">                </span><span class="n">f</span><span class="p">;</span><span class="w"> </span><span class="c1">// deepest loop of a (perfect) nest = the streamed dimension</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">storeIVs</span><span class="p">.</span><span class="n">contains</span><span class="p">(</span><span class="n">f</span><span class="p">.</span><span class="n">getInductionVar</span><span class="p">()))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="c1">// ...unless the loop runs EXACTLY ONCE: its body executes a single</span>
+<span class="w">            </span><span class="c1">// time, so it is not a reduction dimension (TOSA emits a 1x1</span>
+<span class="w">            </span><span class="c1">// pointwise convolution as `for kh&lt;1, kw&lt;1, c&lt;64`).</span>
+<span class="w">            </span><span class="c1">// --promote-accumulator makes the same allowance; the two must</span>
+<span class="w">            </span><span class="c1">// agree.</span>
+<span class="w">            </span><span class="kt">bool</span><span class="w"> </span><span class="n">unitTrip</span><span class="w"> </span><span class="o">=</span>
+<span class="w">                </span><span class="n">f</span><span class="p">.</span><span class="n">hasConstantLowerBound</span><span class="p">()</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">f</span><span class="p">.</span><span class="n">hasConstantUpperBound</span><span class="p">()</span>
+<span class="w">                </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">f</span><span class="p">.</span><span class="n">getStepAsInt</span><span class="p">()</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">                </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">f</span><span class="p">.</span><span class="n">getConstantUpperBound</span><span class="p">()</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">f</span><span class="p">.</span><span class="n">getConstantLowerBound</span><span class="p">()</span>
+<span class="w">                </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="p">(</span><span class="n">f</span><span class="p">.</span><span class="n">getConstantUpperBound</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">f</span><span class="p">.</span><span class="n">getConstantLowerBound</span><span class="p">()</span>
+<span class="w">                    </span><span class="o">+</span><span class="w"> </span><span class="n">f</span><span class="p">.</span><span class="n">getStepAsInt</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span>
+<span class="w">                           </span><span class="o">/</span><span class="w"> </span><span class="n">f</span><span class="p">.</span><span class="n">getStepAsInt</span><span class="p">()</span>
+<span class="w">                       </span><span class="o">==</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">unitTrip</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="c1">// Reduction IV — allowed only if `f` is an INNERMOST (leaf)</span>
+<span class="w">                </span><span class="c1">// loop, i.e. its body contains no further affine.for. Then it</span>
+<span class="w">                </span><span class="c1">// maps to the FU accumulator and the driver walks the outer</span>
+<span class="w">                </span><span class="c1">// (store-indexing) loops per output.</span>
+<span class="w">                </span><span class="n">hasReduction</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">hasInnerFor</span><span class="p">)</span><span class="w"> </span><span class="n">ok</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">});</span>
+<span class="w">    </span><span class="c1">// The fabric accumulator always starts from zero, so a reduction with a</span>
+<span class="w">    </span><span class="c1">// non-zero seed must stay on the CPU unless --split-reduction-bias has</span>
+<span class="w">    </span><span class="c1">// rewritten it into a zero-seeded reduction plus an elementwise bias.</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">ok</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">root</span><span class="p">.</span><span class="n">walk</span><span class="p">([</span><span class="o">&amp;</span><span class="p">](</span><span class="n">mlir</span><span class="o">::</span><span class="n">affine</span><span class="o">::</span><span class="n">AffineForOp</span><span class="w"> </span><span class="n">f</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">mlir</span><span class="o">::</span><span class="n">Value</span><span class="w"> </span><span class="n">init</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">f</span><span class="p">.</span><span class="n">getInits</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">llvm</span><span class="o">::</span><span class="n">APInt</span><span class="w"> </span><span class="n">seed</span><span class="p">;</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">mlir</span><span class="o">::</span><span class="n">matchPattern</span><span class="p">(</span><span class="n">init</span><span class="p">,</span><span class="w"> </span><span class="n">mlir</span><span class="o">::</span><span class="n">m_ConstantInt</span><span class="p">(</span><span class="o">&amp;</span><span class="n">seed</span><span class="p">))</span>
+<span class="w">                    </span><span class="o">||</span><span class="w"> </span><span class="o">!</span><span class="n">seed</span><span class="p">.</span><span class="n">isZero</span><span class="p">())</span>
+<span class="w">                    </span><span class="n">ok</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">});</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="c1">// A pure-elementwise nest is a single 1-D stream, so every load must</span>
+<span class="w">    </span><span class="c1">// advance with the innermost IV; a loop-invariant coefficient load cannot</span>
+<span class="w">    </span><span class="c1">// be broadcast.</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">ok</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="o">!</span><span class="n">hasReduction</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">innermost</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">mlir</span><span class="o">::</span><span class="n">Value</span><span class="w"> </span><span class="n">innerIV</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">innermost</span><span class="p">.</span><span class="n">getInductionVar</span><span class="p">();</span>
+<span class="w">        </span><span class="c1">// Collect every IV of the nest: a 1-D descriptor is (addr, stride,</span>
+<span class="w">        </span><span class="c1">// size) and the memory node walks it ONCE — `input_memory_node.sv`</span>
+<span class="w">        </span><span class="c1">// stops at input_size_i and does NOT wrap. So a streamed load's address</span>
+<span class="w">        </span><span class="c1">// has to advance across the WHOLE dispatch, which means every IV must</span>
+<span class="w">        </span><span class="c1">// appear in its index.</span>
+<span class="w">        </span><span class="n">root</span><span class="p">.</span><span class="n">walk</span><span class="p">([</span><span class="o">&amp;</span><span class="p">](</span><span class="n">mlir</span><span class="o">::</span><span class="n">affine</span><span class="o">::</span><span class="n">AffineLoadOp</span><span class="w"> </span><span class="n">ld</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="kt">bool</span><span class="w"> </span><span class="n">refsInner</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="w">            </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">mlir</span><span class="o">::</span><span class="n">Value</span><span class="w"> </span><span class="n">o</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">ld</span><span class="p">.</span><span class="n">getMapOperands</span><span class="p">())</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">o</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">innerIV</span><span class="p">)</span><span class="w"> </span><span class="n">refsInner</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">refsInner</span><span class="p">)</span><span class="w"> </span><span class="n">ok</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="w">        </span><span class="p">});</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">ok</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kr">inline</span><span class="w"> </span><span class="kt">int64_t</span>
+<span class="n">productOfConstantTripCounts</span><span class="p">(</span><span class="n">mlir</span><span class="o">::</span><span class="n">Region</span><span class="w"> </span><span class="o">&amp;</span><span class="n">r</span><span class="p">,</span><span class="w"> </span><span class="kt">bool</span><span class="o">*</span><span class="w"> </span><span class="n">allConst</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">nullptr</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="kt">int64_t</span><span class="w"> </span><span class="n">size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">bool</span><span class="w"> </span><span class="n">ok</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="w">    </span><span class="n">r</span><span class="p">.</span><span class="n">walk</span><span class="p">([</span><span class="o">&amp;</span><span class="p">](</span><span class="n">mlir</span><span class="o">::</span><span class="n">affine</span><span class="o">::</span><span class="n">AffineForOp</span><span class="w"> </span><span class="n">forOp</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">forOp</span><span class="p">.</span><span class="n">hasConstantUpperBound</span><span class="p">()</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">forOp</span><span class="p">.</span><span class="n">hasConstantLowerBound</span><span class="p">())</span>
+<span class="w">            </span><span class="n">size</span><span class="w"> </span><span class="o">*=</span>
+<span class="w">                </span><span class="n">forOp</span><span class="p">.</span><span class="n">getConstantUpperBound</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">forOp</span><span class="p">.</span><span class="n">getConstantLowerBound</span><span class="p">();</span>
+<span class="w">        </span><span class="k">else</span>
+<span class="w">            </span><span class="n">ok</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="w">    </span><span class="p">});</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">allConst</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="n">allConst</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ok</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">ok</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">size</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kr">inline</span><span class="w"> </span><span class="n">llvm</span><span class="o">::</span><span class="n">SmallVector</span><span class="o">&lt;</span><span class="kt">int64_t</span><span class="o">&gt;</span><span class="w"> </span><span class="n">perfectNestTripCounts</span><span class="p">(</span><span class="n">mlir</span><span class="o">::</span><span class="n">Region</span><span class="w"> </span><span class="o">&amp;</span><span class="n">r</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">llvm</span><span class="o">::</span><span class="n">SmallVector</span><span class="o">&lt;</span><span class="kt">int64_t</span><span class="o">&gt;</span><span class="w"> </span><span class="n">counts</span><span class="p">;</span>
+<span class="w">    </span><span class="n">mlir</span><span class="o">::</span><span class="n">affine</span><span class="o">::</span><span class="n">AffineForOp</span><span class="w"> </span><span class="n">cur</span><span class="p">;</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">mlir</span><span class="o">::</span><span class="n">Operation</span><span class="w"> </span><span class="o">&amp;</span><span class="n">op</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">r</span><span class="p">.</span><span class="n">front</span><span class="p">())</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mlir</span><span class="o">::</span><span class="n">dyn_cast</span><span class="o">&lt;</span><span class="n">mlir</span><span class="o">::</span><span class="n">affine</span><span class="o">::</span><span class="n">AffineForOp</span><span class="o">&gt;</span><span class="p">(</span><span class="o">&amp;</span><span class="n">op</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">cur</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">f</span><span class="p">;</span>
+<span class="w">            </span><span class="k">break</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">cur</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">cur</span><span class="p">.</span><span class="n">hasConstantUpperBound</span><span class="p">()</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="o">!</span><span class="n">cur</span><span class="p">.</span><span class="n">hasConstantLowerBound</span><span class="p">())</span><span class="w"> </span><span class="k">break</span><span class="p">;</span>
+<span class="w">        </span><span class="n">counts</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span>
+<span class="w">            </span><span class="n">cur</span><span class="p">.</span><span class="n">getConstantUpperBound</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">cur</span><span class="p">.</span><span class="n">getConstantLowerBound</span><span class="p">());</span>
+<span class="w">        </span><span class="n">mlir</span><span class="o">::</span><span class="n">affine</span><span class="o">::</span><span class="n">AffineForOp</span><span class="w"> </span><span class="n">next</span><span class="p">;</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">mlir</span><span class="o">::</span><span class="n">Operation</span><span class="w"> </span><span class="o">&amp;</span><span class="n">op</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">cur</span><span class="p">.</span><span class="n">getBody</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">getOperations</span><span class="p">())</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mlir</span><span class="o">::</span><span class="n">dyn_cast</span><span class="o">&lt;</span><span class="n">mlir</span><span class="o">::</span><span class="n">affine</span><span class="o">::</span><span class="n">AffineForOp</span><span class="o">&gt;</span><span class="p">(</span><span class="o">&amp;</span><span class="n">op</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">next</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">f</span><span class="p">;</span>
+<span class="w">                </span><span class="k">break</span><span class="p">;</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="n">cur</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">next</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">counts</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="p">}</span><span class="w"> </span><span class="c1">// namespace mlir::cgra</span>
+</pre></div>
+</div>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,52 @@
+
+.. _program_listing_file_include_picea-mlir_InitAllDialects.h:
+
+Program Listing for File InitAllDialects.h
+==========================================
+
+|exhale_lsh| :ref:`Return to documentation for file <file_include_picea-mlir_InitAllDialects.h>` (``include/picea-mlir/InitAllDialects.h``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. code-block:: cpp
+
+   
+   
+   #include "picea-mlir/Dialect/Base2/IR/Base2.h"
+   #include "picea-mlir/Dialect/Base2/Transforms/BufferizableOpInterfaceImpl.h"
+   #include "picea-mlir/Dialect/CGRA/IR/CGRA.h"
+   #include "picea-mlir/Dialect/DFG/IR/DFG.h"
+   #include "picea-mlir/Dialect/DFG/Transforms/BufferizableOpInterfaceImpl.h"
+   #include "picea-mlir/Dialect/EmitHLS/IR/EmitHLS.h"
+   #include "picea-mlir/Dialect/Filter/IR/Filter.h"
+   
+   #include <mlir/IR/DialectRegistry.h>
+   #include <mlir/InitAllDialects.h>
+   #include <mlir/Interfaces/ControlFlowInterfaces.h>
+   
+   namespace mlir {
+   
+   inline void registerAllPICEAMLIRDialects(DialectRegistry &registry)
+   {
+       // Base2
+       registry.insert<base2::Base2Dialect>();
+       base2::registerBufferizableOpInterfaceExternalModels(registry);
+       // CGRA
+       registry.insert<cgra::CGRADialect>();
+       // DFG
+       registry.insert<dfg::DFGDialect>();
+       dfg::registerBufferizableOpInterfaceExternalModels(registry);
+       // EmitHLS
+       registry.insert<emithls::EmitHLSDialect>();
+       // Filter
+       registry.insert<filter::FilterDialect>();
+   }
+   
+   inline void registerAllPICEAMLIRDialects(MLIRContext &context)
+   {
+       DialectRegistry registry;
+       registerAllPICEAMLIRDialects(registry);
+       context.appendDialectRegistry(registry);
+   }
+   
+   } // namespace mlir

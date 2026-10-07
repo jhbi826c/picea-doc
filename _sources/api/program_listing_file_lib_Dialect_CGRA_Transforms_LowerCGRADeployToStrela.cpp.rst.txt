@@ -1,0 +1,670 @@
+
+.. _program_listing_file_lib_Dialect_CGRA_Transforms_LowerCGRADeployToStrela.cpp:
+
+Program Listing for File LowerCGRADeployToStrela.cpp
+====================================================
+
+|exhale_lsh| :ref:`Return to documentation for file <file_lib_Dialect_CGRA_Transforms_LowerCGRADeployToStrela.cpp>` (``lib/Dialect/CGRA/Transforms/LowerCGRADeployToStrela.cpp``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. code-block:: cpp
+
+   
+   
+   // Lower cgra.deploy to the STRELA MMIO configuration sequence, in two stages:
+   //
+   //   Stage 1 (--cgra-deploy-to-strela): replace each cgra.deploy region with the
+   //     sequence of cgra.strela_write / cgra.strela_read ops that program and
+   //     launch the fabric, and rewrite the kernel function signature so its
+   //     memref arguments become bare !llvm.ptr — because after offload the
+   //     function only needs each stream's base address, and a bare-pointer
+   //     signature is what the RISC-V C driver can actually call (linalg(int32_t*,
+   //     int32_t*, int32_t*)). The loop body itself is erased: it runs on the
+   //     fabric, not the CPU.
+   //
+   //   Stage 2 (--strela-to-llvm): lower cgra.strela_write / cgra.strela_read to
+   //     volatile llvm.store / llvm.load at the resolved MMIO addresses.
+   //
+   //   --cgra-deploy-to-llvm runs both, for the standard lowering pipeline.
+   //
+   // Keeping the register layout in one table (resolveReg, stage 2 only) means the
+   // programming sequence is defined once; the symbolic cgra.strela_write ops in
+   // between are lit-testable and are the same sequence a C driver would issue.
+   //
+   // Register offsets (strela_regs.h):
+   //   CTRL=0x00  MODE=0x04  STATUS=0x08  CONF_ADDR=0x1c
+   //   IMN_N_ADDR = 0x20 + N*8   IMN_N_PARAM = 0x24 + N*8  (stride<<16 | size)
+   //   OMN_N_ADDR = 0x40 + N*8   OMN_N_SIZE  = 0x44 + N*8
+   
+   #include "mlir/Dialect/Affine/IR/AffineOps.h"
+   #include "mlir/Dialect/Arith/IR/Arith.h"
+   #include "mlir/Dialect/Func/IR/FuncOps.h"
+   #include "mlir/Dialect/LLVMIR/LLVMDialect.h"
+   #include "mlir/Dialect/MemRef/IR/MemRef.h"
+   #include "mlir/Dialect/SCF/IR/SCF.h"
+   #include "mlir/IR/Builders.h"
+   #include "mlir/IR/BuiltinOps.h"
+   #include "mlir/IR/BuiltinTypes.h"
+   #include "mlir/Pass/Pass.h"
+   #include "mlir/Pass/PassRegistry.h"
+   #include "mlir/Support/LogicalResult.h"
+   #include "picea-mlir/Dialect/CGRA/IR/CGRA.h"
+   #include "picea-mlir/Dialect/CGRA/Transforms/Passes.h"
+   
+   #include "llvm/ADT/SmallSet.h"
+   #include "llvm/ADT/SmallVector.h"
+   #include "llvm/Support/JSON.h"
+   #include "llvm/Support/MemoryBuffer.h"
+   #include "llvm/Support/raw_ostream.h"
+   
+   using namespace mlir;
+   
+   // ─── STRELA register map (resolved only in stage 2) ─────────────────────────
+   namespace {
+   
+   constexpr uint32_t STATUS_DONE_MASK = (1u << 0);
+   constexpr uint32_t CTRL_CLR = (1u << 1);
+   constexpr uint32_t CTRL_START = (1u << 0);
+   constexpr uint32_t MODE_PERF_CTR_EN = (1u << 1);
+   constexpr uint32_t MODE_INTR_EN = (1u << 0);
+   
+   // Symbolic register names carried by cgra.strela_write / cgra.strela_read.
+   namespace regname {
+   constexpr StringRef Ctrl = "STRELA_CTRL";
+   constexpr StringRef Mode = "STRELA_MODE";
+   constexpr StringRef Status = "STRELA_STATUS";
+   constexpr StringRef Conf = "STRELA_CONF";
+   constexpr StringRef ImnAddr = "STRELA_IMN_ADDR";
+   constexpr StringRef ImnParam = "STRELA_IMN_PARAM";
+   constexpr StringRef OmnAddr = "STRELA_OMN_ADDR";
+   constexpr StringRef OmnSize = "STRELA_OMN_SIZE";
+   } // namespace regname
+   
+   struct RegInfo {
+       uint32_t offset; // byte offset of channel 0
+       uint32_t step;   // per-channel stride (0 if the register has no channel)
+   };
+   
+   // Resolve a symbolic register name to its (offset, per-channel step).
+   static bool resolveReg(StringRef reg, RegInfo &out)
+   {
+       if (reg == regname::Ctrl) {
+           out = {0x00, 0};
+           return true;
+       }
+       if (reg == regname::Mode) {
+           out = {0x04, 0};
+           return true;
+       }
+       if (reg == regname::Status) {
+           out = {0x08, 0};
+           return true;
+       }
+       if (reg == regname::Conf) {
+           out = {0x1c, 0};
+           return true;
+       }
+       if (reg == regname::ImnAddr) {
+           out = {0x20, 0x08};
+           return true;
+       }
+       if (reg == regname::ImnParam) {
+           out = {0x24, 0x08};
+           return true;
+       }
+       if (reg == regname::OmnAddr) {
+           out = {0x40, 0x08};
+           return true;
+       }
+       if (reg == regname::OmnSize) {
+           out = {0x44, 0x08};
+           return true;
+       }
+       return false;
+   }
+   
+   // Byte-width of a memref element.
+   static uint32_t elemBytes(MemRefType mrt)
+   {
+       Type e = mrt.getElementType();
+       if (auto it = dyn_cast<IntegerType>(e)) return it.getWidth() / 8;
+       if (auto ft = dyn_cast<FloatType>(e)) return ft.getWidth() / 8;
+       return 4;
+   }
+   
+   // Parse an io_map.json (written by the mapper's map2bitstream) into the
+   // physical STRELA channel the mapper assigned each stream: inputCh[k] is the
+   // channel of DFG node "input{k}", outputCh[k] of "output{k}". The mapper is
+   // free to permute streams onto channels, so without this the .ll would drive
+   // the wrong channels. The "input{k}" / "output{k}" numbering is
+   // --export-loop-dfg's per-load / per-store body order, the same order
+   // cgra-deploy-to-strela enumerates streams.
+   static LogicalResult parseIoMap(
+       StringRef path,
+       SmallVectorImpl<int> &inputCh,
+       SmallVectorImpl<int> &outputCh,
+       std::string &err)
+   {
+       auto buf = llvm::MemoryBuffer::getFile(path);
+       if (!buf) {
+           err = ("cannot open io-map file: " + path).str();
+           return failure();
+       }
+       auto parsed = llvm::json::parse((*buf)->getBuffer());
+       if (!parsed) {
+           err = ("invalid JSON in io-map: " + path).str();
+           return failure();
+       }
+       llvm::json::Object* root = parsed->getAsObject();
+       if (!root) {
+           err = "io-map is not a JSON object";
+           return failure();
+       }
+   
+       auto loadSection = [&](StringRef key, SmallVectorImpl<int> &out) -> bool {
+           llvm::json::Object* sec = root->getObject(key);
+           if (!sec) return true; // an absent section (e.g. no outputs) is fine
+           for (auto &kv : *sec) {
+               StringRef name = kv.first;
+               llvm::json::Object* entry = kv.second.getAsObject();
+               if (!entry) continue;
+               std::optional<int64_t> ch = entry->getInteger("channel");
+               if (!ch) {
+                   err = ("io-map entry missing 'channel': " + name).str();
+                   return false;
+               }
+               // Index the entry by the numeric suffix of its name ("input3" ->
+               // 3).
+               size_t p = name.find_first_of("0123456789");
+               int idx = 0;
+               if (p == StringRef::npos
+                   || name.drop_front(p).getAsInteger(10, idx)) {
+                   err = ("io-map entry name is not <prefix><N>: " + name).str();
+                   return false;
+               }
+               if ((int)out.size() <= idx) out.resize(idx + 1, -1);
+               out[idx] = (int)*ch;
+           }
+           return true;
+       };
+       if (!loadSection("inputs", inputCh)) return failure();
+       if (!loadSection("outputs", outputCh)) return failure();
+       return success();
+   }
+   
+   } // namespace
+   
+   // ─── Stage 1: cgra.deploy → cgra.strela_write / cgra.strela_read ─────────────
+   
+   namespace {
+   
+   struct CGRADeployToStrelaPass
+           : public PassWrapper<CGRADeployToStrelaPass, OperationPass<ModuleOp>> {
+   
+       MLIR_DEFINE_EXPLICIT_INTERNAL_INLINE_TYPE_ID(CGRADeployToStrelaPass)
+   
+       CGRADeployToStrelaPass() = default;
+       CGRADeployToStrelaPass(const CGRADeployToStrelaPass &o) : PassWrapper(o) {}
+   
+       StringRef getArgument() const final { return "cgra-deploy-to-strela"; }
+       StringRef getDescription() const final
+       {
+           return "Replace cgra.deploy with the STRELA cgra.strela_write/read "
+                  "sequence "
+                  "and give the kernel a C-callable bare-pointer signature";
+       }
+   
+       // Optional io_map.json from the mapper: when given, each stream is
+       // programmed onto the physical channel the mapper chose (which it may
+       // permute) instead of a sequential 0,1,2… assignment — so the .ll drives
+       // the same channels the bitstream expects. Without it the streams keep the
+       // sequential assignment.
+       Pass::Option<std::string> ioMap{
+           *this,
+           "io-map",
+           llvm::cl::desc("io_map.json giving the mapper's channel per stream"),
+           llvm::cl::init("")};
+   
+       // The bitstream array symbol written to CONF. Defaults to
+       // <kernel-func>_kernel, but the outlined kernel function is <base>_kernel
+       // (e.g. main_kernel), whose derived symbol (main_kernel_kernel) need not
+       // match the bitstream array the mapper emits ($(1)_kernel). Set this so the
+       // .ll references the real symbol.
+       Pass::Option<std::string> confSymbol{
+           *this,
+           "conf-symbol",
+           llvm::cl::desc(
+               "bitstream array symbol for the CONF register "
+               "(default: <kernel-func>_kernel)"),
+           llvm::cl::init("")};
+   
+       void getDependentDialects(DialectRegistry &reg) const override
+       {
+           reg.insert<
+               cgra::CGRADialect,
+               LLVM::LLVMDialect,
+               memref::MemRefDialect,
+               scf::SCFDialect,
+               arith::ArithDialect>();
+       }
+   
+       Value i32const(OpBuilder &b, Location loc, int32_t v)
+       {
+           return arith::ConstantOp::create(
+               b,
+               loc,
+               b.getI32Type(),
+               b.getIntegerAttr(b.getI32Type(), v));
+       }
+   
+       void
+       writeReg(OpBuilder &b, Location loc, StringRef reg, int channel, Value v)
+       {
+           IntegerAttr ch =
+               channel < 0 ? IntegerAttr() : b.getI32IntegerAttr(channel);
+           cgra::StrelaWriteOp::create(b, loc, b.getStringAttr(reg), ch, v);
+       }
+       void writeImm(
+           OpBuilder &b,
+           Location loc,
+           StringRef reg,
+           int channel,
+           uint32_t imm)
+       { writeReg(b, loc, reg, channel, i32const(b, loc, (int32_t)imm)); }
+       Value readReg(OpBuilder &b, Location loc, StringRef reg)
+       {
+           return cgra::StrelaReadOp::create(
+               b,
+               loc,
+               b.getI32Type(),
+               b.getStringAttr(reg),
+               IntegerAttr());
+       }
+   
+       // Declare @<func>_kernel as an external i32-array global (the bitstream
+       // symbol resolved from kernels.h), and return its address as an i32.
+       Value
+       kernelAddrI32(OpBuilder &b, Location loc, ModuleOp module, StringRef name)
+       {
+           if (!module.lookupSymbol(name)) {
+               OpBuilder::InsertionGuard guard(b);
+               b.setInsertionPointToStart(module.getBody());
+               auto arrayTy = LLVM::LLVMArrayType::get(b.getI32Type(), 0);
+               LLVM::GlobalOp::create(
+                   b,
+                   loc,
+                   arrayTy,
+                   /*isConstant=*/false,
+                   LLVM::Linkage::External,
+                   name,
+                   /*value=*/Attribute{},
+                   /*alignment=*/4);
+           }
+           auto ptrTy = LLVM::LLVMPointerType::get(b.getContext());
+           Value ptr = LLVM::AddressOfOp::create(b, loc, ptrTy, name);
+           return LLVM::PtrToIntOp::create(b, loc, b.getI32Type(), ptr);
+       }
+   
+       LogicalResult lowerDeploy(
+           cgra::DeployOp deployOp,
+           func::FuncOp funcOp,
+           ModuleOp module,
+           ArrayRef<int> inputCh,
+           ArrayRef<int> outputCh,
+           bool useIoMap)
+       {
+           MLIRContext* ctx = &getContext();
+   
+           // 1. Dispatch element count (prefer the stamped dispatch_size).
+           affine::AffineForOp forOp;
+           deployOp.getBody().walk([&](affine::AffineForOp op) { forOp = op; });
+           if (!forOp)
+               return deployOp.emitError("cgra.deploy: no inner affine.for");
+   
+           int64_t N;
+           if (auto ds = deployOp.getDispatchSize())
+               N = ds.value();
+           else {
+               if (!forOp.hasConstantUpperBound()
+                   || !forOp.hasConstantLowerBound())
+                   return forOp.emitError("cgra.deploy: non-constant loop bound");
+               N = forOp.getConstantUpperBound() - forOp.getConstantLowerBound();
+           }
+   
+           // 2. Classify args (prefer stamped attributes).
+           llvm::SmallVector<unsigned> inputs, outputs, inouts;
+           // The accessors return the optional BY VALUE, so the ArrayRef has to be
+           // held in a local. Iterating `getInputArgs().value()` directly binds
+           // the range to a temporary that is gone before the loop body runs.
+           if (auto in = deployOp.getInputArgs()) {
+               for (int idx : *in) inputs.push_back((unsigned)idx);
+               if (auto out = deployOp.getOutputArgs())
+                   for (int idx : *out) outputs.push_back((unsigned)idx);
+               if (auto inout = deployOp.getInoutArgs())
+                   for (int idx : *inout) inouts.push_back((unsigned)idx);
+           } else {
+               llvm::SmallSet<unsigned, 4> stored;
+               forOp.getBody()->walk([&](affine::AffineStoreOp st) {
+                   if (auto ba = dyn_cast<BlockArgument>(st.getMemRef()))
+                       stored.insert(ba.getArgNumber());
+               });
+               forOp.getBody()->walk([&](affine::AffineLoadOp ld) {
+                   if (auto ba = dyn_cast<BlockArgument>(ld.getMemRef())) {
+                       unsigned n = ba.getArgNumber();
+                       if (!stored.count(n) && !llvm::is_contained(inputs, n))
+                           inputs.push_back(n);
+                   }
+               });
+               for (unsigned n : stored) outputs.push_back(n);
+           }
+   
+           // 3. Element byte-width (from a memref arg, read before we rewrite
+           // types).
+           uint32_t bytes = 4;
+           for (BlockArgument a : funcOp.getArguments())
+               if (auto mrt = dyn_cast<MemRefType>(a.getType())) {
+                   bytes = elemBytes(mrt);
+                   break;
+               }
+           uint32_t sizeBytes = (uint32_t)(N * bytes);
+           uint32_t imnParam = (bytes << 16) | sizeBytes; // stride<<16 | size
+   
+           OpBuilder b(deployOp);
+           Location loc = deployOp.getLoc();
+           auto ptrTy = LLVM::LLVMPointerType::get(ctx);
+   
+           // 4. C-callable signature: rewrite a memref arg to a bare !llvm.ptr
+           // ONLY
+           //    when nothing outside this deploy region uses it. The lowering must
+           //    preserve the CPU code before and after the loop untouched, so an
+           //    array that surrounding code still reads/writes (affine.load/store)
+           //    has to stay a memref — rewriting it would break that code. Pure
+           //    stream arguments (used only inside the loop, the common kernel
+           //    case) become plain pointers so the RISC-V C driver can call the
+           //    kernel directly; any array shared with surrounding CPU code keeps
+           //    the memref (descriptor) ABI.
+           Block &entry = funcOp.getBody().front();
+           auto usedOutsideDeploy = [&](Value v) {
+               for (Operation* user : v.getUsers()) {
+                   // Feeding the value in as a cgra.deploy stream operand is not
+                   // an outside use — that is exactly the stream we are lowering.
+                   if (user == deployOp.getOperation()) continue;
+                   if (!deployOp->isAncestor(user)) return true;
+               }
+               return false;
+           };
+           // Do not change the signature of a kernel that is called from within
+           // the module (e.g. an outlined <H>_kernel invoked by its host
+           // function): the caller passes memrefs, so rewriting to bare pointers
+           // would break the call. Such kernels keep the memref ABI and take the
+           // base pointer from the descriptor. A leaf kernel called only from
+           // external C still becomes bare-pointer / C-callable.
+           bool internallyCalled = false;
+           module.walk([&](func::CallOp c) {
+               if (c.getCallee() == funcOp.getName()) internallyCalled = true;
+           });
+           llvm::SmallVector<Type> newInTypes(
+               funcOp.getArgumentTypes().begin(),
+               funcOp.getArgumentTypes().end());
+           if (!internallyCalled)
+               for (unsigned i = 0; i < entry.getNumArguments(); ++i)
+                   if (isa<MemRefType>(entry.getArgument(i).getType())
+                       && !usedOutsideDeploy(entry.getArgument(i))) {
+                       entry.getArgument(i).setType(ptrTy);
+                       newInTypes[i] = ptrTy;
+                   }
+           funcOp.setType(
+               FunctionType::get(ctx, newInTypes, funcOp.getResultTypes()));
+   
+           auto argBaseI32 = [&](unsigned idx) -> Value {
+               Value arg = funcOp.getArgument(idx);
+               if (isa<LLVM::LLVMPointerType>(arg.getType()))
+                   return LLVM::PtrToIntOp::create(b, loc, b.getI32Type(), arg);
+               // memref kept for surrounding CPU code: take its aligned base
+               // pointer.
+               Value idxp = memref::ExtractAlignedPointerAsIndexOp::create(
+                   b,
+                   loc,
+                   b.getIndexType(),
+                   arg);
+               Value i64 =
+                   arith::IndexCastOp::create(b, loc, b.getI64Type(), idxp);
+               return arith::TruncIOp::create(b, loc, b.getI32Type(), i64);
+           };
+   
+           // 5. Program + launch STRELA.
+           writeImm(b, loc, regname::Ctrl, -1, CTRL_CLR);
+           writeImm(b, loc, regname::Mode, -1, MODE_PERF_CTR_EN | MODE_INTR_EN);
+           std::string confSym = confSymbol.empty()
+                                     ? (funcOp.getName() + "_kernel").str()
+                                     : confSymbol.getValue();
+           writeReg(
+               b,
+               loc,
+               regname::Conf,
+               -1,
+               kernelAddrI32(b, loc, module, confSym));
+   
+           // IMN streams are inputs then inouts; OMN streams are outputs then
+           // inouts — the same order --export-loop-dfg (hence the io_map) numbers
+           // input{k} / output{k}. With an io_map each stream goes to the mapper's
+           // channel; a count mismatch means the correspondence is broken, so
+           // error rather than silently program the wrong channels.
+           if (useIoMap) {
+               size_t nIn = inputs.size() + inouts.size();
+               size_t nOut = outputs.size() + inouts.size();
+               if (inputCh.size() != nIn || outputCh.size() != nOut)
+                   return deployOp.emitError()
+                          << "io-map stream count mismatch: kernel has " << nIn
+                          << " input and " << nOut
+                          << " output streams, io-map has " << inputCh.size()
+                          << " and " << outputCh.size();
+               for (int c : inputCh)
+                   if (c < 0)
+                       return deployOp.emitError(
+                           "io-map: missing an input channel");
+               for (int c : outputCh)
+                   if (c < 0)
+                       return deployOp.emitError(
+                           "io-map: missing an output channel");
+           }
+           auto imnChannel = [&](int k) { return useIoMap ? inputCh[k] : k; };
+           auto omnChannel = [&](int k) { return useIoMap ? outputCh[k] : k; };
+   
+           int imn = 0;
+           for (unsigned a : inputs) {
+               writeReg(b, loc, regname::ImnAddr, imnChannel(imn), argBaseI32(a));
+               writeImm(b, loc, regname::ImnParam, imnChannel(imn), imnParam);
+               ++imn;
+           }
+           for (unsigned a : inouts) {
+               writeReg(b, loc, regname::ImnAddr, imnChannel(imn), argBaseI32(a));
+               writeImm(b, loc, regname::ImnParam, imnChannel(imn), imnParam);
+               ++imn;
+           }
+           int omn = 0;
+           for (unsigned a : outputs) {
+               writeReg(b, loc, regname::OmnAddr, omnChannel(omn), argBaseI32(a));
+               writeImm(b, loc, regname::OmnSize, omnChannel(omn), sizeBytes);
+               ++omn;
+           }
+           for (unsigned a : inouts) {
+               writeReg(b, loc, regname::OmnAddr, omnChannel(omn), argBaseI32(a));
+               writeImm(b, loc, regname::OmnSize, omnChannel(omn), sizeBytes);
+               ++omn;
+           }
+   
+           writeImm(b, loc, regname::Ctrl, -1, CTRL_START);
+   
+           // 6. Spin-wait: while ((STATUS & DONE) == 0) {}
+           auto whileOp = scf::WhileOp::create(b, loc, TypeRange{}, ValueRange{});
+           {
+               Block* before = b.createBlock(&whileOp.getBefore());
+               OpBuilder wb(before, before->begin());
+               Value status = readReg(wb, loc, regname::Status);
+               Value masked = arith::AndIOp::create(
+                   wb,
+                   loc,
+                   status,
+                   i32const(wb, loc, STATUS_DONE_MASK));
+               Value running = arith::CmpIOp::create(
+                   wb,
+                   loc,
+                   arith::CmpIPredicate::eq,
+                   masked,
+                   i32const(wb, loc, 0));
+               scf::ConditionOp::create(wb, loc, running, ValueRange{});
+           }
+           {
+               Block* after = b.createBlock(&whileOp.getAfter());
+               OpBuilder ab(after, after->begin());
+               scf::YieldOp::create(ab, loc);
+           }
+           b.setInsertionPointAfter(whileOp);
+   
+           // 7. Drop the offloaded loop.
+           deployOp.erase();
+           return success();
+       }
+   
+       void runOnOperation() override
+       {
+           ModuleOp module = getOperation();
+   
+           // Parse the mapper's channel assignment once, if one was given.
+           SmallVector<int> inputCh, outputCh;
+           bool useIoMap = !ioMap.empty();
+           if (useIoMap) {
+               std::string err;
+               if (failed(parseIoMap(ioMap, inputCh, outputCh, err))) {
+                   module.emitError(err);
+                   return signalPassFailure();
+               }
+           }
+   
+           llvm::SmallVector<cgra::DeployOp> deploys;
+           module.walk([&](cgra::DeployOp op) { deploys.push_back(op); });
+           for (auto deployOp : deploys) {
+               auto funcOp = deployOp->getParentOfType<func::FuncOp>();
+               if (!funcOp) {
+                   deployOp.emitError("cgra.deploy outside a func.func");
+                   return signalPassFailure();
+               }
+               if (failed(lowerDeploy(
+                       deployOp,
+                       funcOp,
+                       module,
+                       inputCh,
+                       outputCh,
+                       useIoMap)))
+                   return signalPassFailure();
+           }
+       }
+   };
+   
+   // ─── Stage 2: cgra.strela_write / cgra.strela_read → volatile llvm store/load
+   // ─
+   
+   struct CGRAStrelaToLLVMPass
+           : public PassWrapper<CGRAStrelaToLLVMPass, OperationPass<ModuleOp>> {
+   
+       MLIR_DEFINE_EXPLICIT_INTERNAL_INLINE_TYPE_ID(CGRAStrelaToLLVMPass)
+   
+       CGRAStrelaToLLVMPass() = default;
+       CGRAStrelaToLLVMPass(uint64_t sBase) { strelaBase = sBase; }
+       CGRAStrelaToLLVMPass(const CGRAStrelaToLLVMPass &o) : PassWrapper(o)
+       { strelaBase = o.strelaBase; }
+   
+       StringRef getArgument() const final { return "strela-to-llvm"; }
+       StringRef getDescription() const final
+       {
+           return "Lower cgra.strela_write/read to volatile llvm.store/load at "
+                  "STRELA "
+                  "MMIO addresses";
+       }
+   
+       void getDependentDialects(DialectRegistry &reg) const override
+       { reg.insert<LLVM::LLVMDialect, arith::ArithDialect>(); }
+   
+       // Default to a common X-Heep configuration (STRELA on EXT_PERIPHERAL).
+       Pass::Option<uint64_t> strelaBase{
+           *this,
+           "strela-base",
+           llvm::cl::desc("STRELA MMIO base address"),
+           llvm::cl::init(0x60001000ULL)};
+   
+       uint32_t addrOf(StringRef reg, int channel)
+       {
+           RegInfo info;
+           resolveReg(reg, info); // callers only emit known registers
+           uint64_t base = strelaBase;
+           return (uint32_t)(base + info.offset
+                             + (channel < 0 ? 0u : (uint32_t)channel * info.step));
+       }
+   
+       Value mmioPtr(OpBuilder &b, Location loc, uint32_t addr)
+       {
+           Value a = arith::ConstantOp::create(
+               b,
+               loc,
+               b.getI32Type(),
+               b.getIntegerAttr(b.getI32Type(), (int32_t)addr));
+           return LLVM::IntToPtrOp::create(
+               b,
+               loc,
+               LLVM::LLVMPointerType::get(b.getContext()),
+               a);
+       }
+   
+       void runOnOperation() override
+       {
+           ModuleOp module = getOperation();
+   
+           llvm::SmallVector<cgra::StrelaWriteOp> writes;
+           llvm::SmallVector<cgra::StrelaReadOp> reads;
+           module.walk([&](Operation* op) {
+               if (auto w = dyn_cast<cgra::StrelaWriteOp>(op))
+                   writes.push_back(w);
+               else if (auto r = dyn_cast<cgra::StrelaReadOp>(op))
+                   reads.push_back(r);
+           });
+   
+           for (auto w : writes) {
+               OpBuilder b(w);
+               int ch = w.getChannel() ? (int)*w.getChannel() : -1;
+               Value ptr = mmioPtr(b, w.getLoc(), addrOf(w.getReg(), ch));
+               LLVM::StoreOp::create(
+                   b,
+                   w.getLoc(),
+                   w.getValue(),
+                   ptr,
+                   /*alignment=*/4,
+                   /*volatile=*/true);
+               w.erase();
+           }
+           for (auto r : reads) {
+               OpBuilder b(r);
+               int ch = r.getChannel() ? (int)*r.getChannel() : -1;
+               Value ptr = mmioPtr(b, r.getLoc(), addrOf(r.getReg(), ch));
+               Value v = LLVM::LoadOp::create(
+                   b,
+                   r.getLoc(),
+                   b.getI32Type(),
+                   ptr,
+                   /*alignment=*/4,
+                   /*volatile=*/true);
+               r.getResult().replaceAllUsesWith(v);
+               r.erase();
+           }
+       }
+   };
+   
+   } // namespace
+   
+   std::unique_ptr<mlir::Pass> mlir::cgra::createCGRADeployToStrelaPass()
+   { return std::make_unique<CGRADeployToStrelaPass>(); }
+   
+   std::unique_ptr<mlir::Pass>
+   mlir::cgra::createCGRAStrelaToLLVMPass(uint64_t strelaBase)
+   { return std::make_unique<CGRAStrelaToLLVMPass>(strelaBase); }

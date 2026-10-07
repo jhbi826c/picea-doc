@@ -1,0 +1,104 @@
+
+.. _program_listing_file_build_include_picea-mlir_Dialect_EmitHLS_IR_EmitHLSAttributes.h.inc:
+
+Program Listing for File EmitHLSAttributes.h.inc
+================================================
+
+|exhale_lsh| :ref:`Return to documentation for file <file_build_include_picea-mlir_Dialect_EmitHLS_IR_EmitHLSAttributes.h.inc>` (``build/include/picea-mlir/Dialect/EmitHLS/IR/EmitHLSAttributes.h.inc``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. code-block:: cpp
+
+   /*===- TableGen'erated file -------------------------------------*- C++ -*-===*\
+   |*                                                                            *|
+   |* AttrDef Declarations                                                       *|
+   |*                                                                            *|
+   |* Automatically generated file, do not edit!                                 *|
+   |*                                                                            *|
+   \*===----------------------------------------------------------------------===*/
+   
+   #ifdef GET_ATTRDEF_CLASSES
+   #undef GET_ATTRDEF_CLASSES
+   
+   
+   namespace mlir {
+   class AsmParser;
+   class AsmPrinter;
+   } // namespace mlir
+   namespace mlir::emithls {
+   
+   class FixedAttr;
+   class DenseFixedAttr;
+   namespace detail {
+   
+   struct FixedAttrStorage;
+   
+   } // namespace detail
+   class FixedAttr : public ::mlir::Attribute::AttrBase<FixedAttr, ::mlir::Attribute, detail::FixedAttrStorage, ::mlir::TypedAttr::Trait> {
+   public:
+     using Base::Base;
+     static constexpr ::llvm::StringLiteral name = "emithls.fixed";
+     static constexpr ::llvm::StringLiteral dialectName = "emithls";
+     using Base::getChecked;
+     static FixedAttr get(Type type, const ::mlir::base2::BitSequence &value);
+     static FixedAttr getChecked(::llvm::function_ref<::mlir::InFlightDiagnostic()> emitError, Type type, const ::mlir::base2::BitSequence &value);
+     static ::llvm::LogicalResult verify(::llvm::function_ref<::mlir::InFlightDiagnostic()> emitError, ::mlir::Type type, ::mlir::base2::BitSequence value);
+     static ::llvm::LogicalResult verifyInvariants(::llvm::function_ref<::mlir::InFlightDiagnostic()> emitError, ::mlir::Type type, ::mlir::base2::BitSequence value);
+     static constexpr ::llvm::StringLiteral getMnemonic() {
+       return {"fixed"};
+     }
+   
+     static ::mlir::Attribute parse(::mlir::AsmParser &odsParser, ::mlir::Type odsType);
+     void print(::mlir::AsmPrinter &odsPrinter) const;
+     ::mlir::Type getType() const;
+     ::mlir::base2::BitSequence getValue() const;
+   };
+   namespace detail {
+   
+   struct DenseFixedAttrStorage;
+   
+   } // namespace detail
+   class DenseFixedAttr : public ::mlir::Attribute::AttrBase<DenseFixedAttr, ::mlir::Attribute, detail::DenseFixedAttrStorage, ::mlir::TypedAttr::Trait, ::mlir::ElementsAttr::Trait> {
+   public:
+     using Base::Base;
+     ::mlir::ShapedType getShapedType() const;
+   
+     //===--------------------------------------------------------------===//
+     // ElementsAttrInterface
+     //===--------------------------------------------------------------===//
+   
+     using ContiguousIterableTypesT =
+         std::tuple<std::uint8_t, std::uint64_t>;
+   
+     auto try_value_begin_impl(OverloadToken<std::uint8_t>) const;
+     auto try_value_begin_impl(OverloadToken<std::uint64_t>) const;
+   
+     using NonContiguousIterableTypesT =
+         std::tuple<::mlir::base2::BitSequence>;
+   
+     auto try_value_begin_impl(
+         OverloadToken<::mlir::base2::BitSequence>) const;
+     static constexpr ::llvm::StringLiteral name = "emithls.dense_fixed";
+     static constexpr ::llvm::StringLiteral dialectName = "emithls";
+     using Base::getChecked;
+     static DenseFixedAttr get(::mlir::ShapedType type, const DenseIntElementsAttr data);
+     static DenseFixedAttr getChecked(::llvm::function_ref<::mlir::InFlightDiagnostic()> emitError, ::mlir::ShapedType type, const DenseIntElementsAttr data);
+     static ::llvm::LogicalResult verify(::llvm::function_ref<::mlir::InFlightDiagnostic()> emitError, ::mlir::Type type, DenseIntElementsAttr data);
+     static ::llvm::LogicalResult verifyInvariants(::llvm::function_ref<::mlir::InFlightDiagnostic()> emitError, ::mlir::Type type, DenseIntElementsAttr data);
+     static constexpr ::llvm::StringLiteral getMnemonic() {
+       return {"dense_fixed"};
+     }
+   
+     static ::mlir::Attribute parse(::mlir::AsmParser &odsParser, ::mlir::Type odsType);
+     void print(::mlir::AsmPrinter &odsPrinter) const;
+     ::mlir::Type getType() const;
+     DenseIntElementsAttr getData() const;
+   };
+   
+   } // namespace mlir::emithls
+   MLIR_DECLARE_EXPLICIT_TYPE_ID(::mlir::emithls::FixedAttr)
+   MLIR_DECLARE_EXPLICIT_TYPE_ID(::mlir::emithls::DenseFixedAttr)
+   
+   #endif // GET_ATTRDEF_CLASSES
+   

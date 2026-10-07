@@ -1,0 +1,744 @@
+
+.. _program_listing_file_lib_Dialect_CGRA_Transforms_PartitionCGRADFG.cpp:
+
+Program Listing for File PartitionCGRADFG.cpp
+=============================================
+
+|exhale_lsh| :ref:`Return to documentation for file <file_lib_Dialect_CGRA_Transforms_PartitionCGRADFG.cpp>` (``lib/Dialect/CGRA/Transforms/PartitionCGRADFG.cpp``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. code-block:: cpp
+
+   
+   
+   #include "mlir/Dialect/Affine/IR/AffineOps.h"
+   #include "mlir/Dialect/Arith/IR/Arith.h"
+   #include "mlir/Dialect/Func/IR/FuncOps.h"
+   #include "mlir/Dialect/MemRef/IR/MemRef.h"
+   #include "mlir/IR/IRMapping.h"
+   #include "mlir/IR/Matchers.h"
+   #include "mlir/Pass/Pass.h"
+   #include "picea-mlir/Dialect/CGRA/Transforms/Passes.h"
+   
+   #include "llvm/ADT/DenseMap.h"
+   #include "llvm/ADT/SetVector.h"
+   
+   #include <functional>
+   
+   using namespace mlir;
+   
+   namespace {
+   
+   // Required, not optional: without it `residual` has deploys of
+   // 96/59/59/44/36/24 FUs, 7 of 11 over the 16-PE array and so Gurobi-INFEASIBLE;
+   // with it, 48 deploys all <= 13 FUs. Configuration boundaries are chosen here,
+   // not implied by the program. See docs/TODO.md B2.
+   
+   // The STRELA budget (strela_pkg.sv + elastic-cgra configs/4x4_4i-n_4o-s.hjson):
+   // one configuration streams at most 4 arrays in, 4 out, and places at most 16
+   // FUs.
+   static constexpr unsigned kInputNodes = 4;
+   static constexpr unsigned kOutputNodes = 4;
+   
+   // A requantization chain is 20-81 arith ops against 16 PEs, so the mapper
+   // rejects the nest outright. This pass cuts the body's DAG into segments that
+   // each fit one configuration and emits one loop nest per segment over the SAME
+   // iteration space; a value crossing a cut is staged through a temporary buffer,
+   // the only mechanism available since the fabric cannot hold a value between
+   // configurations.
+   //
+   //   for i: t = f(a[i]); out[i] = g(t)      // 20 FUs, does not fit
+   //     =>  for i: tmp[i] = f(a[i])          // segment 0
+   //         for i: out[i] = g(tmp[i])        // segment 1
+   //
+   // A cut edge costs an output stream in the producing segment and an input
+   // stream in the consuming one, so 4-in/4-out bounds cut WIDTH as the PE count
+   // bounds segment HEIGHT. Segmentation is greedy in program order (already a
+   // topological order).
+   //
+   // SCOPE: perfectly-nested, pure-parallel affine nests with a straight-line
+   // body. Reductions are not handled; nests that already fit are untouched.
+   struct CGRAPartitionDFGPass : public PassWrapper<
+                                     CGRAPartitionDFGPass,
+                                     OperationPass<func::FuncOp>> {
+   
+       MLIR_DEFINE_EXPLICIT_INTERNAL_INLINE_TYPE_ID(CGRAPartitionDFGPass)
+   
+       CGRAPartitionDFGPass() = default;
+       CGRAPartitionDFGPass(const CGRAPartitionDFGPass &other) : PassWrapper(other)
+       {}
+   
+       StringRef getArgument() const final { return "partition-cgra-dfg"; }
+       StringRef getDescription() const final
+       {
+           return "Split a compute nest too large for one CGRA configuration into "
+                  "several nests staged through temporary buffers";
+       }
+   
+       // Placement headroom: a segment that uses all 16 PEs leaves the mapper
+       // nothing to route with, so the default keeps two free. Raise it to pack
+       // harder.
+       Pass::Option<unsigned> maxFUs{
+           *this,
+           "max-fus",
+           llvm::cl::desc("FUs allowed in one segment (fabric has 16 PEs)"),
+           llvm::cl::init(14)};
+   
+       // Cutting a nest stages EVERY value crossing a cut through memory, one
+       // element per streamed element — so the scratch a cut costs is the nest's
+       // whole iteration count, not its output size. For a REDUCTION that is the
+       // output count times the reduction trip: tiny_kws' pointwise convolution
+       // streams 1x25x5x64x64 = 512 000 elements, i.e. 2 MB per slot on a machine
+       // with 928 KB of RAM. Accelerating one nest is not worth making the program
+       // unlinkable, so a nest whose stream exceeds this is left unpartitioned (it
+       // then runs on the host like any other non-streamable nest).
+       Pass::Option<unsigned> maxTempElems{
+           *this,
+           "max-temp-elems",
+           llvm::cl::desc(
+               "do not partition a nest whose stream exceeds this many "
+               "elements — each cut would cost that much scratch"),
+           llvm::cl::init(65536)};
+   
+       // A value crossing a cut normally costs a stream at BOTH ends. When it is
+       // cheap to recompute, recomputing it in the consumer is strictly better: it
+       // costs FUs (which the segment has) instead of streams (which are the
+       // scarce resource, and are what dead-ends the i64-multiply emulation — its
+       // half-word splits are one shift from a load, yet four of them are live
+       // across the whole chain). Outputs a segment may produce. The budget is 4
+       // OMNs, but a cut that uses ALL of them together with 3 inputs occupies 7
+       // of the 8 border nodes, and the placer then has no slack: residual_small's
+       // nest 40 (10 FUs, 3 in, 4 out) does not solve even with a 900 s Gurobi
+       // limit. Cutting one narrower costs a segment and maps in seconds.
+       Pass::Option<unsigned> maxOuts{
+           *this,
+           "max-outs",
+           llvm::cl::desc("output streams allowed in one segment (fabric has 4)"),
+           llvm::cl::init(3)};
+   
+       Pass::Option<unsigned> maxRemat{
+           *this,
+           "max-remat",
+           llvm::cl::desc(
+               "FUs worth of backward slice to recompute rather than stage"),
+           llvm::cl::init(3)};
+   
+       void getDependentDialects(mlir::DialectRegistry &registry) const override
+       {
+           registry.insert<
+               affine::AffineDialect,
+               memref::MemRefDialect,
+               arith::ArithDialect>();
+       }
+   
+       // ---------------------------------------------------------------- cost
+       // model
+   
+       // What the nest costs the fabric has to be counted the way
+       // --export-loop-dfg will EMIT it, not the way it reads in MLIR. The one op
+       // that is not 1:1 is arith.shrui: the fabric right shift is arithmetic
+       // only, so the exporter corrects it with an extra masking FU (see
+       // ExportLoopDFG's shrui handling). Undercounting here would hand the mapper
+       // a segment of 17 nodes.
+       static unsigned fuCost(Operation*)
+       {
+           // Charged the way --export-loop-dfg EMITS. The fabric shift is LOGICAL
+           // (FU_data_superpolyvalent.sv applies `>>>` to an UNSIGNED operand), so
+           // arith.shrui costs 1 node — the hardware already zero-fills — while
+           // arith.shrsi costs 3, the exporter restoring the sign with
+           // ((x >>u n) ^ sb) - sb. Undercounting hands the mapper a 17-node
+           // segment against 16 PEs, which is what happened when the shift
+           // lowering was corrected. No arith.shrsi special case:
+           // --expand-fabric-ops has already turned it into real shift/xor/sub
+           // ops, so they are counted like anything else. Restating the cost here
+           // was one of three copies of the same fact, and they drifted.
+           return 1;
+       }
+   
+       static bool isFabricOp(Operation* op)
+       {
+           return isa<
+               arith::MulIOp,
+               arith::AddIOp,
+               arith::SubIOp,
+               arith::CmpIOp,
+               arith::SelectOp,
+               arith::AndIOp,
+               arith::OrIOp,
+               arith::XOrIOp,
+               arith::ShLIOp,
+               arith::ShRSIOp,
+               arith::ShRUIOp>(op);
+       }
+   
+       // ------------------------------------------------------------------ the
+       // nest
+   
+       struct Nest {
+           SmallVector<affine::AffineForOp> loops; // outermost .. innermost
+           Block* body = nullptr;
+           SmallVector<Operation*> ops;               // fabric ops, program order
+           SmallVector<affine::AffineStoreOp> stores; // in the same body
+           int64_t elems = 1;                         // iteration-space size
+       };
+   
+       // A nest is a candidate when it is perfectly nested, every loop is a plain
+       // `0 to N step 1` with no iter_args (no reduction), and the innermost body
+       // is straight-line: loads, fabric arith, stores. Anything else — a nested
+       // region, a call, a division — and the cut would not be expressible as
+       // "same iteration space, fewer ops".
+       static bool collect(affine::AffineForOp root, Nest &n)
+       {
+           affine::AffineForOp cur = root;
+           while (true) {
+               if (cur.getNumIterOperands() != 0 || !cur.hasConstantLowerBound()
+                   || !cur.hasConstantUpperBound() || cur.getStepAsInt() != 1
+                   || cur.getConstantLowerBound() != 0)
+                   return false;
+               n.loops.push_back(cur);
+               n.elems *= cur.getConstantUpperBound();
+   
+               Block* b = cur.getBody();
+               // Perfect nest: a single inner loop and nothing else.
+               auto inner = SmallVector<affine::AffineForOp>(
+                   b->getOps<affine::AffineForOp>());
+               if (inner.size() == 1) {
+                   // …and no stray computation beside it.
+                   for (Operation &op : b->without_terminator())
+                       if (&op != inner[0].getOperation()) return false;
+                   cur = inner[0];
+                   continue;
+               }
+               if (!inner.empty()) return false;
+               n.body = b;
+               break;
+           }
+   
+           for (Operation &op : n.body->without_terminator())
+               if (isFabricOp(&op))
+                   n.ops.push_back(&op);
+               else if (auto st = dyn_cast<affine::AffineStoreOp>(&op))
+                   n.stores.push_back(st);
+               else if (!isa<affine::AffineLoadOp, arith::ConstantOp>(&op))
+                   return false;
+           return !n.ops.empty() && !n.stores.empty();
+       }
+   
+       // ------------------------------------------------------------
+       // rematerialisation
+   
+       // Everything needed to recompute @p v inside a segment: the fabric ops of
+       // its backward slice (stopping at loads, constants and anything defined
+       // outside the nest) plus the loads that slice reads.
+       static void sliceOf(
+           Value v,
+           Block* body,
+           DenseSet<Operation*> &ops,
+           DenseSet<Operation*> &loads)
+       {
+           Operation* d = v.getDefiningOp();
+           if (!d || d->getBlock() != body) return;
+           if (isa<affine::AffineLoadOp>(d)) {
+               loads.insert(d);
+               return;
+           }
+           if (!isFabricOp(d) || !ops.insert(d).second) return;
+           for (Value o : d->getOperands()) sliceOf(o, body, ops, loads);
+       }
+   
+       // Cheap enough to recompute rather than stage?
+       bool isRemat(Value v, Block* body, unsigned budget) const
+       {
+           if (!v.getType().isInteger(32))
+               return true; // an i1 can NEVER be staged, so it must be recomputed
+           DenseSet<Operation*> ops, loads;
+           sliceOf(v, body, ops, loads);
+           if (ops.empty()) return true;
+           unsigned cost = 0;
+           for (Operation* op : ops) cost += fuCost(op);
+           return cost <= budget;
+       }
+   
+       // ---------------------------------------------------------------
+       // scheduling
+   
+       // Program order is a topological order of the DAG, but usually a BAD one to
+       // cut. The i64-multiply emulation is a set of parallel chains (the 16-bit
+       // splits of each operand, their four partial products, the carries);
+       // interleaved as the front-end emits them, every chain has a value in
+       // flight at every point, so a cut anywhere crosses far more than the 4
+       // edges the budget allows.
+       //
+       // Re-scheduling to keep the live set small fixes that: run one chain to its
+       // end before starting the next, so a cut has few values crossing it. This
+       // is the standard list-scheduling heuristic — at each step take the ready
+       // op that KILLS the most live values and creates the fewest — with program
+       // order as a stable tie-break, so a nest that is already in a good order
+       // comes out unchanged.
+       static void scheduleForMinLive(Nest &n)
+       {
+           DenseMap<Operation*, unsigned> idx;
+           for (auto [i, op] : llvm::enumerate(n.ops)) idx[op] = i;
+   
+           // Remaining consumers of each op's result, counting stores.
+           DenseMap<Operation*, unsigned> remaining;
+           for (Operation* op : n.ops) {
+               unsigned uses = 0;
+               for (Operation* user : op->getResult(0).getUsers())
+                   if (idx.count(user) || isa<affine::AffineStoreOp>(user)) ++uses;
+               remaining[op] = uses;
+           }
+   
+           DenseSet<Operation*> done;
+           SmallVector<Operation*> order;
+           order.reserve(n.ops.size());
+           while (order.size() < n.ops.size()) {
+               Operation* best = nullptr;
+               int bestScore = 0;
+               for (Operation* op : n.ops) {
+                   if (done.count(op)) continue;
+                   bool ready = true;
+                   for (Value v : op->getOperands()) {
+                       Operation* d = v.getDefiningOp();
+                       if (d && idx.count(d) && !done.count(d)) ready = false;
+                   }
+                   if (!ready) continue;
+                   // Kills: operands whose last remaining consumer is this op.
+                   int kills = 0;
+                   DenseSet<Operation*> seen;
+                   for (Value v : op->getOperands()) {
+                       Operation* d = v.getDefiningOp();
+                       if (d && idx.count(d) && seen.insert(d).second
+                           && remaining[d] == 1)
+                           ++kills;
+                   }
+                   int score = kills - (remaining[op] ? 1 : 0);
+                   if (!best || score > bestScore) {
+                       best = op;
+                       bestScore = score;
+                   }
+               }
+               assert(best && "cycle in a straight-line body");
+               done.insert(best);
+               order.push_back(best);
+               DenseSet<Operation*> seen;
+               for (Value v : best->getOperands()) {
+                   Operation* d = v.getDefiningOp();
+                   if (d && idx.count(d) && seen.insert(d).second) --remaining[d];
+               }
+           }
+           n.ops = std::move(order);
+       }
+   
+       // -------------------------------------------------------------
+       // segmentation
+   
+       struct Seg {
+           unsigned begin = 0, end = 0;
+           SmallVector<Value> liveIn;  // produced by an earlier segment
+           SmallVector<Value> liveOut; // needed by a later one
+           SmallVector<affine::AffineStoreOp> stores;
+       };
+   
+       // Distinct memory streams a load set needs. Two loads of the same memref
+       // through the same index map are one stream (the memory node walks it
+       // once); a different map is a different node.
+       using StreamKey = std::pair<Value, AffineMap>;
+   
+       // Cost of the candidate segment [begin,end), given where each value is
+       // defined. Returns false when it does not fit.
+       bool costOf(
+           const Nest &n,
+           const DenseMap<Operation*, unsigned> &pos,
+           const DenseMap<affine::AffineStoreOp, unsigned> &storeSeg,
+           unsigned begin,
+           unsigned end,
+           Seg &out,
+           unsigned rematBudget) const
+       {
+           unsigned fus = 0;
+           DenseSet<StreamKey> loads;
+           SetVector<Value> tempIn;
+           SetVector<Value> remat;
+   
+           for (unsigned i = begin; i < end; ++i) {
+               Operation* op = n.ops[i];
+               fus += fuCost(op);
+               for (Value v : op->getOperands()) {
+                   Operation* d = v.getDefiningOp();
+                   if (!d) continue;
+                   if (auto ld = dyn_cast<affine::AffineLoadOp>(d)) {
+                       if (ld->getBlock() == n.body)
+                           loads.insert({ld.getMemRef(), ld.getAffineMap()});
+                   } else if (
+                       auto it = pos.find(d);
+                       it != pos.end() && it->second < begin) {
+                       if (isRemat(v, n.body, rematBudget))
+                           remat.insert(
+                               v); // recompute here instead of reading a stream
+                       else
+                           tempIn.insert(
+                               v); // crosses a cut: read back from its temporary
+                   }
+               }
+           }
+           // Recomputed slices occupy FUs here and bring their own loads with
+           // them.
+           DenseSet<Operation*> rops, rloads;
+           for (Value v : remat) sliceOf(v, n.body, rops, rloads);
+           for (Operation* op : rops)
+               if (!llvm::is_contained(
+                       ArrayRef<Operation*>(n.ops).slice(begin, end - begin),
+                       op))
+                   fus += fuCost(op);
+           for (Operation* op : rloads) {
+               auto ld = cast<affine::AffineLoadOp>(op);
+               loads.insert({ld.getMemRef(), ld.getAffineMap()});
+           }
+   
+           if (fus > maxFUs) return false;
+           if (loads.size() + tempIn.size() > kInputNodes) return false;
+   
+           // Stores whose value this segment produces belong to it, and its
+           // live-outs are the values a later segment (or a later segment's store)
+           // still needs.
+           SmallVector<affine::AffineStoreOp> mine;
+           for (auto st : n.stores)
+               if (auto it = storeSeg.find(st);
+                   it != storeSeg.end() && it->second >= begin && it->second < end)
+                   mine.push_back(st);
+   
+           SetVector<Value> liveOut;
+           for (unsigned i = begin; i < end; ++i) {
+               Value res = n.ops[i]->getResult(0);
+               if (isRemat(res, n.body, rematBudget))
+                   continue; // a later segment recomputes it; it never goes to
+                             // memory
+               for (Operation* user : res.getUsers()) {
+                   if (auto st = dyn_cast<affine::AffineStoreOp>(user)) {
+                       auto it = storeSeg.find(st);
+                       if (it != storeSeg.end() && it->second >= end)
+                           liveOut.insert(res);
+                       continue;
+                   }
+                   auto it = pos.find(user);
+                   if (it == pos.end() || it->second >= end) liveOut.insert(res);
+               }
+           }
+           if (liveOut.size() + mine.size() > maxOuts) return false;
+           // A cut edge becomes a memory stream, and the fabric streams 32-bit
+           // words. The i1 a compare produces cannot be staged, so a cut may not
+           // fall between a compare and the select that consumes it — the greedy
+           // simply takes a shorter segment instead.
+           for (Value v : liveOut)
+               if (!v.getType().isInteger(32)) return false;
+   
+           out.begin = begin;
+           out.end = end;
+           out.liveIn.assign(tempIn.begin(), tempIn.end());
+           out.liveOut.assign(liveOut.begin(), liveOut.end());
+           out.stores = std::move(mine);
+           return true;
+       }
+   
+       // Whether a segment [i,j) fits depends only on i and j — "defined before i"
+       // and "used at or after j" are both properties of the fixed op order, not
+       // of where the earlier cuts fell. So the choice of cuts is a shortest-path
+       // problem on the positions 0..N, and solving it exactly costs no more than
+       // the greedy did: BFS finds a partition whenever one exists in this
+       // ordering, and finds the one with the FEWEST segments, which is what
+       // matters since each segment is a configuration with its own dispatch. A
+       // greedy walk, by contrast, dead-ends — taking the longest affordable
+       // segment leaves a 4-wide cut with no input budget left for the next
+       // segment's loads.
+       bool segment(
+           const Nest &n,
+           SmallVectorImpl<Seg> &segs,
+           unsigned &stuckAt,
+           unsigned &stuckWidth,
+           unsigned rematBudget) const
+       {
+           DenseMap<Operation*, unsigned> pos;
+           for (auto [i, op] : llvm::enumerate(n.ops)) pos[op] = i;
+   
+           // A store runs in the segment that produces the value it writes.
+           DenseMap<affine::AffineStoreOp, unsigned> storeSeg;
+           for (auto st : n.stores) {
+               Operation* d = st.getValueToStore().getDefiningOp();
+               auto it = d ? pos.find(d) : pos.end();
+               if (it == pos.end())
+                   return false; // storing a load or a constant: nothing to
+                                 // partition
+               storeSeg[st] = it->second;
+           }
+   
+           unsigned N = n.ops.size();
+           SmallVector<int> prev(N + 1, -1);
+           SmallVector<unsigned> dist(N + 1, ~0u);
+           SmallVector<Seg> edge(N + 1);
+           dist[0] = 0;
+           SmallVector<unsigned> queue{0};
+           unsigned qi = 0, reached = 0;
+           while (qi < queue.size()) {
+               unsigned i = queue[qi++];
+               reached = std::max(reached, i);
+               for (unsigned j = i + 1; j <= N; ++j) {
+                   if (dist[j] != ~0u) continue;
+                   Seg cand;
+                   if (!costOf(n, pos, storeSeg, i, j, cand, rematBudget))
+                       continue;
+                   dist[j] = dist[i] + 1;
+                   prev[j] = (int)i;
+                   edge[j] = std::move(cand);
+                   queue.push_back(j);
+               }
+           }
+           if (dist[N] == ~0u) {
+               stuckAt = reached;
+               stuckWidth = 0;
+               return false;
+           }
+           for (unsigned j = N; j != 0; j = (unsigned)prev[j])
+               segs.push_back(edge[j]);
+           std::reverse(segs.begin(), segs.end());
+           return true;
+       }
+   
+       // ---------------------------------------------------------------- emission
+   
+       // Temporaries are indexed by the FLATTENED iteration space, so one 1-D
+       // buffer serves any nest shape and the pool can be shared between nests of
+       // different rank.
+       static AffineMap linearMap(Nest &n, MLIRContext* ctx)
+       {
+           unsigned r = n.loops.size();
+           AffineExpr e = getAffineConstantExpr(0, ctx);
+           int64_t stride = 1;
+           for (int i = (int)r - 1; i >= 0; --i) {
+               e = e + getAffineDimExpr(i, ctx) * stride;
+               stride *= n.loops[i].getConstantUpperBound();
+           }
+           return AffineMap::get(r, 0, e, ctx);
+       }
+   
+       // `pool` is not passed: the caller has already resolved every live value to
+       // its slot in `slotOf`, which is all the rewrite needs.
+       void
+       rewrite(Nest &n, ArrayRef<Seg> segs, DenseMap<Value, Value> &slotOf) const
+       {
+           MLIRContext* ctx = n.loops.front().getContext();
+           Location loc = n.loops.front().getLoc();
+           OpBuilder b(n.loops.front());
+           AffineMap lin = linearMap(n, ctx);
+   
+           for (const Seg &seg : segs) {
+               // Rebuild the loop shell over the same iteration space.
+               IRMapping m;
+               SmallVector<Value> ivs;
+               Block* inner = nullptr;
+               OpBuilder cur = b;
+               for (affine::AffineForOp f : n.loops) {
+                   auto nf = affine::AffineForOp::create(
+                       cur,
+                       loc,
+                       f.getConstantLowerBound(),
+                       f.getConstantUpperBound(),
+                       1);
+                   m.map(f.getInductionVar(), nf.getInductionVar());
+                   ivs.push_back(nf.getInductionVar());
+                   inner = nf.getBody();
+                   cur = OpBuilder::atBlockBegin(inner);
+               }
+               OpBuilder ib = OpBuilder::atBlockBegin(inner);
+   
+               // Read back everything that crossed the previous cut.
+               for (Value v : seg.liveIn)
+                   m.map(
+                       v,
+                       affine::AffineLoadOp::create(ib, loc, slotOf[v], lin, ivs));
+   
+               // Clone the segment, materialising each load the first time it is
+               // needed.
+               std::function<void(Value)> ensure = [&](Value v) {
+                   if (m.lookupOrNull(v)) return;
+                   Operation* d = v.getDefiningOp();
+                   if (!d) return;
+                   // Loads AND constants can live inside the body; each segment
+                   // needs its own copy, since the original nest is erased at the
+                   // end. A value defined OUTSIDE the nest (the usual place for
+                   // constants) stays valid as it is.
+                   if (d->getBlock() != n.body)
+                       return; // defined outside the nest: still valid here
+                   // Loads and constants get a private copy per segment; a fabric
+                   // value that is not staged is recomputed, which means
+                   // rebuilding its backward slice.
+                   if (!isa<affine::AffineLoadOp, arith::ConstantOp>(d))
+                       for (Value o : d->getOperands()) ensure(o);
+                   m.map(v, ib.clone(*d, m)->getResult(0));
+               };
+               for (unsigned i = seg.begin; i < seg.end; ++i) {
+                   for (Value v : n.ops[i]->getOperands()) ensure(v);
+                   ib.clone(*n.ops[i], m);
+               }
+   
+               // Hand the cut edges to the next segment…
+               for (Value v : seg.liveOut)
+                   affine::AffineStoreOp::create(
+                       ib,
+                       loc,
+                       m.lookup(v),
+                       slotOf[v],
+                       lin,
+                       ivs);
+               // …and write this segment's real outputs.
+               for (auto st : seg.stores) {
+                   for (Value v : st->getOperands()) ensure(v);
+                   ib.clone(*st.getOperation(), m);
+               }
+           }
+           n.loops.front().erase();
+       }
+   
+       // -------------------------------------------------------------------
+       // driver
+   
+       void runOnOperation() override
+       {
+           func::FuncOp fn = getOperation();
+   
+           SmallVector<affine::AffineForOp> roots;
+           fn.walk([&](affine::AffineForOp f) {
+               if (!f->getParentOfType<affine::AffineForOp>()) roots.push_back(f);
+           });
+   
+           // Phase 1: decide what to split, and how big the temporary pool must
+           // be.
+           struct Job {
+               Nest nest;
+               SmallVector<Seg> segs;
+               unsigned peak = 0; 
+           };
+           std::vector<Job> jobs;
+           int64_t poolElems = 0;
+           unsigned poolSlots = 0;
+   
+           for (affine::AffineForOp root : roots) {
+               Job j;
+               if (!collect(root, j.nest)) continue;
+               // Already one configuration? Leave it exactly as it is.
+               unsigned fus = 0;
+               for (Operation* op : j.nest.ops) fus += fuCost(op);
+               if (fus <= maxFUs) continue;
+               scheduleForMinLive(j.nest);
+               // Staging is the cheaper option when it fits — it costs streams,
+               // and a segment usually has spare FUs but not spare streams.
+               // Recomputing is the FALLBACK for nests whose live set is simply
+               // too wide to stage (the i64-multiply emulation keeps four
+               // half-word splits alive at once), so try the plain cut first and
+               // only pay FUs for recompute if it dead-ends.
+               unsigned stuckAt = 0, stuckWidth = 0;
+               bool ok = segment(j.nest, j.segs, stuckAt, stuckWidth, 0);
+               if (ok && j.segs.size() >= 2
+                   && j.nest.elems > (int64_t)maxTempElems) {
+                   root.emitWarning("partition-cgra-dfg: nest streams ")
+                       << j.nest.elems
+                       << " elements, so each cut would cost that much scratch "
+                       << "(budget " << maxTempElems.getValue()
+                       << "); left unpartitioned — raise max-temp-elems to allow "
+                          "it";
+                   continue;
+               }
+               if (!ok || j.segs.size() < 2) {
+                   j.segs.clear();
+                   ok = segment(j.nest, j.segs, stuckAt, stuckWidth, maxRemat);
+               }
+               if (!ok || j.segs.size() < 2) {
+                   root.emitWarning("partition-cgra-dfg: body needs ")
+                       << fus << " FUs (budget " << maxFUs.getValue()
+                       << ") but no affordable cut exists after op " << stuckAt
+                       << " of " << j.nest.ops.size()
+                       << " (every further cut exceeds the " << kInputNodes
+                       << "-input/" << kOutputNodes
+                       << "-output budget, or would carry a non-i32 value); left "
+                          "on the host";
+                   continue;
+               }
+               // Slots live at once, by linear scan over the segments.
+               unsigned live = 0, peak = 0;
+               DenseMap<Value, unsigned> lastUse;
+               for (auto [si, s] : llvm::enumerate(j.segs))
+                   for (Value v : s.liveIn) lastUse[v] = si;
+               for (auto [si, s] : llvm::enumerate(j.segs)) {
+                   live += s.liveOut.size();
+                   peak = std::max(peak, live);
+                   for (auto &kv : lastUse)
+                       if (kv.second == si) --live;
+               }
+               poolSlots = std::max(poolSlots, peak);
+               poolElems = std::max(poolElems, j.nest.elems);
+               j.peak = peak;
+               jobs.push_back(std::move(j));
+           }
+           if (jobs.empty()) return;
+   
+           // Phase 2: one shared pool for the whole function. Sizing it to the
+           // largest nest and reusing slots is what keeps this affordable — a
+           // private buffer per cut edge would multiply the network's activation
+           // memory several times over, and these boards have ~512 KB.
+           OpBuilder b(&fn.getBody().front(), fn.getBody().front().begin());
+           // Size each slot to the largest nest that actually REACHES it, not to
+           // the largest nest in the function. Slots are handed out greedily
+           // 0,1,2,…, so slot k is only ever touched by a nest needing more than k
+           // of them. One global size instead multiplies the biggest nest's stream
+           // by the deepest nest's slot count: on tiny_kws a single partitioned
+           // reduction streams 1x25x5x64x64 = 512 000 elements, and paying that
+           // for all 9 slots asked for 18.5 MB of pool against a 928 KB machine,
+           // when the nests that need 9 slots stream 8 000 elements each.
+           SmallVector<int64_t> slotElems(poolSlots, 0);
+           for (const Job &j : jobs)
+               for (unsigned k = 0; k < j.peak && k < poolSlots; ++k)
+                   slotElems[k] = std::max(slotElems[k], j.nest.elems);
+           SmallVector<Value> pool;
+           for (unsigned i = 0; i < poolSlots; ++i)
+               pool.push_back(
+                   memref::AllocOp::create(
+                       b,
+                       fn.getLoc(),
+                       MemRefType::get({slotElems[i]}, b.getI32Type())));
+   
+           for (Job &j : jobs) {
+               // Assign slots: a temporary is live from the segment that writes it
+               // to the last segment that reads it, so slots can be recycled down
+               // the chain.
+               DenseMap<Value, Value> slotOf;
+               DenseMap<Value, unsigned> lastUse;
+               for (auto [si, s] : llvm::enumerate(j.segs))
+                   for (Value v : s.liveIn) lastUse[v] = si;
+               SmallVector<bool> busy(pool.size(), false);
+               SmallVector<Value> freeAt; // value occupying each slot
+               freeAt.resize(pool.size());
+               for (auto [si, s] : llvm::enumerate(j.segs)) {
+                   for (Value v : s.liveOut)
+                       for (unsigned k = 0; k < pool.size(); ++k)
+                           if (!busy[k]) {
+                               busy[k] = true;
+                               freeAt[k] = v;
+                               slotOf[v] = pool[k];
+                               break;
+                           }
+                   for (unsigned k = 0; k < pool.size(); ++k)
+                       if (busy[k]) {
+                           auto it = lastUse.find(freeAt[k]);
+                           if (it != lastUse.end() && it->second == si)
+                               busy[k] = false;
+                       }
+               }
+               rewrite(j.nest, j.segs, slotOf);
+           }
+       }
+   };
+   } // namespace
+   
+   std::unique_ptr<mlir::Pass> mlir::cgra::createCGRAPartitionDFGPass()
+   { return std::make_unique<CGRAPartitionDFGPass>(); }

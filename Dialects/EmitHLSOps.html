@@ -1,0 +1,2395 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>‘emithls’ Dialect &mdash; picea 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/collapsible-lists/css/tree_view.css?v=a885cde7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js?v=73120307"></script>
+      <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js?v=660e4f45"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="‘filter’ Dialect" href="FilterOps.html" />
+    <link rel="prev" title="‘dfg’ Dialect" href="DFGOps.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            picea
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Installation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../README.html">About the project</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#guides">Guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#related-projects">Related projects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#development-environment-nix">Development Environment (Nix)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#build-on-ubuntu-24-04-no-nix">Build on Ubuntu 24.04 (no Nix)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#gurobi-license">Gurobi license</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#installing">Installing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#run-the-tests">Run the tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#build-the-documentation">Build the documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#compiling-a-design">Compiling a design</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#running-a-design-on-the-board">Running a design on the board</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#exporting-a-profiled-application-to-mocasin">Exporting a profiled application to Mocasin</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Guides</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../guides/laksa.html">The FPGA Variant using LAKSA backend</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/cgra.html">The CGRA Variant</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">MLIR Dialects</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="Base2Ops.html">‘base2’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="CGRAOps.html">‘cgra’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="DFGOps.html">‘dfg’ Dialect</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">‘emithls’ Dialect</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#operations">Operations</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#emithls-arith-add-emithls-arithaddop"><code class="docutils literal notranslate"><span class="pre">emithls.arith.add</span></code> (emithls::ArithAddOp)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#operands">Operands:</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#results">Results:</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#emithls-arith-and-emithls-arithandop"><code class="docutils literal notranslate"><span class="pre">emithls.arith.and</span></code> (emithls::ArithAndOp)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id1">Operands:</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id2">Results:</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#emithls-arith-cast-emithls-arithcastop"><code class="docutils literal notranslate"><span class="pre">emithls.arith.cast</span></code> (emithls::ArithCastOp)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id3">Operands:</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id4">Results:</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#emithls-arith-cmp-emithls-arithcmpop"><code class="docutils literal notranslate"><span class="pre">emithls.arith.cmp</span></code> (emithls::ArithCmpOp)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#attributes">Attributes:</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id5">Operands:</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id6">Results:</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#emithls-arith-data-range-emithls-arithdatarangeop"><code class="docutils literal notranslate"><span class="pre">emithls.arith.data_range</span></code> (emithls::ArithDataRangeOp)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id7">Operands:</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id8">Results:</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#emithls-arith-div-emithls-arithdivop"><code class="docutils literal notranslate"><span class="pre">emithls.arith.div</span></code> (emithls::ArithDivOp)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id9">Operands:</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id10">Results:</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#emithls-arith-fused-emithls-arithfusedop"><code class="docutils literal notranslate"><span class="pre">emithls.arith.fused</span></code> (emithls::ArithFusedOp)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id11">Attributes:</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id12">Operands:</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#emithls-arith-logical-and-emithls-arithlogicalandop"><code class="docutils literal notranslate"><span class="pre">emithls.arith.logical_and</span></code> (emithls::ArithLogicalAndOp)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id13">Operands:</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id14">Results:</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#emithls-arith-logical-or-emithls-arithlogicalorop"><code class="docutils literal notranslate"><span class="pre">emithls.arith.logical_or</span></code> (emithls::ArithLogicalOrOp)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id15">Operands:</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id16">Results:</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#emithls-arith-max-emithls-arithmaxop"><code class="docutils literal notranslate"><span class="pre">emithls.arith.max</span></code> (emithls::ArithMaxOp)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id17">Operands:</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id18">Results:</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#emithls-arith-min-emithls-arithminop"><code class="docutils literal notranslate"><span class="pre">emithls.arith.min</span></code> (emithls::ArithMinOp)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id19">Operands:</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id20">Results:</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#emithls-arith-mul-emithls-arithmulop"><code class="docutils literal notranslate"><span class="pre">emithls.arith.mul</span></code> (emithls::ArithMulOp)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id21">Operands:</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id22">Results:</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#emithls-arith-or-emithls-arithorop"><code class="docutils literal notranslate"><span class="pre">emithls.arith.or</span></code> (emithls::ArithOrOp)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id23">Operands:</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id24">Results:</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#emithls-arith-rem-emithls-arithremop"><code class="docutils literal notranslate"><span class="pre">emithls.arith.rem</span></code> (emithls::ArithRemOp)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id25">Operands:</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id26">Results:</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#emithls-arith-select-emithls-arithselectop"><code class="docutils literal notranslate"><span class="pre">emithls.arith.select</span></code> (emithls::ArithSelectOp)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id27">Operands:</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id28">Results:</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#emithls-arith-shl-emithls-arithshlop"><code class="docutils literal notranslate"><span class="pre">emithls.arith.shl</span></code> (emithls::ArithShlOp)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id29">Operands:</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id30">Results:</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#emithls-arith-shr-emithls-arithshrop"><code class="docutils literal notranslate"><span class="pre">emithls.arith.shr</span></code> (emithls::ArithShrOp)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id31">Operands:</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id32">Results:</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#emithls-arith-sub-emithls-arithsubop"><code class="docutils literal notranslate"><span class="pre">emithls.arith.sub</span></code> (emithls::ArithSubOp)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id33">Operands:</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id34">Results:</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#emithls-array-ptr-read-emithls-arraypointerreadop"><code class="docutils literal notranslate"><span class="pre">emithls.array.ptr_read</span></code> (emithls::ArrayPointerReadOp)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id35">Operands:</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id36">Results:</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#emithls-array-ptr-write-emithls-arraypointerwriteop"><code class="docutils literal notranslate"><span class="pre">emithls.array.ptr_write</span></code> (emithls::ArrayPointerWriteOp)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id37">Operands:</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#emithls-array-read-emithls-arrayreadop"><code class="docutils literal notranslate"><span class="pre">emithls.array.read</span></code> (emithls::ArrayReadOp)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id38">Operands:</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id39">Results:</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#emithls-array-write-emithls-arraywriteop"><code class="docutils literal notranslate"><span class="pre">emithls.array.write</span></code> (emithls::ArrayWriteOp)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id40">Operands:</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#emithls-call-emithls-callop"><code class="docutils literal notranslate"><span class="pre">emithls.call</span></code> (emithls::CallOp)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id41">Attributes:</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id42">Operands:</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id43">Results:</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#emithls-expr-emithls-expressionop"><code class="docutils literal notranslate"><span class="pre">emithls.expr</span></code> (emithls::ExpressionOp)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id44">Results:</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#emithls-for-emithls-forop"><code class="docutils literal notranslate"><span class="pre">emithls.for</span></code> (emithls::ForOp)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id45">Attributes:</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#emithls-func-emithls-funcop"><code class="docutils literal notranslate"><span class="pre">emithls.func</span></code> (emithls::FuncOp)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id46">Attributes:</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#emithls-helper-accumulate-emithls-helperaccumulateop"><code class="docutils literal notranslate"><span class="pre">emithls.helper.accumulate</span></code> (emithls::HelperAccumulateOp)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id47">Attributes:</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id48">Operands:</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#emithls-helper-linebuf-emithls-helperlinebufferop"><code class="docutils literal notranslate"><span class="pre">emithls.helper.linebuf</span></code> (emithls::HelperLineBufferOp)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id49">Attributes:</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id50">Operands:</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id51">Results:</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#emithls-helper-window-emithls-helperwindowop"><code class="docutils literal notranslate"><span class="pre">emithls.helper.window</span></code> (emithls::HelperWindowOp)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id52">Operands:</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id53">Results:</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#emithls-if-emithls-ifop"><code class="docutils literal notranslate"><span class="pre">emithls.if</span></code> (emithls::IfOp)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id54">Operands:</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#emithls-include-emithls-includeop"><code class="docutils literal notranslate"><span class="pre">emithls.include</span></code> (emithls::IncludeOp)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id55">Attributes:</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#emithls-pragma-array-partition-emithls-pragmaarraypartitionop"><code class="docutils literal notranslate"><span class="pre">emithls.pragma.array_partition</span></code> (emithls::PragmaArrayPartitionOp)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id56">Attributes:</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id57">Operands:</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#emithls-pragma-bind-storage-emithls-pragmabindstorageop"><code class="docutils literal notranslate"><span class="pre">emithls.pragma.bind_storage</span></code> (emithls::PragmaBindStorageOp)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id58">Attributes:</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id59">Operands:</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#emithls-pragma-dataflow-emithls-pragmadataflowop"><code class="docutils literal notranslate"><span class="pre">emithls.pragma.dataflow</span></code> (emithls::PragmaDataflowOp)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#emithls-pragma-inline-emithls-pragmainlineop"><code class="docutils literal notranslate"><span class="pre">emithls.pragma.inline</span></code> (emithls::PragmaInlineOp)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id60">Attributes:</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#emithls-pragma-pipeline-emithls-pragmapipelineop"><code class="docutils literal notranslate"><span class="pre">emithls.pragma.pipeline</span></code> (emithls::PragmaPipelineOp)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id61">Attributes:</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#emithls-pragma-stream-emithls-pragmastreamop"><code class="docutils literal notranslate"><span class="pre">emithls.pragma.stream</span></code> (emithls::PragmaStreamOp)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id62">Attributes:</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id63">Operands:</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#emithls-pragma-unroll-emithls-pragmaunrollop"><code class="docutils literal notranslate"><span class="pre">emithls.pragma.unroll</span></code> (emithls::PragmaUnrollOp)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id64">Attributes:</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#emithls-stream-read-emithls-streamreadop"><code class="docutils literal notranslate"><span class="pre">emithls.stream.read</span></code> (emithls::StreamReadOp)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id65">Operands:</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id66">Results:</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#emithls-stream-write-emithls-streamwriteop"><code class="docutils literal notranslate"><span class="pre">emithls.stream.write</span></code> (emithls::StreamWriteOp)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id67">Operands:</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#emithls-top-interface-emithls-pragmatopinterfaceop"><code class="docutils literal notranslate"><span class="pre">emithls.top_interface</span></code> (emithls::PragmaTopInterfaceOp)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#emithls-update-emithls-updateop"><code class="docutils literal notranslate"><span class="pre">emithls.update</span></code> (emithls::UpdateOp)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id68">Operands:</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#emithls-variable-emithls-variableop"><code class="docutils literal notranslate"><span class="pre">emithls.variable</span></code> (emithls::VariableOp)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id69">Attributes:</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id70">Operands:</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id71">Results:</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#emithls-yield-emithls-yieldop"><code class="docutils literal notranslate"><span class="pre">emithls.yield</span></code> (emithls::YieldOp)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id72">Operands:</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#id73">Attributes</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#densefixedattr">DenseFixedAttr</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#parameters">Parameters:</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#fixedattr">FixedAttr</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id74">Parameters:</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#types">Types</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#arraytype">ArrayType</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id75">Parameters:</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#fixedtype">FixedType</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id76">Parameters:</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#pointertype">PointerType</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id77">Parameters:</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#streamtype">StreamType</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id78">Parameters:</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#enums">Enums</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#arraypartitiontype">ArrayPartitionType</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#cases">Cases:</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#bindstorageimpl">BindStorageImpl</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id79">Cases:</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#bindstoragetype">BindStorageType</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id80">Cases:</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#cmppredicate">CmpPredicate</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id81">Cases:</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#fusedoperator">FusedOperator</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id82">Cases:</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#pipelinestyle">PipelineStyle</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id83">Cases:</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="FilterOps.html">‘filter’ Dialect</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Passes</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/PICEAConversionPasses.html">PICEA Conversion Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/CGRAPasses.html">CGRA Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/DFGPasses.html">DFG Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/EmitHLSPasses.html">Emit HLS Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/FuncExtPasses.html">Func Ext Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/LinalgExtPasses.html">Linalg Ext Passes</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">C++ API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../api/library_root.html">C++ API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">picea</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">‘emithls’ Dialect</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/Dialects/EmitHLSOps.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <!-- Autogenerated by mlir-tblgen; don't manually edit -->
+<section id="emithls-dialect">
+<h1>‘emithls’ Dialect<a class="headerlink" href="#emithls-dialect" title="Link to this heading"></a></h1>
+<p>The <code class="docutils literal notranslate"><span class="pre">emithls</span></code> dialect groups together a set of types, operations and
+transformations that are useful to represent a High-Level Synthese
+style C++ code.
+These abstractions works as a.</p>
+<section id="operations">
+<h2>Operations<a class="headerlink" href="#operations" title="Link to this heading"></a></h2>
+<section id="emithls-arith-add-emithls-arithaddop">
+<h3><code class="docutils literal notranslate"><span class="pre">emithls.arith.add</span></code> (emithls::ArithAddOp)<a class="headerlink" href="#emithls-arith-add-emithls-arithaddop" title="Link to this heading"></a></h3>
+<p>Syntax:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>operation ::= `emithls.arith.add` $lhs `,` $rhs attr-dict `:` type($result)
+</pre></div>
+</div>
+<p>Traits: <code class="docutils literal notranslate"><span class="pre">AlwaysSpeculatableImplTrait</span></code>, <code class="docutils literal notranslate"><span class="pre">SameOperandsAndResultType</span></code></p>
+<p>Interfaces: <code class="docutils literal notranslate"><span class="pre">ConditionallySpeculatable</span></code>, <code class="docutils literal notranslate"><span class="pre">InferTypeOpInterface</span></code>, <code class="docutils literal notranslate"><span class="pre">NoMemoryEffect</span> <span class="pre">(MemoryEffectOpInterface)</span></code></p>
+<p>Effects: <code class="docutils literal notranslate"><span class="pre">MemoryEffects::Effect{}</span></code></p>
+<section id="operands">
+<h4>Operands:<a class="headerlink" href="#operands" title="Link to this heading"></a></h4>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head text-center"><p>Operand</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">lhs</span></code></p></td>
+<td><p>any non-token type</p></td>
+</tr>
+<tr class="row-odd"><td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">rhs</span></code></p></td>
+<td><p>any non-token type</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="results">
+<h4>Results:<a class="headerlink" href="#results" title="Link to this heading"></a></h4>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head text-center"><p>Result</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">result</span></code></p></td>
+<td><p>any non-token type</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="emithls-arith-and-emithls-arithandop">
+<h3><code class="docutils literal notranslate"><span class="pre">emithls.arith.and</span></code> (emithls::ArithAndOp)<a class="headerlink" href="#emithls-arith-and-emithls-arithandop" title="Link to this heading"></a></h3>
+<p>Syntax:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>operation ::= `emithls.arith.and` $lhs `,` $rhs attr-dict `:` type($result)
+</pre></div>
+</div>
+<p>Traits: <code class="docutils literal notranslate"><span class="pre">AlwaysSpeculatableImplTrait</span></code>, <code class="docutils literal notranslate"><span class="pre">SameOperandsAndResultType</span></code></p>
+<p>Interfaces: <code class="docutils literal notranslate"><span class="pre">ConditionallySpeculatable</span></code>, <code class="docutils literal notranslate"><span class="pre">InferTypeOpInterface</span></code>, <code class="docutils literal notranslate"><span class="pre">NoMemoryEffect</span> <span class="pre">(MemoryEffectOpInterface)</span></code></p>
+<p>Effects: <code class="docutils literal notranslate"><span class="pre">MemoryEffects::Effect{}</span></code></p>
+<section id="id1">
+<h4>Operands:<a class="headerlink" href="#id1" title="Link to this heading"></a></h4>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head text-center"><p>Operand</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">lhs</span></code></p></td>
+<td><p>any non-token type</p></td>
+</tr>
+<tr class="row-odd"><td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">rhs</span></code></p></td>
+<td><p>any non-token type</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="id2">
+<h4>Results:<a class="headerlink" href="#id2" title="Link to this heading"></a></h4>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head text-center"><p>Result</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">result</span></code></p></td>
+<td><p>any non-token type</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="emithls-arith-cast-emithls-arithcastop">
+<h3><code class="docutils literal notranslate"><span class="pre">emithls.arith.cast</span></code> (emithls::ArithCastOp)<a class="headerlink" href="#emithls-arith-cast-emithls-arithcastop" title="Link to this heading"></a></h3>
+<p><em>Arithmetic type cast operation.</em></p>
+<p>Syntax:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>operation ::= `emithls.arith.cast` $from attr-dict `:` type($from) `to` type($to)
+</pre></div>
+</div>
+<p>Traits: <code class="docutils literal notranslate"><span class="pre">AlwaysSpeculatableImplTrait</span></code>, <code class="docutils literal notranslate"><span class="pre">SameOperandsAndResultShape</span></code></p>
+<p>Interfaces: <code class="docutils literal notranslate"><span class="pre">ConditionallySpeculatable</span></code>, <code class="docutils literal notranslate"><span class="pre">NoMemoryEffect</span> <span class="pre">(MemoryEffectOpInterface)</span></code></p>
+<p>Effects: <code class="docutils literal notranslate"><span class="pre">MemoryEffects::Effect{}</span></code></p>
+<section id="id3">
+<h4>Operands:<a class="headerlink" href="#id3" title="Link to this heading"></a></h4>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head text-center"><p>Operand</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">from</span></code></p></td>
+<td><p>any non-token type</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="id4">
+<h4>Results:<a class="headerlink" href="#id4" title="Link to this heading"></a></h4>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head text-center"><p>Result</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">to</span></code></p></td>
+<td><p>any non-token type</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="emithls-arith-cmp-emithls-arithcmpop">
+<h3><code class="docutils literal notranslate"><span class="pre">emithls.arith.cmp</span></code> (emithls::ArithCmpOp)<a class="headerlink" href="#emithls-arith-cmp-emithls-arithcmpop" title="Link to this heading"></a></h3>
+<p><em>Arithmetic comparison with predicate.</em></p>
+<p>Syntax:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>operation ::= `emithls.arith.cmp` $predicate `,` $lhs `,` $rhs attr-dict `:` type($lhs)
+</pre></div>
+</div>
+<p>Traits: <code class="docutils literal notranslate"><span class="pre">AlwaysSpeculatableImplTrait</span></code>, <code class="docutils literal notranslate"><span class="pre">SameTypeOperands</span></code></p>
+<p>Interfaces: <code class="docutils literal notranslate"><span class="pre">ConditionallySpeculatable</span></code>, <code class="docutils literal notranslate"><span class="pre">InferTypeOpInterface</span></code>, <code class="docutils literal notranslate"><span class="pre">NoMemoryEffect</span> <span class="pre">(MemoryEffectOpInterface)</span></code></p>
+<p>Effects: <code class="docutils literal notranslate"><span class="pre">MemoryEffects::Effect{}</span></code></p>
+<section id="attributes">
+<h4>Attributes:<a class="headerlink" href="#attributes" title="Link to this heading"></a></h4>
+<table>
+<tr><th>Attribute</th><th>MLIR Type</th><th>Description</th></tr>
+<tr><td><code>predicate</code></td><td>::mlir::emithls::CmpPredicateAttr</td><td>predicate for comparison operation</td></tr>
+</table>
+</section>
+<section id="id5">
+<h4>Operands:<a class="headerlink" href="#id5" title="Link to this heading"></a></h4>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head text-center"><p>Operand</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">lhs</span></code></p></td>
+<td><p>any non-token type</p></td>
+</tr>
+<tr class="row-odd"><td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">rhs</span></code></p></td>
+<td><p>any non-token type</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="id6">
+<h4>Results:<a class="headerlink" href="#id6" title="Link to this heading"></a></h4>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head text-center"><p>Result</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">result</span></code></p></td>
+<td><p>1-bit signless integer</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="emithls-arith-data-range-emithls-arithdatarangeop">
+<h3><code class="docutils literal notranslate"><span class="pre">emithls.arith.data_range</span></code> (emithls::ArithDataRangeOp)<a class="headerlink" href="#emithls-arith-data-range-emithls-arithdatarangeop" title="Link to this heading"></a></h3>
+<p>Traits: <code class="docutils literal notranslate"><span class="pre">AlwaysSpeculatableImplTrait</span></code></p>
+<p>Interfaces: <code class="docutils literal notranslate"><span class="pre">ConditionallySpeculatable</span></code>, <code class="docutils literal notranslate"><span class="pre">NoMemoryEffect</span> <span class="pre">(MemoryEffectOpInterface)</span></code></p>
+<p>Effects: <code class="docutils literal notranslate"><span class="pre">MemoryEffects::Effect{}</span></code></p>
+<section id="id7">
+<h4>Operands:<a class="headerlink" href="#id7" title="Link to this heading"></a></h4>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head text-center"><p>Operand</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">data</span></code></p></td>
+<td><p>any non-token type</p></td>
+</tr>
+<tr class="row-odd"><td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">high_bit</span></code></p></td>
+<td><p>index</p></td>
+</tr>
+<tr class="row-even"><td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">low_bit</span></code></p></td>
+<td><p>index</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="id8">
+<h4>Results:<a class="headerlink" href="#id8" title="Link to this heading"></a></h4>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head text-center"><p>Result</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">result</span></code></p></td>
+<td><p>any non-token type</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="emithls-arith-div-emithls-arithdivop">
+<h3><code class="docutils literal notranslate"><span class="pre">emithls.arith.div</span></code> (emithls::ArithDivOp)<a class="headerlink" href="#emithls-arith-div-emithls-arithdivop" title="Link to this heading"></a></h3>
+<p>Syntax:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>operation ::= `emithls.arith.div` $lhs `,` $rhs attr-dict `:` type($result)
+</pre></div>
+</div>
+<p>Traits: <code class="docutils literal notranslate"><span class="pre">AlwaysSpeculatableImplTrait</span></code>, <code class="docutils literal notranslate"><span class="pre">SameOperandsAndResultType</span></code></p>
+<p>Interfaces: <code class="docutils literal notranslate"><span class="pre">ConditionallySpeculatable</span></code>, <code class="docutils literal notranslate"><span class="pre">InferTypeOpInterface</span></code>, <code class="docutils literal notranslate"><span class="pre">NoMemoryEffect</span> <span class="pre">(MemoryEffectOpInterface)</span></code></p>
+<p>Effects: <code class="docutils literal notranslate"><span class="pre">MemoryEffects::Effect{}</span></code></p>
+<section id="id9">
+<h4>Operands:<a class="headerlink" href="#id9" title="Link to this heading"></a></h4>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head text-center"><p>Operand</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">lhs</span></code></p></td>
+<td><p>any non-token type</p></td>
+</tr>
+<tr class="row-odd"><td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">rhs</span></code></p></td>
+<td><p>any non-token type</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="id10">
+<h4>Results:<a class="headerlink" href="#id10" title="Link to this heading"></a></h4>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head text-center"><p>Result</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">result</span></code></p></td>
+<td><p>any non-token type</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="emithls-arith-fused-emithls-arithfusedop">
+<h3><code class="docutils literal notranslate"><span class="pre">emithls.arith.fused</span></code> (emithls::ArithFusedOp)<a class="headerlink" href="#emithls-arith-fused-emithls-arithfusedop" title="Link to this heading"></a></h3>
+<p><em>Defines C/C++ style fused assignment.</em></p>
+<p>Syntax:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>operation ::= `emithls.arith.fused` $op_code `,` $acc `,` $val attr-dict `:` type($acc)
+</pre></div>
+</div>
+<p>Traits: <code class="docutils literal notranslate"><span class="pre">SameTypeOperands</span></code></p>
+<p>Interfaces: <code class="docutils literal notranslate"><span class="pre">MemoryEffectsOpInterface</span></code></p>
+<section id="id11">
+<h4>Attributes:<a class="headerlink" href="#id11" title="Link to this heading"></a></h4>
+<table>
+<tr><th>Attribute</th><th>MLIR Type</th><th>Description</th></tr>
+<tr><td><code>op_code</code></td><td>::mlir::emithls::FusedOperatorAttr</td><td>fused operator such as `+=`</td></tr>
+</table>
+</section>
+<section id="id12">
+<h4>Operands:<a class="headerlink" href="#id12" title="Link to this heading"></a></h4>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head text-center"><p>Operand</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">acc</span></code></p></td>
+<td><p>any non-token type</p></td>
+</tr>
+<tr class="row-odd"><td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">val</span></code></p></td>
+<td><p>any non-token type</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="emithls-arith-logical-and-emithls-arithlogicalandop">
+<h3><code class="docutils literal notranslate"><span class="pre">emithls.arith.logical_and</span></code> (emithls::ArithLogicalAndOp)<a class="headerlink" href="#emithls-arith-logical-and-emithls-arithlogicalandop" title="Link to this heading"></a></h3>
+<p>Syntax:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>operation ::= `emithls.arith.logical_and` $values attr-dict `:` type($result)
+</pre></div>
+</div>
+<p>Traits: <code class="docutils literal notranslate"><span class="pre">AlwaysSpeculatableImplTrait</span></code>, <code class="docutils literal notranslate"><span class="pre">SameOperandsAndResultType</span></code></p>
+<p>Interfaces: <code class="docutils literal notranslate"><span class="pre">ConditionallySpeculatable</span></code>, <code class="docutils literal notranslate"><span class="pre">NoMemoryEffect</span> <span class="pre">(MemoryEffectOpInterface)</span></code></p>
+<p>Effects: <code class="docutils literal notranslate"><span class="pre">MemoryEffects::Effect{}</span></code></p>
+<section id="id13">
+<h4>Operands:<a class="headerlink" href="#id13" title="Link to this heading"></a></h4>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head text-center"><p>Operand</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">values</span></code></p></td>
+<td><p>variadic of 1-bit signless integer</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="id14">
+<h4>Results:<a class="headerlink" href="#id14" title="Link to this heading"></a></h4>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head text-center"><p>Result</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">result</span></code></p></td>
+<td><p>1-bit signless integer</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="emithls-arith-logical-or-emithls-arithlogicalorop">
+<h3><code class="docutils literal notranslate"><span class="pre">emithls.arith.logical_or</span></code> (emithls::ArithLogicalOrOp)<a class="headerlink" href="#emithls-arith-logical-or-emithls-arithlogicalorop" title="Link to this heading"></a></h3>
+<p>Syntax:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>operation ::= `emithls.arith.logical_or` $values attr-dict `:` type($result)
+</pre></div>
+</div>
+<p>Traits: <code class="docutils literal notranslate"><span class="pre">AlwaysSpeculatableImplTrait</span></code>, <code class="docutils literal notranslate"><span class="pre">SameOperandsAndResultType</span></code></p>
+<p>Interfaces: <code class="docutils literal notranslate"><span class="pre">ConditionallySpeculatable</span></code>, <code class="docutils literal notranslate"><span class="pre">NoMemoryEffect</span> <span class="pre">(MemoryEffectOpInterface)</span></code></p>
+<p>Effects: <code class="docutils literal notranslate"><span class="pre">MemoryEffects::Effect{}</span></code></p>
+<section id="id15">
+<h4>Operands:<a class="headerlink" href="#id15" title="Link to this heading"></a></h4>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head text-center"><p>Operand</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">values</span></code></p></td>
+<td><p>variadic of 1-bit signless integer</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="id16">
+<h4>Results:<a class="headerlink" href="#id16" title="Link to this heading"></a></h4>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head text-center"><p>Result</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">result</span></code></p></td>
+<td><p>1-bit signless integer</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="emithls-arith-max-emithls-arithmaxop">
+<h3><code class="docutils literal notranslate"><span class="pre">emithls.arith.max</span></code> (emithls::ArithMaxOp)<a class="headerlink" href="#emithls-arith-max-emithls-arithmaxop" title="Link to this heading"></a></h3>
+<p>Syntax:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>operation ::= `emithls.arith.max` $lhs `,` $rhs attr-dict `:` type($result)
+</pre></div>
+</div>
+<p>Traits: <code class="docutils literal notranslate"><span class="pre">AlwaysSpeculatableImplTrait</span></code>, <code class="docutils literal notranslate"><span class="pre">SameOperandsAndResultType</span></code></p>
+<p>Interfaces: <code class="docutils literal notranslate"><span class="pre">ConditionallySpeculatable</span></code>, <code class="docutils literal notranslate"><span class="pre">InferTypeOpInterface</span></code>, <code class="docutils literal notranslate"><span class="pre">NoMemoryEffect</span> <span class="pre">(MemoryEffectOpInterface)</span></code></p>
+<p>Effects: <code class="docutils literal notranslate"><span class="pre">MemoryEffects::Effect{}</span></code></p>
+<section id="id17">
+<h4>Operands:<a class="headerlink" href="#id17" title="Link to this heading"></a></h4>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head text-center"><p>Operand</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">lhs</span></code></p></td>
+<td><p>any non-token type</p></td>
+</tr>
+<tr class="row-odd"><td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">rhs</span></code></p></td>
+<td><p>any non-token type</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="id18">
+<h4>Results:<a class="headerlink" href="#id18" title="Link to this heading"></a></h4>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head text-center"><p>Result</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">result</span></code></p></td>
+<td><p>any non-token type</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="emithls-arith-min-emithls-arithminop">
+<h3><code class="docutils literal notranslate"><span class="pre">emithls.arith.min</span></code> (emithls::ArithMinOp)<a class="headerlink" href="#emithls-arith-min-emithls-arithminop" title="Link to this heading"></a></h3>
+<p>Syntax:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>operation ::= `emithls.arith.min` $lhs `,` $rhs attr-dict `:` type($result)
+</pre></div>
+</div>
+<p>Traits: <code class="docutils literal notranslate"><span class="pre">AlwaysSpeculatableImplTrait</span></code>, <code class="docutils literal notranslate"><span class="pre">SameOperandsAndResultType</span></code></p>
+<p>Interfaces: <code class="docutils literal notranslate"><span class="pre">ConditionallySpeculatable</span></code>, <code class="docutils literal notranslate"><span class="pre">InferTypeOpInterface</span></code>, <code class="docutils literal notranslate"><span class="pre">NoMemoryEffect</span> <span class="pre">(MemoryEffectOpInterface)</span></code></p>
+<p>Effects: <code class="docutils literal notranslate"><span class="pre">MemoryEffects::Effect{}</span></code></p>
+<section id="id19">
+<h4>Operands:<a class="headerlink" href="#id19" title="Link to this heading"></a></h4>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head text-center"><p>Operand</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">lhs</span></code></p></td>
+<td><p>any non-token type</p></td>
+</tr>
+<tr class="row-odd"><td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">rhs</span></code></p></td>
+<td><p>any non-token type</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="id20">
+<h4>Results:<a class="headerlink" href="#id20" title="Link to this heading"></a></h4>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head text-center"><p>Result</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">result</span></code></p></td>
+<td><p>any non-token type</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="emithls-arith-mul-emithls-arithmulop">
+<h3><code class="docutils literal notranslate"><span class="pre">emithls.arith.mul</span></code> (emithls::ArithMulOp)<a class="headerlink" href="#emithls-arith-mul-emithls-arithmulop" title="Link to this heading"></a></h3>
+<p>Syntax:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>operation ::= `emithls.arith.mul` $lhs `,` $rhs attr-dict `:` type($result)
+</pre></div>
+</div>
+<p>Traits: <code class="docutils literal notranslate"><span class="pre">AlwaysSpeculatableImplTrait</span></code>, <code class="docutils literal notranslate"><span class="pre">SameOperandsAndResultType</span></code></p>
+<p>Interfaces: <code class="docutils literal notranslate"><span class="pre">ConditionallySpeculatable</span></code>, <code class="docutils literal notranslate"><span class="pre">InferTypeOpInterface</span></code>, <code class="docutils literal notranslate"><span class="pre">NoMemoryEffect</span> <span class="pre">(MemoryEffectOpInterface)</span></code></p>
+<p>Effects: <code class="docutils literal notranslate"><span class="pre">MemoryEffects::Effect{}</span></code></p>
+<section id="id21">
+<h4>Operands:<a class="headerlink" href="#id21" title="Link to this heading"></a></h4>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head text-center"><p>Operand</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">lhs</span></code></p></td>
+<td><p>any non-token type</p></td>
+</tr>
+<tr class="row-odd"><td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">rhs</span></code></p></td>
+<td><p>any non-token type</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="id22">
+<h4>Results:<a class="headerlink" href="#id22" title="Link to this heading"></a></h4>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head text-center"><p>Result</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">result</span></code></p></td>
+<td><p>any non-token type</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="emithls-arith-or-emithls-arithorop">
+<h3><code class="docutils literal notranslate"><span class="pre">emithls.arith.or</span></code> (emithls::ArithOrOp)<a class="headerlink" href="#emithls-arith-or-emithls-arithorop" title="Link to this heading"></a></h3>
+<p>Syntax:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>operation ::= `emithls.arith.or` $lhs `,` $rhs attr-dict `:` type($result)
+</pre></div>
+</div>
+<p>Traits: <code class="docutils literal notranslate"><span class="pre">AlwaysSpeculatableImplTrait</span></code>, <code class="docutils literal notranslate"><span class="pre">SameOperandsAndResultType</span></code></p>
+<p>Interfaces: <code class="docutils literal notranslate"><span class="pre">ConditionallySpeculatable</span></code>, <code class="docutils literal notranslate"><span class="pre">InferTypeOpInterface</span></code>, <code class="docutils literal notranslate"><span class="pre">NoMemoryEffect</span> <span class="pre">(MemoryEffectOpInterface)</span></code></p>
+<p>Effects: <code class="docutils literal notranslate"><span class="pre">MemoryEffects::Effect{}</span></code></p>
+<section id="id23">
+<h4>Operands:<a class="headerlink" href="#id23" title="Link to this heading"></a></h4>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head text-center"><p>Operand</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">lhs</span></code></p></td>
+<td><p>any non-token type</p></td>
+</tr>
+<tr class="row-odd"><td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">rhs</span></code></p></td>
+<td><p>any non-token type</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="id24">
+<h4>Results:<a class="headerlink" href="#id24" title="Link to this heading"></a></h4>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head text-center"><p>Result</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">result</span></code></p></td>
+<td><p>any non-token type</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="emithls-arith-rem-emithls-arithremop">
+<h3><code class="docutils literal notranslate"><span class="pre">emithls.arith.rem</span></code> (emithls::ArithRemOp)<a class="headerlink" href="#emithls-arith-rem-emithls-arithremop" title="Link to this heading"></a></h3>
+<p>Syntax:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>operation ::= `emithls.arith.rem` $lhs `,` $rhs attr-dict `:` type($result)
+</pre></div>
+</div>
+<p>Traits: <code class="docutils literal notranslate"><span class="pre">AlwaysSpeculatableImplTrait</span></code>, <code class="docutils literal notranslate"><span class="pre">SameOperandsAndResultType</span></code></p>
+<p>Interfaces: <code class="docutils literal notranslate"><span class="pre">ConditionallySpeculatable</span></code>, <code class="docutils literal notranslate"><span class="pre">InferTypeOpInterface</span></code>, <code class="docutils literal notranslate"><span class="pre">NoMemoryEffect</span> <span class="pre">(MemoryEffectOpInterface)</span></code></p>
+<p>Effects: <code class="docutils literal notranslate"><span class="pre">MemoryEffects::Effect{}</span></code></p>
+<section id="id25">
+<h4>Operands:<a class="headerlink" href="#id25" title="Link to this heading"></a></h4>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head text-center"><p>Operand</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">lhs</span></code></p></td>
+<td><p>any non-token type</p></td>
+</tr>
+<tr class="row-odd"><td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">rhs</span></code></p></td>
+<td><p>any non-token type</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="id26">
+<h4>Results:<a class="headerlink" href="#id26" title="Link to this heading"></a></h4>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head text-center"><p>Result</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">result</span></code></p></td>
+<td><p>any non-token type</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="emithls-arith-select-emithls-arithselectop">
+<h3><code class="docutils literal notranslate"><span class="pre">emithls.arith.select</span></code> (emithls::ArithSelectOp)<a class="headerlink" href="#emithls-arith-select-emithls-arithselectop" title="Link to this heading"></a></h3>
+<p>Syntax:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>operation ::= `emithls.arith.select` $condition `,` $true_value `,` $false_value attr-dict `:` type($result)
+</pre></div>
+</div>
+<p>Traits: <code class="docutils literal notranslate"><span class="pre">AlwaysSpeculatableImplTrait</span></code></p>
+<p>Interfaces: <code class="docutils literal notranslate"><span class="pre">ConditionallySpeculatable</span></code>, <code class="docutils literal notranslate"><span class="pre">InferTypeOpInterface</span></code>, <code class="docutils literal notranslate"><span class="pre">NoMemoryEffect</span> <span class="pre">(MemoryEffectOpInterface)</span></code></p>
+<p>Effects: <code class="docutils literal notranslate"><span class="pre">MemoryEffects::Effect{}</span></code></p>
+<section id="id27">
+<h4>Operands:<a class="headerlink" href="#id27" title="Link to this heading"></a></h4>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head text-center"><p>Operand</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">condition</span></code></p></td>
+<td><p>1-bit signless integer</p></td>
+</tr>
+<tr class="row-odd"><td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">true_value</span></code></p></td>
+<td><p>any non-token type</p></td>
+</tr>
+<tr class="row-even"><td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">false_value</span></code></p></td>
+<td><p>any non-token type</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="id28">
+<h4>Results:<a class="headerlink" href="#id28" title="Link to this heading"></a></h4>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head text-center"><p>Result</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">result</span></code></p></td>
+<td><p>any non-token type</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="emithls-arith-shl-emithls-arithshlop">
+<h3><code class="docutils literal notranslate"><span class="pre">emithls.arith.shl</span></code> (emithls::ArithShlOp)<a class="headerlink" href="#emithls-arith-shl-emithls-arithshlop" title="Link to this heading"></a></h3>
+<p>Syntax:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>operation ::= `emithls.arith.shl` $lhs `,` $rhs attr-dict `:` type($result)
+</pre></div>
+</div>
+<p>Traits: <code class="docutils literal notranslate"><span class="pre">AlwaysSpeculatableImplTrait</span></code>, <code class="docutils literal notranslate"><span class="pre">SameOperandsAndResultType</span></code></p>
+<p>Interfaces: <code class="docutils literal notranslate"><span class="pre">ConditionallySpeculatable</span></code>, <code class="docutils literal notranslate"><span class="pre">InferTypeOpInterface</span></code>, <code class="docutils literal notranslate"><span class="pre">NoMemoryEffect</span> <span class="pre">(MemoryEffectOpInterface)</span></code></p>
+<p>Effects: <code class="docutils literal notranslate"><span class="pre">MemoryEffects::Effect{}</span></code></p>
+<section id="id29">
+<h4>Operands:<a class="headerlink" href="#id29" title="Link to this heading"></a></h4>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head text-center"><p>Operand</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">lhs</span></code></p></td>
+<td><p>any non-token type</p></td>
+</tr>
+<tr class="row-odd"><td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">rhs</span></code></p></td>
+<td><p>any non-token type</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="id30">
+<h4>Results:<a class="headerlink" href="#id30" title="Link to this heading"></a></h4>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head text-center"><p>Result</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">result</span></code></p></td>
+<td><p>any non-token type</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="emithls-arith-shr-emithls-arithshrop">
+<h3><code class="docutils literal notranslate"><span class="pre">emithls.arith.shr</span></code> (emithls::ArithShrOp)<a class="headerlink" href="#emithls-arith-shr-emithls-arithshrop" title="Link to this heading"></a></h3>
+<p>Syntax:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>operation ::= `emithls.arith.shr` $lhs `,` $rhs attr-dict `:` type($result)
+</pre></div>
+</div>
+<p>Traits: <code class="docutils literal notranslate"><span class="pre">AlwaysSpeculatableImplTrait</span></code>, <code class="docutils literal notranslate"><span class="pre">SameOperandsAndResultType</span></code></p>
+<p>Interfaces: <code class="docutils literal notranslate"><span class="pre">ConditionallySpeculatable</span></code>, <code class="docutils literal notranslate"><span class="pre">InferTypeOpInterface</span></code>, <code class="docutils literal notranslate"><span class="pre">NoMemoryEffect</span> <span class="pre">(MemoryEffectOpInterface)</span></code></p>
+<p>Effects: <code class="docutils literal notranslate"><span class="pre">MemoryEffects::Effect{}</span></code></p>
+<section id="id31">
+<h4>Operands:<a class="headerlink" href="#id31" title="Link to this heading"></a></h4>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head text-center"><p>Operand</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">lhs</span></code></p></td>
+<td><p>any non-token type</p></td>
+</tr>
+<tr class="row-odd"><td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">rhs</span></code></p></td>
+<td><p>any non-token type</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="id32">
+<h4>Results:<a class="headerlink" href="#id32" title="Link to this heading"></a></h4>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head text-center"><p>Result</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">result</span></code></p></td>
+<td><p>any non-token type</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="emithls-arith-sub-emithls-arithsubop">
+<h3><code class="docutils literal notranslate"><span class="pre">emithls.arith.sub</span></code> (emithls::ArithSubOp)<a class="headerlink" href="#emithls-arith-sub-emithls-arithsubop" title="Link to this heading"></a></h3>
+<p>Syntax:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>operation ::= `emithls.arith.sub` $lhs `,` $rhs attr-dict `:` type($result)
+</pre></div>
+</div>
+<p>Traits: <code class="docutils literal notranslate"><span class="pre">AlwaysSpeculatableImplTrait</span></code>, <code class="docutils literal notranslate"><span class="pre">SameOperandsAndResultType</span></code></p>
+<p>Interfaces: <code class="docutils literal notranslate"><span class="pre">ConditionallySpeculatable</span></code>, <code class="docutils literal notranslate"><span class="pre">InferTypeOpInterface</span></code>, <code class="docutils literal notranslate"><span class="pre">NoMemoryEffect</span> <span class="pre">(MemoryEffectOpInterface)</span></code></p>
+<p>Effects: <code class="docutils literal notranslate"><span class="pre">MemoryEffects::Effect{}</span></code></p>
+<section id="id33">
+<h4>Operands:<a class="headerlink" href="#id33" title="Link to this heading"></a></h4>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head text-center"><p>Operand</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">lhs</span></code></p></td>
+<td><p>any non-token type</p></td>
+</tr>
+<tr class="row-odd"><td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">rhs</span></code></p></td>
+<td><p>any non-token type</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="id34">
+<h4>Results:<a class="headerlink" href="#id34" title="Link to this heading"></a></h4>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head text-center"><p>Result</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">result</span></code></p></td>
+<td><p>any non-token type</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="emithls-array-ptr-read-emithls-arraypointerreadop">
+<h3><code class="docutils literal notranslate"><span class="pre">emithls.array.ptr_read</span></code> (emithls::ArrayPointerReadOp)<a class="headerlink" href="#emithls-array-ptr-read-emithls-arraypointerreadop" title="Link to this heading"></a></h3>
+<p><em>Reads a value from an pointer</em></p>
+<p>Syntax:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>operation ::= `emithls.array.ptr_read` $pointer `[` $indices `]` attr-dict `:` qualified(type($pointer)) `-&gt;` type($result)
+</pre></div>
+</div>
+<p>Interfaces: <code class="docutils literal notranslate"><span class="pre">InferTypeOpInterface</span></code>, <code class="docutils literal notranslate"><span class="pre">MemoryEffectsOpInterface</span></code></p>
+<section id="id35">
+<h4>Operands:<a class="headerlink" href="#id35" title="Link to this heading"></a></h4>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head text-center"><p>Operand</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">pointer</span></code></p></td>
+<td><p>Pointer type in HLS C++</p></td>
+</tr>
+<tr class="row-odd"><td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">indices</span></code></p></td>
+<td><p>variadic of index</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="id36">
+<h4>Results:<a class="headerlink" href="#id36" title="Link to this heading"></a></h4>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head text-center"><p>Result</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">result</span></code></p></td>
+<td><p>any non-token type</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="emithls-array-ptr-write-emithls-arraypointerwriteop">
+<h3><code class="docutils literal notranslate"><span class="pre">emithls.array.ptr_write</span></code> (emithls::ArrayPointerWriteOp)<a class="headerlink" href="#emithls-array-ptr-write-emithls-arraypointerwriteop" title="Link to this heading"></a></h3>
+<p><em>Writes a value into an array</em></p>
+<p>Syntax:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>operation ::= `emithls.array.ptr_write` $value `,` $pointer `[` $indices `]` attr-dict `:` type($value) `-&gt;` qualified(type($pointer))
+</pre></div>
+</div>
+<p>Interfaces: <code class="docutils literal notranslate"><span class="pre">MemoryEffectsOpInterface</span></code></p>
+<section id="id37">
+<h4>Operands:<a class="headerlink" href="#id37" title="Link to this heading"></a></h4>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head text-center"><p>Operand</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">value</span></code></p></td>
+<td><p>any non-token type</p></td>
+</tr>
+<tr class="row-odd"><td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">pointer</span></code></p></td>
+<td><p>Pointer type in HLS C++</p></td>
+</tr>
+<tr class="row-even"><td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">indices</span></code></p></td>
+<td><p>variadic of index</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="emithls-array-read-emithls-arrayreadop">
+<h3><code class="docutils literal notranslate"><span class="pre">emithls.array.read</span></code> (emithls::ArrayReadOp)<a class="headerlink" href="#emithls-array-read-emithls-arrayreadop" title="Link to this heading"></a></h3>
+<p><em>Reads a value from an array</em></p>
+<p>Syntax:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>operation ::= `emithls.array.read` $array `[` $indices `]` attr-dict `:` qualified(type($array)) `-&gt;` type($result)
+</pre></div>
+</div>
+<p>Interfaces: <code class="docutils literal notranslate"><span class="pre">InferTypeOpInterface</span></code>, <code class="docutils literal notranslate"><span class="pre">MemoryEffectsOpInterface</span></code></p>
+<section id="id38">
+<h4>Operands:<a class="headerlink" href="#id38" title="Link to this heading"></a></h4>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head text-center"><p>Operand</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">array</span></code></p></td>
+<td><p>Array type in C++</p></td>
+</tr>
+<tr class="row-odd"><td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">indices</span></code></p></td>
+<td><p>variadic of index</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="id39">
+<h4>Results:<a class="headerlink" href="#id39" title="Link to this heading"></a></h4>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head text-center"><p>Result</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">result</span></code></p></td>
+<td><p>any non-token type</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="emithls-array-write-emithls-arraywriteop">
+<h3><code class="docutils literal notranslate"><span class="pre">emithls.array.write</span></code> (emithls::ArrayWriteOp)<a class="headerlink" href="#emithls-array-write-emithls-arraywriteop" title="Link to this heading"></a></h3>
+<p><em>Writes a value into an array</em></p>
+<p>Syntax:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>operation ::= `emithls.array.write` $value `,` $array `[` $indices `]` attr-dict `:` type($value) `-&gt;` qualified(type($array))
+</pre></div>
+</div>
+<p>Interfaces: <code class="docutils literal notranslate"><span class="pre">MemoryEffectsOpInterface</span></code></p>
+<section id="id40">
+<h4>Operands:<a class="headerlink" href="#id40" title="Link to this heading"></a></h4>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head text-center"><p>Operand</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">value</span></code></p></td>
+<td><p>any non-token type</p></td>
+</tr>
+<tr class="row-odd"><td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">array</span></code></p></td>
+<td><p>Array type in C++</p></td>
+</tr>
+<tr class="row-even"><td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">indices</span></code></p></td>
+<td><p>variadic of index</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="emithls-call-emithls-callop">
+<h3><code class="docutils literal notranslate"><span class="pre">emithls.call</span></code> (emithls::CallOp)<a class="headerlink" href="#emithls-call-emithls-callop" title="Link to this heading"></a></h3>
+<p><em>Defines a function call.</em></p>
+<p>Syntax:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>operation ::= `emithls.call` $callee `(` $operands `)` attr-dict `:` functional-type($operands, results)
+</pre></div>
+</div>
+<p>Interfaces: <code class="docutils literal notranslate"><span class="pre">ArgAndResultAttrsOpInterface</span></code>, <code class="docutils literal notranslate"><span class="pre">CallOpInterface</span></code></p>
+<section id="id41">
+<h4>Attributes:<a class="headerlink" href="#id41" title="Link to this heading"></a></h4>
+<table>
+<tr><th>Attribute</th><th>MLIR Type</th><th>Description</th></tr>
+<tr><td><code>callee</code></td><td>::mlir::FlatSymbolRefAttr</td><td>flat symbol reference attribute</td></tr>
+<tr><td><code>arg_attrs</code></td><td>::mlir::ArrayAttr</td><td>Array of dictionary attributes</td></tr>
+<tr><td><code>res_attrs</code></td><td>::mlir::ArrayAttr</td><td>Array of dictionary attributes</td></tr>
+</table>
+</section>
+<section id="id42">
+<h4>Operands:<a class="headerlink" href="#id42" title="Link to this heading"></a></h4>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head text-center"><p>Operand</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">operands</span></code></p></td>
+<td><p>variadic of any non-token type</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="id43">
+<h4>Results:<a class="headerlink" href="#id43" title="Link to this heading"></a></h4>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head text-center"><p>Result</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-center"><p>«unnamed»</p></td>
+<td><p>variadic of any non-token type</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="emithls-expr-emithls-expressionop">
+<h3><code class="docutils literal notranslate"><span class="pre">emithls.expr</span></code> (emithls::ExpressionOp)<a class="headerlink" href="#emithls-expr-emithls-expressionop" title="Link to this heading"></a></h3>
+<p><em>Represents a combined C/C++ expression.</em></p>
+<p>Syntax:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>operation ::= `emithls.expr` attr-dict `:` type($result) $body
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">expression</span></code> operation defines a set of operations that together
+form a C/C++ style complex expression, such as:
+<code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">var</span> <span class="pre">=</span> <span class="pre">(a</span> <span class="pre">+</span> <span class="pre">b)</span> <span class="pre">*</span> <span class="pre">c;</span></code>.
+This operation returns one value with a scalar type, which is yielded
+from the region using <code class="docutils literal notranslate"><span class="pre">YieldOp</span></code>.
+Nested expressions are also allowed.
+Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">//</span> <span class="n">Assume</span> <span class="o">%</span><span class="n">lhs</span><span class="p">,</span> <span class="o">%</span><span class="n">rhs</span><span class="p">,</span> <span class="o">%</span><span class="n">cst</span> <span class="n">are</span> <span class="n">i32</span> <span class="n">values</span>
+<span class="o">%</span><span class="n">expr</span> <span class="o">=</span> <span class="n">emithls</span><span class="o">.</span><span class="n">expr</span> <span class="p">:</span> <span class="n">i32</span> <span class="p">{</span>
+    <span class="o">%</span><span class="mi">0</span> <span class="o">=</span> <span class="n">arith</span><span class="o">.</span><span class="n">addi</span> <span class="o">%</span><span class="n">lhs</span><span class="p">,</span> <span class="o">%</span><span class="n">cst</span> <span class="p">:</span> <span class="n">i32</span>
+    <span class="o">%</span><span class="mi">1</span> <span class="o">=</span> <span class="n">arith</span><span class="o">.</span><span class="n">muli</span> <span class="o">%</span><span class="mi">0</span><span class="p">,</span> <span class="o">%</span><span class="n">rhs</span> <span class="p">:</span> <span class="n">i32</span>
+    <span class="n">emithls</span><span class="o">.</span><span class="k">yield</span> <span class="o">%</span><span class="mi">1</span> <span class="p">:</span> <span class="n">i32</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Traits: <code class="docutils literal notranslate"><span class="pre">NoRegionArguments</span></code>, <code class="docutils literal notranslate"><span class="pre">SingleBlockImplicitTerminator&lt;YieldOp&gt;</span></code>, <code class="docutils literal notranslate"><span class="pre">SingleBlock</span></code></p>
+<p>Interfaces: <code class="docutils literal notranslate"><span class="pre">OpAsmOpInterface</span></code></p>
+<section id="id44">
+<h4>Results:<a class="headerlink" href="#id44" title="Link to this heading"></a></h4>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head text-center"><p>Result</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">result</span></code></p></td>
+<td><p>any non-token type</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="emithls-for-emithls-forop">
+<h3><code class="docutils literal notranslate"><span class="pre">emithls.for</span></code> (emithls::ForOp)<a class="headerlink" href="#emithls-for-emithls-forop" title="Link to this heading"></a></h3>
+<p><em>Defines a C/C++ for loop.</em></p>
+<p>The <code class="docutils literal notranslate"><span class="pre">for</span></code> operation defines a counted loop with compile-time constant
+lower bound, upper bound, and step, mapping to a C/C++ <code class="docutils literal notranslate"><span class="pre">for</span></code> loop.
+The loop body receives the current induction variable as a block
+argument and iterates from <code class="docutils literal notranslate"><span class="pre">lowerBound</span></code> to <code class="docutils literal notranslate"><span class="pre">upperBound</span></code> (exclusive)
+in increments of <code class="docutils literal notranslate"><span class="pre">step</span></code>.
+Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">emithls</span><span class="o">.</span><span class="k">for</span> <span class="o">%</span><span class="n">idx0</span> <span class="o">=</span> <span class="mi">0</span> <span class="n">to</span> <span class="mi">10</span> <span class="n">step</span> <span class="mi">1</span> <span class="p">{</span>
+    <span class="n">ops</span> <span class="n">using</span> <span class="o">%</span><span class="n">idx0</span> <span class="o">...</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Traits: <code class="docutils literal notranslate"><span class="pre">NoTerminator</span></code>, <code class="docutils literal notranslate"><span class="pre">RecursiveMemoryEffects</span></code></p>
+<p>Interfaces: <code class="docutils literal notranslate"><span class="pre">OpAsmOpInterface</span></code></p>
+<section id="id45">
+<h4>Attributes:<a class="headerlink" href="#id45" title="Link to this heading"></a></h4>
+<table>
+<tr><th>Attribute</th><th>MLIR Type</th><th>Description</th></tr>
+<tr><td><code>lowerBound</code></td><td>::mlir::IntegerAttr</td><td>index attribute</td></tr>
+<tr><td><code>upperBound</code></td><td>::mlir::IntegerAttr</td><td>index attribute</td></tr>
+<tr><td><code>step</code></td><td>::mlir::IntegerAttr</td><td>index attribute</td></tr>
+</table>
+</section>
+</section>
+<section id="emithls-func-emithls-funcop">
+<h3><code class="docutils literal notranslate"><span class="pre">emithls.func</span></code> (emithls::FuncOp)<a class="headerlink" href="#emithls-func-emithls-funcop" title="Link to this heading"></a></h3>
+<p><em>Defines a C/C++ function with a void return type.</em></p>
+<p>The <code class="docutils literal notranslate"><span class="pre">func</span></code> operation defines a C/C++ function with a void return type,
+serving as the node and top-level function unit for HLS code generation.
+The function is identified by its symbol name and is isolated from
+above, meaning it cannot reference values defined outside its scope.
+Function arguments are accessible via the entry block of the body region.
+Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">emithls</span><span class="o">.</span><span class="n">func</span> <span class="nd">@my_func</span><span class="p">(</span><span class="o">%</span><span class="n">arg0</span><span class="p">:</span> <span class="nb">type</span><span class="p">,</span> <span class="o">%</span><span class="n">arg1</span><span class="p">:</span> <span class="nb">type</span><span class="p">,</span> <span class="o">...</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">ops</span><span class="o">...</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Traits: <code class="docutils literal notranslate"><span class="pre">AutomaticAllocationScope</span></code>, <code class="docutils literal notranslate"><span class="pre">IsolatedFromAbove</span></code>, <code class="docutils literal notranslate"><span class="pre">NoTerminator</span></code></p>
+<p>Interfaces: <code class="docutils literal notranslate"><span class="pre">ArgAndResultAttrsOpInterface</span></code>, <code class="docutils literal notranslate"><span class="pre">CallableOpInterface</span></code>, <code class="docutils literal notranslate"><span class="pre">FunctionOpInterface</span></code>, <code class="docutils literal notranslate"><span class="pre">Symbol</span></code></p>
+<section id="id46">
+<h4>Attributes:<a class="headerlink" href="#id46" title="Link to this heading"></a></h4>
+<table>
+<tr><th>Attribute</th><th>MLIR Type</th><th>Description</th></tr>
+<tr><td><code>sym_name</code></td><td>::mlir::StringAttr</td><td>string attribute</td></tr>
+<tr><td><code>function_type</code></td><td>::mlir::TypeAttr</td><td>type attribute of function type</td></tr>
+<tr><td><code>arg_attrs</code></td><td>::mlir::ArrayAttr</td><td>Array of dictionary attributes</td></tr>
+<tr><td><code>res_attrs</code></td><td>::mlir::ArrayAttr</td><td>Array of dictionary attributes</td></tr>
+</table>
+</section>
+</section>
+<section id="emithls-helper-accumulate-emithls-helperaccumulateop">
+<h3><code class="docutils literal notranslate"><span class="pre">emithls.helper.accumulate</span></code> (emithls::HelperAccumulateOp)<a class="headerlink" href="#emithls-helper-accumulate-emithls-helperaccumulateop" title="Link to this heading"></a></h3>
+<p><em>Helper to mark the accumulate axis in the computation.</em></p>
+<p>Traits: <code class="docutils literal notranslate"><span class="pre">HasParent&lt;ForOp,</span> <span class="pre">affine::AffineForOp&gt;</span></code></p>
+<section id="id47">
+<h4>Attributes:<a class="headerlink" href="#id47" title="Link to this heading"></a></h4>
+<table>
+<tr><th>Attribute</th><th>MLIR Type</th><th>Description</th></tr>
+<tr><td><code>op_code</code></td><td>::mlir::emithls::FusedOperatorAttr</td><td>fused operator such as `+=`</td></tr>
+</table>
+</section>
+<section id="id48">
+<h4>Operands:<a class="headerlink" href="#id48" title="Link to this heading"></a></h4>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head text-center"><p>Operand</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">accu_ref</span></code></p></td>
+<td><p>memref or emithls.array type</p></td>
+</tr>
+<tr class="row-odd"><td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">value</span></code></p></td>
+<td><p>any non-token type</p></td>
+</tr>
+<tr class="row-even"><td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">indices</span></code></p></td>
+<td><p>variadic of index</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="emithls-helper-linebuf-emithls-helperlinebufferop">
+<h3><code class="docutils literal notranslate"><span class="pre">emithls.helper.linebuf</span></code> (emithls::HelperLineBufferOp)<a class="headerlink" href="#emithls-helper-linebuf-emithls-helperlinebufferop" title="Link to this heading"></a></h3>
+<p><em>Helper to store information of line buffer construction</em></p>
+<p>Traits: <code class="docutils literal notranslate"><span class="pre">HasParent&lt;ForOp,</span> <span class="pre">affine::AffineForOp&gt;</span></code></p>
+<p>Interfaces: <code class="docutils literal notranslate"><span class="pre">OpAsmOpInterface</span></code></p>
+<section id="id49">
+<h4>Attributes:<a class="headerlink" href="#id49" title="Link to this heading"></a></h4>
+<table>
+<tr><th>Attribute</th><th>MLIR Type</th><th>Description</th></tr>
+<tr><td><code>num_chan</code></td><td>::mlir::ArrayAttr</td><td>32-bit integer array attribute</td></tr>
+<tr><td><code>num_line</code></td><td>::mlir::IntegerAttr</td><td>32-bit signless integer attribute</td></tr>
+</table>
+</section>
+<section id="id50">
+<h4>Operands:<a class="headerlink" href="#id50" title="Link to this heading"></a></h4>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head text-center"><p>Operand</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">token_ref</span></code></p></td>
+<td><p>memref or emithls.array type</p></td>
+</tr>
+<tr class="row-odd"><td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">index</span></code></p></td>
+<td><p>index</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="id51">
+<h4>Results:<a class="headerlink" href="#id51" title="Link to this heading"></a></h4>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head text-center"><p>Result</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">buf_ref</span></code></p></td>
+<td><p>memref or emithls.array type</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="emithls-helper-window-emithls-helperwindowop">
+<h3><code class="docutils literal notranslate"><span class="pre">emithls.helper.window</span></code> (emithls::HelperWindowOp)<a class="headerlink" href="#emithls-helper-window-emithls-helperwindowop" title="Link to this heading"></a></h3>
+<p><em>Helper to construct a compute windows from line buffer.</em></p>
+<p>Traits: <code class="docutils literal notranslate"><span class="pre">HasParent&lt;ForOp,</span> <span class="pre">affine::AffineForOp&gt;</span></code></p>
+<p>Interfaces: <code class="docutils literal notranslate"><span class="pre">OpAsmOpInterface</span></code></p>
+<section id="id52">
+<h4>Operands:<a class="headerlink" href="#id52" title="Link to this heading"></a></h4>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head text-center"><p>Operand</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">buf_ref</span></code></p></td>
+<td><p>memref or emithls.array type</p></td>
+</tr>
+<tr class="row-odd"><td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">indices</span></code></p></td>
+<td><p>variadic of index</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="id53">
+<h4>Results:<a class="headerlink" href="#id53" title="Link to this heading"></a></h4>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head text-center"><p>Result</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">win_ref</span></code></p></td>
+<td><p>memref or emithls.array type</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="emithls-if-emithls-ifop">
+<h3><code class="docutils literal notranslate"><span class="pre">emithls.if</span></code> (emithls::IfOp)<a class="headerlink" href="#emithls-if-emithls-ifop" title="Link to this heading"></a></h3>
+<p><em>Defines a C/C style if-statement.</em></p>
+<p>The <code class="docutils literal notranslate"><span class="pre">if</span></code> operation conditionally executes one of two regions based on
+an <code class="docutils literal notranslate"><span class="pre">i1</span></code> condition value, mapping to a C/C++ <code class="docutils literal notranslate"><span class="pre">if</span></code>/<code class="docutils literal notranslate"><span class="pre">else</span></code> statement.
+The <code class="docutils literal notranslate"><span class="pre">then</span></code> region is always executed when the condition is true.
+The optional <code class="docutils literal notranslate"><span class="pre">else</span></code> region is executed when the condition is false;
+if absent, no action is taken on the false path.
+Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">emithls</span><span class="o">.</span><span class="k">if</span> <span class="o">%</span><span class="n">cond</span> <span class="p">{</span>
+    <span class="n">ops</span> <span class="o">...</span>
+<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="n">ops</span> <span class="o">...</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Traits: <code class="docutils literal notranslate"><span class="pre">NoRegionArguments</span></code>, <code class="docutils literal notranslate"><span class="pre">NoTerminator</span></code>, <code class="docutils literal notranslate"><span class="pre">RecursiveMemoryEffects</span></code></p>
+<section id="id54">
+<h4>Operands:<a class="headerlink" href="#id54" title="Link to this heading"></a></h4>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head text-center"><p>Operand</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">condition</span></code></p></td>
+<td><p>1-bit signless integer</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="emithls-include-emithls-includeop">
+<h3><code class="docutils literal notranslate"><span class="pre">emithls.include</span></code> (emithls::IncludeOp)<a class="headerlink" href="#emithls-include-emithls-includeop" title="Link to this heading"></a></h3>
+<p><em>C/C++ include statement</em></p>
+<p>The <code class="docutils literal notranslate"><span class="pre">include</span></code> operation abstracts the C/C++ include syntax.
+However, this operation does not check the existence of the
+header file.
+This operation is created automatically by a transformation pass
+inside this dialect.</p>
+<p>Traits: <code class="docutils literal notranslate"><span class="pre">HasParent&lt;ModuleOp&gt;</span></code></p>
+<section id="id55">
+<h4>Attributes:<a class="headerlink" href="#id55" title="Link to this heading"></a></h4>
+<table>
+<tr><th>Attribute</th><th>MLIR Type</th><th>Description</th></tr>
+<tr><td><code>header</code></td><td>::mlir::StringAttr</td><td>string attribute</td></tr>
+</table>
+</section>
+</section>
+<section id="emithls-pragma-array-partition-emithls-pragmaarraypartitionop">
+<h3><code class="docutils literal notranslate"><span class="pre">emithls.pragma.array_partition</span></code> (emithls::PragmaArrayPartitionOp)<a class="headerlink" href="#emithls-pragma-array-partition-emithls-pragmaarraypartitionop" title="Link to this heading"></a></h3>
+<p><em>#pragma HLS ARRAY_PARTITION variable= type= factor= dim=</em></p>
+<p>Interfaces: <code class="docutils literal notranslate"><span class="pre">EmitHLS_PragmaInterface</span></code></p>
+<section id="id56">
+<h4>Attributes:<a class="headerlink" href="#id56" title="Link to this heading"></a></h4>
+<table>
+<tr><th>Attribute</th><th>MLIR Type</th><th>Description</th></tr>
+<tr><td><code>part_type</code></td><td>::mlir::emithls::ArrayPartitionTypeAttr</td><td>#pragma HLS array_partition type=?</td></tr>
+<tr><td><code>part_factor</code></td><td>::mlir::IntegerAttr</td><td>32-bit signless integer attribute</td></tr>
+<tr><td><code>part_dim</code></td><td>::mlir::IntegerAttr</td><td>32-bit signless integer attribute</td></tr>
+</table>
+</section>
+<section id="id57">
+<h4>Operands:<a class="headerlink" href="#id57" title="Link to this heading"></a></h4>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head text-center"><p>Operand</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">variable</span></code></p></td>
+<td><p>Array type in C++</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="emithls-pragma-bind-storage-emithls-pragmabindstorageop">
+<h3><code class="docutils literal notranslate"><span class="pre">emithls.pragma.bind_storage</span></code> (emithls::PragmaBindStorageOp)<a class="headerlink" href="#emithls-pragma-bind-storage-emithls-pragmabindstorageop" title="Link to this heading"></a></h3>
+<p><em>#pragma HLS BIND_STORAGE variable= type= impl=</em></p>
+<p>Interfaces: <code class="docutils literal notranslate"><span class="pre">EmitHLS_PragmaInterface</span></code></p>
+<section id="id58">
+<h4>Attributes:<a class="headerlink" href="#id58" title="Link to this heading"></a></h4>
+<table>
+<tr><th>Attribute</th><th>MLIR Type</th><th>Description</th></tr>
+<tr><td><code>storage_type</code></td><td>::mlir::emithls::BindStorageTypeAttr</td><td>#pragma HLS bind_storage type=?</td></tr>
+<tr><td><code>storage_impl</code></td><td>::mlir::emithls::BindStorageImplAttr</td><td>#pragma HLS bind_storage impl=?</td></tr>
+</table>
+</section>
+<section id="id59">
+<h4>Operands:<a class="headerlink" href="#id59" title="Link to this heading"></a></h4>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head text-center"><p>Operand</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">variable</span></code></p></td>
+<td><p>Array type in C++ or Stream type in HLS C++</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="emithls-pragma-dataflow-emithls-pragmadataflowop">
+<h3><code class="docutils literal notranslate"><span class="pre">emithls.pragma.dataflow</span></code> (emithls::PragmaDataflowOp)<a class="headerlink" href="#emithls-pragma-dataflow-emithls-pragmadataflowop" title="Link to this heading"></a></h3>
+<p><em>#pragma HLS DATAFLOW</em></p>
+<p>Syntax:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>operation ::= `emithls.pragma.dataflow` $body attr-dict
+</pre></div>
+</div>
+<p>Traits: <code class="docutils literal notranslate"><span class="pre">NoTerminator</span></code></p>
+<p>Interfaces: <code class="docutils literal notranslate"><span class="pre">EmitHLS_PragmaInterface</span></code></p>
+</section>
+<section id="emithls-pragma-inline-emithls-pragmainlineop">
+<h3><code class="docutils literal notranslate"><span class="pre">emithls.pragma.inline</span></code> (emithls::PragmaInlineOp)<a class="headerlink" href="#emithls-pragma-inline-emithls-pragmainlineop" title="Link to this heading"></a></h3>
+<p><em>#pragma HLS INLINE off</em></p>
+<p>Interfaces: <code class="docutils literal notranslate"><span class="pre">EmitHLS_PragmaInterface</span></code></p>
+<section id="id60">
+<h4>Attributes:<a class="headerlink" href="#id60" title="Link to this heading"></a></h4>
+<table>
+<tr><th>Attribute</th><th>MLIR Type</th><th>Description</th></tr>
+<tr><td><code>off</code></td><td>::mlir::UnitAttr</td><td>unit attribute</td></tr>
+</table>
+</section>
+</section>
+<section id="emithls-pragma-pipeline-emithls-pragmapipelineop">
+<h3><code class="docutils literal notranslate"><span class="pre">emithls.pragma.pipeline</span></code> (emithls::PragmaPipelineOp)<a class="headerlink" href="#emithls-pragma-pipeline-emithls-pragmapipelineop" title="Link to this heading"></a></h3>
+<p><em>#pragma HLS PIPELINE II=</em></p>
+<p>Interfaces: <code class="docutils literal notranslate"><span class="pre">EmitHLS_PragmaInterface</span></code></p>
+<section id="id61">
+<h4>Attributes:<a class="headerlink" href="#id61" title="Link to this heading"></a></h4>
+<table>
+<tr><th>Attribute</th><th>MLIR Type</th><th>Description</th></tr>
+<tr><td><code>interval</code></td><td>::mlir::IntegerAttr</td><td>32-bit signless integer attribute</td></tr>
+<tr><td><code>style</code></td><td>::mlir::emithls::PipelineStyleAttr</td><td>##pragma HLS HLS pipeline style=?</td></tr>
+</table>
+</section>
+</section>
+<section id="emithls-pragma-stream-emithls-pragmastreamop">
+<h3><code class="docutils literal notranslate"><span class="pre">emithls.pragma.stream</span></code> (emithls::PragmaStreamOp)<a class="headerlink" href="#emithls-pragma-stream-emithls-pragmastreamop" title="Link to this heading"></a></h3>
+<p><em>#pragma HLS STREAM type=fifo depth=</em></p>
+<p>Interfaces: <code class="docutils literal notranslate"><span class="pre">EmitHLS_PragmaInterface</span></code></p>
+<section id="id62">
+<h4>Attributes:<a class="headerlink" href="#id62" title="Link to this heading"></a></h4>
+<table>
+<tr><th>Attribute</th><th>MLIR Type</th><th>Description</th></tr>
+<tr><td><code>depth</code></td><td>::mlir::IntegerAttr</td><td>32-bit signless integer attribute</td></tr>
+</table>
+</section>
+<section id="id63">
+<h4>Operands:<a class="headerlink" href="#id63" title="Link to this heading"></a></h4>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head text-center"><p>Operand</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">variable</span></code></p></td>
+<td><p>Stream type in HLS C++ or Array type in C++</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="emithls-pragma-unroll-emithls-pragmaunrollop">
+<h3><code class="docutils literal notranslate"><span class="pre">emithls.pragma.unroll</span></code> (emithls::PragmaUnrollOp)<a class="headerlink" href="#emithls-pragma-unroll-emithls-pragmaunrollop" title="Link to this heading"></a></h3>
+<p><em>#pragma HLS UNROLL factor=</em></p>
+<p>Traits: <code class="docutils literal notranslate"><span class="pre">HasParent&lt;ForOp&gt;</span></code></p>
+<p>Interfaces: <code class="docutils literal notranslate"><span class="pre">EmitHLS_PragmaInterface</span></code></p>
+<section id="id64">
+<h4>Attributes:<a class="headerlink" href="#id64" title="Link to this heading"></a></h4>
+<table>
+<tr><th>Attribute</th><th>MLIR Type</th><th>Description</th></tr>
+<tr><td><code>factor</code></td><td>::mlir::IntegerAttr</td><td>32-bit signless integer attribute</td></tr>
+</table>
+</section>
+</section>
+<section id="emithls-stream-read-emithls-streamreadop">
+<h3><code class="docutils literal notranslate"><span class="pre">emithls.stream.read</span></code> (emithls::StreamReadOp)<a class="headerlink" href="#emithls-stream-read-emithls-streamreadop" title="Link to this heading"></a></h3>
+<p><em>Reads data out from hls::stream.</em></p>
+<p>Syntax:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>operation ::= `emithls.stream.read` $stream (`[` $indices^ `]`)? attr-dict `:` qualified(type($stream)) `-&gt;` type($data)
+</pre></div>
+</div>
+<p>Interfaces: <code class="docutils literal notranslate"><span class="pre">MemoryEffectsOpInterface</span></code></p>
+<section id="id65">
+<h4>Operands:<a class="headerlink" href="#id65" title="Link to this heading"></a></h4>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head text-center"><p>Operand</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">stream</span></code></p></td>
+<td><p>Stream type in HLS C++ or Array type in C++</p></td>
+</tr>
+<tr class="row-odd"><td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">indices</span></code></p></td>
+<td><p>variadic of index</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="id66">
+<h4>Results:<a class="headerlink" href="#id66" title="Link to this heading"></a></h4>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head text-center"><p>Result</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">data</span></code></p></td>
+<td><p>any non-token type</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="emithls-stream-write-emithls-streamwriteop">
+<h3><code class="docutils literal notranslate"><span class="pre">emithls.stream.write</span></code> (emithls::StreamWriteOp)<a class="headerlink" href="#emithls-stream-write-emithls-streamwriteop" title="Link to this heading"></a></h3>
+<p><em>Writes data into hls::stream.</em></p>
+<p>Syntax:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>operation ::= `emithls.stream.write` $data `to` $stream (`[` $indices^ `]`)? attr-dict `:` type($data) `-&gt;` qualified(type($stream))
+</pre></div>
+</div>
+<p>Interfaces: <code class="docutils literal notranslate"><span class="pre">MemoryEffectsOpInterface</span></code></p>
+<section id="id67">
+<h4>Operands:<a class="headerlink" href="#id67" title="Link to this heading"></a></h4>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head text-center"><p>Operand</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">data</span></code></p></td>
+<td><p>any non-token type</p></td>
+</tr>
+<tr class="row-odd"><td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">stream</span></code></p></td>
+<td><p>Stream type in HLS C++ or Array type in C++</p></td>
+</tr>
+<tr class="row-even"><td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">indices</span></code></p></td>
+<td><p>variadic of index</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="emithls-top-interface-emithls-pragmatopinterfaceop">
+<h3><code class="docutils literal notranslate"><span class="pre">emithls.top_interface</span></code> (emithls::PragmaTopInterfaceOp)<a class="headerlink" href="#emithls-top-interface-emithls-pragmatopinterfaceop" title="Link to this heading"></a></h3>
+<p><em>#pragma HLS INTERFACE for the top function</em></p>
+<p>Syntax:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>operation ::= `emithls.top_interface` attr-dict
+</pre></div>
+</div>
+<p>Interfaces: <code class="docutils literal notranslate"><span class="pre">EmitHLS_PragmaInterface</span></code></p>
+</section>
+<section id="emithls-update-emithls-updateop">
+<h3><code class="docutils literal notranslate"><span class="pre">emithls.update</span></code> (emithls::UpdateOp)<a class="headerlink" href="#emithls-update-emithls-updateop" title="Link to this heading"></a></h3>
+<p><em>Defines a C/C++ style assignment.</em></p>
+<p>The <code class="docutils literal notranslate"><span class="pre">update</span></code> operation performs a C/C++ style assignment to an
+existing variable.
+This operation also supports element-wise assignment for array
+types using a list of <code class="docutils literal notranslate"><span class="pre">IndexType</span></code> indices.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>emithls.update %var with %new_value : type &lt;- type
+emithls.update %var with %arr[%indices]
+    : type &lt;- !emithls.array&lt;shape x type&gt;
+emithls.update %arr[%indices] with %new_value
+    : !emithls.array&lt;shape x type&gt; &lt;- type
+emithls.update %arr0[%indices] with %arr1[%indices]
+    : !emithls.array&lt;shape x type&gt; &lt;- !emithls.array&lt;shape x type&gt;
+</pre></div>
+</div>
+<p>Traits: <code class="docutils literal notranslate"><span class="pre">AttrSizedOperandSegments</span></code></p>
+<p>Interfaces: <code class="docutils literal notranslate"><span class="pre">MemoryEffectsOpInterface</span></code></p>
+<section id="id68">
+<h4>Operands:<a class="headerlink" href="#id68" title="Link to this heading"></a></h4>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head text-center"><p>Operand</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">variable</span></code></p></td>
+<td><p>any non-token type</p></td>
+</tr>
+<tr class="row-odd"><td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">indices</span></code></p></td>
+<td><p>variadic of index</p></td>
+</tr>
+<tr class="row-even"><td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">new_value</span></code></p></td>
+<td><p>any non-token type</p></td>
+</tr>
+<tr class="row-odd"><td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">new_value_indices</span></code></p></td>
+<td><p>variadic of index</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="emithls-variable-emithls-variableop">
+<h3><code class="docutils literal notranslate"><span class="pre">emithls.variable</span></code> (emithls::VariableOp)<a class="headerlink" href="#emithls-variable-emithls-variableop" title="Link to this heading"></a></h3>
+<p><em>Defines a C/C++ style variable.</em></p>
+<p>The <code class="docutils literal notranslate"><span class="pre">variable</span></code> operation defines a C/C++ variable, which is used to
+simplify the translation from <code class="docutils literal notranslate"><span class="pre">emithls</span></code> dialect to HLS code.
+MLIR adopts the Single Static Assignment form, which forbids multiple
+assignments to the same variable.
+To solve this, the <code class="docutils literal notranslate"><span class="pre">variable</span></code> operation and an <code class="docutils literal notranslate"><span class="pre">update</span></code> operation are
+defined, such as:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="n">var</span> <span class="o">=</span> <span class="n">emithls</span><span class="o">.</span><span class="n">variable</span> <span class="p">:</span> <span class="nb">type</span>
+<span class="n">emithls</span><span class="o">.</span><span class="n">update</span> <span class="o">%</span><span class="n">var</span><span class="p">,</span> <span class="o">%</span><span class="n">value</span> <span class="p">:</span> <span class="nb">type</span>
+</pre></div>
+</div>
+<p>A <code class="docutils literal notranslate"><span class="pre">variable</span></code> can also be defined as a constant as in C/C++.</p>
+<p>Interfaces: <code class="docutils literal notranslate"><span class="pre">OpAsmOpInterface</span></code></p>
+<section id="id69">
+<h4>Attributes:<a class="headerlink" href="#id69" title="Link to this heading"></a></h4>
+<table>
+<tr><th>Attribute</th><th>MLIR Type</th><th>Description</th></tr>
+<tr><td><code>init_number</code></td><td>::mlir::Attribute</td><td>any attribute</td></tr>
+<tr><td><code>is_const</code></td><td>::mlir::UnitAttr</td><td>unit attribute</td></tr>
+</table>
+</section>
+<section id="id70">
+<h4>Operands:<a class="headerlink" href="#id70" title="Link to this heading"></a></h4>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head text-center"><p>Operand</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">init_value</span></code></p></td>
+<td><p>any non-token type</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="id71">
+<h4>Results:<a class="headerlink" href="#id71" title="Link to this heading"></a></h4>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head text-center"><p>Result</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">variable</span></code></p></td>
+<td><p>any non-token type</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="emithls-yield-emithls-yieldop">
+<h3><code class="docutils literal notranslate"><span class="pre">emithls.yield</span></code> (emithls::YieldOp)<a class="headerlink" href="#emithls-yield-emithls-yieldop" title="Link to this heading"></a></h3>
+<p><em>Yields the result value of an expression.</em></p>
+<p>Syntax:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>operation ::= `emithls.yield` attr-dict $value `:` type($value)
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">yield</span></code> operation terminates an expression block with a value,
+which becomes the result of the enclosing expression.
+This operation mimics a combined expression in C/C++.</p>
+<p>Traits: <code class="docutils literal notranslate"><span class="pre">AlwaysSpeculatableImplTrait</span></code>, <code class="docutils literal notranslate"><span class="pre">HasParent&lt;ExpressionOp&gt;</span></code>, <code class="docutils literal notranslate"><span class="pre">Terminator</span></code></p>
+<p>Interfaces: <code class="docutils literal notranslate"><span class="pre">ConditionallySpeculatable</span></code>, <code class="docutils literal notranslate"><span class="pre">NoMemoryEffect</span> <span class="pre">(MemoryEffectOpInterface)</span></code></p>
+<p>Effects: <code class="docutils literal notranslate"><span class="pre">MemoryEffects::Effect{}</span></code></p>
+<section id="id72">
+<h4>Operands:<a class="headerlink" href="#id72" title="Link to this heading"></a></h4>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head text-center"><p>Operand</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">value</span></code></p></td>
+<td><p>any non-token type</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+</section>
+<section id="id73">
+<h2>Attributes<a class="headerlink" href="#id73" title="Link to this heading"></a></h2>
+<section id="densefixedattr">
+<h3>DenseFixedAttr<a class="headerlink" href="#densefixedattr" title="Link to this heading"></a></h3>
+<p><em>Constant densely-packed array of fixed-point values</em></p>
+<p>The <code class="docutils literal notranslate"><span class="pre">dense_fixed</span></code> attribute represents a compile-time constant array
+of values that each define the value of a common <code class="docutils literal notranslate"><span class="pre">FixedType</span></code> element
+type.</p>
+<p>Syntax:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>dense-fixed-attr ::= `dense_fixed` `&lt;` $type `=` $data `&gt;`
+</pre></div>
+</div>
+<p>The result type must be a statically-shaped <code class="docutils literal notranslate"><span class="pre">ArrayType</span></code> of <code class="docutils literal notranslate"><span class="pre">FixedType</span></code>
+elements, and the dense elements contained must match the shape of
+type, or be a splat.</p>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">#emithls.dense_fixed&lt;!emithls.array&lt;3x!emithls.fixed&lt;4, 2&gt;&gt; = dense&lt;[1, 2, 3]&gt;&gt;</span>
+</pre></div>
+</div>
+<section id="parameters">
+<h4>Parameters:<a class="headerlink" href="#parameters" title="Link to this heading"></a></h4>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head text-center"><p>Parameter</p></th>
+<th class="head text-center"><p>C++ type</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-center"><p>type</p></td>
+<td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">::mlir::Type</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td class="text-center"><p>data</p></td>
+<td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">DenseIntElementsAttr</span></code></p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="fixedattr">
+<h3>FixedAttr<a class="headerlink" href="#fixedattr" title="Link to this heading"></a></h3>
+<p><em>Constant fixed-point bit-pattern attribute</em></p>
+<p>Syntax:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">#emithls.fixed&lt;</span>
+  <span class="p">::</span><span class="n">mlir</span><span class="p">::</span><span class="n">Type</span><span class="p">,</span>   <span class="c1"># type</span>
+  <span class="p">::</span><span class="n">mlir</span><span class="p">::</span><span class="n">base2</span><span class="p">::</span><span class="n">BitSequence</span>   <span class="c1"># value</span>
+<span class="o">&gt;</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">fixed</span></code> attribute represents a compile-time constant bit pattern
+that defines the value of a <code class="docutils literal notranslate"><span class="pre">FixedType</span></code>.</p>
+<p>Syntax:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>fixed-attr   ::= `fixed` `&lt;` bit-sequence `&gt;` `:` type
+bit-sequence ::= `"` bit-literal (trunc-spec)? `"`
+bit-literal  ::= `0b` [_01]* | `0x` [_0-9a-fA-F]*
+trunc-spec   ::= `/` [0-9]+
+</pre></div>
+</div>
+<p>The number of bits in the bit-sequence must equal the type’s total
+bit width.</p>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">#emithls.fixed&lt;"0b0100"&gt; : !emithls.fixed&lt;4, 2&gt;</span>
+</pre></div>
+</div>
+<section id="id74">
+<h4>Parameters:<a class="headerlink" href="#id74" title="Link to this heading"></a></h4>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head text-center"><p>Parameter</p></th>
+<th class="head text-center"><p>C++ type</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-center"><p>type</p></td>
+<td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">::mlir::Type</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td class="text-center"><p>value</p></td>
+<td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">::mlir::base2::BitSequence</span></code></p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+</section>
+<section id="types">
+<h2>Types<a class="headerlink" href="#types" title="Link to this heading"></a></h2>
+<section id="arraytype">
+<h3>ArrayType<a class="headerlink" href="#arraytype" title="Link to this heading"></a></h3>
+<p><em>Array type in C++</em></p>
+<p>The <code class="docutils literal notranslate"><span class="pre">array</span></code> type represents a C++ style array, which contains
+a shaped amount of variables of one scalar type, such as:
+<code class="docutils literal notranslate"><span class="pre">!emithls.array&lt;2xi32&gt;</span></code>, <code class="docutils literal notranslate"><span class="pre">!emithls.array&lt;2x2xi32&gt;</span></code></p>
+<section id="id75">
+<h4>Parameters:<a class="headerlink" href="#id75" title="Link to this heading"></a></h4>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head text-center"><p>Parameter</p></th>
+<th class="head text-center"><p>C++ type</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-center"><p>shape</p></td>
+<td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">::llvm::ArrayRef&lt;int64_t&gt;</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td class="text-center"><p>elementType</p></td>
+<td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">Type</span></code></p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="fixedtype">
+<h3>FixedType<a class="headerlink" href="#fixedtype" title="Link to this heading"></a></h3>
+<p><em>AP_Fixed type in HLS C++</em></p>
+<p>Syntax:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>!emithls.fixed&lt;
+  int64_t,   # totalBits
+  int64_t   # intBits
+&gt;
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">fixed</span></code> type represents a HLS C++ <code class="docutils literal notranslate"><span class="pre">ap_fixed&lt;totalBits,</span> <span class="pre">intBits&gt;</span></code>
+fixed-point number. <code class="docutils literal notranslate"><span class="pre">totalBits</span></code> is the overall bit width and <code class="docutils literal notranslate"><span class="pre">intBits</span></code>
+is the number of integer bits, which includes the sign bit. The
+number of fractional bits is implicit: <code class="docutils literal notranslate"><span class="pre">totalBits</span> <span class="pre">-</span> <span class="pre">intBits</span></code>.</p>
+<section id="id76">
+<h4>Parameters:<a class="headerlink" href="#id76" title="Link to this heading"></a></h4>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head text-center"><p>Parameter</p></th>
+<th class="head text-center"><p>C++ type</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-center"><p>totalBits</p></td>
+<td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">int64_t</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td class="text-center"><p>intBits</p></td>
+<td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">int64_t</span></code></p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="pointertype">
+<h3>PointerType<a class="headerlink" href="#pointertype" title="Link to this heading"></a></h3>
+<p><em>Pointer type in HLS C++</em></p>
+<p>Syntax:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>!emithls.ptr&lt;
+  Type   # elementType
+&gt;
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">pointer</span></code> type represents a C++ pointer type, which points
+to the address of a value, e.g. <code class="docutils literal notranslate"><span class="pre">!emithls.ptr&lt;i32&gt;</span></code>.</p>
+<section id="id77">
+<h4>Parameters:<a class="headerlink" href="#id77" title="Link to this heading"></a></h4>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head text-center"><p>Parameter</p></th>
+<th class="head text-center"><p>C++ type</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-center"><p>elementType</p></td>
+<td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">Type</span></code></p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="streamtype">
+<h3>StreamType<a class="headerlink" href="#streamtype" title="Link to this heading"></a></h3>
+<p><em>Stream type in HLS C++</em></p>
+<p>Syntax:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>!emithls.stream&lt;
+  Type   # elementType
+&gt;
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">stream</span></code> type represents a HLS C++ hls::stream type, which
+constructs an FIFO stream with element type flowing in it,
+e.g. <code class="docutils literal notranslate"><span class="pre">!emithls.stream&lt;i32&gt;</span></code>.</p>
+<section id="id78">
+<h4>Parameters:<a class="headerlink" href="#id78" title="Link to this heading"></a></h4>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head text-center"><p>Parameter</p></th>
+<th class="head text-center"><p>C++ type</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-center"><p>elementType</p></td>
+<td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">Type</span></code></p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+</section>
+<section id="enums">
+<h2>Enums<a class="headerlink" href="#enums" title="Link to this heading"></a></h2>
+<section id="arraypartitiontype">
+<h3>ArrayPartitionType<a class="headerlink" href="#arraypartitiontype" title="Link to this heading"></a></h3>
+<p><em>#pragma HLS array_partition type=?</em></p>
+<section id="cases">
+<h4>Cases:<a class="headerlink" href="#cases" title="Link to this heading"></a></h4>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head text-center"><p>Symbol</p></th>
+<th class="head text-center"><p>Value</p></th>
+<th class="head"><p>String</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-center"><p>cyclic</p></td>
+<td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">0</span></code></p></td>
+<td><p>cyclic</p></td>
+</tr>
+<tr class="row-odd"><td class="text-center"><p>block</p></td>
+<td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">1</span></code></p></td>
+<td><p>block</p></td>
+</tr>
+<tr class="row-even"><td class="text-center"><p>complete</p></td>
+<td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">2</span></code></p></td>
+<td><p>complete</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="bindstorageimpl">
+<h3>BindStorageImpl<a class="headerlink" href="#bindstorageimpl" title="Link to this heading"></a></h3>
+<p><em>#pragma HLS bind_storage impl=?</em></p>
+<section id="id79">
+<h4>Cases:<a class="headerlink" href="#id79" title="Link to this heading"></a></h4>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head text-center"><p>Symbol</p></th>
+<th class="head text-center"><p>Value</p></th>
+<th class="head"><p>String</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-center"><p>bram</p></td>
+<td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">0</span></code></p></td>
+<td><p>bram</p></td>
+</tr>
+<tr class="row-odd"><td class="text-center"><p>lutram</p></td>
+<td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">1</span></code></p></td>
+<td><p>lutram</p></td>
+</tr>
+<tr class="row-even"><td class="text-center"><p>srl</p></td>
+<td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">2</span></code></p></td>
+<td><p>srl</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="bindstoragetype">
+<h3>BindStorageType<a class="headerlink" href="#bindstoragetype" title="Link to this heading"></a></h3>
+<p><em>#pragma HLS bind_storage type=?</em></p>
+<section id="id80">
+<h4>Cases:<a class="headerlink" href="#id80" title="Link to this heading"></a></h4>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head text-center"><p>Symbol</p></th>
+<th class="head text-center"><p>Value</p></th>
+<th class="head"><p>String</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-center"><p>fifo</p></td>
+<td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">0</span></code></p></td>
+<td><p>fifo</p></td>
+</tr>
+<tr class="row-odd"><td class="text-center"><p>ram_1p</p></td>
+<td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">1</span></code></p></td>
+<td><p>ram_1p</p></td>
+</tr>
+<tr class="row-even"><td class="text-center"><p>ram_2p</p></td>
+<td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">2</span></code></p></td>
+<td><p>ram_2p</p></td>
+</tr>
+<tr class="row-odd"><td class="text-center"><p>rom_1p</p></td>
+<td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">3</span></code></p></td>
+<td><p>rom_1p</p></td>
+</tr>
+<tr class="row-even"><td class="text-center"><p>rom_2p</p></td>
+<td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">4</span></code></p></td>
+<td><p>rom_2p</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="cmppredicate">
+<h3>CmpPredicate<a class="headerlink" href="#cmppredicate" title="Link to this heading"></a></h3>
+<p><em>Predicate for comparison operation</em></p>
+<section id="id81">
+<h4>Cases:<a class="headerlink" href="#id81" title="Link to this heading"></a></h4>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head text-center"><p>Symbol</p></th>
+<th class="head text-center"><p>Value</p></th>
+<th class="head"><p>String</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-center"><p>eq</p></td>
+<td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">0</span></code></p></td>
+<td><p>eq</p></td>
+</tr>
+<tr class="row-odd"><td class="text-center"><p>ne</p></td>
+<td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">1</span></code></p></td>
+<td><p>ne</p></td>
+</tr>
+<tr class="row-even"><td class="text-center"><p>lt</p></td>
+<td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">2</span></code></p></td>
+<td><p>lt</p></td>
+</tr>
+<tr class="row-odd"><td class="text-center"><p>le</p></td>
+<td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">3</span></code></p></td>
+<td><p>le</p></td>
+</tr>
+<tr class="row-even"><td class="text-center"><p>gt</p></td>
+<td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">4</span></code></p></td>
+<td><p>gt</p></td>
+</tr>
+<tr class="row-odd"><td class="text-center"><p>ge</p></td>
+<td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">5</span></code></p></td>
+<td><p>ge</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="fusedoperator">
+<h3>FusedOperator<a class="headerlink" href="#fusedoperator" title="Link to this heading"></a></h3>
+<p><em>Fused operator such as <code class="docutils literal notranslate"><span class="pre">+=</span></code></em></p>
+<section id="id82">
+<h4>Cases:<a class="headerlink" href="#id82" title="Link to this heading"></a></h4>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head text-center"><p>Symbol</p></th>
+<th class="head text-center"><p>Value</p></th>
+<th class="head"><p>String</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-center"><p>add</p></td>
+<td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">0</span></code></p></td>
+<td><p>add</p></td>
+</tr>
+<tr class="row-odd"><td class="text-center"><p>sub</p></td>
+<td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">1</span></code></p></td>
+<td><p>sub</p></td>
+</tr>
+<tr class="row-even"><td class="text-center"><p>mul</p></td>
+<td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">2</span></code></p></td>
+<td><p>mul</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="pipelinestyle">
+<h3>PipelineStyle<a class="headerlink" href="#pipelinestyle" title="Link to this heading"></a></h3>
+<p><em>##pragma HLS HLS pipeline style=?</em></p>
+<section id="id83">
+<h4>Cases:<a class="headerlink" href="#id83" title="Link to this heading"></a></h4>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head text-center"><p>Symbol</p></th>
+<th class="head text-center"><p>Value</p></th>
+<th class="head"><p>String</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-center"><p>stp</p></td>
+<td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">0</span></code></p></td>
+<td><p>stp</p></td>
+</tr>
+<tr class="row-odd"><td class="text-center"><p>flp</p></td>
+<td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">1</span></code></p></td>
+<td><p>flp</p></td>
+</tr>
+<tr class="row-even"><td class="text-center"><p>frp</p></td>
+<td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">2</span></code></p></td>
+<td><p>frp</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="DFGOps.html" class="btn btn-neutral float-left" title="‘dfg’ Dialect" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="FilterOps.html" class="btn btn-neutral float-right" title="‘filter’ Dialect" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

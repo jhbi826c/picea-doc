@@ -1,0 +1,273 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Namespace mlir::dfg &mdash; picea 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/collapsible-lists/css/tree_view.css?v=a885cde7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js?v=73120307"></script>
+      <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js?v=660e4f45"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Namespace mlir::dfg::detail" href="namespace_mlir__dfg__detail.html" />
+    <link rel="prev" title="Namespace mlir::cgra::detail" href="namespace_mlir__cgra__detail.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            picea
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Installation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../README.html">About the project</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#guides">Guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#related-projects">Related projects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#development-environment-nix">Development Environment (Nix)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#build-on-ubuntu-24-04-no-nix">Build on Ubuntu 24.04 (no Nix)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#gurobi-license">Gurobi license</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#installing">Installing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#run-the-tests">Run the tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#build-the-documentation">Build the documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#compiling-a-design">Compiling a design</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#running-a-design-on-the-board">Running a design on the board</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#exporting-a-profiled-application-to-mocasin">Exporting a profiled application to Mocasin</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Guides</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../guides/laksa.html">The FPGA Variant using LAKSA backend</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/cgra.html">The CGRA Variant</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">MLIR Dialects</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/Base2Ops.html">‘base2’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/CGRAOps.html">‘cgra’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/DFGOps.html">‘dfg’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/EmitHLSOps.html">‘emithls’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/FilterOps.html">‘filter’ Dialect</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Passes</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/PICEAConversionPasses.html">PICEA Conversion Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/CGRAPasses.html">CGRA Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/DFGPasses.html">DFG Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/EmitHLSPasses.html">Emit HLS Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/FuncExtPasses.html">Func Ext Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/LinalgExtPasses.html">Linalg Ext Passes</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">C++ API</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="library_root.html">C++ API Reference</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="library_root.html#picea">picea</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="library_root.html#page-hierarchy">Page Hierarchy</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="library_root.html#full-api">Full API</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="library_root.html#namespaces">Namespaces</a></li>
+<li class="toctree-l4"><a class="reference internal" href="library_root.html#classes-and-structs">Classes and Structs</a></li>
+<li class="toctree-l4"><a class="reference internal" href="library_root.html#enums">Enums</a></li>
+<li class="toctree-l4"><a class="reference internal" href="library_root.html#functions">Functions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="library_root.html#variables">Variables</a></li>
+<li class="toctree-l4"><a class="reference internal" href="library_root.html#defines">Defines</a></li>
+<li class="toctree-l4"><a class="reference internal" href="library_root.html#typedefs">Typedefs</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">picea</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="library_root.html">C++ API Reference</a></li>
+      <li class="breadcrumb-item active">Namespace mlir::dfg</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/namespace_mlir__dfg.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="namespace-mlir-dfg">
+<span id="id1"></span><h1>Namespace mlir::dfg<a class="headerlink" href="#namespace-mlir-dfg" title="Link to this heading"></a></h1>
+<nav class="contents local" id="contents">
+<p class="topic-title">Contents</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#namespaces" id="id2">Namespaces</a></p></li>
+<li><p><a class="reference internal" href="#classes" id="id3">Classes</a></p></li>
+<li><p><a class="reference internal" href="#enums" id="id4">Enums</a></p></li>
+<li><p><a class="reference internal" href="#functions" id="id5">Functions</a></p></li>
+<li><p><a class="reference internal" href="#variables" id="id6">Variables</a></p></li>
+</ul>
+</nav>
+<section id="namespaces">
+<h2>Namespaces<a class="headerlink" href="#namespaces" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="namespace_mlir__dfg__detail.html#namespace-mlir-dfg-detail"><span class="std std-ref">Namespace mlir::dfg::detail</span></a></p></li>
+</ul>
+</section>
+<section id="classes">
+<h2>Classes<a class="headerlink" href="#classes" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="structmlir_1_1dfg_1_1EdgeInterface_1_1Trait.html#exhale-struct-structmlir-1-1dfg-1-1edgeinterface-1-1trait"><span class="std std-ref">Template Struct EdgeInterface::Trait</span></a></p></li>
+<li><p><a class="reference internal" href="structmlir_1_1dfg_1_1GraphInterface_1_1Trait.html#exhale-struct-structmlir-1-1dfg-1-1graphinterface-1-1trait"><span class="std std-ref">Template Struct GraphInterface::Trait</span></a></p></li>
+<li><p><a class="reference internal" href="structmlir_1_1dfg_1_1NodeInterface_1_1Trait.html#exhale-struct-structmlir-1-1dfg-1-1nodeinterface-1-1trait"><span class="std std-ref">Template Struct NodeInterface::Trait</span></a></p></li>
+<li><p><a class="reference internal" href="structmlir_1_1dfg_1_1TypeInterface_1_1Trait.html#exhale-struct-structmlir-1-1dfg-1-1typeinterface-1-1trait"><span class="std std-ref">Template Struct TypeInterface::Trait</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1dfg_1_1ChannelOp.html#exhale-class-classmlir-1-1dfg-1-1channelop"><span class="std std-ref">Class ChannelOp</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1dfg_1_1ChannelOpAdaptor.html#exhale-class-classmlir-1-1dfg-1-1channelopadaptor"><span class="std std-ref">Class ChannelOpAdaptor</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1dfg_1_1ChannelOpGenericAdaptor.html#exhale-class-classmlir-1-1dfg-1-1channelopgenericadaptor"><span class="std std-ref">Template Class ChannelOpGenericAdaptor</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1dfg_1_1DFGDialect.html#exhale-class-classmlir-1-1dfg-1-1dfgdialect"><span class="std std-ref">Class DFGDialect</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1dfg_1_1EdgeInterface.html#exhale-class-classmlir-1-1dfg-1-1edgeinterface"><span class="std std-ref">Class EdgeInterface</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1dfg_1_1EmbedOp.html#exhale-class-classmlir-1-1dfg-1-1embedop"><span class="std std-ref">Class EmbedOp</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1dfg_1_1EmbedOpAdaptor.html#exhale-class-classmlir-1-1dfg-1-1embedopadaptor"><span class="std std-ref">Class EmbedOpAdaptor</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1dfg_1_1EmbedOpGenericAdaptor.html#exhale-class-classmlir-1-1dfg-1-1embedopgenericadaptor"><span class="std std-ref">Template Class EmbedOpGenericAdaptor</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1dfg_1_1GraphInterface.html#exhale-class-classmlir-1-1dfg-1-1graphinterface"><span class="std std-ref">Class GraphInterface</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1dfg_1_1InputType.html#exhale-class-classmlir-1-1dfg-1-1inputtype"><span class="std std-ref">Class InputType</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1dfg_1_1InstantiateOp.html#exhale-class-classmlir-1-1dfg-1-1instantiateop"><span class="std std-ref">Class InstantiateOp</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1dfg_1_1InstantiateOpAdaptor.html#exhale-class-classmlir-1-1dfg-1-1instantiateopadaptor"><span class="std std-ref">Class InstantiateOpAdaptor</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1dfg_1_1InstantiateOpGenericAdaptor.html#exhale-class-classmlir-1-1dfg-1-1instantiateopgenericadaptor"><span class="std std-ref">Template Class InstantiateOpGenericAdaptor</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1dfg_1_1LoopOp.html#exhale-class-classmlir-1-1dfg-1-1loopop"><span class="std std-ref">Class LoopOp</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1dfg_1_1LoopOpAdaptor.html#exhale-class-classmlir-1-1dfg-1-1loopopadaptor"><span class="std std-ref">Class LoopOpAdaptor</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1dfg_1_1LoopOpGenericAdaptor.html#exhale-class-classmlir-1-1dfg-1-1loopopgenericadaptor"><span class="std std-ref">Template Class LoopOpGenericAdaptor</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1dfg_1_1NodeInterface.html#exhale-class-classmlir-1-1dfg-1-1nodeinterface"><span class="std std-ref">Class NodeInterface</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1dfg_1_1OffloadHardwareAttr.html#exhale-class-classmlir-1-1dfg-1-1offloadhardwareattr"><span class="std std-ref">Class OffloadHardwareAttr</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1dfg_1_1OperatorOp.html#exhale-class-classmlir-1-1dfg-1-1operatorop"><span class="std std-ref">Class OperatorOp</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1dfg_1_1OperatorOpAdaptor.html#exhale-class-classmlir-1-1dfg-1-1operatoropadaptor"><span class="std std-ref">Class OperatorOpAdaptor</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1dfg_1_1OperatorOpGenericAdaptor.html#exhale-class-classmlir-1-1dfg-1-1operatoropgenericadaptor"><span class="std std-ref">Template Class OperatorOpGenericAdaptor</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1dfg_1_1OutputOp.html#exhale-class-classmlir-1-1dfg-1-1outputop"><span class="std std-ref">Class OutputOp</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1dfg_1_1OutputOpAdaptor.html#exhale-class-classmlir-1-1dfg-1-1outputopadaptor"><span class="std std-ref">Class OutputOpAdaptor</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1dfg_1_1OutputOpGenericAdaptor.html#exhale-class-classmlir-1-1dfg-1-1outputopgenericadaptor"><span class="std std-ref">Template Class OutputOpGenericAdaptor</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1dfg_1_1OutputType.html#exhale-class-classmlir-1-1dfg-1-1outputtype"><span class="std std-ref">Class OutputType</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1dfg_1_1ProcessOp.html#exhale-class-classmlir-1-1dfg-1-1processop"><span class="std std-ref">Class ProcessOp</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1dfg_1_1ProcessOpAdaptor.html#exhale-class-classmlir-1-1dfg-1-1processopadaptor"><span class="std std-ref">Class ProcessOpAdaptor</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1dfg_1_1ProcessOpGenericAdaptor.html#exhale-class-classmlir-1-1dfg-1-1processopgenericadaptor"><span class="std std-ref">Template Class ProcessOpGenericAdaptor</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1dfg_1_1PullAsMemRefOp.html#exhale-class-classmlir-1-1dfg-1-1pullasmemrefop"><span class="std std-ref">Class PullAsMemRefOp</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1dfg_1_1PullAsMemRefOpAdaptor.html#exhale-class-classmlir-1-1dfg-1-1pullasmemrefopadaptor"><span class="std std-ref">Class PullAsMemRefOpAdaptor</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1dfg_1_1PullAsMemRefOpGenericAdaptor.html#exhale-class-classmlir-1-1dfg-1-1pullasmemrefopgenericadaptor"><span class="std std-ref">Template Class PullAsMemRefOpGenericAdaptor</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1dfg_1_1PullAsTensorOp.html#exhale-class-classmlir-1-1dfg-1-1pullastensorop"><span class="std std-ref">Class PullAsTensorOp</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1dfg_1_1PullAsTensorOpAdaptor.html#exhale-class-classmlir-1-1dfg-1-1pullastensoropadaptor"><span class="std std-ref">Class PullAsTensorOpAdaptor</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1dfg_1_1PullAsTensorOpGenericAdaptor.html#exhale-class-classmlir-1-1dfg-1-1pullastensoropgenericadaptor"><span class="std std-ref">Template Class PullAsTensorOpGenericAdaptor</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1dfg_1_1PullOp.html#exhale-class-classmlir-1-1dfg-1-1pullop"><span class="std std-ref">Class PullOp</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1dfg_1_1PullOpAdaptor.html#exhale-class-classmlir-1-1dfg-1-1pullopadaptor"><span class="std std-ref">Class PullOpAdaptor</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1dfg_1_1PullOpGenericAdaptor.html#exhale-class-classmlir-1-1dfg-1-1pullopgenericadaptor"><span class="std std-ref">Template Class PullOpGenericAdaptor</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1dfg_1_1PushMemRefOp.html#exhale-class-classmlir-1-1dfg-1-1pushmemrefop"><span class="std std-ref">Class PushMemRefOp</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1dfg_1_1PushMemRefOpAdaptor.html#exhale-class-classmlir-1-1dfg-1-1pushmemrefopadaptor"><span class="std std-ref">Class PushMemRefOpAdaptor</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1dfg_1_1PushMemRefOpGenericAdaptor.html#exhale-class-classmlir-1-1dfg-1-1pushmemrefopgenericadaptor"><span class="std std-ref">Template Class PushMemRefOpGenericAdaptor</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1dfg_1_1PushOp.html#exhale-class-classmlir-1-1dfg-1-1pushop"><span class="std std-ref">Class PushOp</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1dfg_1_1PushOpAdaptor.html#exhale-class-classmlir-1-1dfg-1-1pushopadaptor"><span class="std std-ref">Class PushOpAdaptor</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1dfg_1_1PushOpGenericAdaptor.html#exhale-class-classmlir-1-1dfg-1-1pushopgenericadaptor"><span class="std std-ref">Template Class PushOpGenericAdaptor</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1dfg_1_1PushTensorOp.html#exhale-class-classmlir-1-1dfg-1-1pushtensorop"><span class="std std-ref">Class PushTensorOp</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1dfg_1_1PushTensorOpAdaptor.html#exhale-class-classmlir-1-1dfg-1-1pushtensoropadaptor"><span class="std std-ref">Class PushTensorOpAdaptor</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1dfg_1_1PushTensorOpGenericAdaptor.html#exhale-class-classmlir-1-1dfg-1-1pushtensoropgenericadaptor"><span class="std std-ref">Template Class PushTensorOpGenericAdaptor</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1dfg_1_1RegionOp.html#exhale-class-classmlir-1-1dfg-1-1regionop"><span class="std std-ref">Class RegionOp</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1dfg_1_1RegionOpAdaptor.html#exhale-class-classmlir-1-1dfg-1-1regionopadaptor"><span class="std std-ref">Class RegionOpAdaptor</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1dfg_1_1RegionOpGenericAdaptor.html#exhale-class-classmlir-1-1dfg-1-1regionopgenericadaptor"><span class="std std-ref">Template Class RegionOpGenericAdaptor</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1dfg_1_1TypeInterface.html#exhale-class-classmlir-1-1dfg-1-1typeinterface"><span class="std std-ref">Class TypeInterface</span></a></p></li>
+</ul>
+</section>
+<section id="enums">
+<h2>Enums<a class="headerlink" href="#enums" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="enum_namespacemlir_1_1dfg_1ab992f87a92176d33a53caadc3be810f7.html#exhale-enum-namespacemlir-1-1dfg-1ab992f87a92176d33a53caadc3be810f7"><span class="std std-ref">Enum OffloadHardware</span></a></p></li>
+</ul>
+</section>
+<section id="functions">
+<h2>Functions<a class="headerlink" href="#functions" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="function_namespacemlir_1_1dfg_1a1853752e150b26aa331d78830c98d9ef.html#exhale-function-namespacemlir-1-1dfg-1a1853752e150b26aa331d78830c98d9ef"><span class="std std-ref">Function mlir::dfg::createDFGChannelFanoutExpansionPass</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacemlir_1_1dfg_1a4dd06de6318b3a6b0d4eb23517e0208d.html#exhale-function-namespacemlir-1-1dfg-1a4dd06de6318b3a6b0d4eb23517e0208d"><span class="std std-ref">Function mlir::dfg::createDFGCollapseUnitDimsPass</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacemlir_1_1dfg_1a38160612b4580c023aba2f3c85c92b89.html#exhale-function-namespacemlir-1-1dfg-1a38160612b4580c023aba2f3c85c92b89"><span class="std std-ref">Function mlir::dfg::createDFGInlineEmbedRegionPass</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacemlir_1_1dfg_1a8ae39b3a2c14c55344d5572e3eeed148.html#exhale-function-namespacemlir-1-1dfg-1a8ae39b3a2c14c55344d5572e3eeed148"><span class="std std-ref">Function mlir::dfg::createDFGIONormalizationPass</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacemlir_1_1dfg_1a1b9cfc1caa0487b046db0b825c8ed4f5.html#exhale-function-namespacemlir-1-1dfg-1a1b9cfc1caa0487b046db0b825c8ed4f5"><span class="std std-ref">Function mlir::dfg::createDFGOperatorToProcessPass</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacemlir_1_1dfg_1ad62d39d864c0ddf537d50cf6d0f40a6a.html#exhale-function-namespacemlir-1-1dfg-1ad62d39d864c0ddf537d50cf6d0f40a6a"><span class="std std-ref">Function mlir::dfg::emitMocasinMergeScript</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacemlir_1_1dfg_1a283e3736c925369dfa7c81095a89d4d2.html#exhale-function-namespacemlir-1-1dfg-1a283e3736c925369dfa7c81095a89d4d2"><span class="std std-ref">Function mlir::dfg::getMaxEnumValForOffloadHardware</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacemlir_1_1dfg_1a1339438789ae43b229a81fe62d9daeab.html#exhale-function-namespacemlir-1-1dfg-1a1339438789ae43b229a81fe62d9daeab"><span class="std std-ref">Function mlir::dfg::registerBufferizableOpInterfaceExternalModels</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacemlir_1_1dfg_1adb60badf34f28cf07a3567c24fa4af40.html#exhale-function-namespacemlir-1-1dfg-1adb60badf34f28cf07a3567c24fa4af40"><span class="std std-ref">Function mlir::dfg::stringifyEnum</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacemlir_1_1dfg_1a15ed4932fb41730dddc00b6d172ab94a.html#exhale-function-namespacemlir-1-1dfg-1a15ed4932fb41730dddc00b6d172ab94a"><span class="std std-ref">Function mlir::dfg::stringifyOffloadHardware</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacemlir_1_1dfg_1a0ce4e832bca351bbbaa7bdda1fda1982.html#exhale-function-namespacemlir-1-1dfg-1a0ce4e832bca351bbbaa7bdda1fda1982"><span class="std std-ref">Specialized Template Function mlir::dfg::symbolizeEnum&lt; OffloadHardware &gt;</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacemlir_1_1dfg_1a425ee5dddd97fb3094823f205accc306.html#exhale-function-namespacemlir-1-1dfg-1a425ee5dddd97fb3094823f205accc306"><span class="std std-ref">Function mlir::dfg::symbolizeOffloadHardware</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacemlir_1_1dfg_1ac9554489f8c7de22242a67eee16786f0.html#exhale-function-namespacemlir-1-1dfg-1ac9554489f8c7de22242a67eee16786f0"><span class="std std-ref">Function mlir::dfg::translateDFGToDot</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacemlir_1_1dfg_1a3afa4c1b8945a016f0139971fcde9d0c.html#exhale-function-namespacemlir-1-1dfg-1a3afa4c1b8945a016f0139971fcde9d0c"><span class="std std-ref">Function mlir::dfg::translateDFGToMocasinYAML</span></a></p></li>
+</ul>
+</section>
+<section id="variables">
+<h2>Variables<a class="headerlink" href="#variables" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="variable_namespacemlir_1_1dfg_1a71abf79c7ded9c932fea9e880e577758.html#exhale-variable-namespacemlir-1-1dfg-1a71abf79c7ded9c932fea9e880e577758"><span class="std std-ref">Variable mlir::dfg::symbolizeEnum</span></a></p></li>
+<li><p><a class="reference internal" href="variable_namespacemlir_1_1dfg_1a16e65060cabafe816ef976ccea9a41bd.html#exhale-variable-namespacemlir-1-1dfg-1a16e65060cabafe816ef976ccea9a41bd"><span class="std std-ref">Variable mlir::dfg::symbolizeOffloadHardware</span></a></p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="namespace_mlir__cgra__detail.html" class="btn btn-neutral float-left" title="Namespace mlir::cgra::detail" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="namespace_mlir__dfg__detail.html" class="btn btn-neutral float-right" title="Namespace mlir::dfg::detail" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

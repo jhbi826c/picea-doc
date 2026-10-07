@@ -1,0 +1,841 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Program Listing for File PragmaInsertion.cpp &mdash; picea 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/collapsible-lists/css/tree_view.css?v=a885cde7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js?v=73120307"></script>
+      <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js?v=660e4f45"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            picea
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Installation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../README.html">About the project</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#guides">Guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#related-projects">Related projects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#development-environment-nix">Development Environment (Nix)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#build-on-ubuntu-24-04-no-nix">Build on Ubuntu 24.04 (no Nix)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#gurobi-license">Gurobi license</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#installing">Installing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#run-the-tests">Run the tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#build-the-documentation">Build the documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#compiling-a-design">Compiling a design</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#running-a-design-on-the-board">Running a design on the board</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#exporting-a-profiled-application-to-mocasin">Exporting a profiled application to Mocasin</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Guides</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../guides/laksa.html">The FPGA Variant using LAKSA backend</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/cgra.html">The CGRA Variant</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">MLIR Dialects</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/Base2Ops.html">‘base2’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/CGRAOps.html">‘cgra’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/DFGOps.html">‘dfg’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/EmitHLSOps.html">‘emithls’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/FilterOps.html">‘filter’ Dialect</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Passes</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/PICEAConversionPasses.html">PICEA Conversion Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/CGRAPasses.html">CGRA Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/DFGPasses.html">DFG Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/EmitHLSPasses.html">Emit HLS Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/FuncExtPasses.html">Func Ext Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/LinalgExtPasses.html">Linalg Ext Passes</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">C++ API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="library_root.html">C++ API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">picea</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Program Listing for File PragmaInsertion.cpp</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/program_listing_file_lib_Dialect_EmitHLS_Transforms_PragmaInsertion.cpp.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="program-listing-for-file-pragmainsertion-cpp">
+<span id="program-listing-file-lib-dialect-emithls-transforms-pragmainsertion-cpp"></span><h1>Program Listing for File PragmaInsertion.cpp<a class="headerlink" href="#program-listing-for-file-pragmainsertion-cpp" title="Link to this heading"></a></h1>
+<p>↰ <a class="reference internal" href="file_lib_Dialect_EmitHLS_Transforms_PragmaInsertion.cpp.html#file-lib-dialect-emithls-transforms-pragmainsertion-cpp"><span class="std std-ref">Return to documentation for file</span></a> (<code class="docutils literal notranslate"><span class="pre">lib/Dialect/EmitHLS/Transforms/PragmaInsertion.cpp</span></code>)</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="c1">// Implementation of PragmaInsertion transform pass.</span>
+<span class="c1">//</span>
+<span class="c1">// @file</span>
+<span class="c1">// @author     Jiahong Bi (jiahong.bi@tu-dresden.de)</span>
+
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"mlir/IR/BuiltinOps.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"mlir/IR/IRMapping.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"mlir/IR/PatternMatch.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"mlir/IR/SymbolTable.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"mlir/Pass/Pass.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"mlir/Transforms/DialectConversion.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"mlir/Transforms/GreedyPatternRewriteDriver.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"picea-mlir/Dialect/EmitHLS/IR/EmitHLS.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"picea-mlir/Dialect/EmitHLS/IR/EmitHLSOps.h"</span>
+
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;llvm/ADT/TypeSwitch.h&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;llvm/Support/Debug.h&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;mlir/IR/BuiltinAttributes.h&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;optional&gt;</span>
+
+<span class="cp">#define DEBUG_TYPE "emithls-pragma-insertion"</span>
+<span class="cp">#define PICEA_DEBUG(X)                                                         \</span>
+<span class="cp">    LLVM_DEBUG(                                                                \</span>
+<span class="cp">        llvm::dbgs() &lt;&lt; "[emithls-pragma-insertion] "; X;                      \</span>
+<span class="cp">        llvm::dbgs() &lt;&lt; "\n")</span>
+
+<span class="k">using</span><span class="w"> </span><span class="k">namespace</span><span class="w"> </span><span class="nn">mlir</span><span class="p">;</span>
+<span class="k">using</span><span class="w"> </span><span class="k">namespace</span><span class="w"> </span><span class="nn">emithls</span><span class="p">;</span>
+
+<span class="k">namespace</span><span class="w"> </span><span class="nn">mlir</span><span class="w"> </span><span class="p">{</span>
+<span class="k">namespace</span><span class="w"> </span><span class="nn">emithls</span><span class="w"> </span><span class="p">{</span>
+<span class="cp">#define GEN_PASS_DEF_EMITHLSPRAGMAINSERTION</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"picea-mlir/Dialect/EmitHLS/Transforms/Passes.h.inc"</span>
+<span class="p">}</span><span class="w"> </span><span class="c1">// namespace emithls</span>
+<span class="p">}</span><span class="w"> </span><span class="c1">// namespace mlir</span>
+
+<span class="k">namespace</span><span class="w"> </span><span class="p">{</span>
+
+<span class="c1">// True if "op" carries any "dse."-prefixed attribute PragmaDSE attached,</span>
+<span class="c1">// the signal that it still needs a real pragma inserted in its place.</span>
+<span class="kt">bool</span><span class="w"> </span><span class="nf">hasDSEAttr</span><span class="p">(</span><span class="n">Operation</span><span class="o">*</span><span class="w"> </span><span class="n">op</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">llvm</span><span class="o">::</span><span class="n">any_of</span><span class="p">(</span><span class="n">op</span><span class="o">-&gt;</span><span class="n">getAttrs</span><span class="p">(),</span><span class="w"> </span><span class="p">[](</span><span class="n">NamedAttribute</span><span class="w"> </span><span class="n">attr</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">attr</span><span class="p">.</span><span class="n">getName</span><span class="p">().</span><span class="n">getValue</span><span class="p">().</span><span class="n">starts_with</span><span class="p">(</span><span class="s">"dse."</span><span class="p">);</span>
+<span class="w">    </span><span class="p">});</span>
+<span class="p">}</span>
+
+<span class="c1">// A loop marked "dse.io" with no "dse.factor" is just an outer word loop,</span>
+<span class="c1">// so the marker is dropped in place. One with "dse.factor" is a channel</span>
+<span class="c1">// loop whose trip count still reflects the port's old width: a</span>
+<span class="c1">// "factor"-wide loop replaces it in place, and the leftover</span>
+<span class="c1">// "tripCount / factor" multiplies into the parent loop's own trip count</span>
+<span class="c1">// instead of wrapping it, so the parent's index keeps addressing correctly.</span>
+<span class="k">struct</span><span class="w"> </span><span class="nc">SplitIOLoop</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">OpConversionPattern</span><span class="o">&lt;</span><span class="n">ForOp</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">using</span><span class="w"> </span><span class="n">OpConversionPattern</span><span class="o">::</span><span class="n">OpConversionPattern</span><span class="p">;</span>
+
+<span class="w">    </span><span class="n">LogicalResult</span><span class="w"> </span><span class="nf">matchAndRewrite</span><span class="p">(</span>
+<span class="w">        </span><span class="n">ForOp</span><span class="w"> </span><span class="n">op</span><span class="p">,</span>
+<span class="w">        </span><span class="n">OpAdaptor</span><span class="p">,</span>
+<span class="w">        </span><span class="n">ConversionPatternRewriter</span><span class="w"> </span><span class="o">&amp;</span><span class="n">rewriter</span><span class="p">)</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">override</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">op</span><span class="o">-&gt;</span><span class="n">hasAttr</span><span class="p">(</span><span class="s">"dse.io"</span><span class="p">))</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">failure</span><span class="p">();</span>
+<span class="w">        </span><span class="n">Location</span><span class="w"> </span><span class="n">loc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">op</span><span class="p">.</span><span class="n">getLoc</span><span class="p">();</span>
+<span class="w">        </span><span class="n">PICEA_DEBUG</span><span class="p">(</span>
+<span class="w">            </span><span class="n">llvm</span><span class="o">::</span><span class="n">dbgs</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"Rewriting loop inside io function at "</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">loc</span><span class="p">);</span>
+
+<span class="w">        </span><span class="k">auto</span><span class="w"> </span><span class="n">factorAttr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">op</span><span class="o">-&gt;</span><span class="n">getAttrOfType</span><span class="o">&lt;</span><span class="n">IntegerAttr</span><span class="o">&gt;</span><span class="p">(</span><span class="s">"dse.factor"</span><span class="p">);</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">factorAttr</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">PICEA_DEBUG</span><span class="p">(</span>
+<span class="w">                </span><span class="n">llvm</span><span class="o">::</span><span class="n">dbgs</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"  Dropping bare dse.io tag at "</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">loc</span><span class="p">);</span>
+<span class="w">            </span><span class="n">rewriter</span><span class="p">.</span><span class="n">modifyOpInPlace</span><span class="p">(</span><span class="n">op</span><span class="p">,</span><span class="w"> </span><span class="p">[</span><span class="o">&amp;</span><span class="p">]()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">op</span><span class="o">-&gt;</span><span class="n">removeAttr</span><span class="p">(</span><span class="s">"dse.io"</span><span class="p">);</span><span class="w"> </span><span class="p">});</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="n">success</span><span class="p">();</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="kt">int64_t</span><span class="w"> </span><span class="n">factor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">factorAttr</span><span class="p">.</span><span class="n">getInt</span><span class="p">();</span>
+<span class="w">        </span><span class="kt">int64_t</span><span class="w"> </span><span class="n">tripCount</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">op</span><span class="p">.</span><span class="n">getTripCount</span><span class="p">();</span>
+<span class="w">        </span><span class="kt">int64_t</span><span class="w"> </span><span class="n">outerTrip</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">tripCount</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">factor</span><span class="p">;</span>
+<span class="w">        </span><span class="n">PICEA_DEBUG</span><span class="p">(</span>
+<span class="w">            </span><span class="n">llvm</span><span class="o">::</span><span class="n">dbgs</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"  Splitting io loop at "</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">loc</span>
+<span class="w">                         </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">" (trip="</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">tripCount</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">", factor="</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">factor</span>
+<span class="w">                         </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">") into "</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">outerTrip</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">" x "</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">factor</span><span class="p">);</span>
+
+<span class="w">        </span><span class="k">auto</span><span class="w"> </span><span class="n">parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dyn_cast</span><span class="o">&lt;</span><span class="n">ForOp</span><span class="o">&gt;</span><span class="p">(</span><span class="n">op</span><span class="o">-&gt;</span><span class="n">getParentOp</span><span class="p">());</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">parent</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="n">rewriter</span><span class="p">.</span><span class="n">notifyMatchFailure</span><span class="p">(</span>
+<span class="w">                </span><span class="n">loc</span><span class="p">,</span>
+<span class="w">                </span><span class="s">"expect enclosing loop at outer range"</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="c1">// The "factor"-wide loop replaces "op" right where it was.</span>
+<span class="w">        </span><span class="n">rewriter</span><span class="p">.</span><span class="n">setInsertionPoint</span><span class="p">(</span><span class="n">op</span><span class="p">);</span>
+<span class="w">        </span><span class="k">auto</span><span class="w"> </span><span class="n">newInner</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ForOp</span><span class="o">::</span><span class="n">create</span><span class="p">(</span><span class="n">rewriter</span><span class="p">,</span><span class="w"> </span><span class="n">loc</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">factor</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">);</span>
+<span class="w">        </span><span class="n">Block</span><span class="w"> </span><span class="o">&amp;</span><span class="n">innerBody</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">newInner</span><span class="p">.</span><span class="n">getBody</span><span class="p">().</span><span class="n">front</span><span class="p">();</span>
+<span class="w">        </span><span class="n">rewriter</span><span class="p">.</span><span class="n">inlineBlockBefore</span><span class="p">(</span>
+<span class="w">            </span><span class="o">&amp;</span><span class="n">op</span><span class="p">.</span><span class="n">getBody</span><span class="p">().</span><span class="n">front</span><span class="p">(),</span>
+<span class="w">            </span><span class="o">&amp;</span><span class="n">innerBody</span><span class="p">,</span>
+<span class="w">            </span><span class="n">innerBody</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span>
+<span class="w">            </span><span class="n">ValueRange</span><span class="p">{</span><span class="n">newInner</span><span class="p">.</span><span class="n">getInductionVariable</span><span class="p">()});</span>
+<span class="w">        </span><span class="n">PICEA_DEBUG</span><span class="p">(</span>
+<span class="w">            </span><span class="n">llvm</span><span class="o">::</span><span class="n">dbgs</span><span class="p">()</span>
+<span class="w">            </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"  Created new loop 0..."</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">newInner</span><span class="p">.</span><span class="n">getUpperBound</span><span class="p">());</span>
+<span class="w">        </span><span class="n">rewriter</span><span class="p">.</span><span class="n">eraseOp</span><span class="p">(</span><span class="n">op</span><span class="p">);</span>
+
+<span class="w">        </span><span class="c1">// The split-out "tripCount / factor" multiplies into the parent</span>
+<span class="w">        </span><span class="c1">// loop's own trip count instead of wrapping it, so the parent's</span>
+<span class="w">        </span><span class="c1">// own index keeps addressing correctly.</span>
+<span class="w">        </span><span class="kt">int64_t</span><span class="w"> </span><span class="n">parentLB</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">parent</span><span class="p">.</span><span class="n">getLowerBound</span><span class="p">().</span><span class="n">getSExtValue</span><span class="p">();</span>
+<span class="w">        </span><span class="kt">int64_t</span><span class="w"> </span><span class="n">parentStep</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">parent</span><span class="p">.</span><span class="n">getStep</span><span class="p">().</span><span class="n">getSExtValue</span><span class="p">();</span>
+<span class="w">        </span><span class="kt">int64_t</span><span class="w"> </span><span class="n">newParentTripCount</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">parent</span><span class="p">.</span><span class="n">getTripCount</span><span class="p">()</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">outerTrip</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">int64_t</span><span class="w"> </span><span class="n">newParentUB</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">parentLB</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">newParentTripCount</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">parentStep</span><span class="p">;</span>
+<span class="w">        </span><span class="n">rewriter</span><span class="p">.</span><span class="n">modifyOpInPlace</span><span class="p">(</span><span class="n">parent</span><span class="p">,</span><span class="w"> </span><span class="p">[</span><span class="o">&amp;</span><span class="p">]()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">parent</span><span class="o">-&gt;</span><span class="n">setAttr</span><span class="p">(</span><span class="s">"upperBound"</span><span class="p">,</span><span class="w"> </span><span class="n">rewriter</span><span class="p">.</span><span class="n">getIndexAttr</span><span class="p">(</span><span class="n">newParentUB</span><span class="p">));</span>
+<span class="w">        </span><span class="p">});</span>
+<span class="w">        </span><span class="n">PICEA_DEBUG</span><span class="p">(</span>
+<span class="w">            </span><span class="n">llvm</span><span class="o">::</span><span class="n">dbgs</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"  Scaled parent loop at "</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">parent</span><span class="p">.</span><span class="n">getLoc</span><span class="p">()</span>
+<span class="w">                         </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">" up to trip count "</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">newParentTripCount</span><span class="p">);</span>
+
+<span class="w">        </span><span class="k">auto</span><span class="w"> </span><span class="n">pipelineAttr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">op</span><span class="o">-&gt;</span><span class="n">getAttrOfType</span><span class="o">&lt;</span><span class="n">BoolAttr</span><span class="o">&gt;</span><span class="p">(</span><span class="s">"dse.pipelined"</span><span class="p">);</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">pipelineAttr</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="n">rewriter</span><span class="p">.</span><span class="n">notifyMatchFailure</span><span class="p">(</span>
+<span class="w">                </span><span class="n">loc</span><span class="p">,</span>
+<span class="w">                </span><span class="s">"expect a </span><span class="se">\"</span><span class="s">dse.pipelined</span><span class="se">\"</span><span class="s"> attribute"</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">pipelineAttr</span><span class="p">.</span><span class="n">getValue</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">rewriter</span><span class="p">.</span><span class="n">setInsertionPointToStart</span><span class="p">(</span><span class="o">&amp;</span><span class="n">parent</span><span class="p">.</span><span class="n">getBody</span><span class="p">().</span><span class="n">front</span><span class="p">());</span>
+<span class="w">            </span><span class="n">PragmaPipelineOp</span><span class="o">::</span><span class="n">create</span><span class="p">(</span><span class="n">rewriter</span><span class="p">,</span><span class="w"> </span><span class="n">parent</span><span class="p">.</span><span class="n">getLoc</span><span class="p">());</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">success</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">};</span>
+
+<span class="c1">// A non-I/O loop carrying "dse.factor" is strip-mined into an outer</span>
+<span class="c1">// "tripCount / splitFactor" loop, pipelined if "dse.pipelined" is set,</span>
+<span class="c1">// wrapping a "splitFactor"-wide inner loop; "splitFactor" is "dse.factor"</span>
+<span class="c1">// unless "dse.port" is wider. A port-touching index use takes the inner</span>
+<span class="c1">// loop's own index, everything else gets the true index rebuilt as</span>
+<span class="c1">// "outer * splitFactor + inner", and a "splitFactor=1" unpipelined loop is</span>
+<span class="c1">// left alone with its tags stripped.</span>
+<span class="k">struct</span><span class="w"> </span><span class="nc">SplitFactorLoop</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">OpConversionPattern</span><span class="o">&lt;</span><span class="n">ForOp</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">using</span><span class="w"> </span><span class="n">OpConversionPattern</span><span class="o">::</span><span class="n">OpConversionPattern</span><span class="p">;</span>
+
+<span class="w">    </span><span class="n">LogicalResult</span><span class="w"> </span><span class="nf">matchAndRewrite</span><span class="p">(</span>
+<span class="w">        </span><span class="n">ForOp</span><span class="w"> </span><span class="n">op</span><span class="p">,</span>
+<span class="w">        </span><span class="n">OpAdaptor</span><span class="p">,</span>
+<span class="w">        </span><span class="n">ConversionPatternRewriter</span><span class="w"> </span><span class="o">&amp;</span><span class="n">rewriter</span><span class="p">)</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">override</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">op</span><span class="o">-&gt;</span><span class="n">hasAttr</span><span class="p">(</span><span class="s">"dse.io"</span><span class="p">))</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">failure</span><span class="p">();</span>
+<span class="w">        </span><span class="k">auto</span><span class="w"> </span><span class="n">factorAttr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">op</span><span class="o">-&gt;</span><span class="n">getAttrOfType</span><span class="o">&lt;</span><span class="n">IntegerAttr</span><span class="o">&gt;</span><span class="p">(</span><span class="s">"dse.factor"</span><span class="p">);</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">factorAttr</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">failure</span><span class="p">();</span>
+
+<span class="w">        </span><span class="n">Location</span><span class="w"> </span><span class="n">loc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">op</span><span class="p">.</span><span class="n">getLoc</span><span class="p">();</span>
+<span class="w">        </span><span class="n">PICEA_DEBUG</span><span class="p">(</span>
+<span class="w">            </span><span class="n">llvm</span><span class="o">::</span><span class="n">dbgs</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"Rewriting loop inside node function at "</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">loc</span><span class="p">);</span>
+<span class="w">        </span><span class="kt">int64_t</span><span class="w"> </span><span class="n">factor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">factorAttr</span><span class="p">.</span><span class="n">getInt</span><span class="p">();</span>
+<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">pipelined</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="n">pipelinedAttr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">op</span><span class="o">-&gt;</span><span class="n">getAttrOfType</span><span class="o">&lt;</span><span class="n">BoolAttr</span><span class="o">&gt;</span><span class="p">(</span><span class="s">"dse.pipelined"</span><span class="p">))</span>
+<span class="w">            </span><span class="n">pipelined</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">pipelinedAttr</span><span class="p">.</span><span class="n">getValue</span><span class="p">();</span>
+<span class="w">        </span><span class="kt">int64_t</span><span class="w"> </span><span class="n">tripCount</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">op</span><span class="p">.</span><span class="n">getTripCount</span><span class="p">();</span>
+
+<span class="w">        </span><span class="c1">// A pair of loops, one in each branch of the same "if", that both</span>
+<span class="w">        </span><span class="c1">// already fully unroll and pipeline don't need splitting: their</span>
+<span class="w">        </span><span class="c1">// tags are stripped and the enclosing loop gets the pipeline</span>
+<span class="w">        </span><span class="c1">// pragma instead, so Vitis HLS can flatten both branches under one</span>
+<span class="w">        </span><span class="c1">// region. Whichever loop is visited first handles both, so the</span>
+<span class="w">        </span><span class="c1">// other is already legal by the time the driver reaches it.</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">pipelined</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">factor</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">tripCount</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="n">ifOp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dyn_cast</span><span class="o">&lt;</span><span class="n">IfOp</span><span class="o">&gt;</span><span class="p">(</span><span class="n">op</span><span class="o">-&gt;</span><span class="n">getParentOp</span><span class="p">()))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="kt">bool</span><span class="w"> </span><span class="n">inThen</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">op</span><span class="o">-&gt;</span><span class="n">getParentRegion</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="o">&amp;</span><span class="n">ifOp</span><span class="p">.</span><span class="n">getThenRegion</span><span class="p">();</span>
+<span class="w">                </span><span class="n">Region</span><span class="w"> </span><span class="o">&amp;</span><span class="n">siblingRegion</span><span class="w"> </span><span class="o">=</span>
+<span class="w">                    </span><span class="n">inThen</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">ifOp</span><span class="p">.</span><span class="n">getElseRegion</span><span class="p">()</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">ifOp</span><span class="p">.</span><span class="n">getThenRegion</span><span class="p">();</span>
+<span class="w">                </span><span class="n">ForOp</span><span class="w"> </span><span class="n">sibling</span><span class="p">;</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">siblingRegion</span><span class="p">.</span><span class="n">empty</span><span class="p">())</span>
+<span class="w">                    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">Operation</span><span class="w"> </span><span class="o">&amp;</span><span class="n">siblingOp</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">siblingRegion</span><span class="p">.</span><span class="n">front</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                        </span><span class="k">auto</span><span class="w"> </span><span class="n">siblingLoop</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dyn_cast</span><span class="o">&lt;</span><span class="n">ForOp</span><span class="o">&gt;</span><span class="p">(</span><span class="n">siblingOp</span><span class="p">);</span>
+<span class="w">                        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">siblingLoop</span><span class="p">)</span><span class="w"> </span><span class="k">continue</span><span class="p">;</span>
+<span class="w">                        </span><span class="k">auto</span><span class="w"> </span><span class="n">siblingFactorAttr</span><span class="w"> </span><span class="o">=</span>
+<span class="w">                            </span><span class="n">siblingLoop</span><span class="o">-&gt;</span><span class="n">getAttrOfType</span><span class="o">&lt;</span><span class="n">IntegerAttr</span><span class="o">&gt;</span><span class="p">(</span>
+<span class="w">                                </span><span class="s">"dse.factor"</span><span class="p">);</span>
+<span class="w">                        </span><span class="k">auto</span><span class="w"> </span><span class="n">siblingPipelinedAttr</span><span class="w"> </span><span class="o">=</span>
+<span class="w">                            </span><span class="n">siblingLoop</span><span class="o">-&gt;</span><span class="n">getAttrOfType</span><span class="o">&lt;</span><span class="n">BoolAttr</span><span class="o">&gt;</span><span class="p">(</span>
+<span class="w">                                </span><span class="s">"dse.pipelined"</span><span class="p">);</span>
+<span class="w">                        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">siblingFactorAttr</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">siblingPipelinedAttr</span>
+<span class="w">                            </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">siblingPipelinedAttr</span><span class="p">.</span><span class="n">getValue</span><span class="p">()</span>
+<span class="w">                            </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">siblingFactorAttr</span><span class="p">.</span><span class="n">getInt</span><span class="p">()</span>
+<span class="w">                                   </span><span class="o">==</span><span class="w"> </span><span class="n">siblingLoop</span><span class="p">.</span><span class="n">getTripCount</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                            </span><span class="n">sibling</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">siblingLoop</span><span class="p">;</span>
+<span class="w">                            </span><span class="k">break</span><span class="p">;</span>
+<span class="w">                        </span><span class="p">}</span>
+<span class="w">                    </span><span class="p">}</span>
+<span class="w">                </span><span class="k">auto</span><span class="w"> </span><span class="n">parent</span><span class="w"> </span><span class="o">=</span>
+<span class="w">                    </span><span class="n">sibling</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">dyn_cast</span><span class="o">&lt;</span><span class="n">ForOp</span><span class="o">&gt;</span><span class="p">(</span><span class="n">ifOp</span><span class="o">-&gt;</span><span class="n">getParentOp</span><span class="p">())</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">ForOp</span><span class="p">{};</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">parent</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                    </span><span class="n">PICEA_DEBUG</span><span class="p">(</span>
+<span class="w">                        </span><span class="n">llvm</span><span class="o">::</span><span class="n">dbgs</span><span class="p">()</span>
+<span class="w">                        </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"  Collapsing matching if/else branch loops at "</span>
+<span class="w">                        </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">loc</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">" and "</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">sibling</span><span class="p">.</span><span class="n">getLoc</span><span class="p">()</span>
+<span class="w">                        </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">" under a shared pipeline on "</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">parent</span><span class="p">.</span><span class="n">getLoc</span><span class="p">());</span>
+<span class="w">                    </span><span class="k">auto</span><span class="w"> </span><span class="n">stripTags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="o">&amp;</span><span class="p">](</span><span class="n">ForOp</span><span class="w"> </span><span class="n">loop</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                        </span><span class="n">rewriter</span><span class="p">.</span><span class="n">modifyOpInPlace</span><span class="p">(</span><span class="n">loop</span><span class="p">,</span><span class="w"> </span><span class="p">[</span><span class="o">&amp;</span><span class="p">]()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                            </span><span class="n">loop</span><span class="o">-&gt;</span><span class="n">removeAttr</span><span class="p">(</span><span class="s">"dse.factor"</span><span class="p">);</span>
+<span class="w">                            </span><span class="n">loop</span><span class="o">-&gt;</span><span class="n">removeAttr</span><span class="p">(</span><span class="s">"dse.pipelined"</span><span class="p">);</span>
+<span class="w">                            </span><span class="n">loop</span><span class="o">-&gt;</span><span class="n">removeAttr</span><span class="p">(</span><span class="s">"dse.port"</span><span class="p">);</span>
+<span class="w">                        </span><span class="p">});</span>
+<span class="w">                    </span><span class="p">};</span>
+<span class="w">                    </span><span class="n">stripTags</span><span class="p">(</span><span class="n">op</span><span class="p">);</span>
+<span class="w">                    </span><span class="n">stripTags</span><span class="p">(</span><span class="n">sibling</span><span class="p">);</span>
+<span class="w">                    </span><span class="n">rewriter</span><span class="p">.</span><span class="n">setInsertionPointToStart</span><span class="p">(</span>
+<span class="w">                        </span><span class="o">&amp;</span><span class="n">parent</span><span class="p">.</span><span class="n">getBody</span><span class="p">().</span><span class="n">front</span><span class="p">());</span>
+<span class="w">                    </span><span class="n">PragmaPipelineOp</span><span class="o">::</span><span class="n">create</span><span class="p">(</span><span class="n">rewriter</span><span class="p">,</span><span class="w"> </span><span class="n">ifOp</span><span class="p">.</span><span class="n">getLoc</span><span class="p">());</span>
+<span class="w">                    </span><span class="k">return</span><span class="w"> </span><span class="n">success</span><span class="p">();</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="k">auto</span><span class="w"> </span><span class="n">portAttr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">op</span><span class="o">-&gt;</span><span class="n">getAttrOfType</span><span class="o">&lt;</span><span class="n">IntegerAttr</span><span class="o">&gt;</span><span class="p">(</span><span class="s">"dse.port"</span><span class="p">);</span>
+<span class="w">        </span><span class="kt">int64_t</span><span class="w"> </span><span class="n">splitFactor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">portAttr</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">portAttr</span><span class="p">.</span><span class="n">getInt</span><span class="p">()</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">factor</span><span class="p">)</span>
+<span class="w">                                  </span><span class="o">?</span><span class="w"> </span><span class="n">portAttr</span><span class="p">.</span><span class="n">getInt</span><span class="p">()</span>
+<span class="w">                                  </span><span class="o">:</span><span class="w"> </span><span class="n">factor</span><span class="p">;</span>
+
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">pipelined</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">splitFactor</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">PICEA_DEBUG</span><span class="p">(</span>
+<span class="w">                </span><span class="n">llvm</span><span class="o">::</span><span class="n">dbgs</span><span class="p">()</span>
+<span class="w">                </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"  Dropping dse tags at "</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">loc</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">", nothing to split"</span><span class="p">);</span>
+<span class="w">            </span><span class="n">rewriter</span><span class="p">.</span><span class="n">modifyOpInPlace</span><span class="p">(</span><span class="n">op</span><span class="p">,</span><span class="w"> </span><span class="p">[</span><span class="o">&amp;</span><span class="p">]()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">op</span><span class="o">-&gt;</span><span class="n">removeAttr</span><span class="p">(</span><span class="s">"dse.factor"</span><span class="p">);</span>
+<span class="w">                </span><span class="n">op</span><span class="o">-&gt;</span><span class="n">removeAttr</span><span class="p">(</span><span class="s">"dse.pipelined"</span><span class="p">);</span>
+<span class="w">                </span><span class="n">op</span><span class="o">-&gt;</span><span class="n">removeAttr</span><span class="p">(</span><span class="s">"dse.port"</span><span class="p">);</span>
+<span class="w">            </span><span class="p">});</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="n">success</span><span class="p">();</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="kt">int64_t</span><span class="w"> </span><span class="n">outerTrip</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">tripCount</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">splitFactor</span><span class="p">;</span>
+<span class="w">        </span><span class="n">PICEA_DEBUG</span><span class="p">(</span>
+<span class="w">            </span><span class="n">llvm</span><span class="o">::</span><span class="n">dbgs</span><span class="p">()</span>
+<span class="w">            </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"  Splitting loop at "</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">loc</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">" (trip="</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">tripCount</span>
+<span class="w">            </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">", splitFactor="</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">splitFactor</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">", pipelined="</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">pipelined</span>
+<span class="w">            </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">") into "</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">outerTrip</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">" x "</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">splitFactor</span><span class="p">);</span>
+
+<span class="w">        </span><span class="c1">// Every direct, port-touching use of the old index will just take</span>
+<span class="w">        </span><span class="c1">// the inner loop's own induction variable; everything else needs</span>
+<span class="w">        </span><span class="c1">// the true original index rebuilt below, so it's captured now,</span>
+<span class="w">        </span><span class="c1">// before "op"'s own induction variable stops existing.</span>
+<span class="w">        </span><span class="n">Value</span><span class="w"> </span><span class="n">oldIV</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">op</span><span class="p">.</span><span class="n">getInductionVariable</span><span class="p">();</span>
+<span class="w">        </span><span class="k">struct</span><span class="w"> </span><span class="nc">PortTouch</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">Value</span><span class="w"> </span><span class="n">port</span><span class="p">;</span>
+<span class="w">            </span><span class="n">ValueRange</span><span class="w"> </span><span class="n">indices</span><span class="p">;</span>
+<span class="w">        </span><span class="p">};</span>
+<span class="w">        </span><span class="n">SmallVector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">pair</span><span class="o">&lt;</span><span class="n">Operation</span><span class="o">*</span><span class="p">,</span><span class="w"> </span><span class="kt">unsigned</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="n">nonPortUses</span><span class="p">;</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">OpOperand</span><span class="w"> </span><span class="o">&amp;</span><span class="n">use</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">oldIV</span><span class="p">.</span><span class="n">getUses</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">auto</span><span class="w"> </span><span class="n">touch</span><span class="w"> </span><span class="o">=</span>
+<span class="w">                </span><span class="n">llvm</span><span class="o">::</span><span class="n">TypeSwitch</span><span class="o">&lt;</span><span class="n">Operation</span><span class="o">*</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;</span><span class="n">PortTouch</span><span class="o">&gt;&gt;</span><span class="p">(</span>
+<span class="w">                    </span><span class="n">use</span><span class="p">.</span><span class="n">getOwner</span><span class="p">())</span>
+<span class="w">                    </span><span class="p">.</span><span class="n">Case</span><span class="o">&lt;</span><span class="n">StreamReadOp</span><span class="p">,</span><span class="w"> </span><span class="n">StreamWriteOp</span><span class="o">&gt;</span><span class="p">([](</span><span class="k">auto</span><span class="w"> </span><span class="n">o</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                        </span><span class="k">return</span><span class="w"> </span><span class="n">PortTouch</span><span class="p">{</span><span class="n">o</span><span class="p">.</span><span class="n">getStream</span><span class="p">(),</span><span class="w"> </span><span class="n">o</span><span class="p">.</span><span class="n">getIndices</span><span class="p">()};</span>
+<span class="w">                    </span><span class="p">})</span>
+<span class="w">                    </span><span class="p">.</span><span class="n">Case</span><span class="o">&lt;</span><span class="n">ArrayPointerReadOp</span><span class="p">,</span><span class="w"> </span><span class="n">ArrayPointerWriteOp</span><span class="o">&gt;</span><span class="p">([](</span><span class="k">auto</span><span class="w"> </span><span class="n">o</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                        </span><span class="k">return</span><span class="w"> </span><span class="n">PortTouch</span><span class="p">{</span><span class="n">o</span><span class="p">.</span><span class="n">getPointer</span><span class="p">(),</span><span class="w"> </span><span class="n">o</span><span class="p">.</span><span class="n">getIndices</span><span class="p">()};</span>
+<span class="w">                    </span><span class="p">})</span>
+<span class="w">                    </span><span class="p">.</span><span class="n">Default</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">nullopt</span><span class="p">);</span>
+<span class="w">            </span><span class="kt">bool</span><span class="w"> </span><span class="n">isPortIndex</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">touch</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">isa</span><span class="o">&lt;</span><span class="n">BlockArgument</span><span class="o">&gt;</span><span class="p">(</span><span class="n">touch</span><span class="o">-&gt;</span><span class="n">port</span><span class="p">)</span>
+<span class="w">                               </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">llvm</span><span class="o">::</span><span class="n">is_contained</span><span class="p">(</span><span class="n">touch</span><span class="o">-&gt;</span><span class="n">indices</span><span class="p">,</span><span class="w"> </span><span class="n">oldIV</span><span class="p">);</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">isPortIndex</span><span class="p">)</span>
+<span class="w">                </span><span class="n">nonPortUses</span><span class="p">.</span><span class="n">emplace_back</span><span class="p">(</span>
+<span class="w">                    </span><span class="n">use</span><span class="p">.</span><span class="n">getOwner</span><span class="p">(),</span>
+<span class="w">                    </span><span class="n">use</span><span class="p">.</span><span class="n">getOperandNumber</span><span class="p">());</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="n">rewriter</span><span class="p">.</span><span class="n">setInsertionPoint</span><span class="p">(</span><span class="n">op</span><span class="p">);</span>
+<span class="w">        </span><span class="k">auto</span><span class="w"> </span><span class="n">newOuter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ForOp</span><span class="o">::</span><span class="n">create</span><span class="p">(</span><span class="n">rewriter</span><span class="p">,</span><span class="w"> </span><span class="n">loc</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">outerTrip</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">);</span>
+<span class="w">        </span><span class="n">rewriter</span><span class="p">.</span><span class="n">setInsertionPointToStart</span><span class="p">(</span><span class="o">&amp;</span><span class="n">newOuter</span><span class="p">.</span><span class="n">getBody</span><span class="p">().</span><span class="n">front</span><span class="p">());</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">pipelined</span><span class="p">)</span><span class="w"> </span><span class="n">PragmaPipelineOp</span><span class="o">::</span><span class="n">create</span><span class="p">(</span><span class="n">rewriter</span><span class="p">,</span><span class="w"> </span><span class="n">loc</span><span class="p">);</span>
+<span class="w">        </span><span class="k">auto</span><span class="w"> </span><span class="n">newInner</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ForOp</span><span class="o">::</span><span class="n">create</span><span class="p">(</span><span class="n">rewriter</span><span class="p">,</span><span class="w"> </span><span class="n">loc</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">splitFactor</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">);</span>
+<span class="w">        </span><span class="n">Value</span><span class="w"> </span><span class="n">outerIV</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">newOuter</span><span class="p">.</span><span class="n">getInductionVariable</span><span class="p">();</span>
+<span class="w">        </span><span class="n">Value</span><span class="w"> </span><span class="n">innerIV</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">newInner</span><span class="p">.</span><span class="n">getInductionVariable</span><span class="p">();</span>
+
+<span class="w">        </span><span class="n">Block</span><span class="w"> </span><span class="o">&amp;</span><span class="n">innerBody</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">newInner</span><span class="p">.</span><span class="n">getBody</span><span class="p">().</span><span class="n">front</span><span class="p">();</span>
+<span class="w">        </span><span class="n">rewriter</span><span class="p">.</span><span class="n">inlineBlockBefore</span><span class="p">(</span>
+<span class="w">            </span><span class="o">&amp;</span><span class="n">op</span><span class="p">.</span><span class="n">getBody</span><span class="p">().</span><span class="n">front</span><span class="p">(),</span>
+<span class="w">            </span><span class="o">&amp;</span><span class="n">innerBody</span><span class="p">,</span>
+<span class="w">            </span><span class="n">innerBody</span><span class="p">.</span><span class="n">end</span><span class="p">(),</span>
+<span class="w">            </span><span class="n">ValueRange</span><span class="p">{</span><span class="n">innerIV</span><span class="p">});</span>
+<span class="w">        </span><span class="n">rewriter</span><span class="p">.</span><span class="n">eraseOp</span><span class="p">(</span><span class="n">op</span><span class="p">);</span>
+
+<span class="w">        </span><span class="c1">// The inline above pointed every old-index use at "innerIV"; the</span>
+<span class="w">        </span><span class="c1">// non-port ones captured above are now corrected back to the true</span>
+<span class="w">        </span><span class="c1">// original index, "outer * splitFactor + inner". When "outerTrip"</span>
+<span class="w">        </span><span class="c1">// is 1 the outer loop only ever runs once, so "innerIV" alone is</span>
+<span class="w">        </span><span class="c1">// already correct and no correction is needed.</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">nonPortUses</span><span class="p">.</span><span class="n">empty</span><span class="p">()</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">outerTrip</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">rewriter</span><span class="p">.</span><span class="n">setInsertionPointToStart</span><span class="p">(</span><span class="o">&amp;</span><span class="n">innerBody</span><span class="p">);</span>
+<span class="w">            </span><span class="n">Value</span><span class="w"> </span><span class="n">splitFactorConst</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">VariableOp</span><span class="o">::</span><span class="n">create</span><span class="p">(</span>
+<span class="w">                                         </span><span class="n">rewriter</span><span class="p">,</span>
+<span class="w">                                         </span><span class="n">loc</span><span class="p">,</span>
+<span class="w">                                         </span><span class="n">rewriter</span><span class="p">.</span><span class="n">getIndexType</span><span class="p">(),</span>
+<span class="w">                                         </span><span class="n">rewriter</span><span class="p">.</span><span class="n">getIndexAttr</span><span class="p">(</span><span class="n">splitFactor</span><span class="p">),</span>
+<span class="w">                                         </span><span class="cm">/*isConst=*/</span><span class="nb">true</span><span class="p">)</span>
+<span class="w">                                         </span><span class="p">.</span><span class="n">getVariable</span><span class="p">();</span>
+<span class="w">            </span><span class="n">Value</span><span class="w"> </span><span class="n">combined</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ExpressionOp</span><span class="o">::</span><span class="n">create</span><span class="p">(</span>
+<span class="w">                                 </span><span class="n">rewriter</span><span class="p">,</span>
+<span class="w">                                 </span><span class="n">loc</span><span class="p">,</span>
+<span class="w">                                 </span><span class="n">rewriter</span><span class="p">.</span><span class="n">getIndexType</span><span class="p">(),</span>
+<span class="w">                                 </span><span class="p">[</span><span class="o">&amp;</span><span class="p">](</span><span class="n">OpBuilder</span><span class="w"> </span><span class="o">&amp;</span><span class="n">eb</span><span class="p">,</span><span class="w"> </span><span class="n">Location</span><span class="w"> </span><span class="n">el</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                                     </span><span class="k">auto</span><span class="w"> </span><span class="n">mul</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ArithMulOp</span><span class="o">::</span><span class="n">create</span><span class="p">(</span>
+<span class="w">                                         </span><span class="n">eb</span><span class="p">,</span>
+<span class="w">                                         </span><span class="n">el</span><span class="p">,</span>
+<span class="w">                                         </span><span class="n">outerIV</span><span class="p">,</span>
+<span class="w">                                         </span><span class="n">splitFactorConst</span><span class="p">);</span>
+<span class="w">                                     </span><span class="k">auto</span><span class="w"> </span><span class="n">add</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ArithAddOp</span><span class="o">::</span><span class="n">create</span><span class="p">(</span>
+<span class="w">                                         </span><span class="n">eb</span><span class="p">,</span>
+<span class="w">                                         </span><span class="n">el</span><span class="p">,</span>
+<span class="w">                                         </span><span class="n">mul</span><span class="p">.</span><span class="n">getResult</span><span class="p">(),</span>
+<span class="w">                                         </span><span class="n">innerIV</span><span class="p">);</span>
+<span class="w">                                     </span><span class="n">YieldOp</span><span class="o">::</span><span class="n">create</span><span class="p">(</span><span class="n">eb</span><span class="p">,</span><span class="w"> </span><span class="n">el</span><span class="p">,</span><span class="w"> </span><span class="n">add</span><span class="p">.</span><span class="n">getResult</span><span class="p">());</span>
+<span class="w">                                 </span><span class="p">})</span>
+<span class="w">                                 </span><span class="p">.</span><span class="n">getResult</span><span class="p">();</span>
+<span class="w">            </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="p">[</span><span class="n">owner</span><span class="p">,</span><span class="w"> </span><span class="n">operandIdx</span><span class="p">]</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">nonPortUses</span><span class="p">)</span>
+<span class="w">                </span><span class="n">rewriter</span><span class="p">.</span><span class="n">modifyOpInPlace</span><span class="p">(</span><span class="n">owner</span><span class="p">,</span><span class="w"> </span><span class="p">[</span><span class="o">&amp;</span><span class="p">]()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                    </span><span class="n">owner</span><span class="o">-&gt;</span><span class="n">setOperand</span><span class="p">(</span><span class="n">operandIdx</span><span class="p">,</span><span class="w"> </span><span class="n">combined</span><span class="p">);</span>
+<span class="w">                </span><span class="p">});</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">success</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">};</span>
+
+<span class="c1">// A FuncOp's signature is rewritten from PragmaDSE's "dse.factors": a</span>
+<span class="c1">// pointer port becomes its new element bit width, an array port becomes</span>
+<span class="c1">// its new shape. The top function's own pointer ports get the same resize</span>
+<span class="c1">// since they pass straight into an I/O bridge call. Every callee besides</span>
+<span class="c1">// top also gets a "#pragma HLS INLINE off"; loops were already marked</span>
+<span class="c1">// "dse.io" or "dse.port" by PragmaDSE and just ride along through the</span>
+<span class="c1">// clone below.</span>
+<span class="k">struct</span><span class="w"> </span><span class="nc">RewriteFuncSignature</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">OpConversionPattern</span><span class="o">&lt;</span><span class="n">FuncOp</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">using</span><span class="w"> </span><span class="n">OpConversionPattern</span><span class="o">::</span><span class="n">OpConversionPattern</span><span class="p">;</span>
+
+<span class="w">    </span><span class="n">LogicalResult</span><span class="w"> </span><span class="nf">matchAndRewrite</span><span class="p">(</span>
+<span class="w">        </span><span class="n">FuncOp</span><span class="w"> </span><span class="n">op</span><span class="p">,</span>
+<span class="w">        </span><span class="n">OpAdaptor</span><span class="p">,</span>
+<span class="w">        </span><span class="n">ConversionPatternRewriter</span><span class="w"> </span><span class="o">&amp;</span><span class="n">rewriter</span><span class="p">)</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">override</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="n">Location</span><span class="w"> </span><span class="n">loc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">op</span><span class="p">.</span><span class="n">getLoc</span><span class="p">();</span>
+<span class="w">        </span><span class="n">PICEA_DEBUG</span><span class="p">(</span>
+<span class="w">            </span><span class="n">llvm</span><span class="o">::</span><span class="n">dbgs</span><span class="p">()</span>
+<span class="w">            </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"Rewriting func </span><span class="se">\"</span><span class="s">"</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">op</span><span class="p">.</span><span class="n">getSymName</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"</span><span class="se">\"</span><span class="s"> at "</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">loc</span><span class="p">);</span>
+<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">isTop</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">op</span><span class="o">-&gt;</span><span class="n">hasAttr</span><span class="p">(</span><span class="s">"dse.top"</span><span class="p">);</span>
+<span class="w">        </span><span class="k">auto</span><span class="w"> </span><span class="n">factorsAttr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">op</span><span class="o">-&gt;</span><span class="n">getAttrOfType</span><span class="o">&lt;</span><span class="n">ArrayAttr</span><span class="o">&gt;</span><span class="p">(</span><span class="s">"dse.factors"</span><span class="p">);</span>
+<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">isIO</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">op</span><span class="o">-&gt;</span><span class="n">hasAttr</span><span class="p">(</span><span class="s">"dse.io_func"</span><span class="p">);</span>
+<span class="w">        </span><span class="n">PICEA_DEBUG</span><span class="p">(</span>
+<span class="w">            </span><span class="n">llvm</span><span class="o">::</span><span class="n">dbgs</span><span class="p">()</span>
+<span class="w">            </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"  This function is top="</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">isTop</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">" io="</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">isIO</span><span class="p">);</span>
+
+<span class="w">        </span><span class="c1">// Every argument, top function included, is resized using its own</span>
+<span class="w">        </span><span class="c1">// per-argument "dse.factors" entry. A pointer port's own new</span>
+<span class="w">        </span><span class="c1">// element type is also kept around per index, so the word variable</span>
+<span class="w">        </span><span class="c1">// an I/O write function packs into it can be resized to match once</span>
+<span class="w">        </span><span class="c1">// the body is cloned below.</span>
+<span class="w">        </span><span class="n">SmallVector</span><span class="o">&lt;</span><span class="n">Type</span><span class="o">&gt;</span><span class="w"> </span><span class="n">newArgTypes</span><span class="p">;</span>
+<span class="w">        </span><span class="n">SmallVector</span><span class="o">&lt;</span><span class="n">Type</span><span class="o">&gt;</span><span class="w"> </span><span class="n">newPointeeTypes</span><span class="p">(</span><span class="n">op</span><span class="p">.</span><span class="n">getNumArguments</span><span class="p">());</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="n">argType</span><span class="p">]</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">llvm</span><span class="o">::</span><span class="n">enumerate</span><span class="p">(</span><span class="n">op</span><span class="p">.</span><span class="n">getArgumentTypes</span><span class="p">()))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">factorsAttr</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">newArgTypes</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">argType</span><span class="p">);</span>
+<span class="w">                </span><span class="k">continue</span><span class="p">;</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="k">auto</span><span class="w"> </span><span class="n">dims</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cast</span><span class="o">&lt;</span><span class="n">ArrayAttr</span><span class="o">&gt;</span><span class="p">(</span><span class="n">factorsAttr</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="n">ptrType</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dyn_cast</span><span class="o">&lt;</span><span class="n">PointerType</span><span class="o">&gt;</span><span class="p">(</span><span class="n">argType</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="kt">int64_t</span><span class="w"> </span><span class="n">newBits</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cast</span><span class="o">&lt;</span><span class="n">IntegerAttr</span><span class="o">&gt;</span><span class="p">(</span><span class="n">dims</span><span class="p">[</span><span class="mi">0</span><span class="p">]).</span><span class="n">getInt</span><span class="p">();</span>
+<span class="w">                </span><span class="n">Type</span><span class="w"> </span><span class="n">newPointee</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">rewriter</span><span class="p">.</span><span class="n">getIntegerType</span><span class="p">(</span><span class="n">newBits</span><span class="p">);</span>
+<span class="w">                </span><span class="n">newPointeeTypes</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">newPointee</span><span class="p">;</span>
+<span class="w">                </span><span class="n">newArgTypes</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span>
+<span class="w">                    </span><span class="n">PointerType</span><span class="o">::</span><span class="n">get</span><span class="p">(</span><span class="n">rewriter</span><span class="p">.</span><span class="n">getContext</span><span class="p">(),</span><span class="w"> </span><span class="n">newPointee</span><span class="p">));</span>
+<span class="w">            </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="n">arrType</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dyn_cast</span><span class="o">&lt;</span><span class="n">emithls</span><span class="o">::</span><span class="n">ArrayType</span><span class="o">&gt;</span><span class="p">(</span><span class="n">argType</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">SmallVector</span><span class="o">&lt;</span><span class="kt">int64_t</span><span class="o">&gt;</span><span class="w"> </span><span class="n">newShape</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">llvm</span><span class="o">::</span><span class="n">map_to_vector</span><span class="p">(</span>
+<span class="w">                    </span><span class="n">dims</span><span class="p">,</span>
+<span class="w">                    </span><span class="p">[](</span><span class="n">Attribute</span><span class="w"> </span><span class="n">d</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">cast</span><span class="o">&lt;</span><span class="n">IntegerAttr</span><span class="o">&gt;</span><span class="p">(</span><span class="n">d</span><span class="p">).</span><span class="n">getInt</span><span class="p">();</span><span class="w"> </span><span class="p">});</span>
+<span class="w">                </span><span class="n">newArgTypes</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span>
+<span class="w">                    </span><span class="n">emithls</span><span class="o">::</span><span class="n">ArrayType</span><span class="o">::</span><span class="n">get</span><span class="p">(</span>
+<span class="w">                        </span><span class="n">newShape</span><span class="p">,</span>
+<span class="w">                        </span><span class="n">arrType</span><span class="p">.</span><span class="n">getElementType</span><span class="p">()));</span>
+<span class="w">            </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="c1">// A bare (non-array) stream/scalar port has no shape of its</span>
+<span class="w">                </span><span class="c1">// own to resize.</span>
+<span class="w">                </span><span class="n">newArgTypes</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">argType</span><span class="p">);</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">auto</span><span class="w"> </span><span class="n">newFuncType</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">rewriter</span><span class="p">.</span><span class="n">getFunctionType</span><span class="p">(</span><span class="n">newArgTypes</span><span class="p">,</span><span class="w"> </span><span class="p">{});</span>
+<span class="w">        </span><span class="n">PICEA_DEBUG</span><span class="p">(</span><span class="n">llvm</span><span class="o">::</span><span class="n">dbgs</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"  New signature is "</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">newFuncType</span><span class="p">);</span>
+
+<span class="w">        </span><span class="n">rewriter</span><span class="p">.</span><span class="n">setInsertionPoint</span><span class="p">(</span><span class="n">op</span><span class="p">);</span>
+<span class="w">        </span><span class="k">auto</span><span class="w"> </span><span class="n">newFunc</span><span class="w"> </span><span class="o">=</span>
+<span class="w">            </span><span class="n">FuncOp</span><span class="o">::</span><span class="n">create</span><span class="p">(</span><span class="n">rewriter</span><span class="p">,</span><span class="w"> </span><span class="n">loc</span><span class="p">,</span><span class="w"> </span><span class="n">op</span><span class="p">.</span><span class="n">getSymName</span><span class="p">(),</span><span class="w"> </span><span class="n">newFuncType</span><span class="p">);</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">NamedAttribute</span><span class="w"> </span><span class="n">attr</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">op</span><span class="o">-&gt;</span><span class="n">getDiscardableAttrs</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">attr</span><span class="p">.</span><span class="n">getName</span><span class="p">().</span><span class="n">getValue</span><span class="p">().</span><span class="n">starts_with</span><span class="p">(</span><span class="s">"dse."</span><span class="p">))</span><span class="w"> </span><span class="k">continue</span><span class="p">;</span>
+<span class="w">            </span><span class="n">newFunc</span><span class="o">-&gt;</span><span class="n">setDiscardableAttr</span><span class="p">(</span><span class="n">attr</span><span class="p">.</span><span class="n">getName</span><span class="p">(),</span><span class="w"> </span><span class="n">attr</span><span class="p">.</span><span class="n">getValue</span><span class="p">());</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="n">SmallVector</span><span class="o">&lt;</span><span class="n">Location</span><span class="o">&gt;</span><span class="w"> </span><span class="n">argLocs</span><span class="p">(</span><span class="n">newArgTypes</span><span class="p">.</span><span class="n">size</span><span class="p">(),</span><span class="w"> </span><span class="n">loc</span><span class="p">);</span>
+<span class="w">        </span><span class="n">Block</span><span class="o">*</span><span class="w"> </span><span class="n">entry</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">rewriter</span><span class="p">.</span><span class="n">createBlock</span><span class="p">(</span>
+<span class="w">            </span><span class="o">&amp;</span><span class="n">newFunc</span><span class="p">.</span><span class="n">getBody</span><span class="p">(),</span>
+<span class="w">            </span><span class="n">newFunc</span><span class="p">.</span><span class="n">getBody</span><span class="p">().</span><span class="n">end</span><span class="p">(),</span>
+<span class="w">            </span><span class="n">newArgTypes</span><span class="p">,</span>
+<span class="w">            </span><span class="n">argLocs</span><span class="p">);</span>
+
+<span class="w">        </span><span class="c1">// Map every old block argument onto its new counterpart up front, so</span>
+<span class="w">        </span><span class="c1">// cloning the body below never leaves a reference to the old</span>
+<span class="w">        </span><span class="c1">// (now dead) block behind as an unresolved SSA value.</span>
+<span class="w">        </span><span class="n">IRMapping</span><span class="w"> </span><span class="n">mapping</span><span class="p">;</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="p">[</span><span class="n">oldArg</span><span class="p">,</span><span class="w"> </span><span class="n">newArg</span><span class="p">]</span><span class="w"> </span><span class="o">:</span>
+<span class="w">             </span><span class="n">llvm</span><span class="o">::</span><span class="n">zip</span><span class="p">(</span><span class="n">op</span><span class="p">.</span><span class="n">getArguments</span><span class="p">(),</span><span class="w"> </span><span class="n">entry</span><span class="o">-&gt;</span><span class="n">getArguments</span><span class="p">()))</span>
+<span class="w">            </span><span class="n">mapping</span><span class="p">.</span><span class="n">map</span><span class="p">(</span><span class="n">oldArg</span><span class="p">,</span><span class="w"> </span><span class="n">newArg</span><span class="p">);</span>
+
+<span class="w">        </span><span class="n">rewriter</span><span class="p">.</span><span class="n">setInsertionPointToStart</span><span class="p">(</span><span class="n">entry</span><span class="p">);</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">isTop</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="c1">// Marks this function as the design's top for Vitis HLS,</span>
+<span class="w">            </span><span class="c1">// emitting a "#pragma HLS INTERFACE" for every port and letting</span>
+<span class="w">            </span><span class="c1">// downstream tooling (e.g. the EmitHLSToHLSTcl/EmitHLSToVivadoTcl</span>
+<span class="w">            </span><span class="c1">// translations) find the top function by walking for this op.</span>
+<span class="w">            </span><span class="n">PragmaTopInterfaceOp</span><span class="o">::</span><span class="n">create</span><span class="p">(</span><span class="n">rewriter</span><span class="p">,</span><span class="w"> </span><span class="n">loc</span><span class="p">);</span>
+<span class="w">            </span><span class="c1">// The top function's own buffer declarations stay directly in</span>
+<span class="w">            </span><span class="c1">// its body, but its calls move into a "#pragma HLS DATAFLOW"</span>
+<span class="w">            </span><span class="c1">// region so Vitis HLS runs the pipeline stages concurrently</span>
+<span class="w">            </span><span class="c1">// instead of sequentially.</span>
+<span class="w">            </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">Operation</span><span class="w"> </span><span class="o">&amp;</span><span class="n">bodyOp</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">op</span><span class="p">.</span><span class="n">getBody</span><span class="p">().</span><span class="n">front</span><span class="p">())</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">isa</span><span class="o">&lt;</span><span class="n">VariableOp</span><span class="o">&gt;</span><span class="p">(</span><span class="n">bodyOp</span><span class="p">))</span><span class="w"> </span><span class="n">rewriter</span><span class="p">.</span><span class="n">clone</span><span class="p">(</span><span class="n">bodyOp</span><span class="p">,</span><span class="w"> </span><span class="n">mapping</span><span class="p">);</span>
+<span class="w">            </span><span class="n">PragmaDataflowOp</span><span class="o">::</span><span class="n">create</span><span class="p">(</span>
+<span class="w">                </span><span class="n">rewriter</span><span class="p">,</span>
+<span class="w">                </span><span class="n">loc</span><span class="p">,</span>
+<span class="w">                </span><span class="p">[</span><span class="o">&amp;</span><span class="p">](</span><span class="n">OpBuilder</span><span class="w"> </span><span class="o">&amp;</span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="n">Location</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">Operation</span><span class="w"> </span><span class="o">&amp;</span><span class="n">bodyOp</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">op</span><span class="p">.</span><span class="n">getBody</span><span class="p">().</span><span class="n">front</span><span class="p">())</span>
+<span class="w">                        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">isa</span><span class="o">&lt;</span><span class="n">CallOp</span><span class="o">&gt;</span><span class="p">(</span><span class="n">bodyOp</span><span class="p">))</span><span class="w"> </span><span class="n">b</span><span class="p">.</span><span class="n">clone</span><span class="p">(</span><span class="n">bodyOp</span><span class="p">,</span><span class="w"> </span><span class="n">mapping</span><span class="p">);</span>
+<span class="w">                </span><span class="p">});</span>
+<span class="w">            </span><span class="n">PICEA_DEBUG</span><span class="p">(</span>
+<span class="w">                </span><span class="n">llvm</span><span class="o">::</span><span class="n">dbgs</span><span class="p">()</span>
+<span class="w">                </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"  Cloning calls into a dataflow pragma region."</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">PragmaInlineOp</span><span class="o">::</span><span class="n">create</span><span class="p">(</span><span class="n">rewriter</span><span class="p">,</span><span class="w"> </span><span class="n">loc</span><span class="p">,</span><span class="w"> </span><span class="cm">/*off=*/</span><span class="nb">true</span><span class="p">);</span>
+<span class="w">            </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">Operation</span><span class="w"> </span><span class="o">&amp;</span><span class="n">bodyOp</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">op</span><span class="p">.</span><span class="n">getBody</span><span class="p">().</span><span class="n">front</span><span class="p">())</span>
+<span class="w">                </span><span class="n">rewriter</span><span class="p">.</span><span class="n">clone</span><span class="p">(</span><span class="n">bodyOp</span><span class="p">,</span><span class="w"> </span><span class="n">mapping</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="c1">// A widened/narrowed pointer port leaves the local "word" variable</span>
+<span class="w">        </span><span class="c1">// an I/O write function packs before its own ptr_write, and the word</span>
+<span class="w">        </span><span class="c1">// an I/O read function gets from its own ptr_read, stale at their</span>
+<span class="w">        </span><span class="c1">// old width (the clone above just copied them verbatim); rebuild</span>
+<span class="w">        </span><span class="c1">// them at the pointer's own new element type so they agree again.</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="n">newArg</span><span class="p">]</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">llvm</span><span class="o">::</span><span class="n">enumerate</span><span class="p">(</span><span class="n">entry</span><span class="o">-&gt;</span><span class="n">getArguments</span><span class="p">()))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">Type</span><span class="w"> </span><span class="n">newPointee</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">newPointeeTypes</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">newPointee</span><span class="p">)</span><span class="w"> </span><span class="k">continue</span><span class="p">;</span>
+<span class="w">            </span><span class="n">SmallVector</span><span class="o">&lt;</span><span class="n">ArrayPointerReadOp</span><span class="o">&gt;</span><span class="w"> </span><span class="n">staleReads</span><span class="p">;</span>
+<span class="w">            </span><span class="n">newFunc</span><span class="p">.</span><span class="n">walk</span><span class="p">([</span><span class="o">&amp;</span><span class="p">](</span><span class="n">ArrayPointerReadOp</span><span class="w"> </span><span class="n">readOp</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">readOp</span><span class="p">.</span><span class="n">getPointer</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">newArg</span>
+<span class="w">                    </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">readOp</span><span class="p">.</span><span class="n">getType</span><span class="p">()</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">newPointee</span><span class="p">)</span>
+<span class="w">                    </span><span class="n">staleReads</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">readOp</span><span class="p">);</span>
+<span class="w">            </span><span class="p">});</span>
+<span class="w">            </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">ArrayPointerReadOp</span><span class="w"> </span><span class="n">readOp</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">staleReads</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">rewriter</span><span class="p">.</span><span class="n">setInsertionPoint</span><span class="p">(</span><span class="n">readOp</span><span class="p">);</span>
+<span class="w">                </span><span class="n">Value</span><span class="w"> </span><span class="n">newRead</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ArrayPointerReadOp</span><span class="o">::</span><span class="n">create</span><span class="p">(</span>
+<span class="w">                    </span><span class="n">rewriter</span><span class="p">,</span>
+<span class="w">                    </span><span class="n">readOp</span><span class="p">.</span><span class="n">getLoc</span><span class="p">(),</span>
+<span class="w">                    </span><span class="n">newPointee</span><span class="p">,</span>
+<span class="w">                    </span><span class="n">readOp</span><span class="p">.</span><span class="n">getPointer</span><span class="p">(),</span>
+<span class="w">                    </span><span class="n">readOp</span><span class="p">.</span><span class="n">getIndices</span><span class="p">());</span>
+<span class="w">                </span><span class="n">readOp</span><span class="p">.</span><span class="n">getResult</span><span class="p">().</span><span class="n">replaceAllUsesWith</span><span class="p">(</span><span class="n">newRead</span><span class="p">);</span>
+<span class="w">                </span><span class="n">rewriter</span><span class="p">.</span><span class="n">eraseOp</span><span class="p">(</span><span class="n">readOp</span><span class="p">);</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="n">SmallVector</span><span class="o">&lt;</span><span class="n">ArrayPointerWriteOp</span><span class="o">&gt;</span><span class="w"> </span><span class="n">staleWrites</span><span class="p">;</span>
+<span class="w">            </span><span class="n">newFunc</span><span class="p">.</span><span class="n">walk</span><span class="p">([</span><span class="o">&amp;</span><span class="p">](</span><span class="n">ArrayPointerWriteOp</span><span class="w"> </span><span class="n">writeOp</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">writeOp</span><span class="p">.</span><span class="n">getPointer</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">newArg</span>
+<span class="w">                    </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">writeOp</span><span class="p">.</span><span class="n">getValue</span><span class="p">().</span><span class="n">getType</span><span class="p">()</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">newPointee</span><span class="p">)</span>
+<span class="w">                    </span><span class="n">staleWrites</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">writeOp</span><span class="p">);</span>
+<span class="w">            </span><span class="p">});</span>
+<span class="w">            </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">ArrayPointerWriteOp</span><span class="w"> </span><span class="n">writeOp</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">staleWrites</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="k">auto</span><span class="w"> </span><span class="n">wordVar</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">writeOp</span><span class="p">.</span><span class="n">getValue</span><span class="p">().</span><span class="n">getDefiningOp</span><span class="o">&lt;</span><span class="n">VariableOp</span><span class="o">&gt;</span><span class="p">();</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">wordVar</span><span class="p">)</span><span class="w"> </span><span class="k">continue</span><span class="p">;</span>
+<span class="w">                </span><span class="kt">int64_t</span><span class="w"> </span><span class="n">initValue</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="n">initAttr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dyn_cast_or_null</span><span class="o">&lt;</span><span class="n">IntegerAttr</span><span class="o">&gt;</span><span class="p">(</span>
+<span class="w">                        </span><span class="n">wordVar</span><span class="p">.</span><span class="n">getInitNumberAttr</span><span class="p">()))</span>
+<span class="w">                    </span><span class="n">initValue</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">initAttr</span><span class="p">.</span><span class="n">getInt</span><span class="p">();</span>
+<span class="w">                </span><span class="n">PICEA_DEBUG</span><span class="p">(</span>
+<span class="w">                    </span><span class="n">llvm</span><span class="o">::</span><span class="n">dbgs</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"  Resizing word variable "</span>
+<span class="w">                                 </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">wordVar</span><span class="p">.</span><span class="n">getLoc</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">" to "</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">newPointee</span><span class="p">);</span>
+<span class="w">                </span><span class="n">rewriter</span><span class="p">.</span><span class="n">setInsertionPoint</span><span class="p">(</span><span class="n">wordVar</span><span class="p">);</span>
+<span class="w">                </span><span class="n">Value</span><span class="w"> </span><span class="n">newWordVar</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">VariableOp</span><span class="o">::</span><span class="n">create</span><span class="p">(</span>
+<span class="w">                    </span><span class="n">rewriter</span><span class="p">,</span>
+<span class="w">                    </span><span class="n">wordVar</span><span class="p">.</span><span class="n">getLoc</span><span class="p">(),</span>
+<span class="w">                    </span><span class="n">newPointee</span><span class="p">,</span>
+<span class="w">                    </span><span class="n">rewriter</span><span class="p">.</span><span class="n">getIntegerAttr</span><span class="p">(</span>
+<span class="w">                        </span><span class="n">cast</span><span class="o">&lt;</span><span class="n">IntegerType</span><span class="o">&gt;</span><span class="p">(</span><span class="n">newPointee</span><span class="p">),</span>
+<span class="w">                        </span><span class="n">initValue</span><span class="p">),</span>
+<span class="w">                    </span><span class="n">wordVar</span><span class="p">.</span><span class="n">getIsConst</span><span class="p">());</span>
+<span class="w">                </span><span class="n">wordVar</span><span class="p">.</span><span class="n">getVariable</span><span class="p">().</span><span class="n">replaceAllUsesWith</span><span class="p">(</span><span class="n">newWordVar</span><span class="p">);</span>
+<span class="w">                </span><span class="n">rewriter</span><span class="p">.</span><span class="n">eraseOp</span><span class="p">(</span><span class="n">wordVar</span><span class="p">);</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="n">rewriter</span><span class="p">.</span><span class="n">eraseOp</span><span class="p">(</span><span class="n">op</span><span class="p">);</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">success</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">};</span>
+
+<span class="c1">// A local array's "dse.mem" becomes a bind_storage pragma: BRAM maps to</span>
+<span class="c1">// ram_2p/bram, LUTRAM to rom_1p/lutram if const or ram_2p/lutram otherwise.</span>
+<span class="c1">// Each dimension's "dse.factors" entry becomes its own array_partition</span>
+<span class="c1">// pragma, complete if it fills the dimension and cyclic otherwise.</span>
+<span class="k">struct</span><span class="w"> </span><span class="nc">InsertArrayPragmas</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">OpConversionPattern</span><span class="o">&lt;</span><span class="n">VariableOp</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">using</span><span class="w"> </span><span class="n">OpConversionPattern</span><span class="o">::</span><span class="n">OpConversionPattern</span><span class="p">;</span>
+
+<span class="w">    </span><span class="n">LogicalResult</span><span class="w"> </span><span class="nf">matchAndRewrite</span><span class="p">(</span>
+<span class="w">        </span><span class="n">VariableOp</span><span class="w"> </span><span class="n">op</span><span class="p">,</span>
+<span class="w">        </span><span class="n">OpAdaptor</span><span class="p">,</span>
+<span class="w">        </span><span class="n">ConversionPatternRewriter</span><span class="w"> </span><span class="o">&amp;</span><span class="n">rewriter</span><span class="p">)</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">override</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="k">auto</span><span class="w"> </span><span class="n">memAttr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">op</span><span class="o">-&gt;</span><span class="n">getAttrOfType</span><span class="o">&lt;</span><span class="n">StringAttr</span><span class="o">&gt;</span><span class="p">(</span><span class="s">"dse.mem"</span><span class="p">);</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">memAttr</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">failure</span><span class="p">();</span>
+
+<span class="w">        </span><span class="n">Location</span><span class="w"> </span><span class="n">loc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">op</span><span class="p">.</span><span class="n">getLoc</span><span class="p">();</span>
+<span class="w">        </span><span class="n">PICEA_DEBUG</span><span class="p">(</span>
+<span class="w">            </span><span class="n">llvm</span><span class="o">::</span><span class="n">dbgs</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"Rewriting memory type variable at "</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">loc</span><span class="p">);</span>
+<span class="w">        </span><span class="n">Value</span><span class="w"> </span><span class="n">variable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">op</span><span class="p">.</span><span class="n">getVariable</span><span class="p">();</span>
+<span class="w">        </span><span class="n">PICEA_DEBUG</span><span class="p">(</span>
+<span class="w">            </span><span class="n">llvm</span><span class="o">::</span><span class="n">dbgs</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"  Inserting array pragmas for "</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">op</span><span class="p">.</span><span class="n">getLoc</span><span class="p">()</span>
+<span class="w">                         </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">", mem="</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">memAttr</span><span class="p">.</span><span class="n">getValue</span><span class="p">());</span>
+
+<span class="w">        </span><span class="n">BindStorageType</span><span class="w"> </span><span class="n">storageType</span><span class="p">;</span>
+<span class="w">        </span><span class="n">BindStorageImpl</span><span class="w"> </span><span class="n">storageImpl</span><span class="p">;</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">memAttr</span><span class="p">.</span><span class="n">getValue</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s">"BRAM"</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">storageType</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">BindStorageType</span><span class="o">::</span><span class="n">ram_2p</span><span class="p">;</span>
+<span class="w">            </span><span class="n">storageImpl</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">BindStorageImpl</span><span class="o">::</span><span class="n">bram</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">storageImpl</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">BindStorageImpl</span><span class="o">::</span><span class="n">lutram</span><span class="p">;</span>
+<span class="w">            </span><span class="n">storageType</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">op</span><span class="p">.</span><span class="n">getIsConst</span><span class="p">()</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">BindStorageType</span><span class="o">::</span><span class="n">rom_1p</span>
+<span class="w">                                          </span><span class="o">:</span><span class="w"> </span><span class="n">BindStorageType</span><span class="o">::</span><span class="n">ram_2p</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="n">rewriter</span><span class="p">.</span><span class="n">setInsertionPointAfter</span><span class="p">(</span><span class="n">op</span><span class="p">);</span>
+<span class="w">        </span><span class="n">PragmaBindStorageOp</span><span class="o">::</span><span class="n">create</span><span class="p">(</span>
+<span class="w">            </span><span class="n">rewriter</span><span class="p">,</span>
+<span class="w">            </span><span class="n">loc</span><span class="p">,</span>
+<span class="w">            </span><span class="n">variable</span><span class="p">,</span>
+<span class="w">            </span><span class="n">storageType</span><span class="p">,</span>
+<span class="w">            </span><span class="n">storageImpl</span><span class="p">);</span>
+<span class="w">        </span><span class="n">PICEA_DEBUG</span><span class="p">(</span>
+<span class="w">            </span><span class="n">llvm</span><span class="o">::</span><span class="n">dbgs</span><span class="p">()</span>
+<span class="w">            </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"  Pragma-ing the array with the bound storage type."</span><span class="p">);</span>
+
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="n">factorsAttr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">op</span><span class="o">-&gt;</span><span class="n">getAttrOfType</span><span class="o">&lt;</span><span class="n">ArrayAttr</span><span class="o">&gt;</span><span class="p">(</span><span class="s">"dse.factors"</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">auto</span><span class="w"> </span><span class="n">arrType</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cast</span><span class="o">&lt;</span><span class="n">emithls</span><span class="o">::</span><span class="n">ArrayType</span><span class="o">&gt;</span><span class="p">(</span><span class="n">variable</span><span class="p">.</span><span class="n">getType</span><span class="p">());</span>
+<span class="w">            </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="p">[</span><span class="n">d</span><span class="p">,</span><span class="w"> </span><span class="n">factorAttr</span><span class="p">]</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">llvm</span><span class="o">::</span><span class="n">enumerate</span><span class="p">(</span><span class="n">factorsAttr</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="kt">int64_t</span><span class="w"> </span><span class="n">factor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cast</span><span class="o">&lt;</span><span class="n">IntegerAttr</span><span class="o">&gt;</span><span class="p">(</span><span class="n">factorAttr</span><span class="p">).</span><span class="n">getInt</span><span class="p">();</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">factor</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="k">continue</span><span class="p">;</span>
+<span class="w">                </span><span class="kt">bool</span><span class="w"> </span><span class="n">complete</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">factor</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">arrType</span><span class="p">.</span><span class="n">getShape</span><span class="p">()[</span><span class="n">d</span><span class="p">];</span>
+<span class="w">                </span><span class="n">PragmaArrayPartitionOp</span><span class="o">::</span><span class="n">create</span><span class="p">(</span>
+<span class="w">                    </span><span class="n">rewriter</span><span class="p">,</span>
+<span class="w">                    </span><span class="n">loc</span><span class="p">,</span>
+<span class="w">                    </span><span class="n">variable</span><span class="p">,</span>
+<span class="w">                    </span><span class="n">complete</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">ArrayPartitionType</span><span class="o">::</span><span class="n">complete</span>
+<span class="w">                             </span><span class="o">:</span><span class="w"> </span><span class="n">ArrayPartitionType</span><span class="o">::</span><span class="n">cyclic</span><span class="p">,</span>
+<span class="w">                    </span><span class="n">complete</span>
+<span class="w">                        </span><span class="o">?</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">nullopt</span>
+<span class="w">                        </span><span class="o">:</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;</span><span class="kt">int32_t</span><span class="o">&gt;</span><span class="p">(</span><span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">int32_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">factor</span><span class="p">)),</span>
+<span class="w">                    </span><span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">int32_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">d</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">));</span>
+<span class="w">                </span><span class="n">PICEA_DEBUG</span><span class="p">(</span>
+<span class="w">                    </span><span class="n">llvm</span><span class="o">::</span><span class="n">dbgs</span><span class="p">()</span>
+<span class="w">                    </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"  Pragma-ing the array with the partition factor."</span><span class="p">);</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="n">rewriter</span><span class="p">.</span><span class="n">modifyOpInPlace</span><span class="p">(</span><span class="n">op</span><span class="p">,</span><span class="w"> </span><span class="p">[</span><span class="o">&amp;</span><span class="p">]()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">op</span><span class="o">-&gt;</span><span class="n">removeAttr</span><span class="p">(</span><span class="s">"dse.mem"</span><span class="p">);</span>
+<span class="w">            </span><span class="n">op</span><span class="o">-&gt;</span><span class="n">removeAttr</span><span class="p">(</span><span class="s">"dse.factors"</span><span class="p">);</span>
+<span class="w">        </span><span class="p">});</span>
+
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">success</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">};</span>
+
+<span class="c1">// A "dse.fifo" buffer is rebuilt at its "dse.factors" shape, then gets a</span>
+<span class="c1">// bind_storage and stream pragma with "dse.depth" as the depth. A bare</span>
+<span class="c1">// stream has no shape to resize, so it just gets the two pragmas in place.</span>
+<span class="k">struct</span><span class="w"> </span><span class="nc">RewriteFIFOVariable</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">OpConversionPattern</span><span class="o">&lt;</span><span class="n">VariableOp</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">using</span><span class="w"> </span><span class="n">OpConversionPattern</span><span class="o">::</span><span class="n">OpConversionPattern</span><span class="p">;</span>
+
+<span class="w">    </span><span class="n">LogicalResult</span><span class="w"> </span><span class="nf">matchAndRewrite</span><span class="p">(</span>
+<span class="w">        </span><span class="n">VariableOp</span><span class="w"> </span><span class="n">op</span><span class="p">,</span>
+<span class="w">        </span><span class="n">OpAdaptor</span><span class="p">,</span>
+<span class="w">        </span><span class="n">ConversionPatternRewriter</span><span class="w"> </span><span class="o">&amp;</span><span class="n">rewriter</span><span class="p">)</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">override</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">op</span><span class="o">-&gt;</span><span class="n">hasAttr</span><span class="p">(</span><span class="s">"dse.fifo"</span><span class="p">))</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">failure</span><span class="p">();</span>
+
+<span class="w">        </span><span class="n">Location</span><span class="w"> </span><span class="n">loc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">op</span><span class="p">.</span><span class="n">getLoc</span><span class="p">();</span>
+<span class="w">        </span><span class="n">PICEA_DEBUG</span><span class="p">(</span><span class="n">llvm</span><span class="o">::</span><span class="n">dbgs</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"Rewriting FIFO type variable at "</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">loc</span><span class="p">);</span>
+<span class="w">        </span><span class="kt">int32_t</span><span class="w"> </span><span class="n">depth</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">int32_t</span><span class="o">&gt;</span><span class="p">(</span>
+<span class="w">            </span><span class="n">cast</span><span class="o">&lt;</span><span class="n">IntegerAttr</span><span class="o">&gt;</span><span class="p">(</span><span class="n">op</span><span class="o">-&gt;</span><span class="n">getAttr</span><span class="p">(</span><span class="s">"dse.depth"</span><span class="p">)).</span><span class="n">getInt</span><span class="p">());</span>
+<span class="w">        </span><span class="k">auto</span><span class="w"> </span><span class="n">factorsAttr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">op</span><span class="o">-&gt;</span><span class="n">getAttrOfType</span><span class="o">&lt;</span><span class="n">ArrayAttr</span><span class="o">&gt;</span><span class="p">(</span><span class="s">"dse.factors"</span><span class="p">);</span>
+<span class="w">        </span><span class="k">auto</span><span class="w"> </span><span class="n">arrType</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dyn_cast</span><span class="o">&lt;</span><span class="n">emithls</span><span class="o">::</span><span class="n">ArrayType</span><span class="o">&gt;</span><span class="p">(</span><span class="n">op</span><span class="p">.</span><span class="n">getVariable</span><span class="p">().</span><span class="n">getType</span><span class="p">());</span>
+
+<span class="w">        </span><span class="n">Value</span><span class="w"> </span><span class="n">variable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">op</span><span class="p">.</span><span class="n">getVariable</span><span class="p">();</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">arrType</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">factorsAttr</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">SmallVector</span><span class="o">&lt;</span><span class="kt">int64_t</span><span class="o">&gt;</span><span class="w"> </span><span class="n">newShape</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">llvm</span><span class="o">::</span><span class="n">map_to_vector</span><span class="p">(</span>
+<span class="w">                </span><span class="n">factorsAttr</span><span class="p">,</span>
+<span class="w">                </span><span class="p">[](</span><span class="n">Attribute</span><span class="w"> </span><span class="n">d</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">cast</span><span class="o">&lt;</span><span class="n">IntegerAttr</span><span class="o">&gt;</span><span class="p">(</span><span class="n">d</span><span class="p">).</span><span class="n">getInt</span><span class="p">();</span><span class="w"> </span><span class="p">});</span>
+<span class="w">            </span><span class="k">auto</span><span class="w"> </span><span class="n">newType</span><span class="w"> </span><span class="o">=</span>
+<span class="w">                </span><span class="n">emithls</span><span class="o">::</span><span class="n">ArrayType</span><span class="o">::</span><span class="n">get</span><span class="p">(</span><span class="n">newShape</span><span class="p">,</span><span class="w"> </span><span class="n">arrType</span><span class="p">.</span><span class="n">getElementType</span><span class="p">());</span>
+<span class="w">            </span><span class="n">PICEA_DEBUG</span><span class="p">(</span>
+<span class="w">                </span><span class="n">llvm</span><span class="o">::</span><span class="n">dbgs</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"  Rewriting FIFO buffer into "</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">newType</span><span class="p">);</span>
+
+<span class="w">            </span><span class="n">rewriter</span><span class="p">.</span><span class="n">setInsertionPoint</span><span class="p">(</span><span class="n">op</span><span class="p">);</span>
+<span class="w">            </span><span class="k">auto</span><span class="w"> </span><span class="n">newOp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">VariableOp</span><span class="o">::</span><span class="n">create</span><span class="p">(</span>
+<span class="w">                </span><span class="n">rewriter</span><span class="p">,</span>
+<span class="w">                </span><span class="n">loc</span><span class="p">,</span>
+<span class="w">                </span><span class="n">newType</span><span class="p">,</span>
+<span class="w">                </span><span class="cm">/*initValue=*/</span><span class="n">Value</span><span class="p">{});</span>
+<span class="w">            </span><span class="n">variable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">newOp</span><span class="p">.</span><span class="n">getVariable</span><span class="p">();</span>
+<span class="w">            </span><span class="n">rewriter</span><span class="p">.</span><span class="n">setInsertionPointAfter</span><span class="p">(</span><span class="n">newOp</span><span class="p">);</span>
+<span class="w">            </span><span class="n">PragmaBindStorageOp</span><span class="o">::</span><span class="n">create</span><span class="p">(</span>
+<span class="w">                </span><span class="n">rewriter</span><span class="p">,</span>
+<span class="w">                </span><span class="n">loc</span><span class="p">,</span>
+<span class="w">                </span><span class="n">variable</span><span class="p">,</span>
+<span class="w">                </span><span class="n">BindStorageType</span><span class="o">::</span><span class="n">fifo</span><span class="p">,</span>
+<span class="w">                </span><span class="n">BindStorageImpl</span><span class="o">::</span><span class="n">srl</span><span class="p">);</span>
+<span class="w">            </span><span class="n">PICEA_DEBUG</span><span class="p">(</span>
+<span class="w">                </span><span class="n">llvm</span><span class="o">::</span><span class="n">dbgs</span><span class="p">()</span>
+<span class="w">                </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"  Pragma-ing the FIFO array with the bound storage type."</span><span class="p">);</span>
+<span class="w">            </span><span class="n">PragmaStreamOp</span><span class="o">::</span><span class="n">create</span><span class="p">(</span><span class="n">rewriter</span><span class="p">,</span><span class="w"> </span><span class="n">loc</span><span class="p">,</span><span class="w"> </span><span class="n">variable</span><span class="p">,</span><span class="w"> </span><span class="n">depth</span><span class="p">);</span>
+<span class="w">            </span><span class="n">PICEA_DEBUG</span><span class="p">(</span>
+<span class="w">                </span><span class="n">llvm</span><span class="o">::</span><span class="n">dbgs</span><span class="p">()</span>
+<span class="w">                </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"  Pragma-ing the FIFO array with stream mark."</span><span class="p">);</span>
+<span class="w">            </span><span class="n">op</span><span class="p">.</span><span class="n">getVariable</span><span class="p">().</span><span class="n">replaceAllUsesWith</span><span class="p">(</span><span class="n">variable</span><span class="p">);</span>
+<span class="w">            </span><span class="n">rewriter</span><span class="p">.</span><span class="n">eraseOp</span><span class="p">(</span><span class="n">op</span><span class="p">);</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="n">success</span><span class="p">();</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="n">PICEA_DEBUG</span><span class="p">(</span>
+<span class="w">            </span><span class="n">llvm</span><span class="o">::</span><span class="n">dbgs</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"  Pragma-ing FIFO array "</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">op</span><span class="p">.</span><span class="n">getLoc</span><span class="p">()</span>
+<span class="w">                         </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">" in place, no array shape to resize"</span><span class="p">);</span>
+<span class="w">        </span><span class="n">rewriter</span><span class="p">.</span><span class="n">setInsertionPointAfter</span><span class="p">(</span><span class="n">op</span><span class="p">);</span>
+<span class="w">        </span><span class="n">PragmaBindStorageOp</span><span class="o">::</span><span class="n">create</span><span class="p">(</span>
+<span class="w">            </span><span class="n">rewriter</span><span class="p">,</span>
+<span class="w">            </span><span class="n">loc</span><span class="p">,</span>
+<span class="w">            </span><span class="n">variable</span><span class="p">,</span>
+<span class="w">            </span><span class="n">BindStorageType</span><span class="o">::</span><span class="n">fifo</span><span class="p">,</span>
+<span class="w">            </span><span class="n">BindStorageImpl</span><span class="o">::</span><span class="n">srl</span><span class="p">);</span>
+<span class="w">        </span><span class="n">PragmaStreamOp</span><span class="o">::</span><span class="n">create</span><span class="p">(</span><span class="n">rewriter</span><span class="p">,</span><span class="w"> </span><span class="n">loc</span><span class="p">,</span><span class="w"> </span><span class="n">variable</span><span class="p">,</span><span class="w"> </span><span class="n">depth</span><span class="p">);</span>
+
+<span class="w">        </span><span class="n">rewriter</span><span class="p">.</span><span class="n">modifyOpInPlace</span><span class="p">(</span><span class="n">op</span><span class="p">,</span><span class="w"> </span><span class="p">[</span><span class="o">&amp;</span><span class="p">]()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">op</span><span class="o">-&gt;</span><span class="n">removeAttr</span><span class="p">(</span><span class="s">"dse.fifo"</span><span class="p">);</span>
+<span class="w">            </span><span class="n">op</span><span class="o">-&gt;</span><span class="n">removeAttr</span><span class="p">(</span><span class="s">"dse.depth"</span><span class="p">);</span>
+<span class="w">            </span><span class="n">op</span><span class="o">-&gt;</span><span class="n">removeAttr</span><span class="p">(</span><span class="s">"dse.factors"</span><span class="p">);</span>
+<span class="w">        </span><span class="p">});</span>
+
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">success</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">};</span>
+
+<span class="p">}</span><span class="w"> </span><span class="c1">// namespace</span>
+
+<span class="k">namespace</span><span class="w"> </span><span class="p">{</span>
+<span class="k">struct</span><span class="w"> </span><span class="nc">EmitHLSPragmaInsertionPass</span>
+<span class="w">        </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">emithls</span><span class="o">::</span><span class="n">impl</span><span class="o">::</span><span class="n">EmitHLSPragmaInsertionBase</span><span class="o">&lt;</span>
+<span class="w">              </span><span class="n">EmitHLSPragmaInsertionPass</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="nf">runOnOperation</span><span class="p">()</span><span class="w"> </span><span class="k">override</span><span class="p">;</span>
+<span class="p">};</span>
+<span class="p">}</span><span class="w"> </span><span class="c1">// namespace</span>
+
+<span class="kt">void</span><span class="w"> </span><span class="n">EmitHLSPragmaInsertionPass</span><span class="o">::</span><span class="n">runOnOperation</span><span class="p">()</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">ConversionTarget</span><span class="w"> </span><span class="nf">target</span><span class="p">(</span><span class="n">getContext</span><span class="p">());</span>
+<span class="w">    </span><span class="n">RewritePatternSet</span><span class="w"> </span><span class="nf">patterns</span><span class="p">(</span><span class="o">&amp;</span><span class="n">getContext</span><span class="p">());</span>
+
+<span class="w">    </span><span class="n">patterns</span><span class="p">.</span><span class="n">add</span><span class="o">&lt;</span><span class="n">RewriteFuncSignature</span><span class="o">&gt;</span><span class="p">(</span><span class="o">&amp;</span><span class="n">getContext</span><span class="p">());</span>
+<span class="w">    </span><span class="n">patterns</span><span class="p">.</span><span class="n">add</span><span class="o">&lt;</span><span class="n">InsertArrayPragmas</span><span class="o">&gt;</span><span class="p">(</span><span class="o">&amp;</span><span class="n">getContext</span><span class="p">());</span>
+<span class="w">    </span><span class="n">patterns</span><span class="p">.</span><span class="n">add</span><span class="o">&lt;</span><span class="n">RewriteFIFOVariable</span><span class="o">&gt;</span><span class="p">(</span><span class="o">&amp;</span><span class="n">getContext</span><span class="p">());</span>
+<span class="w">    </span><span class="n">patterns</span><span class="p">.</span><span class="n">add</span><span class="o">&lt;</span><span class="n">SplitIOLoop</span><span class="o">&gt;</span><span class="p">(</span><span class="o">&amp;</span><span class="n">getContext</span><span class="p">());</span>
+<span class="w">    </span><span class="n">patterns</span><span class="p">.</span><span class="n">add</span><span class="o">&lt;</span><span class="n">SplitFactorLoop</span><span class="o">&gt;</span><span class="p">(</span><span class="o">&amp;</span><span class="n">getContext</span><span class="p">());</span>
+
+<span class="w">    </span><span class="n">target</span><span class="p">.</span><span class="n">addLegalDialect</span><span class="o">&lt;</span><span class="n">EmitHLSDialect</span><span class="o">&gt;</span><span class="p">();</span>
+<span class="w">    </span><span class="n">target</span><span class="p">.</span><span class="n">markUnknownOpDynamicallyLegal</span><span class="p">([](</span><span class="n">Operation</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span><span class="w"> </span><span class="p">});</span>
+<span class="w">    </span><span class="n">target</span><span class="p">.</span><span class="n">addDynamicallyLegalOp</span><span class="o">&lt;</span><span class="n">FuncOp</span><span class="o">&gt;</span><span class="p">(</span>
+<span class="w">        </span><span class="p">[](</span><span class="n">FuncOp</span><span class="w"> </span><span class="n">op</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="o">!</span><span class="n">hasDSEAttr</span><span class="p">(</span><span class="n">op</span><span class="p">);</span><span class="w"> </span><span class="p">});</span>
+<span class="w">    </span><span class="n">target</span><span class="p">.</span><span class="n">addDynamicallyLegalOp</span><span class="o">&lt;</span><span class="n">VariableOp</span><span class="o">&gt;</span><span class="p">(</span>
+<span class="w">        </span><span class="p">[](</span><span class="n">VariableOp</span><span class="w"> </span><span class="n">op</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="o">!</span><span class="n">hasDSEAttr</span><span class="p">(</span><span class="n">op</span><span class="p">);</span><span class="w"> </span><span class="p">});</span>
+<span class="w">    </span><span class="n">target</span><span class="p">.</span><span class="n">addDynamicallyLegalOp</span><span class="o">&lt;</span><span class="n">ForOp</span><span class="o">&gt;</span><span class="p">(</span>
+<span class="w">        </span><span class="p">[](</span><span class="n">ForOp</span><span class="w"> </span><span class="n">op</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="o">!</span><span class="n">hasDSEAttr</span><span class="p">(</span><span class="n">op</span><span class="p">);</span><span class="w"> </span><span class="p">});</span>
+
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">failed</span><span class="p">(</span><span class="n">applyPartialConversion</span><span class="p">(</span>
+<span class="w">            </span><span class="n">getOperation</span><span class="p">(),</span>
+<span class="w">            </span><span class="n">target</span><span class="p">,</span>
+<span class="w">            </span><span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">patterns</span><span class="p">))))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">signalPassFailure</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">Pass</span><span class="o">&gt;</span><span class="w"> </span><span class="n">mlir</span><span class="o">::</span><span class="n">emithls</span><span class="o">::</span><span class="n">createEmitHLSPragmaInsertionPass</span><span class="p">()</span>
+<span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">make_unique</span><span class="o">&lt;</span><span class="n">EmitHLSPragmaInsertionPass</span><span class="o">&gt;</span><span class="p">();</span><span class="w"> </span><span class="p">}</span>
+</pre></div>
+</div>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

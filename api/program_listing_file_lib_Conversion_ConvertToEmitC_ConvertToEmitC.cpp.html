@@ -1,0 +1,250 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Program Listing for File ConvertToEmitC.cpp &mdash; picea 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/collapsible-lists/css/tree_view.css?v=a885cde7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js?v=73120307"></script>
+      <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js?v=660e4f45"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            picea
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Installation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../README.html">About the project</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#guides">Guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#related-projects">Related projects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#development-environment-nix">Development Environment (Nix)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#build-on-ubuntu-24-04-no-nix">Build on Ubuntu 24.04 (no Nix)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#gurobi-license">Gurobi license</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#installing">Installing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#run-the-tests">Run the tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#build-the-documentation">Build the documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#compiling-a-design">Compiling a design</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#running-a-design-on-the-board">Running a design on the board</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#exporting-a-profiled-application-to-mocasin">Exporting a profiled application to Mocasin</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Guides</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../guides/laksa.html">The FPGA Variant using LAKSA backend</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/cgra.html">The CGRA Variant</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">MLIR Dialects</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/Base2Ops.html">‘base2’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/CGRAOps.html">‘cgra’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/DFGOps.html">‘dfg’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/EmitHLSOps.html">‘emithls’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/FilterOps.html">‘filter’ Dialect</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Passes</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/PICEAConversionPasses.html">PICEA Conversion Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/CGRAPasses.html">CGRA Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/DFGPasses.html">DFG Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/EmitHLSPasses.html">Emit HLS Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/FuncExtPasses.html">Func Ext Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/LinalgExtPasses.html">Linalg Ext Passes</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">C++ API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="library_root.html">C++ API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">picea</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Program Listing for File ConvertToEmitC.cpp</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/program_listing_file_lib_Conversion_ConvertToEmitC_ConvertToEmitC.cpp.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="program-listing-for-file-converttoemitc-cpp">
+<span id="program-listing-file-lib-conversion-converttoemitc-converttoemitc-cpp"></span><h1>Program Listing for File ConvertToEmitC.cpp<a class="headerlink" href="#program-listing-for-file-converttoemitc-cpp" title="Link to this heading"></a></h1>
+<p>↰ <a class="reference internal" href="file_lib_Conversion_ConvertToEmitC_ConvertToEmitC.cpp.html#file-lib-conversion-converttoemitc-converttoemitc-cpp"><span class="std std-ref">Return to documentation for file</span></a> (<code class="docutils literal notranslate"><span class="pre">lib/Conversion/ConvertToEmitC/ConvertToEmitC.cpp</span></code>)</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">"picea-mlir/Conversion/ConvertToEmitC/ConvertToEmitC.h"</span>
+
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"mlir/Conversion/AffineToStandard/AffineToStandard.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"mlir/Conversion/ConvertToEmitC/ConvertToEmitCPass.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"mlir/Conversion/ReconcileUnrealizedCasts/ReconcileUnrealizedCasts.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"mlir/Dialect/Arith/Transforms/Passes.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"mlir/Dialect/Bufferization/Transforms/Passes.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"mlir/Dialect/Linalg/Passes.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"mlir/Dialect/MemRef/Transforms/Passes.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"mlir/Pass/PassManager.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"mlir/Pass/PassRegistry.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"picea-mlir/Conversion/ConvertToDFG/ConvertToDFG.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"picea-mlir/Conversion/ReshapedCopyToLoops/ReshapedCopyToLoops.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"picea-mlir/Dialect/Func/Transforms/Passes.h"</span>
+
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;mlir/Transforms/Passes.h&gt;</span>
+
+<span class="k">using</span><span class="w"> </span><span class="k">namespace</span><span class="w"> </span><span class="nn">mlir</span><span class="p">;</span>
+
+<span class="k">namespace</span><span class="w"> </span><span class="p">{</span>
+<span class="k">struct</span><span class="w"> </span><span class="nc">ConvertToEmitCPipelineOptions</span>
+<span class="w">        </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">PassPipelineOptions</span><span class="o">&lt;</span><span class="n">ConvertToEmitCPipelineOptions</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">Option</span><span class="o">&lt;</span><span class="kt">uint32_t</span><span class="o">&gt;</span><span class="w"> </span><span class="n">maxAllocSizeInBytes</span><span class="p">{</span>
+<span class="w">        </span><span class="o">*</span><span class="k">this</span><span class="p">,</span>
+<span class="w">        </span><span class="s">"max-alloc-size-in-bytes"</span><span class="p">,</span>
+<span class="w">        </span><span class="n">llvm</span><span class="o">::</span><span class="n">cl</span><span class="o">::</span><span class="n">desc</span><span class="p">(</span>
+<span class="w">            </span><span class="s">"Maximal size in bytes of a heap allocation that is "</span>
+<span class="w">            </span><span class="s">"promoted to the stack. EmitC has no lowering for "</span>
+<span class="w">            </span><span class="s">"memref.alloc, so anything above this limit makes the "</span>
+<span class="w">            </span><span class="s">"conversion fail."</span><span class="p">),</span>
+<span class="w">        </span><span class="n">llvm</span><span class="o">::</span><span class="n">cl</span><span class="o">::</span><span class="n">init</span><span class="p">(</span><span class="mi">100000000</span><span class="p">)};</span>
+<span class="p">};</span>
+<span class="p">}</span><span class="w"> </span><span class="c1">// namespace</span>
+
+<span class="kt">void</span><span class="w"> </span><span class="n">mlir</span><span class="o">::</span><span class="n">picea</span><span class="o">::</span><span class="n">addConvertToEmitCPasses</span><span class="p">(</span>
+<span class="w">    </span><span class="n">OpPassManager</span><span class="w"> </span><span class="o">&amp;</span><span class="n">pm</span><span class="p">,</span>
+<span class="w">    </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">maxAllocSizeInBytes</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="c1">// Bufferize with identity layout maps: EmitC has no notion of a strided</span>
+<span class="w">    </span><span class="c1">// memref, so the function boundaries must come out as plain arrays.</span>
+<span class="w">    </span><span class="n">bufferization</span><span class="o">::</span><span class="n">OneShotBufferizePassOptions</span><span class="w"> </span><span class="n">bufferizeOptions</span><span class="p">;</span>
+<span class="w">    </span><span class="n">bufferizeOptions</span><span class="p">.</span><span class="n">bufferizeFunctionBoundaries</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="w">    </span><span class="n">bufferizeOptions</span><span class="p">.</span><span class="n">functionBoundaryTypeConversion</span><span class="w"> </span><span class="o">=</span>
+<span class="w">        </span><span class="n">bufferization</span><span class="o">::</span><span class="n">LayoutMapOption</span><span class="o">::</span><span class="n">IdentityLayoutMap</span><span class="p">;</span>
+<span class="w">    </span><span class="c1">// MemRefToEmitC rejects memref.global/memref.alloc carrying an alignment</span>
+<span class="w">    </span><span class="c1">// attribute, so do not let bufferization attach one.</span>
+<span class="w">    </span><span class="n">bufferizeOptions</span><span class="p">.</span><span class="n">bufferAlignment</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">    </span><span class="n">pm</span><span class="p">.</span><span class="n">addPass</span><span class="p">(</span><span class="n">bufferization</span><span class="o">::</span><span class="n">createOneShotBufferizePass</span><span class="p">(</span><span class="n">bufferizeOptions</span><span class="p">));</span>
+<span class="w">    </span><span class="c1">// A memref-returning function has no C equivalent; turn the result into an</span>
+<span class="w">    </span><span class="c1">// out-parameter instead. Public functions are opted in explicitly, as the</span>
+<span class="w">    </span><span class="c1">// entry point is the one that matters here.</span>
+<span class="w">    </span><span class="n">bufferization</span><span class="o">::</span><span class="n">BufferResultsToOutParamsPassOptions</span><span class="w"> </span><span class="n">outParamsOptions</span><span class="p">;</span>
+<span class="w">    </span><span class="n">outParamsOptions</span><span class="p">.</span><span class="n">modifyPublicFunctions</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="w">    </span><span class="n">outParamsOptions</span><span class="p">.</span><span class="n">hoistStaticAllocs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="w">    </span><span class="n">pm</span><span class="p">.</span><span class="n">addPass</span><span class="p">(</span>
+<span class="w">        </span><span class="n">bufferization</span><span class="o">::</span><span class="n">createBufferResultsToOutParamsPass</span><span class="p">(</span><span class="n">outParamsOptions</span><span class="p">));</span>
+<span class="w">    </span><span class="n">pm</span><span class="p">.</span><span class="n">addPass</span><span class="p">(</span><span class="n">createConvertLinalgToLoopsPass</span><span class="p">());</span>
+<span class="w">    </span><span class="c1">// Fold the reshapes bufferization left behind into the loads and stores</span>
+<span class="w">    </span><span class="c1">// that consume them.</span>
+<span class="w">    </span><span class="n">pm</span><span class="p">.</span><span class="n">addPass</span><span class="p">(</span><span class="n">memref</span><span class="o">::</span><span class="n">createFoldMemRefAliasOpsPass</span><span class="p">());</span>
+<span class="w">    </span><span class="n">pm</span><span class="p">.</span><span class="n">addPass</span><span class="p">(</span><span class="n">createConvertReshapedCopyToLoopsPass</span><span class="p">());</span>
+<span class="w">    </span><span class="n">pm</span><span class="p">.</span><span class="n">addPass</span><span class="p">(</span><span class="n">memref</span><span class="o">::</span><span class="n">createExpandStridedMetadataPass</span><span class="p">());</span>
+<span class="w">    </span><span class="n">pm</span><span class="p">.</span><span class="n">addPass</span><span class="p">(</span><span class="n">createLowerAffinePass</span><span class="p">());</span>
+<span class="w">    </span><span class="n">pm</span><span class="p">.</span><span class="n">addPass</span><span class="p">(</span><span class="n">createCSEPass</span><span class="p">());</span>
+<span class="w">    </span><span class="n">pm</span><span class="p">.</span><span class="n">addPass</span><span class="p">(</span><span class="n">createCanonicalizerPass</span><span class="p">());</span>
+<span class="w">    </span><span class="c1">// Whatever allocation survived out-param hoisting has to become a stack</span>
+<span class="w">    </span><span class="c1">// array, the only kind of buffer EmitC can express.</span>
+<span class="w">    </span><span class="n">bufferization</span><span class="o">::</span><span class="n">PromoteBuffersToStackPassOptions</span><span class="w"> </span><span class="n">promoteOptions</span><span class="p">;</span>
+<span class="w">    </span><span class="n">promoteOptions</span><span class="p">.</span><span class="n">maxAllocSizeInBytes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">maxAllocSizeInBytes</span><span class="p">;</span>
+<span class="w">    </span><span class="n">pm</span><span class="p">.</span><span class="n">nest</span><span class="p">(</span><span class="s">"func.func"</span><span class="p">)</span>
+<span class="w">        </span><span class="p">.</span><span class="n">addPass</span><span class="p">(</span>
+<span class="w">            </span><span class="n">bufferization</span><span class="o">::</span><span class="n">createPromoteBuffersToStackPass</span><span class="p">(</span><span class="n">promoteOptions</span><span class="p">));</span>
+<span class="w">    </span><span class="c1">// ArithToEmitC has no pattern for the min/max ops; expand them into the</span>
+<span class="w">    </span><span class="c1">// cmpi/select pairs it does handle.</span>
+<span class="w">    </span><span class="n">pm</span><span class="p">.</span><span class="n">addPass</span><span class="p">(</span><span class="n">arith</span><span class="o">::</span><span class="n">createArithExpandOpsPass</span><span class="p">());</span>
+<span class="w">    </span><span class="n">pm</span><span class="p">.</span><span class="n">addPass</span><span class="p">(</span><span class="n">createConvertToEmitC</span><span class="p">());</span>
+<span class="w">    </span><span class="n">pm</span><span class="p">.</span><span class="n">addPass</span><span class="p">(</span><span class="n">createReconcileUnrealizedCastsPass</span><span class="p">());</span>
+<span class="p">}</span>
+
+<span class="kt">void</span><span class="w"> </span><span class="n">mlir</span><span class="o">::</span><span class="n">picea</span><span class="o">::</span><span class="n">addConvertToCPUProfilePasses</span><span class="p">(</span>
+<span class="w">    </span><span class="n">OpPassManager</span><span class="w"> </span><span class="o">&amp;</span><span class="n">pm</span><span class="p">,</span>
+<span class="w">    </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">maxAllocSizeInBytes</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">addComputationNodeOutliningPasses</span><span class="p">(</span><span class="n">pm</span><span class="p">);</span>
+<span class="w">    </span><span class="n">pm</span><span class="p">.</span><span class="n">addPass</span><span class="p">(</span><span class="n">func</span><span class="o">::</span><span class="n">createFuncRemoveOutlinedFunctionWrappersPass</span><span class="p">());</span>
+<span class="w">    </span><span class="n">addConvertToEmitCPasses</span><span class="p">(</span><span class="n">pm</span><span class="p">,</span><span class="w"> </span><span class="n">maxAllocSizeInBytes</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">void</span><span class="w"> </span><span class="n">mlir</span><span class="o">::</span><span class="n">picea</span><span class="o">::</span><span class="n">registerConvertToEmitCPipelines</span><span class="p">()</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">PassPipelineRegistration</span><span class="o">&lt;</span><span class="n">ConvertToEmitCPipelineOptions</span><span class="o">&gt;</span><span class="p">(</span>
+<span class="w">        </span><span class="s">"convert-to-picea-emitc"</span><span class="p">,</span>
+<span class="w">        </span><span class="s">"Convert everything to the upstream emitc dialect"</span><span class="p">,</span>
+<span class="w">        </span><span class="p">[](</span><span class="n">OpPassManager</span><span class="w"> </span><span class="o">&amp;</span><span class="n">pm</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">ConvertToEmitCPipelineOptions</span><span class="w"> </span><span class="o">&amp;</span><span class="n">options</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">addConvertToEmitCPasses</span><span class="p">(</span><span class="n">pm</span><span class="p">,</span><span class="w"> </span><span class="n">options</span><span class="p">.</span><span class="n">maxAllocSizeInBytes</span><span class="p">);</span>
+<span class="w">        </span><span class="p">});</span>
+<span class="w">    </span><span class="n">PassPipelineRegistration</span><span class="o">&lt;</span><span class="n">ConvertToEmitCPipelineOptions</span><span class="o">&gt;</span><span class="p">(</span>
+<span class="w">        </span><span class="s">"convert-to-laksa-cpu-profile"</span><span class="p">,</span>
+<span class="w">        </span><span class="s">"Outline DFG nodes and lower each one independently to emitc"</span><span class="p">,</span>
+<span class="w">        </span><span class="p">[](</span><span class="n">OpPassManager</span><span class="w"> </span><span class="o">&amp;</span><span class="n">pm</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">ConvertToEmitCPipelineOptions</span><span class="w"> </span><span class="o">&amp;</span><span class="n">options</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">addConvertToCPUProfilePasses</span><span class="p">(</span><span class="n">pm</span><span class="p">,</span><span class="w"> </span><span class="n">options</span><span class="p">.</span><span class="n">maxAllocSizeInBytes</span><span class="p">);</span>
+<span class="w">        </span><span class="p">});</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

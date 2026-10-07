@@ -1,0 +1,48 @@
+
+.. _program_listing_file_lib_Dialect_Func_Transforms_RemoveOutlinedFunctionWrappers.cpp:
+
+Program Listing for File RemoveOutlinedFunctionWrappers.cpp
+===========================================================
+
+|exhale_lsh| :ref:`Return to documentation for file <file_lib_Dialect_Func_Transforms_RemoveOutlinedFunctionWrappers.cpp>` (``lib/Dialect/Func/Transforms/RemoveOutlinedFunctionWrappers.cpp``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. code-block:: cpp
+
+   
+   
+   #include "mlir/Dialect/Func/IR/FuncOps.h"
+   #include "mlir/IR/BuiltinOps.h"
+   #include "picea-mlir/Dialect/Func/Transforms/Passes.h"
+   #include "picea-mlir/IR/LaksaAttributes.h"
+   
+   namespace mlir {
+   namespace func {
+   #define GEN_PASS_DEF_FUNCREMOVEOUTLINEDFUNCTIONWRAPPERS
+   #include "picea-mlir/Dialect/Func/Transforms/Passes.h.inc"
+   } // namespace func
+   } // namespace mlir
+   
+   using namespace mlir;
+   
+   namespace {
+   
+   struct FuncRemoveOutlinedFunctionWrappersPass
+           : public func::impl::FuncRemoveOutlinedFunctionWrappersBase<
+                 FuncRemoveOutlinedFunctionWrappersPass> {
+       void runOnOperation() final
+       {
+           SmallVector<func::FuncOp> wrappers;
+           for (func::FuncOp funcOp : getOperation().getOps<func::FuncOp>())
+               if (funcOp->hasAttr(picea::kRootAttrName))
+                   wrappers.push_back(funcOp);
+   
+           for (func::FuncOp wrapper : wrappers) wrapper.erase();
+       }
+   };
+   
+   } // namespace
+   
+   std::unique_ptr<Pass> mlir::func::createFuncRemoveOutlinedFunctionWrappersPass()
+   { return std::make_unique<FuncRemoveOutlinedFunctionWrappersPass>(); }

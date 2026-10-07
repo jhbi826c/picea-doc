@@ -1,0 +1,38 @@
+
+.. _program_listing_file_include_picea-mlir_Dialect_Func_Transforms_Passes.h:
+
+Program Listing for File Passes.h
+=================================
+
+|exhale_lsh| :ref:`Return to documentation for file <file_include_picea-mlir_Dialect_Func_Transforms_Passes.h>` (``include/picea-mlir/Dialect/Func/Transforms/Passes.h``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. code-block:: cpp
+
+   
+   
+   #pragma once
+   
+   #include "mlir/Pass/Pass.h"
+   
+   namespace mlir::func {
+   
+   //===- Generated passes ---------------------------------------------------===//
+   
+   #define GEN_PASS_DECL
+   #include "picea-mlir/Dialect/Func/Transforms/Passes.h.inc"
+   
+   //===----------------------------------------------------------------------===//
+   
+   std::unique_ptr<Pass> createFuncOutlineComputationLeafPass();
+   std::unique_ptr<Pass> createFuncRemoveOutlinedFunctionWrappersPass();
+   
+   //===----------------------------------------------------------------------===//
+   // Registration
+   //===----------------------------------------------------------------------===//
+   
+   #define GEN_PASS_REGISTRATION
+   #include "picea-mlir/Dialect/Func/Transforms/Passes.h.inc"
+   
+   } // namespace mlir::func

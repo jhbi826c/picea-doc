@@ -1,0 +1,68 @@
+
+.. _program_listing_file_include_picea-mlir_Dialect_EmitHLS_IR_EmitHLSAttributes.h:
+
+Program Listing for File EmitHLSAttributes.h
+============================================
+
+|exhale_lsh| :ref:`Return to documentation for file <file_include_picea-mlir_Dialect_EmitHLS_IR_EmitHLSAttributes.h>` (``include/picea-mlir/Dialect/EmitHLS/IR/EmitHLSAttributes.h``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. code-block:: cpp
+
+   
+   
+   #pragma once
+   
+   #include "mlir/IR/Attributes.h"
+   #include "picea-mlir/Dialect/Base2/Analysis/BitSequence.h"
+   #include "picea-mlir/Dialect/EmitHLS/IR/EmitHLSBase.h"
+   
+   #include "llvm/ADT/STLExtras.h"
+   #include "llvm/ADT/StringRef.h"
+   
+   //===- Generated includes -------------------------------------------------===//
+   
+   #define GET_ATTRDEF_CLASSES
+   #include "picea-mlir/Dialect/EmitHLS/IR/EmitHLSAttributes.h.inc"
+   
+   //===----------------------------------------------------------------------===//
+   
+   namespace mlir::emithls {
+   
+   inline constexpr llvm::StringLiteral kModelCyclesAttrName =
+       "emithls.model_cycles";
+   
+   //===------------------------------------------------------------------===//
+   // DenseFixedAttr
+   //===------------------------------------------------------------------===//
+   
+   inline ::mlir::ShapedType DenseFixedAttr::getShapedType() const
+   { return cast<::mlir::ShapedType>(::mlir::TypedAttr(*this).getType()); }
+   
+   //===--------------------------------------------------------------===//
+   // ElementsAttrInterface
+   //===--------------------------------------------------------------===//
+   
+   inline auto
+   DenseFixedAttr::try_value_begin_impl(OverloadToken<std::uint8_t>) const
+   { return getData().try_value_begin<std::uint8_t>(); }
+   
+   inline auto
+   DenseFixedAttr::try_value_begin_impl(OverloadToken<std::uint64_t>) const
+   { return getData().try_value_begin<std::uint64_t>(); }
+   
+   inline auto DenseFixedAttr::try_value_begin_impl(
+       OverloadToken<::mlir::base2::BitSequence>) const
+   {
+       const auto bitWidth = getData().getType().getElementTypeBitWidth();
+       return mlir::success(
+           llvm::map_range(
+               getData().getValues<llvm::APInt>(),
+               [=](const llvm::APInt &raw) {
+                   return ::mlir::base2::BitSequence(raw).getLSB(bitWidth);
+               })
+               .begin());
+   }
+   
+   } // namespace mlir::emithls

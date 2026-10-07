@@ -1,0 +1,134 @@
+
+.. _program_listing_file_build_include_picea-mlir_Dialect_Base2_Base2Enums.h.inc:
+
+Program Listing for File Base2Enums.h.inc
+=========================================
+
+|exhale_lsh| :ref:`Return to documentation for file <file_build_include_picea-mlir_Dialect_Base2_Base2Enums.h.inc>` (``build/include/picea-mlir/Dialect/Base2/Base2Enums.h.inc``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. code-block:: cpp
+
+   /*===- TableGen'erated file -------------------------------------*- C++ -*-===*\
+   |*                                                                            *|
+   |* Enum Utility Declarations                                                  *|
+   |*                                                                            *|
+   |* Automatically generated file, do not edit!                                 *|
+   |* From: Base2Enums.td                                                        *|
+   |*                                                                            *|
+   \*===----------------------------------------------------------------------===*/
+   
+   namespace mlir::base2 {
+   
+   // Predicate to apply during comparison operation
+   enum class OrderingPredicate : uint32_t {
+     Falsum = 0,
+     OrderedAndEqual = 1,
+     OrderedAndGreater = 2,
+     OrderedAndGreaterOrEqual = 3,
+     OrderedAndLess = 4,
+     OrderedAndLessOrEqual = 5,
+     OrderedAndUnequal = 6,
+     Ordered = 7,
+     Unordered = 8,
+     UnorderedOrEqual = 9,
+     UnorderedOrGreater = 10,
+     UnorderedOrGreaterOrEqual = 11,
+     UnorderedOrLess = 12,
+     UnorderedOrLessOrEqual = 13,
+     UnorderedOrUnequal = 14,
+     Verum = 15,
+   };
+   
+   ::std::optional<OrderingPredicate> symbolizeOrderingPredicate(uint32_t);
+   ::llvm::StringRef stringifyOrderingPredicate(OrderingPredicate);
+   ::std::optional<OrderingPredicate> symbolizeOrderingPredicate(::llvm::StringRef);
+   inline constexpr unsigned getMaxEnumValForOrderingPredicate() {
+     return 15;
+   }
+   
+   
+   inline ::llvm::StringRef stringifyEnum(OrderingPredicate enumValue) {
+     return stringifyOrderingPredicate(enumValue);
+   }
+   
+   template <typename EnumType>
+   ::std::optional<EnumType> symbolizeEnum(::llvm::StringRef);
+   
+   template <>
+   inline ::std::optional<OrderingPredicate> symbolizeEnum<OrderingPredicate>(::llvm::StringRef str) {
+     return symbolizeOrderingPredicate(str);
+   }
+   
+   class OrderingPredicateAttr : public ::mlir::IntegerAttr {
+   public:
+     using ValueType = OrderingPredicate;
+     using ::mlir::IntegerAttr::IntegerAttr;
+     static bool classof(::mlir::Attribute attr);
+     static OrderingPredicateAttr get(::mlir::MLIRContext *context, OrderingPredicate val);
+     OrderingPredicate getValue() const;
+   };
+   
+   } // namespace mlir::base2
+   
+   namespace mlir {
+   template <typename T, typename>
+   struct FieldParser;
+   
+   template<>
+   struct FieldParser<::mlir::base2::OrderingPredicate, ::mlir::base2::OrderingPredicate> {
+     template <typename ParserT>
+     static FailureOr<::mlir::base2::OrderingPredicate> parse(ParserT &parser) {
+       // Parse the keyword/string containing the enum.
+       std::string enumKeyword;
+       auto loc = parser.getCurrentLocation();
+       if (failed(parser.parseOptionalKeywordOrString(&enumKeyword)))
+         return parser.emitError(loc, "expected keyword for Predicate to apply during comparison operation");
+   
+       // Symbolize the keyword.
+       if (::std::optional<::mlir::base2::OrderingPredicate> attr = ::mlir::base2::symbolizeEnum<::mlir::base2::OrderingPredicate>(enumKeyword))
+         return *attr;
+       return parser.emitError(loc, "expected one of [false, oeq, ogt, oge, olt, ole, une, ord, uno, ueq, ugt, uge, ult, ule, une, true] for Predicate to apply during comparison operation, got: ") << enumKeyword;
+     }
+   };
+   
+   template<>
+   struct FieldParser<std::optional<::mlir::base2::OrderingPredicate>, std::optional<::mlir::base2::OrderingPredicate>> {
+     template <typename ParserT>
+     static FailureOr<std::optional<::mlir::base2::OrderingPredicate>> parse(ParserT &parser) {
+       // Parse the keyword/string containing the enum.
+       std::string enumKeyword;
+       auto loc = parser.getCurrentLocation();
+       if (failed(parser.parseOptionalKeywordOrString(&enumKeyword, {"false", "oeq", "ogt", "oge", "olt", "ole", "une", "ord", "uno", "ueq", "ugt", "uge", "ult", "ule", "une", "true"})))
+         return std::optional<::mlir::base2::OrderingPredicate>{};
+   
+       // Symbolize the keyword.
+       if (::std::optional<::mlir::base2::OrderingPredicate> attr = ::mlir::base2::symbolizeEnum<::mlir::base2::OrderingPredicate>(enumKeyword))
+         return attr;
+       return parser.emitError(loc, "expected one of [false, oeq, ogt, oge, olt, ole, une, ord, uno, ueq, ugt, uge, ult, ule, une, true] for Predicate to apply during comparison operation, got: ") << enumKeyword;
+     }
+   };
+   } // namespace mlir
+   
+   namespace llvm {
+   inline ::llvm::raw_ostream &operator<<(::llvm::raw_ostream &p, ::mlir::base2::OrderingPredicate value) {
+     auto valueStr = stringifyEnum(value);
+     return p << valueStr;
+   }
+   } // namespace llvm
+   
+   namespace llvm {
+   template<> struct DenseMapInfo<::mlir::base2::OrderingPredicate> {
+     using StorageInfo = ::llvm::DenseMapInfo<uint32_t>;
+   
+     static unsigned getHashValue(const ::mlir::base2::OrderingPredicate &val) {
+       return StorageInfo::getHashValue(static_cast<uint32_t>(val));
+     }
+   
+     static bool isEqual(const ::mlir::base2::OrderingPredicate &lhs, const ::mlir::base2::OrderingPredicate &rhs) {
+       return lhs == rhs;
+     }
+   };
+   }
+   

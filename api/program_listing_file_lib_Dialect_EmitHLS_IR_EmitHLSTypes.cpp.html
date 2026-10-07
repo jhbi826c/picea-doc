@@ -1,0 +1,278 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Program Listing for File EmitHLSTypes.cpp &mdash; picea 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/collapsible-lists/css/tree_view.css?v=a885cde7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js?v=73120307"></script>
+      <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js?v=660e4f45"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            picea
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Installation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../README.html">About the project</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#guides">Guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#related-projects">Related projects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#development-environment-nix">Development Environment (Nix)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#build-on-ubuntu-24-04-no-nix">Build on Ubuntu 24.04 (no Nix)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#gurobi-license">Gurobi license</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#installing">Installing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#run-the-tests">Run the tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#build-the-documentation">Build the documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#compiling-a-design">Compiling a design</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#running-a-design-on-the-board">Running a design on the board</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#exporting-a-profiled-application-to-mocasin">Exporting a profiled application to Mocasin</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Guides</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../guides/laksa.html">The FPGA Variant using LAKSA backend</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/cgra.html">The CGRA Variant</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">MLIR Dialects</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/Base2Ops.html">‘base2’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/CGRAOps.html">‘cgra’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/DFGOps.html">‘dfg’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/EmitHLSOps.html">‘emithls’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/FilterOps.html">‘filter’ Dialect</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Passes</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/PICEAConversionPasses.html">PICEA Conversion Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/CGRAPasses.html">CGRA Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/DFGPasses.html">DFG Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/EmitHLSPasses.html">Emit HLS Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/FuncExtPasses.html">Func Ext Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/LinalgExtPasses.html">Linalg Ext Passes</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">C++ API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="library_root.html">C++ API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">picea</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Program Listing for File EmitHLSTypes.cpp</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/program_listing_file_lib_Dialect_EmitHLS_IR_EmitHLSTypes.cpp.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="program-listing-for-file-emithlstypes-cpp">
+<span id="program-listing-file-lib-dialect-emithls-ir-emithlstypes-cpp"></span><h1>Program Listing for File EmitHLSTypes.cpp<a class="headerlink" href="#program-listing-for-file-emithlstypes-cpp" title="Link to this heading"></a></h1>
+<p>↰ <a class="reference internal" href="file_lib_Dialect_EmitHLS_IR_EmitHLSTypes.cpp.html#file-lib-dialect-emithls-ir-emithlstypes-cpp"><span class="std std-ref">Return to documentation for file</span></a> (<code class="docutils literal notranslate"><span class="pre">lib/Dialect/EmitHLS/IR/EmitHLSTypes.cpp</span></code>)</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">"picea-mlir/Dialect/EmitHLS/IR/EmitHLSTypes.h"</span>
+
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"mlir/IR/Builders.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"mlir/IR/DialectImplementation.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"mlir/IR/OpImplementation.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"mlir/IR/TypeUtilities.h"</span>
+
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"llvm/ADT/TypeSwitch.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"llvm/Support/ErrorHandling.h"</span>
+
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;cstdint&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;mlir/IR/Diagnostics.h&gt;</span>
+
+<span class="k">using</span><span class="w"> </span><span class="k">namespace</span><span class="w"> </span><span class="nn">mlir</span><span class="p">;</span>
+<span class="k">using</span><span class="w"> </span><span class="k">namespace</span><span class="w"> </span><span class="nn">mlir</span><span class="o">::</span><span class="nn">emithls</span><span class="p">;</span>
+
+<span class="c1">//===- Generated implementation -------------------------------------------===//</span>
+
+<span class="cp">#define GET_TYPEDEF_CLASSES</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"picea-mlir/Dialect/EmitHLS/IR/EmitHLSTypes.cpp.inc"</span>
+
+<span class="c1">//===----------------------------------------------------------------------===//</span>
+
+<span class="c1">//===----------------------------------------------------------------------===//</span>
+<span class="c1">// FixedType</span>
+<span class="c1">//===----------------------------------------------------------------------===//</span>
+
+<span class="n">LogicalResult</span><span class="w"> </span><span class="nf">FixedType::verify</span><span class="p">(</span>
+<span class="w">    </span><span class="n">llvm</span><span class="o">::</span><span class="n">function_ref</span><span class="o">&lt;::</span><span class="n">mlir</span><span class="o">::</span><span class="n">InFlightDiagnostic</span><span class="p">()</span><span class="o">&gt;</span><span class="w"> </span><span class="n">emitError</span><span class="p">,</span>
+<span class="w">    </span><span class="kt">int64_t</span><span class="w"> </span><span class="n">totalBits</span><span class="p">,</span>
+<span class="w">    </span><span class="kt">int64_t</span><span class="w"> </span><span class="n">intBits</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">intBits</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">emitError</span><span class="p">()</span>
+<span class="w">               </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"There must be at least 1-bit integer part as signedness"</span><span class="p">;</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">totalBits</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">intBits</span><span class="p">)</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">emitError</span><span class="p">()</span>
+<span class="w">               </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"total bit width ("</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">totalBits</span>
+<span class="w">               </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">") must be at least as large as the integer bit width ("</span>
+<span class="w">               </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">intBits</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">")"</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">success</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="c1">//===----------------------------------------------------------------------===//</span>
+<span class="c1">// StreamType</span>
+<span class="c1">//===----------------------------------------------------------------------===//</span>
+
+<span class="n">LogicalResult</span><span class="w"> </span><span class="nf">StreamType::verify</span><span class="p">(</span>
+<span class="w">    </span><span class="n">llvm</span><span class="o">::</span><span class="n">function_ref</span><span class="o">&lt;::</span><span class="n">mlir</span><span class="o">::</span><span class="n">InFlightDiagnostic</span><span class="p">()</span><span class="o">&gt;</span><span class="w"> </span><span class="n">emitError</span><span class="p">,</span>
+<span class="w">    </span><span class="n">Type</span><span class="w"> </span><span class="n">elementType</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">llvm</span><span class="o">::</span><span class="n">isa</span><span class="o">&lt;</span><span class="n">IntegerType</span><span class="p">,</span><span class="w"> </span><span class="n">FixedType</span><span class="o">&gt;</span><span class="p">(</span><span class="n">elementType</span><span class="p">))</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">emitError</span><span class="p">()</span>
+<span class="w">               </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"Only integers and fixed-point types are currently "</span>
+<span class="w">                  </span><span class="s">"supported in stream"</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">success</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="c1">//===----------------------------------------------------------------------===//</span>
+<span class="c1">// PointerType</span>
+<span class="c1">//===----------------------------------------------------------------------===//</span>
+
+<span class="n">LogicalResult</span><span class="w"> </span><span class="nf">PointerType::verify</span><span class="p">(</span>
+<span class="w">    </span><span class="n">llvm</span><span class="o">::</span><span class="n">function_ref</span><span class="o">&lt;::</span><span class="n">mlir</span><span class="o">::</span><span class="n">InFlightDiagnostic</span><span class="p">()</span><span class="o">&gt;</span><span class="w"> </span><span class="n">emitError</span><span class="p">,</span>
+<span class="w">    </span><span class="n">Type</span><span class="w"> </span><span class="n">elementType</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">llvm</span><span class="o">::</span><span class="n">isa</span><span class="o">&lt;</span><span class="n">IntegerType</span><span class="o">&gt;</span><span class="p">(</span><span class="n">elementType</span><span class="p">))</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">emitError</span><span class="p">()</span>
+<span class="w">               </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"Only integers are currently supported with pointer"</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">success</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="c1">//===----------------------------------------------------------------------===//</span>
+<span class="c1">// ArrayType</span>
+<span class="c1">//===----------------------------------------------------------------------===//</span>
+
+<span class="n">ArrayType</span><span class="w"> </span><span class="nf">ArrayType::get</span><span class="p">(</span><span class="n">ArrayRef</span><span class="o">&lt;</span><span class="kt">int64_t</span><span class="o">&gt;</span><span class="w"> </span><span class="n">shape</span><span class="p">,</span><span class="w"> </span><span class="n">Type</span><span class="w"> </span><span class="n">elementType</span><span class="p">)</span>
+<span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">Base</span><span class="o">::</span><span class="n">get</span><span class="p">(</span><span class="n">elementType</span><span class="p">.</span><span class="n">getContext</span><span class="p">(),</span><span class="w"> </span><span class="n">shape</span><span class="p">,</span><span class="w"> </span><span class="n">elementType</span><span class="p">);</span><span class="w"> </span><span class="p">}</span>
+
+<span class="n">Type</span><span class="w"> </span><span class="nf">ArrayType::parse</span><span class="p">(</span><span class="n">AsmParser</span><span class="w"> </span><span class="o">&amp;</span><span class="n">parser</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">parser</span><span class="p">.</span><span class="n">parseLess</span><span class="p">())</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="p">{};</span>
+
+<span class="w">    </span><span class="n">SmallVector</span><span class="o">&lt;</span><span class="kt">int64_t</span><span class="o">&gt;</span><span class="w"> </span><span class="n">shape</span><span class="p">;</span>
+<span class="w">    </span><span class="n">Type</span><span class="w"> </span><span class="n">elementType</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">parser</span><span class="p">.</span><span class="n">parseDimensionList</span><span class="p">(</span><span class="n">shape</span><span class="p">,</span><span class="w"> </span><span class="cm">/*allowDynamic=*/</span><span class="nb">false</span><span class="p">))</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="p">{};</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">parser</span><span class="p">.</span><span class="n">parseType</span><span class="p">(</span><span class="n">elementType</span><span class="p">))</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="p">{};</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">parser</span><span class="p">.</span><span class="n">parseGreater</span><span class="p">())</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="p">{};</span>
+
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">ArrayType</span><span class="o">::</span><span class="n">get</span><span class="p">(</span><span class="n">shape</span><span class="p">,</span><span class="w"> </span><span class="n">elementType</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">void</span><span class="w"> </span><span class="nf">ArrayType::print</span><span class="p">(</span><span class="n">AsmPrinter</span><span class="w"> </span><span class="o">&amp;</span><span class="n">p</span><span class="p">)</span><span class="w"> </span><span class="k">const</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">p</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"&lt;"</span><span class="p">;</span>
+<span class="w">    </span><span class="n">p</span><span class="p">.</span><span class="n">printDimensionList</span><span class="p">(</span><span class="n">getShape</span><span class="p">());</span>
+<span class="w">    </span><span class="n">p</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"x"</span><span class="p">;</span>
+<span class="w">    </span><span class="n">p</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">getElementType</span><span class="p">();</span>
+<span class="w">    </span><span class="n">p</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"&gt;"</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="n">LogicalResult</span><span class="w"> </span><span class="nf">ArrayType::verify</span><span class="p">(</span>
+<span class="w">    </span><span class="n">function_ref</span><span class="o">&lt;</span><span class="n">InFlightDiagnostic</span><span class="p">()</span><span class="o">&gt;</span><span class="w"> </span><span class="n">emitError</span><span class="p">,</span>
+<span class="w">    </span><span class="n">ArrayRef</span><span class="o">&lt;</span><span class="kt">int64_t</span><span class="o">&gt;</span><span class="w"> </span><span class="n">shape</span><span class="p">,</span>
+<span class="w">    </span><span class="n">Type</span><span class="w"> </span><span class="n">elementType</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">isa</span><span class="o">&lt;</span><span class="n">ShapedType</span><span class="o">&gt;</span><span class="p">(</span><span class="n">elementType</span><span class="p">))</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">emitError</span><span class="p">()</span>
+<span class="w">               </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"element type of ArrayType must be a scalar, not a shaped "</span>
+<span class="w">                  </span><span class="s">"type like '"</span>
+<span class="w">               </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">elementType</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"'"</span><span class="p">;</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">shape</span><span class="p">.</span><span class="n">empty</span><span class="p">())</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">emitError</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"shape cannot be empty for an array"</span><span class="p">;</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int64_t</span><span class="w"> </span><span class="n">dim</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">shape</span><span class="p">)</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">dim</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="n">emitError</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"dimensions of InputType must be static"</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">success</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="c1">//===----------------------------------------------------------------------===//</span>
+<span class="c1">// EmitHLSDialect</span>
+<span class="c1">//===----------------------------------------------------------------------===//</span>
+
+<span class="kt">void</span><span class="w"> </span><span class="nf">EmitHLSDialect::registerTypes</span><span class="p">()</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">addTypes</span><span class="o">&lt;</span>
+<span class="cp">#define GET_TYPEDEF_LIST</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"picea-mlir/Dialect/EmitHLS/IR/EmitHLSTypes.cpp.inc"</span>
+<span class="w">        </span><span class="o">&gt;</span><span class="p">();</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

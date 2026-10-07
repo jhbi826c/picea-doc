@@ -1,0 +1,208 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Namespace llvm &mdash; picea 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/collapsible-lists/css/tree_view.css?v=a885cde7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js?v=73120307"></script>
+      <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js?v=660e4f45"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Namespace llvm::yaml" href="namespace_llvm__yaml.html" />
+    <link rel="prev" title="C++ API Reference" href="library_root.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            picea
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Installation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../README.html">About the project</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#guides">Guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#related-projects">Related projects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#development-environment-nix">Development Environment (Nix)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#build-on-ubuntu-24-04-no-nix">Build on Ubuntu 24.04 (no Nix)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#gurobi-license">Gurobi license</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#installing">Installing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#run-the-tests">Run the tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#build-the-documentation">Build the documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#compiling-a-design">Compiling a design</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#running-a-design-on-the-board">Running a design on the board</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#exporting-a-profiled-application-to-mocasin">Exporting a profiled application to Mocasin</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Guides</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../guides/laksa.html">The FPGA Variant using LAKSA backend</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/cgra.html">The CGRA Variant</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">MLIR Dialects</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/Base2Ops.html">‘base2’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/CGRAOps.html">‘cgra’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/DFGOps.html">‘dfg’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/EmitHLSOps.html">‘emithls’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/FilterOps.html">‘filter’ Dialect</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Passes</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/PICEAConversionPasses.html">PICEA Conversion Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/CGRAPasses.html">CGRA Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/DFGPasses.html">DFG Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/EmitHLSPasses.html">Emit HLS Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/FuncExtPasses.html">Func Ext Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/LinalgExtPasses.html">Linalg Ext Passes</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">C++ API</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="library_root.html">C++ API Reference</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="library_root.html#picea">picea</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="library_root.html#page-hierarchy">Page Hierarchy</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="library_root.html#full-api">Full API</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="library_root.html#namespaces">Namespaces</a></li>
+<li class="toctree-l4"><a class="reference internal" href="library_root.html#classes-and-structs">Classes and Structs</a></li>
+<li class="toctree-l4"><a class="reference internal" href="library_root.html#enums">Enums</a></li>
+<li class="toctree-l4"><a class="reference internal" href="library_root.html#functions">Functions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="library_root.html#variables">Variables</a></li>
+<li class="toctree-l4"><a class="reference internal" href="library_root.html#defines">Defines</a></li>
+<li class="toctree-l4"><a class="reference internal" href="library_root.html#typedefs">Typedefs</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">picea</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="library_root.html">C++ API Reference</a></li>
+      <li class="breadcrumb-item active">Namespace llvm</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/namespace_llvm.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="namespace-llvm">
+<span id="id1"></span><h1>Namespace llvm<a class="headerlink" href="#namespace-llvm" title="Link to this heading"></a></h1>
+<nav class="contents local" id="contents">
+<p class="topic-title">Contents</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#namespaces" id="id2">Namespaces</a></p></li>
+<li><p><a class="reference internal" href="#classes" id="id3">Classes</a></p></li>
+<li><p><a class="reference internal" href="#functions" id="id4">Functions</a></p></li>
+</ul>
+</nav>
+<section id="namespaces">
+<h2>Namespaces<a class="headerlink" href="#namespaces" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="namespace_llvm__yaml.html#namespace-llvm-yaml"><span class="std std-ref">Namespace llvm::yaml</span></a></p></li>
+</ul>
+</section>
+<section id="classes">
+<h2>Classes<a class="headerlink" href="#classes" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="structllvm_1_1DenseMapInfo_3_1_1mlir_1_1base2_1_1OrderingPredicate_01_4.html#exhale-struct-structllvm-1-1densemapinfo-3-1-1mlir-1-1base2-1-1orderingpredicate-01-4"><span class="std std-ref">Template Struct DenseMapInfo&lt; ::mlir::base2::OrderingPredicate &gt;</span></a></p></li>
+<li><p><a class="reference internal" href="structllvm_1_1DenseMapInfo_3_1_1mlir_1_1dfg_1_1OffloadHardware_01_4.html#exhale-struct-structllvm-1-1densemapinfo-3-1-1mlir-1-1dfg-1-1offloadhardware-01-4"><span class="std std-ref">Template Struct DenseMapInfo&lt; ::mlir::dfg::OffloadHardware &gt;</span></a></p></li>
+<li><p><a class="reference internal" href="structllvm_1_1DenseMapInfo_3_1_1mlir_1_1emithls_1_1ArrayPartitionType_01_4.html#exhale-struct-structllvm-1-1densemapinfo-3-1-1mlir-1-1emithls-1-1arraypartitiontype-01-4"><span class="std std-ref">Template Struct DenseMapInfo&lt; ::mlir::emithls::ArrayPartitionType &gt;</span></a></p></li>
+<li><p><a class="reference internal" href="structllvm_1_1DenseMapInfo_3_1_1mlir_1_1emithls_1_1BindStorageImpl_01_4.html#exhale-struct-structllvm-1-1densemapinfo-3-1-1mlir-1-1emithls-1-1bindstorageimpl-01-4"><span class="std std-ref">Template Struct DenseMapInfo&lt; ::mlir::emithls::BindStorageImpl &gt;</span></a></p></li>
+<li><p><a class="reference internal" href="structllvm_1_1DenseMapInfo_3_1_1mlir_1_1emithls_1_1BindStorageType_01_4.html#exhale-struct-structllvm-1-1densemapinfo-3-1-1mlir-1-1emithls-1-1bindstoragetype-01-4"><span class="std std-ref">Template Struct DenseMapInfo&lt; ::mlir::emithls::BindStorageType &gt;</span></a></p></li>
+<li><p><a class="reference internal" href="structllvm_1_1DenseMapInfo_3_1_1mlir_1_1emithls_1_1CmpPredicate_01_4.html#exhale-struct-structllvm-1-1densemapinfo-3-1-1mlir-1-1emithls-1-1cmppredicate-01-4"><span class="std std-ref">Template Struct DenseMapInfo&lt; ::mlir::emithls::CmpPredicate &gt;</span></a></p></li>
+<li><p><a class="reference internal" href="structllvm_1_1DenseMapInfo_3_1_1mlir_1_1emithls_1_1FusedOperator_01_4.html#exhale-struct-structllvm-1-1densemapinfo-3-1-1mlir-1-1emithls-1-1fusedoperator-01-4"><span class="std std-ref">Template Struct DenseMapInfo&lt; ::mlir::emithls::FusedOperator &gt;</span></a></p></li>
+<li><p><a class="reference internal" href="structllvm_1_1DenseMapInfo_3_1_1mlir_1_1emithls_1_1PipelineStyle_01_4.html#exhale-struct-structllvm-1-1densemapinfo-3-1-1mlir-1-1emithls-1-1pipelinestyle-01-4"><span class="std std-ref">Template Struct DenseMapInfo&lt; ::mlir::emithls::PipelineStyle &gt;</span></a></p></li>
+<li><p><a class="reference internal" href="structllvm_1_1DenseMapInfo_3_1_1mlir_1_1filter_1_1EnvelopeStyle_01_4.html#exhale-struct-structllvm-1-1densemapinfo-3-1-1mlir-1-1filter-1-1envelopestyle-01-4"><span class="std std-ref">Template Struct DenseMapInfo&lt; ::mlir::filter::EnvelopeStyle &gt;</span></a></p></li>
+</ul>
+</section>
+<section id="functions">
+<h2>Functions<a class="headerlink" href="#functions" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="function_namespacellvm_1a010bf67f2cf0331f30e4b5b9c9479b95.html#exhale-function-namespacellvm-1a010bf67f2cf0331f30e4b5b9c9479b95"><span class="std std-ref">Function llvm::operator&lt;&lt;(::llvm::raw_ostream&amp;, ::mlir::emithls::ArrayPartitionType)</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacellvm_1a2be6edd82c442483d57227a775920d7a.html#exhale-function-namespacellvm-1a2be6edd82c442483d57227a775920d7a"><span class="std std-ref">Function llvm::operator&lt;&lt;(::llvm::raw_ostream&amp;, ::mlir::dfg::OffloadHardware)</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacellvm_1a6867e0b7d1cc6fa19ca1107937b84792.html#exhale-function-namespacellvm-1a6867e0b7d1cc6fa19ca1107937b84792"><span class="std std-ref">Function llvm::operator&lt;&lt;(::llvm::raw_ostream&amp;, ::mlir::base2::OrderingPredicate)</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacellvm_1a6360beb60bf9858a9cb97e199ebc3efc.html#exhale-function-namespacellvm-1a6360beb60bf9858a9cb97e199ebc3efc"><span class="std std-ref">Function llvm::operator&lt;&lt;(::llvm::raw_ostream&amp;, ::mlir::emithls::BindStorageImpl)</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacellvm_1ac3e25bf7ebbb9d039600df443c44c094.html#exhale-function-namespacellvm-1ac3e25bf7ebbb9d039600df443c44c094"><span class="std std-ref">Function llvm::operator&lt;&lt;(::llvm::raw_ostream&amp;, ::mlir::emithls::BindStorageType)</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacellvm_1af53d336bccb96ab5de18008c60a23bc5.html#exhale-function-namespacellvm-1af53d336bccb96ab5de18008c60a23bc5"><span class="std std-ref">Function llvm::operator&lt;&lt;(::llvm::raw_ostream&amp;, ::mlir::emithls::CmpPredicate)</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacellvm_1a334f2ff2131bd77c2e147dc6345e6ddb.html#exhale-function-namespacellvm-1a334f2ff2131bd77c2e147dc6345e6ddb"><span class="std std-ref">Function llvm::operator&lt;&lt;(::llvm::raw_ostream&amp;, ::mlir::emithls::FusedOperator)</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacellvm_1a0388627806c47d9df584f03e88947d9c.html#exhale-function-namespacellvm-1a0388627806c47d9df584f03e88947d9c"><span class="std std-ref">Function llvm::operator&lt;&lt;(::llvm::raw_ostream&amp;, ::mlir::emithls::PipelineStyle)</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacellvm_1aa0841b39adde87509d8b01726dbda61f.html#exhale-function-namespacellvm-1aa0841b39adde87509d8b01726dbda61f"><span class="std std-ref">Function llvm::operator&lt;&lt;(::llvm::raw_ostream&amp;, ::mlir::filter::EnvelopeStyle)</span></a></p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="library_root.html" class="btn btn-neutral float-left" title="C++ API Reference" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="namespace_llvm__yaml.html" class="btn btn-neutral float-right" title="Namespace llvm::yaml" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

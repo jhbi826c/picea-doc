@@ -1,0 +1,292 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Class OutputType &mdash; picea 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/collapsible-lists/css/tree_view.css?v=a885cde7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js?v=73120307"></script>
+      <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js?v=660e4f45"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Class ProcessOp" href="classmlir_1_1dfg_1_1ProcessOp.html" />
+    <link rel="prev" title="Template Class OutputOpGenericAdaptor" href="classmlir_1_1dfg_1_1OutputOpGenericAdaptor.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            picea
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Installation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../README.html">About the project</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#guides">Guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#related-projects">Related projects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#development-environment-nix">Development Environment (Nix)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#build-on-ubuntu-24-04-no-nix">Build on Ubuntu 24.04 (no Nix)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#gurobi-license">Gurobi license</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#installing">Installing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#run-the-tests">Run the tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#build-the-documentation">Build the documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#compiling-a-design">Compiling a design</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#running-a-design-on-the-board">Running a design on the board</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#exporting-a-profiled-application-to-mocasin">Exporting a profiled application to Mocasin</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Guides</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../guides/laksa.html">The FPGA Variant using LAKSA backend</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/cgra.html">The CGRA Variant</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">MLIR Dialects</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/Base2Ops.html">‘base2’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/CGRAOps.html">‘cgra’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/DFGOps.html">‘dfg’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/EmitHLSOps.html">‘emithls’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/FilterOps.html">‘filter’ Dialect</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Passes</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/PICEAConversionPasses.html">PICEA Conversion Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/CGRAPasses.html">CGRA Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/DFGPasses.html">DFG Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/EmitHLSPasses.html">Emit HLS Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/FuncExtPasses.html">Func Ext Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/LinalgExtPasses.html">Linalg Ext Passes</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">C++ API</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="library_root.html">C++ API Reference</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="library_root.html#picea">picea</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="library_root.html#page-hierarchy">Page Hierarchy</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="library_root.html#full-api">Full API</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="library_root.html#namespaces">Namespaces</a></li>
+<li class="toctree-l4 current"><a class="reference internal" href="library_root.html#classes-and-structs">Classes and Structs</a></li>
+<li class="toctree-l4"><a class="reference internal" href="library_root.html#enums">Enums</a></li>
+<li class="toctree-l4"><a class="reference internal" href="library_root.html#functions">Functions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="library_root.html#variables">Variables</a></li>
+<li class="toctree-l4"><a class="reference internal" href="library_root.html#defines">Defines</a></li>
+<li class="toctree-l4"><a class="reference internal" href="library_root.html#typedefs">Typedefs</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">picea</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="library_root.html">C++ API Reference</a></li>
+      <li class="breadcrumb-item active">Class OutputType</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/classmlir_1_1dfg_1_1OutputType.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="class-outputtype">
+<span id="exhale-class-classmlir-1-1dfg-1-1outputtype"></span><h1>Class OutputType<a class="headerlink" href="#class-outputtype" title="Link to this heading"></a></h1>
+<ul class="simple">
+<li><p>Defined in <a class="reference internal" href="file_build_include_picea-mlir_Dialect_DFG_IR_DFGTypes.h.inc.html#file-build-include-picea-mlir-dialect-dfg-ir-dfgtypes-h-inc"><span class="std std-ref">File DFGTypes.h.inc</span></a></p></li>
+</ul>
+<section id="inheritance-relationships">
+<h2>Inheritance Relationships<a class="headerlink" href="#inheritance-relationships" title="Link to this heading"></a></h2>
+<section id="base-type">
+<h3>Base Type<a class="headerlink" href="#base-type" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">public</span> <span class="pre">mlir::Type::TypeBase&lt;</span> <span class="pre">OutputType,</span> <span class="pre">::mlir::Type,</span> <span class="pre">detail::OutputTypeStorage,</span> <span class="pre">::mlir::dfg::TypeInterface::Trait</span> <span class="pre">&gt;</span></code></p></li>
+</ul>
+</section>
+</section>
+<section id="class-documentation">
+<h2>Class Documentation<a class="headerlink" href="#class-documentation" title="Link to this heading"></a></h2>
+<dl class="cpp class">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir3dfg10OutputTypeE">
+<span id="_CPPv3N4mlir3dfg10OutputTypeE"></span><span id="_CPPv2N4mlir3dfg10OutputTypeE"></span><span id="mlir::dfg::OutputType"></span><span class="target" id="classmlir_1_1dfg_1_1OutputType"></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">OutputType</span></span></span><span class="w"> </span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="k"><span class="pre">public</span></span><span class="w"> </span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">Type</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">TypeBase</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4N4mlir3dfg10OutputTypeE" title="mlir::dfg::OutputType"><span class="n"><span class="pre">OutputType</span></span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">Type</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">detail</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">OutputTypeStorage</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">dfg</span></span><span class="p"><span class="pre">::</span></span><a class="reference internal" href="classmlir_1_1dfg_1_1TypeInterface.html#_CPPv4N4mlir3dfg13TypeInterfaceE" title="mlir::dfg::TypeInterface"><span class="n"><span class="pre">TypeInterface</span></span></a><span class="p"><span class="pre">::</span></span><a class="reference internal" href="classmlir_1_1dfg_1_1TypeInterface.html#_CPPv4I0EN4mlir3dfg13TypeInterface5TraitE" title="mlir::dfg::TypeInterface::Trait"><span class="n"><span class="pre">Trait</span></span></a><span class="p"><span class="pre">&gt;</span></span><a class="headerlink" href="#_CPPv4N4mlir3dfg10OutputTypeE" title="Link to this definition"></a><br /></dt>
+<dd><div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK4mlir3dfg10OutputType5printERN4mlir10AsmPrinterE">
+<span id="_CPPv3NK4mlir3dfg10OutputType5printERN4mlir10AsmPrinterE"></span><span id="_CPPv2NK4mlir3dfg10OutputType5printERN4mlir10AsmPrinterE"></span><span id="mlir::dfg::OutputType::print__mlir::AsmPrinterRC"></span><span class="target" id="classmlir_1_1dfg_1_1OutputType_1af2ce80997d3dbd8a99cc4088000735af"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">print</span></span></span><span class="sig-paren">(</span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">AsmPrinter</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">odsPrinter</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK4mlir3dfg10OutputType5printERN4mlir10AsmPrinterE" title="Link to this definition"></a><br /></dt>
+<dd><p>Prints an <a class="reference internal" href="#classmlir_1_1dfg_1_1OutputType"><span class="std std-ref">OutputType</span></a> in its assembly format <code class="docutils literal notranslate"><span class="pre">&lt;[shape</span> <span class="pre">x]</span> <span class="pre">type&gt;</span></code>. </p>
+<p>Emits <code class="docutils literal notranslate"><span class="pre">&lt;</span></code>, the dimension list (omitting the trailing <code class="docutils literal notranslate"><span class="pre">x</span></code> for scalar types), the element type, and <code class="docutils literal notranslate"><span class="pre">&gt;</span></code>. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK4mlir3dfg10OutputType8getShapeEv">
+<span id="_CPPv3NK4mlir3dfg10OutputType8getShapeEv"></span><span id="_CPPv2NK4mlir3dfg10OutputType8getShapeEv"></span><span id="mlir::dfg::OutputType::getShapeC"></span><span class="target" id="classmlir_1_1dfg_1_1OutputType_1a513263b2932d770eece337ffddf2a01f"></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">llvm</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">ArrayRef</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">int64_t</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">getShape</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK4mlir3dfg10OutputType8getShapeEv" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK4mlir3dfg10OutputType14getElementTypeEv">
+<span id="_CPPv3NK4mlir3dfg10OutputType14getElementTypeEv"></span><span id="_CPPv2NK4mlir3dfg10OutputType14getElementTypeEv"></span><span id="mlir::dfg::OutputType::getElementTypeC"></span><span class="target" id="classmlir_1_1dfg_1_1OutputType_1a47f13f595af42495e4428fcc4491136b"></span><span class="n"><span class="pre">Type</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">getElementType</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK4mlir3dfg10OutputType14getElementTypeEv" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-static-functions">Public Static Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir3dfg10OutputType3getEPN4mlir11MLIRContextEN4llvm8ArrayRefI7int64_tEE4Type">
+<span id="_CPPv3N4mlir3dfg10OutputType3getEPN4mlir11MLIRContextEN4llvm8ArrayRefI7int64_tEE4Type"></span><span id="_CPPv2N4mlir3dfg10OutputType3getEPN4mlir11MLIRContextEN4llvm8ArrayRefI7int64_tEE4Type"></span><span id="mlir::dfg::OutputType::get__mlir::MLIRContextP.llvm::ArrayRef:int64_t:.Type"></span><span class="target" id="classmlir_1_1dfg_1_1OutputType_1aceaf25d4a628c94cddc80be7c2d83ab9"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N4mlir3dfg10OutputTypeE" title="mlir::dfg::OutputType"><span class="n"><span class="pre">OutputType</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">get</span></span></span><span class="sig-paren">(</span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">MLIRContext</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">context</span></span>, <span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">llvm</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">ArrayRef</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">int64_t</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">shape</span></span>, <span class="n"><span class="pre">Type</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">elementType</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4mlir3dfg10OutputType3getEPN4mlir11MLIRContextEN4llvm8ArrayRefI7int64_tEE4Type" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir3dfg10OutputType10getCheckedEN4llvm12function_refIFN4mlir18InFlightDiagnosticEvEEEPN4mlir11MLIRContextEN4llvm8ArrayRefI7int64_tEE4Type">
+<span id="_CPPv3N4mlir3dfg10OutputType10getCheckedEN4llvm12function_refIFN4mlir18InFlightDiagnosticEvEEEPN4mlir11MLIRContextEN4llvm8ArrayRefI7int64_tEE4Type"></span><span id="_CPPv2N4mlir3dfg10OutputType10getCheckedEN4llvm12function_refIFN4mlir18InFlightDiagnosticEvEEEPN4mlir11MLIRContextEN4llvm8ArrayRefI7int64_tEE4Type"></span><span class="target" id="classmlir_1_1dfg_1_1OutputType_1a9d9ead40d9844cce01a56ef831e12ebc"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N4mlir3dfg10OutputTypeE" title="mlir::dfg::OutputType"><span class="n"><span class="pre">OutputType</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">getChecked</span></span></span><span class="sig-paren">(</span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">llvm</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">function_ref</span></span><span class="p"><span class="pre">&lt;</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">InFlightDiagnostic</span></span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">emitError</span></span>, <span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">MLIRContext</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">context</span></span>, <span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">llvm</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">ArrayRef</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">int64_t</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">shape</span></span>, <span class="n"><span class="pre">Type</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">elementType</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4mlir3dfg10OutputType10getCheckedEN4llvm12function_refIFN4mlir18InFlightDiagnosticEvEEEPN4mlir11MLIRContextEN4llvm8ArrayRefI7int64_tEE4Type" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir3dfg10OutputType3getE4Type">
+<span id="_CPPv3N4mlir3dfg10OutputType3getE4Type"></span><span id="_CPPv2N4mlir3dfg10OutputType3getE4Type"></span><span id="mlir::dfg::OutputType::get__Type"></span><span class="target" id="classmlir_1_1dfg_1_1OutputType_1a584630c2bf996a15162bfc544f45fc60"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N4mlir3dfg10OutputTypeE" title="mlir::dfg::OutputType"><span class="n"><span class="pre">OutputType</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">get</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">Type</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">elementType</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4mlir3dfg10OutputType3getE4Type" title="Link to this definition"></a><br /></dt>
+<dd><p>Creates an <a class="reference internal" href="#classmlir_1_1dfg_1_1OutputType"><span class="std std-ref">OutputType</span></a> for a scalar element type with no shape dimensions. </p>
+<p>This is the simplest form of <a class="reference internal" href="#classmlir_1_1dfg_1_1OutputType"><span class="std std-ref">OutputType</span></a> where the channel carries a single scalar value of the given <code class="docutils literal notranslate"><span class="pre">elementType</span></code>. Equivalent to calling <a class="reference internal" href="#classmlir_1_1dfg_1_1OutputType_1aceaf25d4a628c94cddc80be7c2d83ab9"><span class="std std-ref">OutputType::get</span></a>({}, elementType). </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir3dfg10OutputType10getCheckedEN4llvm12function_refIFN4mlir18InFlightDiagnosticEvEEE4Type">
+<span id="_CPPv3N4mlir3dfg10OutputType10getCheckedEN4llvm12function_refIFN4mlir18InFlightDiagnosticEvEEE4Type"></span><span id="_CPPv2N4mlir3dfg10OutputType10getCheckedEN4llvm12function_refIFN4mlir18InFlightDiagnosticEvEEE4Type"></span><span class="target" id="classmlir_1_1dfg_1_1OutputType_1a7195eede5ce00cf9635d49d07de51a1d"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N4mlir3dfg10OutputTypeE" title="mlir::dfg::OutputType"><span class="n"><span class="pre">OutputType</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">getChecked</span></span></span><span class="sig-paren">(</span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">llvm</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">function_ref</span></span><span class="p"><span class="pre">&lt;</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">InFlightDiagnostic</span></span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">emitError</span></span>, <span class="n"><span class="pre">Type</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">elementType</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4mlir3dfg10OutputType10getCheckedEN4llvm12function_refIFN4mlir18InFlightDiagnosticEvEEE4Type" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir3dfg10OutputType3getE8ArrayRefI7int64_tE4Type">
+<span id="_CPPv3N4mlir3dfg10OutputType3getE8ArrayRefI7int64_tE4Type"></span><span id="_CPPv2N4mlir3dfg10OutputType3getE8ArrayRefI7int64_tE4Type"></span><span id="mlir::dfg::OutputType::get__ArrayRef:int64_t:.Type"></span><span class="target" id="classmlir_1_1dfg_1_1OutputType_1a5708d25d892384f5bc1baf01e7b55566"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N4mlir3dfg10OutputTypeE" title="mlir::dfg::OutputType"><span class="n"><span class="pre">OutputType</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">get</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">ArrayRef</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">int64_t</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">shape</span></span>, <span class="n"><span class="pre">Type</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">elementType</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4mlir3dfg10OutputType3getE8ArrayRefI7int64_tE4Type" title="Link to this definition"></a><br /></dt>
+<dd><p>Creates an <a class="reference internal" href="#classmlir_1_1dfg_1_1OutputType"><span class="std std-ref">OutputType</span></a> with an explicit shape and element type. </p>
+<p>The <code class="docutils literal notranslate"><span class="pre">shape</span></code> defines the number of elements along each dimension. All dimensions must be static (non-negative). Pass an empty shape for a scalar channel. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir3dfg10OutputType10getCheckedEN4llvm12function_refIFN4mlir18InFlightDiagnosticEvEEE8ArrayRefI7int64_tE4Type">
+<span id="_CPPv3N4mlir3dfg10OutputType10getCheckedEN4llvm12function_refIFN4mlir18InFlightDiagnosticEvEEE8ArrayRefI7int64_tE4Type"></span><span id="_CPPv2N4mlir3dfg10OutputType10getCheckedEN4llvm12function_refIFN4mlir18InFlightDiagnosticEvEEE8ArrayRefI7int64_tE4Type"></span><span class="target" id="classmlir_1_1dfg_1_1OutputType_1a4827c0c397f435ddc88c520b32aeb7d6"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N4mlir3dfg10OutputTypeE" title="mlir::dfg::OutputType"><span class="n"><span class="pre">OutputType</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">getChecked</span></span></span><span class="sig-paren">(</span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">llvm</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">function_ref</span></span><span class="p"><span class="pre">&lt;</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">InFlightDiagnostic</span></span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">emitError</span></span>, <span class="n"><span class="pre">ArrayRef</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">int64_t</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">shape</span></span>, <span class="n"><span class="pre">Type</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">elementType</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4mlir3dfg10OutputType10getCheckedEN4llvm12function_refIFN4mlir18InFlightDiagnosticEvEEE8ArrayRefI7int64_tE4Type" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir3dfg10OutputType3getE10ShapedType">
+<span id="_CPPv3N4mlir3dfg10OutputType3getE10ShapedType"></span><span id="_CPPv2N4mlir3dfg10OutputType3getE10ShapedType"></span><span id="mlir::dfg::OutputType::get__ShapedType"></span><span class="target" id="classmlir_1_1dfg_1_1OutputType_1a058a43c633730910846f97bc16a33b84"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N4mlir3dfg10OutputTypeE" title="mlir::dfg::OutputType"><span class="n"><span class="pre">OutputType</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">get</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">ShapedType</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">shapedType</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4mlir3dfg10OutputType3getE10ShapedType" title="Link to this definition"></a><br /></dt>
+<dd><p>Creates an <a class="reference internal" href="#classmlir_1_1dfg_1_1OutputType"><span class="std std-ref">OutputType</span></a> from an existing ShapedType. </p>
+<p>Convenience builder that decomposes <code class="docutils literal notranslate"><span class="pre">shapedType</span></code> into its shape and scalar element type, then constructs the corresponding <a class="reference internal" href="#classmlir_1_1dfg_1_1OutputType"><span class="std std-ref">OutputType</span></a>. Useful when adapting memref or tensor types to DFG channel types. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir3dfg10OutputType10getCheckedEN4llvm12function_refIFN4mlir18InFlightDiagnosticEvEEE10ShapedType">
+<span id="_CPPv3N4mlir3dfg10OutputType10getCheckedEN4llvm12function_refIFN4mlir18InFlightDiagnosticEvEEE10ShapedType"></span><span id="_CPPv2N4mlir3dfg10OutputType10getCheckedEN4llvm12function_refIFN4mlir18InFlightDiagnosticEvEEE10ShapedType"></span><span class="target" id="classmlir_1_1dfg_1_1OutputType_1a3bce0f3cf54fd7c46a10fe03618f446f"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N4mlir3dfg10OutputTypeE" title="mlir::dfg::OutputType"><span class="n"><span class="pre">OutputType</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">getChecked</span></span></span><span class="sig-paren">(</span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">llvm</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">function_ref</span></span><span class="p"><span class="pre">&lt;</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">InFlightDiagnostic</span></span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">emitError</span></span>, <span class="n"><span class="pre">ShapedType</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">shapedType</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4mlir3dfg10OutputType10getCheckedEN4llvm12function_refIFN4mlir18InFlightDiagnosticEvEEE10ShapedType" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir3dfg10OutputType6verifyEN4llvm12function_refIFN4mlir18InFlightDiagnosticEvEEEN4llvm8ArrayRefI7int64_tEE4Type">
+<span id="_CPPv3N4mlir3dfg10OutputType6verifyEN4llvm12function_refIFN4mlir18InFlightDiagnosticEvEEEN4llvm8ArrayRefI7int64_tEE4Type"></span><span id="_CPPv2N4mlir3dfg10OutputType6verifyEN4llvm12function_refIFN4mlir18InFlightDiagnosticEvEEEN4llvm8ArrayRefI7int64_tEE4Type"></span><span class="target" id="classmlir_1_1dfg_1_1OutputType_1afd71267bc2c241cf8154f25bc8b52fe9"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">llvm</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">LogicalResult</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">verify</span></span></span><span class="sig-paren">(</span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">llvm</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">function_ref</span></span><span class="p"><span class="pre">&lt;</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">InFlightDiagnostic</span></span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">emitError</span></span>, <span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">llvm</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">ArrayRef</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">int64_t</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">shape</span></span>, <span class="n"><span class="pre">Type</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">elementType</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4mlir3dfg10OutputType6verifyEN4llvm12function_refIFN4mlir18InFlightDiagnosticEvEEEN4llvm8ArrayRefI7int64_tEE4Type" title="Link to this definition"></a><br /></dt>
+<dd><p>Verifies the invariants of an <a class="reference internal" href="#classmlir_1_1dfg_1_1OutputType"><span class="std std-ref">OutputType</span></a>. </p>
+<p>Checks that <code class="docutils literal notranslate"><span class="pre">elementType</span></code> is a scalar (not a ShapedType) and that every dimension in <code class="docutils literal notranslate"><span class="pre">shape</span></code> is non-negative (i.e. static). </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir3dfg10OutputType16verifyInvariantsEN4llvm12function_refIFN4mlir18InFlightDiagnosticEvEEEN4llvm8ArrayRefI7int64_tEE4Type">
+<span id="_CPPv3N4mlir3dfg10OutputType16verifyInvariantsEN4llvm12function_refIFN4mlir18InFlightDiagnosticEvEEEN4llvm8ArrayRefI7int64_tEE4Type"></span><span id="_CPPv2N4mlir3dfg10OutputType16verifyInvariantsEN4llvm12function_refIFN4mlir18InFlightDiagnosticEvEEEN4llvm8ArrayRefI7int64_tEE4Type"></span><span class="target" id="classmlir_1_1dfg_1_1OutputType_1ae3085e61d94532f3ba22a495ee1c6dda"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">llvm</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">LogicalResult</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">verifyInvariants</span></span></span><span class="sig-paren">(</span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">llvm</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">function_ref</span></span><span class="p"><span class="pre">&lt;</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">InFlightDiagnostic</span></span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">emitError</span></span>, <span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">llvm</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">ArrayRef</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">int64_t</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">shape</span></span>, <span class="n"><span class="pre">Type</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">elementType</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4mlir3dfg10OutputType16verifyInvariantsEN4llvm12function_refIFN4mlir18InFlightDiagnosticEvEEEN4llvm8ArrayRefI7int64_tEE4Type" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir3dfg10OutputType11getMnemonicEv">
+<span id="_CPPv3N4mlir3dfg10OutputType11getMnemonicEv"></span><span id="_CPPv2N4mlir3dfg10OutputType11getMnemonicEv"></span><span id="mlir::dfg::OutputType::getMnemonicCE"></span><span class="target" id="classmlir_1_1dfg_1_1OutputType_1aba8b38218a5bec3ef5345822c8f37caa"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="k"><span class="pre">constexpr</span></span><span class="w"> </span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">llvm</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">StringLiteral</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">getMnemonic</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4mlir3dfg10OutputType11getMnemonicEv" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir3dfg10OutputType5parseERN4mlir9AsmParserE">
+<span id="_CPPv3N4mlir3dfg10OutputType5parseERN4mlir9AsmParserE"></span><span id="_CPPv2N4mlir3dfg10OutputType5parseERN4mlir9AsmParserE"></span><span id="mlir::dfg::OutputType::parse__mlir::AsmParserR"></span><span class="target" id="classmlir_1_1dfg_1_1OutputType_1a243a3889f7aaf26a9b5e2a682974855f"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">Type</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">parse</span></span></span><span class="sig-paren">(</span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">mlir</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">AsmParser</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">odsParser</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4mlir3dfg10OutputType5parseERN4mlir9AsmParserE" title="Link to this definition"></a><br /></dt>
+<dd><p>Parses an <a class="reference internal" href="#classmlir_1_1dfg_1_1OutputType"><span class="std std-ref">OutputType</span></a> from its assembly format <code class="docutils literal notranslate"><span class="pre">&lt;[shape</span> <span class="pre">x]</span> <span class="pre">type&gt;</span></code>. </p>
+<p>Expects a <code class="docutils literal notranslate"><span class="pre">&lt;</span></code> delimiter, an optional dimension list (e.g. <code class="docutils literal notranslate"><span class="pre">2x3x</span></code>), a scalar element type, and a closing <code class="docutils literal notranslate"><span class="pre">&gt;</span></code>. Returns an empty Type on any parse failure. </p>
+</dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-static-attributes">Public Static Attributes</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir3dfg10OutputType4nameE">
+<span id="_CPPv3N4mlir3dfg10OutputType4nameE"></span><span id="_CPPv2N4mlir3dfg10OutputType4nameE"></span><span id="mlir::dfg::OutputType::name__llvm::StringLiteral"></span><span class="target" id="classmlir_1_1dfg_1_1OutputType_1a656225de8298259dfb6905cb917633ac"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="k"><span class="pre">constexpr</span></span><span class="w"> </span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">llvm</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">StringLiteral</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">name</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="s"><span class="pre">&quot;dfg.output&quot;</span></span><a class="headerlink" href="#_CPPv4N4mlir3dfg10OutputType4nameE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N4mlir3dfg10OutputType11dialectNameE">
+<span id="_CPPv3N4mlir3dfg10OutputType11dialectNameE"></span><span id="_CPPv2N4mlir3dfg10OutputType11dialectNameE"></span><span id="mlir::dfg::OutputType::dialectName__llvm::StringLiteral"></span><span class="target" id="classmlir_1_1dfg_1_1OutputType_1a6a7e64dcb93970e08fb0f8fb498e6a13"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="k"><span class="pre">constexpr</span></span><span class="w"> </span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">llvm</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">StringLiteral</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">dialectName</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="s"><span class="pre">&quot;dfg&quot;</span></span><a class="headerlink" href="#_CPPv4N4mlir3dfg10OutputType11dialectNameE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+</div>
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="classmlir_1_1dfg_1_1OutputOpGenericAdaptor.html" class="btn btn-neutral float-left" title="Template Class OutputOpGenericAdaptor" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="classmlir_1_1dfg_1_1ProcessOp.html" class="btn btn-neutral float-right" title="Class ProcessOp" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

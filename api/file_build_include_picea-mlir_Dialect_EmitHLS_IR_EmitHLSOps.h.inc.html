@@ -1,0 +1,313 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>File EmitHLSOps.h.inc &mdash; picea 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/collapsible-lists/css/tree_view.css?v=a885cde7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js?v=73120307"></script>
+      <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js?v=660e4f45"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            picea
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Installation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../README.html">About the project</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#guides">Guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#related-projects">Related projects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#development-environment-nix">Development Environment (Nix)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#build-on-ubuntu-24-04-no-nix">Build on Ubuntu 24.04 (no Nix)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#gurobi-license">Gurobi license</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#installing">Installing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#run-the-tests">Run the tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#build-the-documentation">Build the documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#compiling-a-design">Compiling a design</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#running-a-design-on-the-board">Running a design on the board</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#exporting-a-profiled-application-to-mocasin">Exporting a profiled application to Mocasin</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Guides</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../guides/laksa.html">The FPGA Variant using LAKSA backend</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/cgra.html">The CGRA Variant</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">MLIR Dialects</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/Base2Ops.html">‘base2’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/CGRAOps.html">‘cgra’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/DFGOps.html">‘dfg’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/EmitHLSOps.html">‘emithls’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/FilterOps.html">‘filter’ Dialect</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Passes</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/PICEAConversionPasses.html">PICEA Conversion Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/CGRAPasses.html">CGRA Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/DFGPasses.html">DFG Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/EmitHLSPasses.html">Emit HLS Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/FuncExtPasses.html">Func Ext Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/LinalgExtPasses.html">Linalg Ext Passes</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">C++ API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="library_root.html">C++ API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">picea</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">File EmitHLSOps.h.inc</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/file_build_include_picea-mlir_Dialect_EmitHLS_IR_EmitHLSOps.h.inc.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="file-emithlsops-h-inc">
+<span id="file-build-include-picea-mlir-dialect-emithls-ir-emithlsops-h-inc"></span><h1>File EmitHLSOps.h.inc<a class="headerlink" href="#file-emithlsops-h-inc" title="Link to this heading"></a></h1>
+<p>↰ <a class="reference internal" href="dir_build_include_picea-mlir_Dialect_EmitHLS_IR.html#dir-build-include-picea-mlir-dialect-emithls-ir"><span class="std std-ref">Parent directory</span></a> (<code class="docutils literal notranslate"><span class="pre">build/include/picea-mlir/Dialect/EmitHLS/IR</span></code>)</p>
+<nav class="contents local" id="contents">
+<p class="topic-title">Contents</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#definition-build-include-picea-mlir-dialect-emithls-ir-emithlsops-h-inc" id="id1">Definition (<code class="docutils literal notranslate"><span class="pre">build/include/picea-mlir/Dialect/EmitHLS/IR/EmitHLSOps.h.inc</span></code>)</a></p></li>
+<li><p><a class="reference internal" href="#included-by" id="id2">Included By</a></p></li>
+<li><p><a class="reference internal" href="#namespaces" id="id3">Namespaces</a></p></li>
+<li><p><a class="reference internal" href="#classes" id="id4">Classes</a></p></li>
+</ul>
+</nav>
+<section id="definition-build-include-picea-mlir-dialect-emithls-ir-emithlsops-h-inc">
+<h2>Definition (<code class="docutils literal notranslate"><span class="pre">build/include/picea-mlir/Dialect/EmitHLS/IR/EmitHLSOps.h.inc</span></code>)<a class="headerlink" href="#definition-build-include-picea-mlir-dialect-emithls-ir-emithlsops-h-inc" title="Link to this heading"></a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="program_listing_file_build_include_picea-mlir_Dialect_EmitHLS_IR_EmitHLSOps.h.inc.html">Program Listing for File EmitHLSOps.h.inc</a></li>
+</ul>
+</div>
+</section>
+<section id="included-by">
+<h2>Included By<a class="headerlink" href="#included-by" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="file_include_picea-mlir_Dialect_EmitHLS_IR_EmitHLSOps.h.html#file-include-picea-mlir-dialect-emithls-ir-emithlsops-h"><span class="std std-ref">File EmitHLSOps.h</span></a></p></li>
+</ul>
+</section>
+<section id="namespaces">
+<h2>Namespaces<a class="headerlink" href="#namespaces" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="namespace_mlir.html#namespace-mlir"><span class="std std-ref">Namespace mlir</span></a></p></li>
+<li><p><a class="reference internal" href="namespace_mlir__emithls.html#namespace-mlir-emithls"><span class="std std-ref">Namespace mlir::emithls</span></a></p></li>
+<li><p><a class="reference internal" href="namespace_mlir__emithls__detail.html#namespace-mlir-emithls-detail"><span class="std std-ref">Namespace mlir::emithls::detail</span></a></p></li>
+</ul>
+</section>
+<section id="classes">
+<h2>Classes<a class="headerlink" href="#classes" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="classmlir_1_1emithls_1_1ArithAddOp.html#exhale-class-classmlir-1-1emithls-1-1arithaddop"><span class="std std-ref">Class ArithAddOp</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1emithls_1_1ArithAddOpAdaptor.html#exhale-class-classmlir-1-1emithls-1-1arithaddopadaptor"><span class="std std-ref">Class ArithAddOpAdaptor</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1emithls_1_1ArithAddOpGenericAdaptor.html#exhale-class-classmlir-1-1emithls-1-1arithaddopgenericadaptor"><span class="std std-ref">Template Class ArithAddOpGenericAdaptor</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1emithls_1_1ArithAndOp.html#exhale-class-classmlir-1-1emithls-1-1arithandop"><span class="std std-ref">Class ArithAndOp</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1emithls_1_1ArithAndOpAdaptor.html#exhale-class-classmlir-1-1emithls-1-1arithandopadaptor"><span class="std std-ref">Class ArithAndOpAdaptor</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1emithls_1_1ArithAndOpGenericAdaptor.html#exhale-class-classmlir-1-1emithls-1-1arithandopgenericadaptor"><span class="std std-ref">Template Class ArithAndOpGenericAdaptor</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1emithls_1_1ArithCastOp.html#exhale-class-classmlir-1-1emithls-1-1arithcastop"><span class="std std-ref">Class ArithCastOp</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1emithls_1_1ArithCastOpAdaptor.html#exhale-class-classmlir-1-1emithls-1-1arithcastopadaptor"><span class="std std-ref">Class ArithCastOpAdaptor</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1emithls_1_1ArithCastOpGenericAdaptor.html#exhale-class-classmlir-1-1emithls-1-1arithcastopgenericadaptor"><span class="std std-ref">Template Class ArithCastOpGenericAdaptor</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1emithls_1_1ArithCmpOp.html#exhale-class-classmlir-1-1emithls-1-1arithcmpop"><span class="std std-ref">Class ArithCmpOp</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1emithls_1_1ArithCmpOpAdaptor.html#exhale-class-classmlir-1-1emithls-1-1arithcmpopadaptor"><span class="std std-ref">Class ArithCmpOpAdaptor</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1emithls_1_1ArithCmpOpGenericAdaptor.html#exhale-class-classmlir-1-1emithls-1-1arithcmpopgenericadaptor"><span class="std std-ref">Template Class ArithCmpOpGenericAdaptor</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1emithls_1_1ArithDataRangeOp.html#exhale-class-classmlir-1-1emithls-1-1arithdatarangeop"><span class="std std-ref">Class ArithDataRangeOp</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1emithls_1_1ArithDataRangeOpAdaptor.html#exhale-class-classmlir-1-1emithls-1-1arithdatarangeopadaptor"><span class="std std-ref">Class ArithDataRangeOpAdaptor</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1emithls_1_1ArithDataRangeOpGenericAdaptor.html#exhale-class-classmlir-1-1emithls-1-1arithdatarangeopgenericadaptor"><span class="std std-ref">Template Class ArithDataRangeOpGenericAdaptor</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1emithls_1_1ArithDivOp.html#exhale-class-classmlir-1-1emithls-1-1arithdivop"><span class="std std-ref">Class ArithDivOp</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1emithls_1_1ArithDivOpAdaptor.html#exhale-class-classmlir-1-1emithls-1-1arithdivopadaptor"><span class="std std-ref">Class ArithDivOpAdaptor</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1emithls_1_1ArithDivOpGenericAdaptor.html#exhale-class-classmlir-1-1emithls-1-1arithdivopgenericadaptor"><span class="std std-ref">Template Class ArithDivOpGenericAdaptor</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1emithls_1_1ArithFusedOp.html#exhale-class-classmlir-1-1emithls-1-1arithfusedop"><span class="std std-ref">Class ArithFusedOp</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1emithls_1_1ArithFusedOpAdaptor.html#exhale-class-classmlir-1-1emithls-1-1arithfusedopadaptor"><span class="std std-ref">Class ArithFusedOpAdaptor</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1emithls_1_1ArithFusedOpGenericAdaptor.html#exhale-class-classmlir-1-1emithls-1-1arithfusedopgenericadaptor"><span class="std std-ref">Template Class ArithFusedOpGenericAdaptor</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1emithls_1_1ArithLogicalAndOp.html#exhale-class-classmlir-1-1emithls-1-1arithlogicalandop"><span class="std std-ref">Class ArithLogicalAndOp</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1emithls_1_1ArithLogicalAndOpAdaptor.html#exhale-class-classmlir-1-1emithls-1-1arithlogicalandopadaptor"><span class="std std-ref">Class ArithLogicalAndOpAdaptor</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1emithls_1_1ArithLogicalAndOpGenericAdaptor.html#exhale-class-classmlir-1-1emithls-1-1arithlogicalandopgenericadaptor"><span class="std std-ref">Template Class ArithLogicalAndOpGenericAdaptor</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1emithls_1_1ArithLogicalOrOp.html#exhale-class-classmlir-1-1emithls-1-1arithlogicalorop"><span class="std std-ref">Class ArithLogicalOrOp</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1emithls_1_1ArithLogicalOrOpAdaptor.html#exhale-class-classmlir-1-1emithls-1-1arithlogicaloropadaptor"><span class="std std-ref">Class ArithLogicalOrOpAdaptor</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1emithls_1_1ArithLogicalOrOpGenericAdaptor.html#exhale-class-classmlir-1-1emithls-1-1arithlogicaloropgenericadaptor"><span class="std std-ref">Template Class ArithLogicalOrOpGenericAdaptor</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1emithls_1_1ArithMaxOp.html#exhale-class-classmlir-1-1emithls-1-1arithmaxop"><span class="std std-ref">Class ArithMaxOp</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1emithls_1_1ArithMaxOpAdaptor.html#exhale-class-classmlir-1-1emithls-1-1arithmaxopadaptor"><span class="std std-ref">Class ArithMaxOpAdaptor</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1emithls_1_1ArithMaxOpGenericAdaptor.html#exhale-class-classmlir-1-1emithls-1-1arithmaxopgenericadaptor"><span class="std std-ref">Template Class ArithMaxOpGenericAdaptor</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1emithls_1_1ArithMinOp.html#exhale-class-classmlir-1-1emithls-1-1arithminop"><span class="std std-ref">Class ArithMinOp</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1emithls_1_1ArithMinOpAdaptor.html#exhale-class-classmlir-1-1emithls-1-1arithminopadaptor"><span class="std std-ref">Class ArithMinOpAdaptor</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1emithls_1_1ArithMinOpGenericAdaptor.html#exhale-class-classmlir-1-1emithls-1-1arithminopgenericadaptor"><span class="std std-ref">Template Class ArithMinOpGenericAdaptor</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1emithls_1_1ArithMulOp.html#exhale-class-classmlir-1-1emithls-1-1arithmulop"><span class="std std-ref">Class ArithMulOp</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1emithls_1_1ArithMulOpAdaptor.html#exhale-class-classmlir-1-1emithls-1-1arithmulopadaptor"><span class="std std-ref">Class ArithMulOpAdaptor</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1emithls_1_1ArithMulOpGenericAdaptor.html#exhale-class-classmlir-1-1emithls-1-1arithmulopgenericadaptor"><span class="std std-ref">Template Class ArithMulOpGenericAdaptor</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1emithls_1_1ArithOrOp.html#exhale-class-classmlir-1-1emithls-1-1arithorop"><span class="std std-ref">Class ArithOrOp</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1emithls_1_1ArithOrOpAdaptor.html#exhale-class-classmlir-1-1emithls-1-1arithoropadaptor"><span class="std std-ref">Class ArithOrOpAdaptor</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1emithls_1_1ArithOrOpGenericAdaptor.html#exhale-class-classmlir-1-1emithls-1-1arithoropgenericadaptor"><span class="std std-ref">Template Class ArithOrOpGenericAdaptor</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1emithls_1_1ArithRemOp.html#exhale-class-classmlir-1-1emithls-1-1arithremop"><span class="std std-ref">Class ArithRemOp</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1emithls_1_1ArithRemOpAdaptor.html#exhale-class-classmlir-1-1emithls-1-1arithremopadaptor"><span class="std std-ref">Class ArithRemOpAdaptor</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1emithls_1_1ArithRemOpGenericAdaptor.html#exhale-class-classmlir-1-1emithls-1-1arithremopgenericadaptor"><span class="std std-ref">Template Class ArithRemOpGenericAdaptor</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1emithls_1_1ArithSelectOp.html#exhale-class-classmlir-1-1emithls-1-1arithselectop"><span class="std std-ref">Class ArithSelectOp</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1emithls_1_1ArithSelectOpAdaptor.html#exhale-class-classmlir-1-1emithls-1-1arithselectopadaptor"><span class="std std-ref">Class ArithSelectOpAdaptor</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1emithls_1_1ArithSelectOpGenericAdaptor.html#exhale-class-classmlir-1-1emithls-1-1arithselectopgenericadaptor"><span class="std std-ref">Template Class ArithSelectOpGenericAdaptor</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1emithls_1_1ArithShlOp.html#exhale-class-classmlir-1-1emithls-1-1arithshlop"><span class="std std-ref">Class ArithShlOp</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1emithls_1_1ArithShlOpAdaptor.html#exhale-class-classmlir-1-1emithls-1-1arithshlopadaptor"><span class="std std-ref">Class ArithShlOpAdaptor</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1emithls_1_1ArithShlOpGenericAdaptor.html#exhale-class-classmlir-1-1emithls-1-1arithshlopgenericadaptor"><span class="std std-ref">Template Class ArithShlOpGenericAdaptor</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1emithls_1_1ArithShrOp.html#exhale-class-classmlir-1-1emithls-1-1arithshrop"><span class="std std-ref">Class ArithShrOp</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1emithls_1_1ArithShrOpAdaptor.html#exhale-class-classmlir-1-1emithls-1-1arithshropadaptor"><span class="std std-ref">Class ArithShrOpAdaptor</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1emithls_1_1ArithShrOpGenericAdaptor.html#exhale-class-classmlir-1-1emithls-1-1arithshropgenericadaptor"><span class="std std-ref">Template Class ArithShrOpGenericAdaptor</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1emithls_1_1ArithSubOp.html#exhale-class-classmlir-1-1emithls-1-1arithsubop"><span class="std std-ref">Class ArithSubOp</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1emithls_1_1ArithSubOpAdaptor.html#exhale-class-classmlir-1-1emithls-1-1arithsubopadaptor"><span class="std std-ref">Class ArithSubOpAdaptor</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1emithls_1_1ArithSubOpGenericAdaptor.html#exhale-class-classmlir-1-1emithls-1-1arithsubopgenericadaptor"><span class="std std-ref">Template Class ArithSubOpGenericAdaptor</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1emithls_1_1ArrayPointerReadOp.html#exhale-class-classmlir-1-1emithls-1-1arraypointerreadop"><span class="std std-ref">Class ArrayPointerReadOp</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1emithls_1_1ArrayPointerReadOpAdaptor.html#exhale-class-classmlir-1-1emithls-1-1arraypointerreadopadaptor"><span class="std std-ref">Class ArrayPointerReadOpAdaptor</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1emithls_1_1ArrayPointerReadOpGenericAdaptor.html#exhale-class-classmlir-1-1emithls-1-1arraypointerreadopgenericadaptor"><span class="std std-ref">Template Class ArrayPointerReadOpGenericAdaptor</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1emithls_1_1ArrayPointerWriteOp.html#exhale-class-classmlir-1-1emithls-1-1arraypointerwriteop"><span class="std std-ref">Class ArrayPointerWriteOp</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1emithls_1_1ArrayPointerWriteOpAdaptor.html#exhale-class-classmlir-1-1emithls-1-1arraypointerwriteopadaptor"><span class="std std-ref">Class ArrayPointerWriteOpAdaptor</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1emithls_1_1ArrayPointerWriteOpGenericAdaptor.html#exhale-class-classmlir-1-1emithls-1-1arraypointerwriteopgenericadaptor"><span class="std std-ref">Template Class ArrayPointerWriteOpGenericAdaptor</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1emithls_1_1ArrayReadOp.html#exhale-class-classmlir-1-1emithls-1-1arrayreadop"><span class="std std-ref">Class ArrayReadOp</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1emithls_1_1ArrayReadOpAdaptor.html#exhale-class-classmlir-1-1emithls-1-1arrayreadopadaptor"><span class="std std-ref">Class ArrayReadOpAdaptor</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1emithls_1_1ArrayReadOpGenericAdaptor.html#exhale-class-classmlir-1-1emithls-1-1arrayreadopgenericadaptor"><span class="std std-ref">Template Class ArrayReadOpGenericAdaptor</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1emithls_1_1ArrayWriteOp.html#exhale-class-classmlir-1-1emithls-1-1arraywriteop"><span class="std std-ref">Class ArrayWriteOp</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1emithls_1_1ArrayWriteOpAdaptor.html#exhale-class-classmlir-1-1emithls-1-1arraywriteopadaptor"><span class="std std-ref">Class ArrayWriteOpAdaptor</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1emithls_1_1ArrayWriteOpGenericAdaptor.html#exhale-class-classmlir-1-1emithls-1-1arraywriteopgenericadaptor"><span class="std std-ref">Template Class ArrayWriteOpGenericAdaptor</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1emithls_1_1CallOp.html#exhale-class-classmlir-1-1emithls-1-1callop"><span class="std std-ref">Class CallOp</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1emithls_1_1CallOpAdaptor.html#exhale-class-classmlir-1-1emithls-1-1callopadaptor"><span class="std std-ref">Class CallOpAdaptor</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1emithls_1_1CallOpGenericAdaptor.html#exhale-class-classmlir-1-1emithls-1-1callopgenericadaptor"><span class="std std-ref">Template Class CallOpGenericAdaptor</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1emithls_1_1ExpressionOp.html#exhale-class-classmlir-1-1emithls-1-1expressionop"><span class="std std-ref">Class ExpressionOp</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1emithls_1_1ExpressionOpAdaptor.html#exhale-class-classmlir-1-1emithls-1-1expressionopadaptor"><span class="std std-ref">Class ExpressionOpAdaptor</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1emithls_1_1ExpressionOpGenericAdaptor.html#exhale-class-classmlir-1-1emithls-1-1expressionopgenericadaptor"><span class="std std-ref">Template Class ExpressionOpGenericAdaptor</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1emithls_1_1ForOp.html#exhale-class-classmlir-1-1emithls-1-1forop"><span class="std std-ref">Class ForOp</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1emithls_1_1ForOpAdaptor.html#exhale-class-classmlir-1-1emithls-1-1foropadaptor"><span class="std std-ref">Class ForOpAdaptor</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1emithls_1_1ForOpGenericAdaptor.html#exhale-class-classmlir-1-1emithls-1-1foropgenericadaptor"><span class="std std-ref">Template Class ForOpGenericAdaptor</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1emithls_1_1FuncOp.html#exhale-class-classmlir-1-1emithls-1-1funcop"><span class="std std-ref">Class FuncOp</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1emithls_1_1FuncOpAdaptor.html#exhale-class-classmlir-1-1emithls-1-1funcopadaptor"><span class="std std-ref">Class FuncOpAdaptor</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1emithls_1_1FuncOpGenericAdaptor.html#exhale-class-classmlir-1-1emithls-1-1funcopgenericadaptor"><span class="std std-ref">Template Class FuncOpGenericAdaptor</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1emithls_1_1HelperAccumulateOp.html#exhale-class-classmlir-1-1emithls-1-1helperaccumulateop"><span class="std std-ref">Class HelperAccumulateOp</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1emithls_1_1HelperAccumulateOpAdaptor.html#exhale-class-classmlir-1-1emithls-1-1helperaccumulateopadaptor"><span class="std std-ref">Class HelperAccumulateOpAdaptor</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1emithls_1_1HelperAccumulateOpGenericAdaptor.html#exhale-class-classmlir-1-1emithls-1-1helperaccumulateopgenericadaptor"><span class="std std-ref">Template Class HelperAccumulateOpGenericAdaptor</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1emithls_1_1HelperLineBufferOp.html#exhale-class-classmlir-1-1emithls-1-1helperlinebufferop"><span class="std std-ref">Class HelperLineBufferOp</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1emithls_1_1HelperLineBufferOpAdaptor.html#exhale-class-classmlir-1-1emithls-1-1helperlinebufferopadaptor"><span class="std std-ref">Class HelperLineBufferOpAdaptor</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1emithls_1_1HelperLineBufferOpGenericAdaptor.html#exhale-class-classmlir-1-1emithls-1-1helperlinebufferopgenericadaptor"><span class="std std-ref">Template Class HelperLineBufferOpGenericAdaptor</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1emithls_1_1HelperWindowOp.html#exhale-class-classmlir-1-1emithls-1-1helperwindowop"><span class="std std-ref">Class HelperWindowOp</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1emithls_1_1HelperWindowOpAdaptor.html#exhale-class-classmlir-1-1emithls-1-1helperwindowopadaptor"><span class="std std-ref">Class HelperWindowOpAdaptor</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1emithls_1_1HelperWindowOpGenericAdaptor.html#exhale-class-classmlir-1-1emithls-1-1helperwindowopgenericadaptor"><span class="std std-ref">Template Class HelperWindowOpGenericAdaptor</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1emithls_1_1IfOp.html#exhale-class-classmlir-1-1emithls-1-1ifop"><span class="std std-ref">Class IfOp</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1emithls_1_1IfOpAdaptor.html#exhale-class-classmlir-1-1emithls-1-1ifopadaptor"><span class="std std-ref">Class IfOpAdaptor</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1emithls_1_1IfOpGenericAdaptor.html#exhale-class-classmlir-1-1emithls-1-1ifopgenericadaptor"><span class="std std-ref">Template Class IfOpGenericAdaptor</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1emithls_1_1IncludeOp.html#exhale-class-classmlir-1-1emithls-1-1includeop"><span class="std std-ref">Class IncludeOp</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1emithls_1_1IncludeOpAdaptor.html#exhale-class-classmlir-1-1emithls-1-1includeopadaptor"><span class="std std-ref">Class IncludeOpAdaptor</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1emithls_1_1IncludeOpGenericAdaptor.html#exhale-class-classmlir-1-1emithls-1-1includeopgenericadaptor"><span class="std std-ref">Template Class IncludeOpGenericAdaptor</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1emithls_1_1PragmaArrayPartitionOp.html#exhale-class-classmlir-1-1emithls-1-1pragmaarraypartitionop"><span class="std std-ref">Class PragmaArrayPartitionOp</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1emithls_1_1PragmaArrayPartitionOpAdaptor.html#exhale-class-classmlir-1-1emithls-1-1pragmaarraypartitionopadaptor"><span class="std std-ref">Class PragmaArrayPartitionOpAdaptor</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1emithls_1_1PragmaArrayPartitionOpGenericAdaptor.html#exhale-class-classmlir-1-1emithls-1-1pragmaarraypartitionopgenericadaptor"><span class="std std-ref">Template Class PragmaArrayPartitionOpGenericAdaptor</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1emithls_1_1PragmaBindStorageOp.html#exhale-class-classmlir-1-1emithls-1-1pragmabindstorageop"><span class="std std-ref">Class PragmaBindStorageOp</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1emithls_1_1PragmaBindStorageOpAdaptor.html#exhale-class-classmlir-1-1emithls-1-1pragmabindstorageopadaptor"><span class="std std-ref">Class PragmaBindStorageOpAdaptor</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1emithls_1_1PragmaBindStorageOpGenericAdaptor.html#exhale-class-classmlir-1-1emithls-1-1pragmabindstorageopgenericadaptor"><span class="std std-ref">Template Class PragmaBindStorageOpGenericAdaptor</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1emithls_1_1PragmaDataflowOp.html#exhale-class-classmlir-1-1emithls-1-1pragmadataflowop"><span class="std std-ref">Class PragmaDataflowOp</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1emithls_1_1PragmaDataflowOpAdaptor.html#exhale-class-classmlir-1-1emithls-1-1pragmadataflowopadaptor"><span class="std std-ref">Class PragmaDataflowOpAdaptor</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1emithls_1_1PragmaDataflowOpGenericAdaptor.html#exhale-class-classmlir-1-1emithls-1-1pragmadataflowopgenericadaptor"><span class="std std-ref">Template Class PragmaDataflowOpGenericAdaptor</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1emithls_1_1PragmaInlineOp.html#exhale-class-classmlir-1-1emithls-1-1pragmainlineop"><span class="std std-ref">Class PragmaInlineOp</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1emithls_1_1PragmaInlineOpAdaptor.html#exhale-class-classmlir-1-1emithls-1-1pragmainlineopadaptor"><span class="std std-ref">Class PragmaInlineOpAdaptor</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1emithls_1_1PragmaInlineOpGenericAdaptor.html#exhale-class-classmlir-1-1emithls-1-1pragmainlineopgenericadaptor"><span class="std std-ref">Template Class PragmaInlineOpGenericAdaptor</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1emithls_1_1PragmaPipelineOp.html#exhale-class-classmlir-1-1emithls-1-1pragmapipelineop"><span class="std std-ref">Class PragmaPipelineOp</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1emithls_1_1PragmaPipelineOpAdaptor.html#exhale-class-classmlir-1-1emithls-1-1pragmapipelineopadaptor"><span class="std std-ref">Class PragmaPipelineOpAdaptor</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1emithls_1_1PragmaPipelineOpGenericAdaptor.html#exhale-class-classmlir-1-1emithls-1-1pragmapipelineopgenericadaptor"><span class="std std-ref">Template Class PragmaPipelineOpGenericAdaptor</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1emithls_1_1PragmaStreamOp.html#exhale-class-classmlir-1-1emithls-1-1pragmastreamop"><span class="std std-ref">Class PragmaStreamOp</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1emithls_1_1PragmaStreamOpAdaptor.html#exhale-class-classmlir-1-1emithls-1-1pragmastreamopadaptor"><span class="std std-ref">Class PragmaStreamOpAdaptor</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1emithls_1_1PragmaStreamOpGenericAdaptor.html#exhale-class-classmlir-1-1emithls-1-1pragmastreamopgenericadaptor"><span class="std std-ref">Template Class PragmaStreamOpGenericAdaptor</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1emithls_1_1PragmaTopInterfaceOp.html#exhale-class-classmlir-1-1emithls-1-1pragmatopinterfaceop"><span class="std std-ref">Class PragmaTopInterfaceOp</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1emithls_1_1PragmaTopInterfaceOpAdaptor.html#exhale-class-classmlir-1-1emithls-1-1pragmatopinterfaceopadaptor"><span class="std std-ref">Class PragmaTopInterfaceOpAdaptor</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1emithls_1_1PragmaTopInterfaceOpGenericAdaptor.html#exhale-class-classmlir-1-1emithls-1-1pragmatopinterfaceopgenericadaptor"><span class="std std-ref">Template Class PragmaTopInterfaceOpGenericAdaptor</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1emithls_1_1PragmaUnrollOp.html#exhale-class-classmlir-1-1emithls-1-1pragmaunrollop"><span class="std std-ref">Class PragmaUnrollOp</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1emithls_1_1PragmaUnrollOpAdaptor.html#exhale-class-classmlir-1-1emithls-1-1pragmaunrollopadaptor"><span class="std std-ref">Class PragmaUnrollOpAdaptor</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1emithls_1_1PragmaUnrollOpGenericAdaptor.html#exhale-class-classmlir-1-1emithls-1-1pragmaunrollopgenericadaptor"><span class="std std-ref">Template Class PragmaUnrollOpGenericAdaptor</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1emithls_1_1StreamReadOp.html#exhale-class-classmlir-1-1emithls-1-1streamreadop"><span class="std std-ref">Class StreamReadOp</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1emithls_1_1StreamReadOpAdaptor.html#exhale-class-classmlir-1-1emithls-1-1streamreadopadaptor"><span class="std std-ref">Class StreamReadOpAdaptor</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1emithls_1_1StreamReadOpGenericAdaptor.html#exhale-class-classmlir-1-1emithls-1-1streamreadopgenericadaptor"><span class="std std-ref">Template Class StreamReadOpGenericAdaptor</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1emithls_1_1StreamWriteOp.html#exhale-class-classmlir-1-1emithls-1-1streamwriteop"><span class="std std-ref">Class StreamWriteOp</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1emithls_1_1StreamWriteOpAdaptor.html#exhale-class-classmlir-1-1emithls-1-1streamwriteopadaptor"><span class="std std-ref">Class StreamWriteOpAdaptor</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1emithls_1_1StreamWriteOpGenericAdaptor.html#exhale-class-classmlir-1-1emithls-1-1streamwriteopgenericadaptor"><span class="std std-ref">Template Class StreamWriteOpGenericAdaptor</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1emithls_1_1UpdateOp.html#exhale-class-classmlir-1-1emithls-1-1updateop"><span class="std std-ref">Class UpdateOp</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1emithls_1_1UpdateOpAdaptor.html#exhale-class-classmlir-1-1emithls-1-1updateopadaptor"><span class="std std-ref">Class UpdateOpAdaptor</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1emithls_1_1UpdateOpGenericAdaptor.html#exhale-class-classmlir-1-1emithls-1-1updateopgenericadaptor"><span class="std std-ref">Template Class UpdateOpGenericAdaptor</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1emithls_1_1VariableOp.html#exhale-class-classmlir-1-1emithls-1-1variableop"><span class="std std-ref">Class VariableOp</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1emithls_1_1VariableOpAdaptor.html#exhale-class-classmlir-1-1emithls-1-1variableopadaptor"><span class="std std-ref">Class VariableOpAdaptor</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1emithls_1_1VariableOpGenericAdaptor.html#exhale-class-classmlir-1-1emithls-1-1variableopgenericadaptor"><span class="std std-ref">Template Class VariableOpGenericAdaptor</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1emithls_1_1YieldOp.html#exhale-class-classmlir-1-1emithls-1-1yieldop"><span class="std std-ref">Class YieldOp</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1emithls_1_1YieldOpAdaptor.html#exhale-class-classmlir-1-1emithls-1-1yieldopadaptor"><span class="std std-ref">Class YieldOpAdaptor</span></a></p></li>
+<li><p><a class="reference internal" href="classmlir_1_1emithls_1_1YieldOpGenericAdaptor.html#exhale-class-classmlir-1-1emithls-1-1yieldopgenericadaptor"><span class="std std-ref">Template Class YieldOpGenericAdaptor</span></a></p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

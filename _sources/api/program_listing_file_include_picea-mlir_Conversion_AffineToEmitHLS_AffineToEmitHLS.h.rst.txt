@@ -1,0 +1,35 @@
+
+.. _program_listing_file_include_picea-mlir_Conversion_AffineToEmitHLS_AffineToEmitHLS.h:
+
+Program Listing for File AffineToEmitHLS.h
+==========================================
+
+|exhale_lsh| :ref:`Return to documentation for file <file_include_picea-mlir_Conversion_AffineToEmitHLS_AffineToEmitHLS.h>` (``include/picea-mlir/Conversion/AffineToEmitHLS/AffineToEmitHLS.h``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. code-block:: cpp
+
+   
+   
+   #pragma once
+   
+   #include "mlir/Pass/Pass.h"
+   #include "mlir/Transforms/DialectConversion.h"
+   
+   namespace mlir {
+   
+   //===- Generated includes -------------------------------------------------===//
+   
+   #define GEN_PASS_DECL_CONVERTAFFINETOEMITHLS
+   #include "picea-mlir/Conversion/Passes.h.inc"
+   
+   //===----------------------------------------------------------------------===//
+   
+   void populateAffineToEmitHLSConversionPatterns(
+       TypeConverter &typeConverter,
+       RewritePatternSet &patterns);
+   
+   std::unique_ptr<Pass> createConvertAffineToEmitHLSPass();
+   
+   } // namespace mlir

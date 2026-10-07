@@ -1,0 +1,74 @@
+
+.. _program_listing_file_build_include_picea-mlir_Dialect_EmitHLS_Interfaces_PragmaInterface.h.inc:
+
+Program Listing for File PragmaInterface.h.inc
+==============================================
+
+|exhale_lsh| :ref:`Return to documentation for file <file_build_include_picea-mlir_Dialect_EmitHLS_Interfaces_PragmaInterface.h.inc>` (``build/include/picea-mlir/Dialect/EmitHLS/Interfaces/PragmaInterface.h.inc``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. code-block:: cpp
+
+   /*===- TableGen'erated file -------------------------------------*- C++ -*-===*\
+   |*                                                                            *|
+   |* Interface Declarations                                                     *|
+   |*                                                                            *|
+   |* Automatically generated file, do not edit!                                 *|
+   |*                                                                            *|
+   \*===----------------------------------------------------------------------===*/
+   
+   namespace mlir::emithls {
+   
+   class PragmaInterface;
+   
+   } // namespace mlir::emithls
+   namespace mlir::emithls {
+   
+   namespace detail {
+   struct PragmaInterfaceInterfaceTraits {
+     struct Concept {
+     };
+     template<typename ConcreteOp>
+     class Model : public Concept {
+     public:
+       using Interface = ::mlir::emithls::PragmaInterface;
+       Model() : Concept{} {}
+   
+     };
+     template<typename ConcreteOp>
+     class FallbackModel : public Concept {
+     public:
+       using Interface = ::mlir::emithls::PragmaInterface;
+       FallbackModel() : Concept{} {}
+   
+     };
+     template<typename ConcreteModel, typename ConcreteOp>
+     class ExternalModel : public FallbackModel<ConcreteModel> {
+     public:
+       using ConcreteEntity = ConcreteOp;
+     };
+   };
+   template <typename ConcreteOp>
+   struct PragmaInterfaceTrait;
+   
+   } // namespace detail
+   class PragmaInterface : public ::mlir::OpInterface<PragmaInterface, detail::PragmaInterfaceInterfaceTraits> {
+   public:
+     using ::mlir::OpInterface<PragmaInterface, detail::PragmaInterfaceInterfaceTraits>::OpInterface;
+     template <typename ConcreteOp>
+     struct Trait : public detail::PragmaInterfaceTrait<ConcreteOp> {};
+   };
+   
+   } // namespace mlir::emithls
+   namespace mlir::emithls::detail {
+   
+     template <typename ConcreteOp>
+     struct PragmaInterfaceTrait : public ::mlir::OpInterface<PragmaInterface, detail::PragmaInterfaceInterfaceTraits>::Trait<ConcreteOp> {
+     };
+   
+   } // namespace mlir::emithls::detail
+   namespace mlir::emithls {
+   
+   
+   } // namespace mlir::emithls

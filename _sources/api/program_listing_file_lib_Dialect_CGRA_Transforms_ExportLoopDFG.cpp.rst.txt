@@ -1,0 +1,876 @@
+
+.. _program_listing_file_lib_Dialect_CGRA_Transforms_ExportLoopDFG.cpp:
+
+Program Listing for File ExportLoopDFG.cpp
+==========================================
+
+|exhale_lsh| :ref:`Return to documentation for file <file_lib_Dialect_CGRA_Transforms_ExportLoopDFG.cpp>` (``lib/Dialect/CGRA/Transforms/ExportLoopDFG.cpp``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. code-block:: cpp
+
+   
+   
+   //===- ExportLoopDFG.cpp - CGRA DFG .dot export for affine.for loops ------===//
+   //
+   // For each innermost affine.for loop that contains arith computation ops (no
+   // nested loops, no llvm.call), builds a CGRA dataflow graph and writes it to
+   // a .dot file.  Mirrors the behaviour of mlir_loops_to_dot.py but operates
+   // directly on the MLIR IR instead of parsing text via regex.
+   //
+   // Pass option:
+   //   --output-dir=<path>   directory for .dot files (default: "dot_results")
+   //
+   //===----------------------------------------------------------------------===//
+   
+   #include "mlir/Dialect/Affine/IR/AffineOps.h"
+   #include "mlir/Dialect/Arith/IR/Arith.h"
+   #include "mlir/Dialect/LLVMIR/LLVMDialect.h"
+   #include "mlir/Dialect/MemRef/IR/MemRef.h"
+   #include "mlir/IR/BuiltinOps.h"
+   #include "mlir/IR/Matchers.h"
+   #include "mlir/Pass/Pass.h"
+   #include "picea-mlir/Dialect/CGRA/IR/CGRA.h"
+   #include "picea-mlir/Dialect/CGRA/Transforms/CGRAAnalysisUtils.h"
+   #include "picea-mlir/Dialect/CGRA/Transforms/Passes.h"
+   
+   #include "llvm/ADT/DenseMap.h"
+   #include "llvm/ADT/DenseSet.h"
+   #include "llvm/Support/FileSystem.h"
+   #include "llvm/Support/raw_ostream.h"
+   
+   #include <algorithm>
+   #include <limits>
+   #include <string>
+   #include <vector>
+   
+   using namespace mlir;
+   
+   namespace {
+   
+   // ─── DFG layout constants (must match mlir_loops_to_dot.py) ─────────────────
+   static constexpr uint64_t BASE_IN = 0x200;
+   static constexpr uint64_t BASE_OUT = 0x400;
+   static constexpr uint64_t STRIDE = 4;
+   
+   // ─── Ordered attribute list ──────────────────────────────────────────────────
+   using Attrs = std::vector<std::pair<std::string, std::string>>;
+   
+   static Attrs inputAttrs(uint64_t addr, int64_t size)
+   {
+       return {
+           {"address", "\"0x" + llvm::utohexstr(addr) + "\""},
+           { "stride",                std::to_string(STRIDE)},
+           {   "size",                  std::to_string(size)},
+           { "border",                               "north"}
+       };
+   }
+   
+   static Attrs outputAttrs(uint64_t addr, int64_t size)
+   {
+       return {
+           {"address", "\"0x" + llvm::utohexstr(addr) + "\""},
+           {   "size",                  std::to_string(size)},
+           { "border",                               "south"}
+       };
+   }
+   
+   static Attrs fuAttrs(
+       int64_t feedback = 0,
+       int64_t constant = 0,
+       int64_t cfi = 0,
+       int64_t delay = 0)
+   {
+       return {
+           {         "feedback", std::to_string(feedback)},
+           {         "constant", std::to_string(constant)},
+           {"constant_fu_input",      std::to_string(cfi)},
+           {    "initial_value",                      "0"},
+           {    "initial_valid",                      "0"},
+           {      "delay_value",    std::to_string(delay)}
+       };
+   }
+   
+   // ─── DFG node / edge ─────────────────────────────────────────────────────────
+   enum class NodeKind { Input, Output, FU };
+   
+   struct DFGNode {
+       std::string name;
+       NodeKind kind;
+       Attrs attrs;
+   };
+   struct DFGEdge {
+       std::string src, dst;
+       Attrs attrs;
+   };
+   
+   static void emitNode(llvm::raw_ostream &os, const DFGNode &n)
+   {
+       os << n.name;
+       for (auto &[k, v] : n.attrs) os << "[" << k << "=" << v << "]";
+       if (n.kind == NodeKind::FU) os << ";";
+       os << "\n";
+   }
+   
+   // Operand-order attributes for a NON-COMMUTATIVE FU (sub, shifts). Without them
+   // map2bitstream assigns the two FU input slots by SORTING the producer names,
+   // which is arbitrary: `sub0` fed by {mul0, input1} sorts to `input1 - mul0`
+   // (wrong) while `sub1` fed by {add0, input3} sorts to `add0 - input3` (right) —
+   // the operand order then depends on the node names the mapper happens to
+   // produce. Emitting the order explicitly makes the encoding independent of
+   // naming and placement.
+   static Attrs operandAttr(unsigned idx)
+   {
+       return {
+           {"operand", std::to_string(idx)}
+       };
+   }
+   
+   static void emitEdge(llvm::raw_ostream &os, const DFGEdge &e)
+   {
+       os << e.src << "->" << e.dst;
+       if (!e.attrs.empty()) {
+           os << " ";
+           for (auto &[k, v] : e.attrs) os << "[" << k << "=" << v << "]";
+       }
+       os << ";\n";
+   }
+   
+   static void writeDot(
+       llvm::raw_ostream &os,
+       llvm::ArrayRef<DFGNode> nodes,
+       llvm::ArrayRef<DFGEdge> edges)
+   {
+       os << "digraph G {\n";
+       for (auto &n : nodes) emitNode(os, n);
+       os << "\n";
+       for (auto &e : edges) emitEdge(os, e);
+       os << "}\n";
+   }
+   
+   // ─── IR helpers ──────────────────────────────────────────────────────────────
+   static bool tryGetConst(Value v, int64_t &out)
+   {
+       APInt val;
+       if (!matchPattern(v, m_ConstantInt(&val))) return false;
+       out = val.getSExtValue();
+       return true;
+   }
+   
+   // Returns the flat element count of a memref. A dynamic (pointer-derived)
+   // dimension has no static extent, so fall back to @p dynFallback — the
+   // enclosing loop's trip count, which is the stream length the fabric actually
+   // consumes. Without this a memref<?xi32> stream reports size 1, and consecutive
+   // input streams are then packed 1 element apart (0x200, 0x204, …) so they
+   // overlap. Number of ELEMENTS a memory node streams from @p v: the product of
+   // the memref's dimensions, not its outermost one.
+   //
+   // Using shape[0] silently mis-sized every rank>1 stream.
+   // `memref<1x10x10x8xi32>` — how a bufferized NHWC activation arrives — declared
+   // **1** where the nest really streams 800, and the generated bitstream then
+   // disagreed with the descriptor the driver programs (the driver sizes streams
+   // from the access pattern, and got 800 right). The consumer FU expects one
+   // token, the memory node pushes 800, the elastic FIFO fills, the node never
+   // reaches its programmed size, and since `exec_done_i = &mn_done` the whole
+   // configuration deadlocks. On residual_small every one of the 6 configurations
+   // with such a stream hung, 6 of 6.
+   //
+   // A dynamic dimension still falls back to the enclosing trip count, and a
+   // rank-1 static memref is unchanged (product == shape[0]), so 1-D kernels are
+   // untouched.
+   static int64_t memRefSize(Value v, int64_t dynFallback)
+   {
+       auto mrt = dyn_cast<MemRefType>(v.getType());
+       if (!mrt || mrt.getRank() == 0) return dynFallback;
+       int64_t n = 1;
+       for (int64_t d : mrt.getShape()) {
+           if (d == ShapedType::kDynamic) return dynFallback;
+           n *= d;
+       }
+       return n;
+   }
+   
+   static const char* cmpStr(arith::CmpIPredicate pred)
+   {
+       switch (pred) {
+       // The hardware spells equality-against-zero "=0" (CGRA.py _HW_CMP_OPS);
+       // "==0" is rejected by map2bitstream. --normalize-cgra-compare leaves
+       // exactly this predicate and ">0", so these two are the only ones that
+       // should ever reach it.
+       case arith::CmpIPredicate::eq: return "=0";
+       case arith::CmpIPredicate::ne: return "!=0";
+       case arith::CmpIPredicate::slt: return "<0";
+       case arith::CmpIPredicate::sle: return "<=0";
+       case arith::CmpIPredicate::sgt: return ">0";
+       case arith::CmpIPredicate::sge: return ">=0";
+       case arith::CmpIPredicate::ult: return "<0";
+       case arith::CmpIPredicate::ule: return "<=0";
+       case arith::CmpIPredicate::ugt: return ">0";
+       case arith::CmpIPredicate::uge: return ">=0";
+       }
+   }
+   
+   // An innermost computation loop has arith ops, no nested affine.for, no
+   // llvm.call (which marks printf / other host-side calls, not CGRA work).
+   static bool isComputationLoop(affine::AffineForOp forOp)
+   {
+       // Only the INNERMOST loop of a nest becomes a DFG (annotate wraps the
+       // OUTERMOST one in the cgra.deploy, so this picks the compute loop inside
+       // it).
+       bool nested = false;
+       forOp.walk([&](affine::AffineForOp inner) {
+           if (inner != forOp) nested = true;
+       });
+       if (nested) return false;
+       // Everything else is the SHARED predicate --annotate-to-cgra gates on. It
+       // used to be a second, independent copy here; see cgra::hasFabricArith for
+       // what that cost.
+       return cgra::hasFabricArith(forOp) && !cgra::hasHostCall(forOp);
+   }
+   
+   // ─── DFG builder ─────────────────────────────────────────────────────────────
+   struct DFGBuilder {
+       llvm::SmallVector<DFGNode, 16> nodes;
+       llvm::SmallVector<DFGEdge, 16> edges;
+       DenseMap<Value, std::string> valMap; // SSA value → DFG node name
+       DenseSet<Value> iterArgs;            // iter_arg block arguments
+       std::map<std::string, int> counters; // per-kind node counter
+       uint64_t inAddr = BASE_IN;
+       uint64_t outAddr = BASE_OUT;
+       int outIdx = 0;
+       bool fatal = false; // an op the exporter must not silently translate
+       bool isAccum = false;
+       int64_t streamLen = 1; // enclosing loop trip count; size of dynamic streams
+       std::string firstInput; // first input node, used as a token source
+   
+       std::string fresh(StringRef kind)
+       {
+           int n = counters[kind.str()]++;
+           return (kind + llvm::Twine(n)).str();
+       }
+   
+       // Produce @p c as a real DATA token, for the one case the FU cannot
+       // express: a select whose true AND false operands are both constants, where
+       // the single constant slot can only hold one of them. `x AND 0` turns any
+       // stream token into 0 (one FU); a non-zero constant then needs `OR c` on
+       // top (two). The token comes from the nest's first input node, which
+       // delivers exactly one value per firing, so the materialised constant
+       // arrives in step with the other operands.
+       std::string materialiseConst(int64_t c)
+       {
+           if (firstInput.empty()) return {};
+           std::string z = fresh("and");
+           nodes.push_back({z, NodeKind::FU, fuAttrs(0, 0, 2)}); // x & 0 == 0
+           edges.push_back({firstInput, z, operandAttr(1)});
+           if (c == 0) return z;
+           std::string k = fresh("or");
+           nodes.push_back({k, NodeKind::FU, fuAttrs(0, c, 2)}); // 0 | c == c
+           edges.push_back({z, k, operandAttr(1)});
+           return k;
+       }
+   
+       // Resolves v: returns DFG node name if known, or sets constOut and returns
+       // "" with isConst=true, or returns "" with isConst=false if unknown.
+       std::string resolveOrConst(Value v, int64_t &constOut, bool &isConst)
+       {
+           int64_t c;
+           if (tryGetConst(v, c)) {
+               constOut = c;
+               isConst = true;
+               return "";
+           }
+           isConst = false;
+           auto it = valMap.find(v);
+           return (it != valMap.end()) ? it->second : "";
+       }
+   
+       void addInputNode(Value result, Value memref)
+       {
+           int64_t sz = memRefSize(memref, streamLen);
+           std::string n = fresh("input");
+           if (firstInput.empty())
+               firstInput =
+                   n; // token source for materialiseConst(), see the select case
+           nodes.push_back({n, NodeKind::Input, inputAttrs(inAddr, sz)});
+           inAddr += sz * STRIDE;
+           valMap[result] = n;
+       }
+   
+       void addOutputNode(const std::string &src, int64_t size)
+       {
+           std::string n = "output" + std::to_string(outIdx++);
+           nodes.push_back({n, NodeKind::Output, outputAttrs(outAddr, size)});
+           edges.push_back({src, n, {}});
+           outAddr += size * STRIDE;
+       }
+   
+       bool hasInputs() const
+       {
+           return llvm::any_of(nodes, [](const DFGNode &n) {
+               return n.kind == NodeKind::Input;
+           });
+       }
+       bool hasFUs() const
+       {
+           return llvm::any_of(nodes, [](const DFGNode &n) {
+               return n.kind == NodeKind::FU;
+           });
+       }
+       bool hasOutputs() const
+       {
+           return llvm::any_of(nodes, [](const DFGNode &n) {
+               return n.kind == NodeKind::Output;
+           });
+       }
+   
+       void build(affine::AffineForOp forOp)
+       {
+           Block* body = forOp.getBody();
+   
+           // Stream length = loop trip count (step 1, matching the CGRA analysis
+           // helpers); used as the size of any dynamic (pointer-derived) memref
+           // stream.
+           if (forOp.hasConstantLowerBound() && forOp.hasConstantUpperBound())
+               streamLen =
+                   forOp.getConstantUpperBound() - forOp.getConstantLowerBound();
+   
+           for (BlockArgument ba : forOp.getRegionIterArgs()) iterArgs.insert(ba);
+   
+           // Pass 1: one input node per affine.load (each load is a distinct
+           // operand).
+           for (Operation &op : *body)
+               if (auto load = dyn_cast<affine::AffineLoadOp>(&op))
+                   addInputNode(load.getResult(), load.getMemRef());
+   
+           std::string lastFU;
+   
+           // Pass 2: arithmetic ops → FU nodes, in source order.
+           for (Operation &op : *body) {
+   
+               // Width casts (i1->i32 carry, sign/zero extend, truncate) carry no
+               // fabric operation — alias the result to the operand's node so the
+               // value keeps flowing (otherwise e.g. a carry cmp dead-ends at the
+               // extui and its edge is dropped).
+               if (isa<arith::ExtUIOp, arith::ExtSIOp, arith::TruncIOp>(&op)) {
+                   auto it = valMap.find(op.getOperand(0));
+                   if (it != valMap.end()) valMap[op.getResult(0)] = it->second;
+                   continue;
+               }
+   
+               if (auto mul = dyn_cast<arith::MulIOp>(&op)) {
+                   int64_t c0 = 0, c1 = 0;
+                   bool ic0, ic1;
+                   std::string d0 = resolveOrConst(mul.getLhs(), c0, ic0);
+                   std::string d1 = resolveOrConst(mul.getRhs(), c1, ic1);
+                   int64_t cval = ic0 ? c0 : (ic1 ? c1 : 0);
+                   std::string name = fresh("mul");
+                   nodes.push_back(
+                       {name,
+                        NodeKind::FU,
+                        fuAttrs(0, cval, (ic0 || ic1) ? 1 : 0)});
+                   if (!ic0 && !d0.empty()) edges.push_back({d0, name, {}});
+                   if (!ic1 && !d1.empty()) edges.push_back({d1, name, {}});
+                   valMap[mul.getResult()] = name;
+                   lastFU = name;
+   
+               } else if (auto add = dyn_cast<arith::AddIOp>(&op)) {
+                   bool lhsIter = iterArgs.count(add.getLhs());
+                   bool rhsIter = iterArgs.count(add.getRhs());
+                   std::string name;
+   
+                   if (lhsIter || rhsIter) {
+                       // Accumulator pattern: loop-carried value via iter_arg →
+                       // feedback node. delay_value = the reduction trip count, so
+                       // the FU emits the summed result on fu_d once per completed
+                       // reduction (every `streamLen` firings) instead of every
+                       // firing.
+                       isAccum = true;
+                       name = fresh("add");
+                       nodes.push_back(
+                           {name, NodeKind::FU, fuAttrs(1, 0, 0, streamLen)});
+                       Value dataVal = lhsIter ? add.getRhs() : add.getLhs();
+                       int64_t dc = 0;
+                       bool idc;
+                       std::string dd = resolveOrConst(dataVal, dc, idc);
+                       if (!idc && !dd.empty()) edges.push_back({dd, name, {}});
+                       edges.push_back({name, name, {}}); // self-loop = feedback
+                   } else {
+                       int64_t c0 = 0, c1 = 0;
+                       bool ic0, ic1;
+                       std::string d0 = resolveOrConst(add.getLhs(), c0, ic0);
+                       std::string d1 = resolveOrConst(add.getRhs(), c1, ic1);
+                       int64_t cval = ic0 ? c0 : (ic1 ? c1 : 0);
+                       bool hasConst = ic0 || ic1;
+                       // A negative constant on an add is represented as a sub
+                       // node — except for INT32_MIN, whose negation (2^31) does
+                       // not fit the bitstream's signed 32-bit immediate field. `x
+                       // + INT32_MIN` and `x - INT32_MIN` are the same value mod
+                       // 2^32, so keeping the ADD form with the original constant
+                       // is both correct and representable. The i64-add carry
+                       // chain in a quantized network adds exactly this constant.
+                       bool asSub = hasConst && cval < 0
+                                    && cval != std::numeric_limits<int32_t>::min();
+                       name = asSub ? fresh("sub") : fresh("add");
+                       Attrs fa = hasConst ? (asSub ? fuAttrs(0, -cval, 2)
+                                                    : fuAttrs(0, cval, 2))
+                                           : fuAttrs();
+                       nodes.push_back({name, NodeKind::FU, fa});
+                       if (!ic0 && !d0.empty()) edges.push_back({d0, name, {}});
+                       if (!ic1 && !d1.empty()) edges.push_back({d1, name, {}});
+                   }
+                   valMap[add.getResult()] = name;
+                   lastFU = name;
+   
+               } else if (auto sub = dyn_cast<arith::SubIOp>(&op)) {
+                   int64_t c0 = 0, c1 = 0;
+                   bool ic0, ic1;
+                   std::string d0 = resolveOrConst(sub.getLhs(), c0, ic0);
+                   std::string d1 = resolveOrConst(sub.getRhs(), c1, ic1);
+                   std::string name = fresh("sub");
+                   Attrs fa;
+                   if (ic1)
+                       fa = fuAttrs(0, c1, 2);
+                   else if (ic0)
+                       fa = fuAttrs(0, c0, 1);
+                   else
+                       fa = fuAttrs();
+                   nodes.push_back({name, NodeKind::FU, fa});
+                   // sub is NON-COMMUTATIVE: pin lhs->fu_in1, rhs->fu_in2
+                   // explicitly.
+                   if (!ic0 && !d0.empty())
+                       edges.push_back({d0, name, operandAttr(1)});
+                   if (!ic1 && !d1.empty())
+                       edges.push_back({d1, name, operandAttr(2)});
+                   valMap[sub.getResult()] = name;
+                   lastFU = name;
+   
+               } else if (auto cmp = dyn_cast<arith::CmpIOp>(&op)) {
+                   std::string cs = cmpStr(cmp.getPredicate());
+                   std::string name = fresh("cmp");
+                   nodes.push_back({
+                       name,
+                       NodeKind::FU,
+                       {{"cmp_op", "\"" + cs + "\""}, {"constant", "0"}}
+                   });
+                   int64_t c0 = 0;
+                   bool ic0;
+                   std::string d0 = resolveOrConst(cmp.getLhs(), c0, ic0);
+                   if (!ic0 && !d0.empty())
+                       edges.push_back({d0, name, {{"operand", "1"}}});
+                   valMap[cmp.getResult()] = name;
+                   lastFU = name;
+   
+               } else if (auto sel = dyn_cast<arith::SelectOp>(&op)) {
+                   int64_t cc = 0, ct = 0, cf = 0;
+                   bool icc, ict, icf;
+                   std::string dc = resolveOrConst(sel.getCondition(), cc, icc);
+                   std::string dt = resolveOrConst(sel.getTrueValue(), ct, ict);
+                   std::string df = resolveOrConst(sel.getFalseValue(), cf, icf);
+                   std::string name = fresh("select");
+   
+                   // BOTH data inputs of a select must have a source.
+                   // map2bitstream configures it as `join_w_c`, whose RTL fires
+                   // only on `din_1_v_i & din_2_v_i & cin_v_i`, so an undriven
+                   // data input DEADLOCKS the whole configuration — no output node
+                   // ever reaches its size and `exec_done_i = &mn_done` never
+                   // asserts. The FU has exactly ONE constant slot, and this used
+                   // to spend it only on the FALSE value, so a constant TRUE value
+                   // was dropped entirely: it got neither an edge nor the slot. On
+                   // residual_small that was every one of the 8 hanging
+                   // configurations, and none of the 8 working ones (each select
+                   // there has two real sources).
+                   //
+                   // The slot goes to whichever side is constant; when BOTH are,
+                   // the second one is MATERIALISED from a stream token: `x AND 0`
+                   // yields 0 (one FU), and a non-zero constant needs `OR c` on
+                   // top of it (two).
+                   std::string tSrc = dt, fSrc = df;
+                   int constInput = 0;
+                   int64_t constVal = 0;
+                   if (icf) { // false side takes the slot (input 1)
+                       constInput = 1;
+                       constVal = cf;
+                   } else if (ict) { // only the true side is constant: slot =
+                                     // input 2
+                       constInput = 2;
+                       constVal = ct;
+                   }
+                   if (ict && icf) {
+                       // Both constant — keep FALSE in the slot and build the TRUE
+                       // value.
+                       tSrc = materialiseConst(ct);
+                       if (tSrc.empty())
+                           op.emitError(
+                               "export-loop-dfg: arith.select with two constant "
+                               "operands "
+                               "needs a stream token to materialise one of them, "
+                               "and this "
+                               "nest has no input node");
+                       ict = false;
+                   }
+                   nodes.push_back({
+                       name,
+                       NodeKind::FU,
+                       {{"constant", std::to_string(constVal)},
+                             {"constant_fu_input", std::to_string(constInput)}}
+                   });
+                   if (!icc && !dc.empty())
+                       edges.push_back({dc, name, {{"operand", "cond"}}});
+                   if (!ict && !tSrc.empty())
+                       edges.push_back({tSrc, name, {{"operand", "2"}}});
+                   if (!icf && !fSrc.empty())
+                       edges.push_back({fSrc, name, {{"operand", "1"}}});
+                   valMap[sel.getResult()] = name;
+                   lastFU = name;
+   
+               } else if (
+                   isa<arith::ShLIOp,
+                       arith::ShRSIOp,
+                       arith::ShRUIOp,
+                       arith::AndIOp,
+                       arith::OrIOp,
+                       arith::XOrIOp>(&op)) {
+                   // Shift / bitwise ops — the i64-arithmetic emulation and
+                   // quantization produce these. The fabric has a SHIFT FU (S:
+                   // shl=SHF, shr=SHFA) and a LOGICAL FU (L: and/or/xor); emit
+                   // them as nodes so the emulation's values keep flowing (an
+                   // untracked result drops every edge through it, fragmenting the
+                   // DFG).
+                   const char* prefix = isa<arith::ShLIOp>(&op) ? "shl"
+                                        : isa<arith::ShRSIOp, arith::ShRUIOp>(&op)
+                                            ? "shr"
+                                        : isa<arith::AndIOp>(&op) ? "and"
+                                        : isa<arith::OrIOp>(&op)  ? "or"
+                                                                  : "xor";
+                   int64_t c0 = 0, c1 = 0;
+                   bool ic0, ic1;
+                   std::string d0 = resolveOrConst(op.getOperand(0), c0, ic0);
+                   std::string d1 = resolveOrConst(op.getOperand(1), c1, ic1);
+                   std::string name = fresh(prefix);
+                   Attrs fa = ic1   ? fuAttrs(0, c1, 2)
+                              : ic0 ? fuAttrs(0, c0, 1)
+                                    : fuAttrs();
+                   nodes.push_back({name, NodeKind::FU, fa});
+                   // shl/shr are NON-COMMUTATIVE (value, amount); tag and/or/xor
+                   // too so the slot assignment never depends on node naming.
+                   if (!ic0 && !d0.empty())
+                       edges.push_back({d0, name, operandAttr(1)});
+                   if (!ic1 && !d1.empty())
+                       edges.push_back({d1, name, operandAttr(2)});
+                   valMap[op.getResult(0)] = name;
+                   lastFU = name;
+   
+                   // The fabric right shift is LOGICAL only:
+                   // FU_data_superpolyvalent.sv declares din_1_i unsigned, so
+                   // opcode 5 (`>>>`) behaves as opcode 4 (`>>`). Therefore
+                   // arith.shrui needs no correction, and arith.shrsi must already
+                   // have been rewritten by --expand-fabric-ops into
+                   //     x >>s n  ==  ((x >>u n) ^ sb) - sb,  sb = 1 << (31 - n)
+                   // If one survives here the pass chain is wrong and the
+                   // bitstream would zero-fill where sign extension was asked for
+                   // — refuse rather than emit.
+                   if (isa<arith::ShRSIOp>(&op)) {
+                       op.emitError(
+                           "export-loop-dfg: arith.shrsi reached the exporter — "
+                           "run "
+                           "--expand-fabric-ops (inside --legalize-fabric-body) "
+                           "first; "
+                           "the fabric shift FU is LOGICAL and this would "
+                           "silently "
+                           "zero-fill for negative values");
+                       fatal = true;
+                   }
+                   // A VARIABLE-amount shrsi needs the same correction with `sb`
+                   // computed at run time: sb = 1 << (31 - n), which is two more
+                   // FUs (a subtract and a shift) on top of the xor/sub pair. Five
+                   // FUs in total against one for the logical shift, but the
+                   // alternative is a wrong answer.
+                   //
+                   // This used to `emitError` and CONTINUE. Because `verify()`
+                   // only marks div/rem/math ops, `bad` stayed false, the pass
+                   // succeeded, and the Makefile runs `picea-opt >/dev/null 2>&1`
+                   // — so the message was thrown away and the exporter emitted a
+                   // plain LOGICAL shift. `shared8 >>s shared6` in
+                   // residual_small's 64-bit shift emulation then zero-filled
+                   // instead of sign-extending, which is wrong exactly for the
+                   // channels whose value is negative: 3 of its 8 output channels,
+                   // 192 of 512 elements.
+                   //
+                   // Valid for n in [0,31]: n=0 gives sb=1<<31 and
+                   // ((x^2^31)-2^31)==x, n=31 gives sb=1 and maps {0,1} to {0,-1}.
+                   // n>=32 is UB in the source anyway and the emulation guards it
+                   // with a select.
+                   if (isa<arith::ShRSIOp>(&op) && !ic1 && !d1.empty()) {
+                       std::string mname = fresh("sub"); // m  = 31 - n
+                       nodes.push_back({mname, NodeKind::FU, fuAttrs(0, 31, 1)});
+                       edges.push_back(
+                           {d1, mname, operandAttr(2)}); // non-commutative: 31 - n
+                       std::string bname = fresh("shl"); // sb = 1 << m
+                       nodes.push_back({bname, NodeKind::FU, fuAttrs(0, 1, 1)});
+                       edges.push_back({mname, bname, operandAttr(2)});
+                       std::string xname = fresh("xor"); // t ^ sb
+                       nodes.push_back({xname, NodeKind::FU, fuAttrs()});
+                       edges.push_back({name, xname, operandAttr(1)});
+                       edges.push_back({bname, xname, operandAttr(2)});
+                       std::string sname = fresh("sub"); // (t ^ sb) - sb
+                       nodes.push_back({sname, NodeKind::FU, fuAttrs()});
+                       edges.push_back({xname, sname, operandAttr(1)});
+                       edges.push_back({bname, sname, operandAttr(2)});
+                       valMap[op.getResult(0)] = sname;
+                       lastFU = sname;
+                   }
+               }
+           }
+   
+           // Output size: 1 for accumulator loops; otherwise the largest loaded
+           // array.
+           int64_t outSize = 1;
+           if (!isAccum) {
+               for (Operation &op : *body)
+                   if (auto load = dyn_cast<affine::AffineLoadOp>(&op))
+                       outSize = std::max(
+                           outSize,
+                           memRefSize(load.getMemRef(), streamLen));
+           }
+   
+           // Output nodes: one per affine.yield operand when the loop carries
+           // values, one per affine.store value otherwise (conv2d / gemm_cpu
+           // pattern), or fallback to the last FU.
+           auto* term = body->getTerminator();
+           auto yieldOp = dyn_cast<affine::AffineYieldOp>(term);
+           bool hasYield = yieldOp && !yieldOp.getOperands().empty();
+   
+           if (hasYield) {
+               for (Value v : yieldOp.getOperands()) {
+                   auto it = valMap.find(v);
+                   if (it != valMap.end()) addOutputNode(it->second, outSize);
+               }
+           } else {
+               for (Operation &op : *body)
+                   if (auto store = dyn_cast<affine::AffineStoreOp>(&op)) {
+                       auto it = valMap.find(store.getValue());
+                       if (it != valMap.end()) addOutputNode(it->second, outSize);
+                   }
+           }
+   
+           if (!hasOutputs() && !lastFU.empty()) addOutputNode(lastFU, outSize);
+       }
+   };
+   
+   // ─── Pass ────────────────────────────────────────────────────────────────────
+   class CGRAExportLoopDFGPass
+           : public PassWrapper<CGRAExportLoopDFGPass, OperationPass<ModuleOp>> {
+   public:
+       MLIR_DEFINE_EXPLICIT_INTERNAL_INLINE_TYPE_ID(CGRAExportLoopDFGPass)
+   
+       CGRAExportLoopDFGPass() = default;
+       // Option<> is not copyable, so we delegate to the default constructor
+       // (which re-initialises all Options to their defaults) and then copy option
+       // values.
+       CGRAExportLoopDFGPass(const CGRAExportLoopDFGPass &other)
+               : CGRAExportLoopDFGPass()
+       { copyOptionValuesFrom(&other); }
+   
+       StringRef getArgument() const final { return "export-loop-dfg"; }
+       StringRef getDescription() const final
+       {
+           return "Export innermost affine.for computation loops as CGRA DFG .dot "
+                  "files";
+       }
+   
+       Option<std::string> outputDir{
+           *this,
+           "output-dir",
+           llvm::cl::desc("Directory for output .dot files"),
+           llvm::cl::init("dot_results")};
+   
+       void runOnOperation() override
+       {
+           ModuleOp module = getOperation();
+           StringRef dir = outputDir.getValue();
+   
+           if (auto ec = llvm::sys::fs::create_directories(dir)) {
+               module.emitError() << "cannot create output directory '" << dir
+                                  << "': " << ec.message();
+               signalPassFailure();
+               return;
+           }
+   
+           // When the module has already been annotated (cgra.deploy regions
+           // exist), export ONLY the loops the driver actually offloads — those
+           // nested in a cgra.deploy. This keeps the per-loop DFG (→
+           // bitstream/io_map) indices in lock-step with --generate-cgra-driver's
+           // per-deploy config indices, even when the source carries extra
+           // host-side loops the driver never runs (a hand-written CPU reference
+           // function, array-init loops). On un-annotated IR (no deploys) the pass
+           // keeps its original whole-module behaviour.
+           bool hasDeploy = false;
+           module.walk([&](cgra::DeployOp) { hasDeploy = true; });
+   
+           // The node emitter has no case for a divide/remainder or a `math`
+           // intrinsic, and DOES NOT FAIL on one: it contributes no node, its
+           // edges are dropped, and the .dot still parses — so the mapper produces
+           // a perfectly valid bitstream for a graph that computes something else.
+           // --annotate-to-cgra offloads a power-of-two divide and the integer
+           // math ops on the promise that
+           // --expand-fabric-ops lowered them first; that promise lives in a
+           // Makefile, so verify it here rather than trust it.
+           //
+           // A HARD ERROR, not a warning: the shipped DFG-export rules run
+           // picea-opt with
+           // `>/dev/null 2>&1`, so a warning would be discarded and the wrong
+           // bitstream built anyway, whereas a non-zero exit stops the rule's `&&`
+           // chain.
+           //
+           // Only for a loop that is actually WRITTEN, which is not the same as
+           // one that passes the filters above — a store-only array-init nest gets
+           // an index but no file (no input streams), and conv_gen/conv_mc
+           // initialise their inputs with `(i*7 + j*3) % 11`. Checking before the
+           // build flagged those and broke two working kernels. Hence the single
+           // pass below: build everything, keep the text in memory, and write only
+           // once every exported loop has been verified — which also means a
+           // failure can never leave a PARTIAL .dot set behind, and the driver
+           // indexes configurations by position in that set.
+           bool bad = false;
+           auto verify = [&](affine::AffineForOp forOp) {
+               forOp.walk([&](Operation* op) {
+                   bool divRem =
+                       isa<arith::DivSIOp,
+                           arith::DivUIOp,
+                           arith::RemSIOp,
+                           arith::RemUIOp,
+                           arith::CeilDivSIOp,
+                           arith::CeilDivUIOp,
+                           arith::FloorDivSIOp>(op);
+                   bool mathOp = op->getDialect()
+                                 && op->getDialect()->getNamespace() == "math";
+                   // An arith.shrsi the exporter cannot correct (a shift amount
+                   // that is neither a constant in [1,31] nor a routed value)
+                   // would become a plain logical shift — silently wrong for
+                   // negative inputs. It must be FATAL: `emitError` alone is
+                   // invisible here, because the Makefile discards stderr and only
+                   // the exit code is observed.
+                   bool badShift = false;
+                   if (auto sr = dyn_cast<arith::ShRSIOp>(op)) {
+                       APInt amt;
+                       bool constAmt =
+                           matchPattern(sr.getRhs(), m_ConstantInt(&amt));
+                       int64_t a = constAmt ? amt.getSExtValue() : 0;
+                       badShift = constAmt && (a <= 0 || a >= 32);
+                   }
+                   if (!divRem && !mathOp && !badShift) return;
+                   bad = true;
+                   op->emitError("export-loop-dfg: '")
+                       << op->getName().getStringRef()
+                       << "' has no DFG node, so it would be silently DROPPED "
+                          "from the "
+                          "exported graph and the bitstream would compute "
+                          "something else; "
+                          "run --expand-fabric-ops before this pass";
+               });
+           };
+           llvm::SmallVector<std::pair<std::string, std::string>>
+               pending; // stem, dot
+   
+           int loopIdx = 0;
+           module.walk([&](affine::AffineForOp forOp) {
+               if (hasDeploy && !forOp->getParentOfType<cgra::DeployOp>()) return;
+               if (!isComputationLoop(forOp)) return;
+               // Emit a DFG only for the loops the driver runs on the fabric — the
+               // same streamability predicate --generate-cgra-driver uses — so the
+               // per-loop DFG (and hence bitstream) indices line up with the
+               // driver's config indices. A reduction/conv nest runs on the CPU
+               // and gets no DFG.
+               if (!cgra::isFabricStreamable(forOp)) return;
+   
+               int thisIdx =
+                   loopIdx++; // increment regardless, so filename indices match
+                              // the Python script's per-file loop enumeration
+   
+               DFGBuilder b;
+               b.build(forOp);
+               if (b.fatal) bad = true;
+   
+               // Skip loops that produced no inputs or no FU nodes (e.g.
+               // index-cast init loops that slipped through the arith check). This
+               // is the point at which a loop is committed to becoming a file, so
+               // it is also the point at which it must be verified.
+               if (!b.hasInputs() || !b.hasFUs()) return;
+               verify(forOp);
+   
+               std::string lb = "0", ub = "?";
+               if (forOp.hasConstantLowerBound())
+                   lb = std::to_string(forOp.getConstantLowerBound());
+               if (forOp.hasConstantUpperBound())
+                   ub = std::to_string(forOp.getConstantUpperBound());
+   
+               std::string idxStr =
+                   (thisIdx < 10 ? "0" : "") + std::to_string(thisIdx);
+               std::string stem = "loop_" + idxStr + "_iter" + lb + "to" + ub;
+   
+               std::string dot;
+               llvm::raw_string_ostream os(dot);
+               writeDot(os, b.nodes, b.edges);
+               pending.emplace_back(stem, std::move(dot));
+           });
+   
+           // Every cgra.deploy MUST have produced exactly one .dot. The driver
+           // numbers its configurations from the deploys and the mapper numbers
+           // its bitstreams from these files, so a shortfall pairs configuration k
+           // with bitstream k-1 from the first missing one onward — silently,
+           // because both artifacts are individually valid. lenet shipped 60
+           // deploys against 58 contiguously-numbered .dot files this way. Now
+           // that both sides share cgra::hasFabricArith this should be
+           // unreachable; if it fires, a deploy exists that the exporter cannot
+           // express and that is a hard error.
+           if (hasDeploy) {
+               // Count what the DRIVER will call a fabric configuration, not every
+               // deploy: it marks `onFabric = isFabricStreamable(nest)` and leaves
+               // the rest on the CPU, so a non-streamable deploy legitimately has
+               // no .dot. Comparing against ALL deploys instead flagged lenet's
+               // 60-vs-58 as an error when the driver also counts 58.
+               unsigned deploys = 0;
+               module.walk([&](cgra::DeployOp d) {
+                   bool fabric = false;
+                   d.getBody().walk([&](affine::AffineForOp f) {
+                       if (cgra::isFabricStreamable(f) && isComputationLoop(f))
+                           fabric = true;
+                   });
+                   if (fabric) ++deploys;
+               });
+               if (deploys != pending.size()) {
+                   module.emitError() << "export-loop-dfg: " << deploys
+                                      << " cgra.deploy but " << pending.size()
+                                      << " DFGs — the configuration and bitstream "
+                                         "indices would not line up";
+                   bad = true;
+               }
+           }
+   
+           if (bad) {
+               signalPassFailure();
+               return; // nothing written: a partial .dot set misnumbers every
+                       // later config
+           }
+   
+           for (auto &[stem, dot] : pending) {
+               std::string outPath = dir.str() + "/" + stem + ".dot";
+               std::error_code ec;
+               llvm::raw_fd_ostream os(outPath, ec);
+               if (ec) {
+                   module.emitError()
+                       << "cannot write '" << outPath << "': " << ec.message();
+                   signalPassFailure();
+                   return;
+               }
+               os << dot;
+               llvm::outs() << "  " << stem << ".dot\n";
+           }
+       }
+   };
+   
+   } // namespace
+   
+   std::unique_ptr<mlir::Pass> cgra::createCGRAExportLoopDFGPass()
+   { return std::make_unique<CGRAExportLoopDFGPass>(); }

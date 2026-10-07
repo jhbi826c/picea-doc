@@ -1,0 +1,164 @@
+
+.. _program_listing_file_include_picea-mlir-c_Dialect_EmitHLS.h:
+
+Program Listing for File EmitHLS.h
+==================================
+
+|exhale_lsh| :ref:`Return to documentation for file <file_include_picea-mlir-c_Dialect_EmitHLS.h>` (``include/picea-mlir-c/Dialect/EmitHLS.h``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. code-block:: cpp
+
+   //===--- EmitHLS.h - C API for EmitHLS dialect --------------------*- C -*-===//
+   //
+   // @author  Jiahong Bi (jiahong.bi@tu-dresden.de)
+   //===----------------------------------------------------------------------===//
+   
+   #ifndef PICEA_MLIR_C_DIALECT_EMITHLS_H
+   #define PICEA_MLIR_C_DIALECT_EMITHLS_H
+   
+   #include "mlir-c/IR.h"
+   #include "mlir-c/Support.h"
+   
+   #ifdef __cplusplus
+   extern "C" {
+   #endif
+   
+   MLIR_DECLARE_CAPI_DIALECT_REGISTRATION(EmitHLS, emithls);
+   
+   //===---------------------------------------------------------------------===//
+   // StreamType
+   //===---------------------------------------------------------------------===//
+   
+   MLIR_CAPI_EXPORTED bool mlirTypeIsAEmitHLSStreamType(MlirType type);
+   
+   MLIR_CAPI_EXPORTED MlirType mlirEmitHLSStreamTypeGet(MlirType elementType);
+   
+   MLIR_CAPI_EXPORTED MlirType mlirEmitHLSStreamTypeGetElementType(MlirType type);
+   
+   //===---------------------------------------------------------------------===//
+   // FixedType
+   //===---------------------------------------------------------------------===//
+   
+   MLIR_CAPI_EXPORTED bool mlirTypeIsAEmitHLSFixedType(MlirType type);
+   
+   MLIR_CAPI_EXPORTED MlirType
+   mlirEmitHLSFixedTypeGet(MlirContext ctx, int64_t totalBits, int64_t intBits);
+   
+   MLIR_CAPI_EXPORTED int64_t mlirEmitHLSFixedTypeGetTotalBits(MlirType type);
+   
+   MLIR_CAPI_EXPORTED int64_t mlirEmitHLSFixedTypeGetIntBits(MlirType type);
+   
+   MLIR_CAPI_EXPORTED int64_t mlirEmitHLSFixedTypeGetFracBits(MlirType type);
+   
+   //===---------------------------------------------------------------------===//
+   // FixedAttr
+   //===---------------------------------------------------------------------===//
+   
+   MLIR_CAPI_EXPORTED bool mlirAttributeIsAEmitHLSFixedAttr(MlirAttribute attr);
+   
+   MLIR_CAPI_EXPORTED MlirAttribute
+   mlirEmitHLSFixedAttrGet(MlirType type, uint64_t value);
+   
+   MLIR_CAPI_EXPORTED uint64_t mlirEmitHLSFixedAttrGetValue(MlirAttribute attr);
+   
+   //===---------------------------------------------------------------------===//
+   // DenseFixedAttr
+   //===---------------------------------------------------------------------===//
+   
+   MLIR_CAPI_EXPORTED bool
+   mlirAttributeIsAEmitHLSDenseFixedAttr(MlirAttribute attr);
+   
+   MLIR_CAPI_EXPORTED MlirAttribute
+   mlirEmitHLSDenseFixedAttrGet(MlirType type, MlirAttribute data);
+   
+   MLIR_CAPI_EXPORTED MlirAttribute
+   mlirEmitHLSDenseFixedAttrGetData(MlirAttribute attr);
+   
+   //===---------------------------------------------------------------------===//
+   // PointerType
+   //===---------------------------------------------------------------------===//
+   
+   MLIR_CAPI_EXPORTED bool mlirTypeIsAEmitHLSPointerType(MlirType type);
+   
+   MLIR_CAPI_EXPORTED MlirType mlirEmitHLSPointerTypeGet(MlirType elementType);
+   
+   MLIR_CAPI_EXPORTED MlirType mlirEmitHLSPointerTypeGetElementType(MlirType type);
+   
+   //===---------------------------------------------------------------------===//
+   // ArrayType
+   //===---------------------------------------------------------------------===//
+   
+   MLIR_CAPI_EXPORTED bool mlirTypeIsAEmitHLSArrayType(MlirType type);
+   
+   MLIR_CAPI_EXPORTED MlirType mlirEmitHLSArrayTypeGet(
+       intptr_t rank,
+       const int64_t* shape,
+       MlirType elementType);
+   
+   MLIR_CAPI_EXPORTED intptr_t mlirEmitHLSArrayTypeGetRank(MlirType type);
+   
+   MLIR_CAPI_EXPORTED int64_t
+   mlirEmitHLSArrayTypeGetDimSize(MlirType type, intptr_t dim);
+   
+   MLIR_CAPI_EXPORTED MlirType mlirEmitHLSArrayTypeGetElementType(MlirType type);
+   
+   //===---------------------------------------------------------------------===//
+   // Translation
+   //===---------------------------------------------------------------------===//
+   
+   MLIR_CAPI_EXPORTED MlirLogicalResult mlirTranslateEmitHLSToCpp(
+       MlirOperation op,
+       MlirStringCallback callback,
+       void* userData);
+   
+   MLIR_CAPI_EXPORTED MlirLogicalResult mlirTranslateEmitHLSToHLSTcl(
+       MlirOperation op,
+       MlirStringCallback callback,
+       void* userData);
+   
+   MLIR_CAPI_EXPORTED MlirLogicalResult mlirTranslateEmitHLSToKriaDtsi(
+       MlirOperation op,
+       MlirStringCallback callback,
+       void* userData);
+   
+   MLIR_CAPI_EXPORTED MlirLogicalResult mlirTranslateEmitHLSToLaksaApp(
+       MlirOperation op,
+       MlirStringCallback callback,
+       void* userData);
+   
+   MLIR_CAPI_EXPORTED MlirLogicalResult mlirTranslateEmitHLSToLaksaHeader(
+       MlirOperation op,
+       MlirStringCallback callback,
+       void* userData);
+   
+   MLIR_CAPI_EXPORTED MlirLogicalResult mlirTranslateEmitHLSToVivadoTcl(
+       MlirOperation op,
+       MlirStringCallback callback,
+       void* userData);
+   
+   #ifdef __cplusplus
+   }
+   #endif
+   
+   //===---------------------------------------------------------------------===//
+   // Pass Registration
+   //===---------------------------------------------------------------------===//
+   
+   #include "picea-mlir/Dialect/EmitHLS/Transforms/Passes.capi.h.inc"
+   
+   #ifdef __cplusplus
+   extern "C" {
+   #endif
+   
+   // Creates an "emithls-pragma-dse" pass with explicit BRAM/DSP budgets
+   MLIR_CAPI_EXPORTED MlirPass mlirCreateEmitHLSEmitHLSPragmaDSEWithOptions(
+       int64_t availableBRAM,
+       int64_t availableDSP);
+   
+   #ifdef __cplusplus
+   }
+   #endif
+   
+   #endif

@@ -1,0 +1,260 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>File Passes.h &mdash; picea 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/collapsible-lists/css/tree_view.css?v=a885cde7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js?v=73120307"></script>
+      <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js?v=660e4f45"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            picea
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Installation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../README.html">About the project</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#guides">Guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#related-projects">Related projects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#development-environment-nix">Development Environment (Nix)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#build-on-ubuntu-24-04-no-nix">Build on Ubuntu 24.04 (no Nix)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#gurobi-license">Gurobi license</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#installing">Installing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#run-the-tests">Run the tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#build-the-documentation">Build the documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#compiling-a-design">Compiling a design</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#running-a-design-on-the-board">Running a design on the board</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#exporting-a-profiled-application-to-mocasin">Exporting a profiled application to Mocasin</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Guides</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../guides/laksa.html">The FPGA Variant using LAKSA backend</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/cgra.html">The CGRA Variant</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">MLIR Dialects</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/Base2Ops.html">‘base2’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/CGRAOps.html">‘cgra’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/DFGOps.html">‘dfg’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/EmitHLSOps.html">‘emithls’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/FilterOps.html">‘filter’ Dialect</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Passes</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/PICEAConversionPasses.html">PICEA Conversion Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/CGRAPasses.html">CGRA Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/DFGPasses.html">DFG Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/EmitHLSPasses.html">Emit HLS Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/FuncExtPasses.html">Func Ext Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/LinalgExtPasses.html">Linalg Ext Passes</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">C++ API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="library_root.html">C++ API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">picea</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">File Passes.h</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/file_include_picea-mlir_Dialect_CGRA_Transforms_Passes.h.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="file-passes-h">
+<span id="file-include-picea-mlir-dialect-cgra-transforms-passes-h"></span><h1>File Passes.h<a class="headerlink" href="#file-passes-h" title="Link to this heading"></a></h1>
+<p>↰ <a class="reference internal" href="dir_include_picea-mlir_Dialect_CGRA_Transforms.html#dir-include-picea-mlir-dialect-cgra-transforms"><span class="std std-ref">Parent directory</span></a> (<code class="docutils literal notranslate"><span class="pre">include/picea-mlir/Dialect/CGRA/Transforms</span></code>)</p>
+<nav class="contents local" id="contents">
+<p class="topic-title">Contents</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#definition-include-picea-mlir-dialect-cgra-transforms-passes-h" id="id1">Definition (<code class="docutils literal notranslate"><span class="pre">include/picea-mlir/Dialect/CGRA/Transforms/Passes.h</span></code>)</a></p></li>
+<li><p><a class="reference internal" href="#detailed-description" id="id2">Detailed Description</a></p></li>
+<li><p><a class="reference internal" href="#includes" id="id3">Includes</a></p></li>
+<li><p><a class="reference internal" href="#included-by" id="id4">Included By</a></p></li>
+<li><p><a class="reference internal" href="#namespaces" id="id5">Namespaces</a></p></li>
+<li><p><a class="reference internal" href="#functions" id="id6">Functions</a></p></li>
+<li><p><a class="reference internal" href="#defines" id="id7">Defines</a></p></li>
+</ul>
+</nav>
+<section id="definition-include-picea-mlir-dialect-cgra-transforms-passes-h">
+<h2>Definition (<code class="docutils literal notranslate"><span class="pre">include/picea-mlir/Dialect/CGRA/Transforms/Passes.h</span></code>)<a class="headerlink" href="#definition-include-picea-mlir-dialect-cgra-transforms-passes-h" title="Link to this heading"></a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="program_listing_file_include_picea-mlir_Dialect_CGRA_Transforms_Passes.h.html">Program Listing for File Passes.h</a></li>
+</ul>
+</div>
+</section>
+<section id="detailed-description">
+<h2>Detailed Description<a class="headerlink" href="#detailed-description" title="Link to this heading"></a></h2>
+<p>Juan Gallego (<a class="reference external" href="mailto:j&#46;gallegor&#37;&#52;&#48;upm&#46;es">j<span>&#46;</span>gallegor<span>&#64;</span>upm<span>&#46;</span>es</a>)</p>
+<p>What each pass does, its options and the order they run in: docs/guides/cgra.md.</p>
+</section>
+<section id="includes">
+<h2>Includes<a class="headerlink" href="#includes" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">memory</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">mlir/Dialect/Affine/IR/AffineOps.h</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">mlir/Dialect/Func/IR/FuncOps.h</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">mlir/Pass/Pass.h</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">mlir/Pass/PassManager.h</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">mlir/Pass/PassRegistry.h</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">picea-mlir/Dialect/CGRA/Transforms/Passes.h.inc</span></code></p></li>
+</ul>
+</section>
+<section id="included-by">
+<h2>Included By<a class="headerlink" href="#included-by" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="file_include_picea-mlir_InitAllPasses.h.html#file-include-picea-mlir-initallpasses-h"><span class="std std-ref">File InitAllPasses.h</span></a></p></li>
+<li><p><a class="reference internal" href="file_lib_Conversion_ConvertToCGRA_ConvertToCGRA.cpp.html#file-lib-conversion-converttocgra-converttocgra-cpp"><span class="std std-ref">File ConvertToCGRA.cpp</span></a></p></li>
+<li><p><a class="reference internal" href="file_lib_Dialect_CGRA_Transforms_AnnotateDispatchIO.cpp.html#file-lib-dialect-cgra-transforms-annotatedispatchio-cpp"><span class="std std-ref">File AnnotateDispatchIO.cpp</span></a></p></li>
+<li><p><a class="reference internal" href="file_lib_Dialect_CGRA_Transforms_AnnotateToCGRA.cpp.html#file-lib-dialect-cgra-transforms-annotatetocgra-cpp"><span class="std std-ref">File AnnotateToCGRA.cpp</span></a></p></li>
+<li><p><a class="reference internal" href="file_lib_Dialect_CGRA_Transforms_ConvToIm2col.cpp.html#file-lib-dialect-cgra-transforms-convtoim2col-cpp"><span class="std std-ref">File ConvToIm2col.cpp</span></a></p></li>
+<li><p><a class="reference internal" href="file_lib_Dialect_CGRA_Transforms_DFGOperatorToCGRA.cpp.html#file-lib-dialect-cgra-transforms-dfgoperatortocgra-cpp"><span class="std std-ref">File DFGOperatorToCGRA.cpp</span></a></p></li>
+<li><p><a class="reference internal" href="file_lib_Dialect_CGRA_Transforms_ExpandFabricOps.cpp.html#file-lib-dialect-cgra-transforms-expandfabricops-cpp"><span class="std std-ref">File ExpandFabricOps.cpp</span></a></p></li>
+<li><p><a class="reference internal" href="file_lib_Dialect_CGRA_Transforms_ExpandMemRefCopy.cpp.html#file-lib-dialect-cgra-transforms-expandmemrefcopy-cpp"><span class="std std-ref">File ExpandMemRefCopy.cpp</span></a></p></li>
+<li><p><a class="reference internal" href="file_lib_Dialect_CGRA_Transforms_ExportLoopDFG.cpp.html#file-lib-dialect-cgra-transforms-exportloopdfg-cpp"><span class="std std-ref">File ExportLoopDFG.cpp</span></a></p></li>
+<li><p><a class="reference internal" href="file_lib_Dialect_CGRA_Transforms_FuseCGRANests.cpp.html#file-lib-dialect-cgra-transforms-fusecgranests-cpp"><span class="std std-ref">File FuseCGRANests.cpp</span></a></p></li>
+<li><p><a class="reference internal" href="file_lib_Dialect_CGRA_Transforms_GenerateDriver.cpp.html#file-lib-dialect-cgra-transforms-generatedriver-cpp"><span class="std std-ref">File GenerateDriver.cpp</span></a></p></li>
+<li><p><a class="reference internal" href="file_lib_Dialect_CGRA_Transforms_HoistReductionUnpack.cpp.html#file-lib-dialect-cgra-transforms-hoistreductionunpack-cpp"><span class="std std-ref">File HoistReductionUnpack.cpp</span></a></p></li>
+<li><p><a class="reference internal" href="file_lib_Dialect_CGRA_Transforms_LegalizeToI32.cpp.html#file-lib-dialect-cgra-transforms-legalizetoi32-cpp"><span class="std std-ref">File LegalizeToI32.cpp</span></a></p></li>
+<li><p><a class="reference internal" href="file_lib_Dialect_CGRA_Transforms_LowerCGRADeployToStrela.cpp.html#file-lib-dialect-cgra-transforms-lowercgradeploytostrela-cpp"><span class="std std-ref">File LowerCGRADeployToStrela.cpp</span></a></p></li>
+<li><p><a class="reference internal" href="file_lib_Dialect_CGRA_Transforms_NormalizeCGRACompare.cpp.html#file-lib-dialect-cgra-transforms-normalizecgracompare-cpp"><span class="std std-ref">File NormalizeCGRACompare.cpp</span></a></p></li>
+<li><p><a class="reference internal" href="file_lib_Dialect_CGRA_Transforms_OutlineCGRADeploy.cpp.html#file-lib-dialect-cgra-transforms-outlinecgradeploy-cpp"><span class="std std-ref">File OutlineCGRADeploy.cpp</span></a></p></li>
+<li><p><a class="reference internal" href="file_lib_Dialect_CGRA_Transforms_PackCGRABuffers.cpp.html#file-lib-dialect-cgra-transforms-packcgrabuffers-cpp"><span class="std std-ref">File PackCGRABuffers.cpp</span></a></p></li>
+<li><p><a class="reference internal" href="file_lib_Dialect_CGRA_Transforms_PartitionCGRADFG.cpp.html#file-lib-dialect-cgra-transforms-partitioncgradfg-cpp"><span class="std std-ref">File PartitionCGRADFG.cpp</span></a></p></li>
+<li><p><a class="reference internal" href="file_lib_Dialect_CGRA_Transforms_PredicatedStoreToSelect.cpp.html#file-lib-dialect-cgra-transforms-predicatedstoretoselect-cpp"><span class="std std-ref">File PredicatedStoreToSelect.cpp</span></a></p></li>
+<li><p><a class="reference internal" href="file_lib_Dialect_CGRA_Transforms_PromoteAccumulator.cpp.html#file-lib-dialect-cgra-transforms-promoteaccumulator-cpp"><span class="std std-ref">File PromoteAccumulator.cpp</span></a></p></li>
+<li><p><a class="reference internal" href="file_lib_Dialect_CGRA_Transforms_PromoteAllocaToGlobal.cpp.html#file-lib-dialect-cgra-transforms-promoteallocatoglobal-cpp"><span class="std std-ref">File PromoteAllocaToGlobal.cpp</span></a></p></li>
+<li><p><a class="reference internal" href="file_lib_Dialect_CGRA_Transforms_PromoteScalarReduction.cpp.html#file-lib-dialect-cgra-transforms-promotescalarreduction-cpp"><span class="std std-ref">File PromoteScalarReduction.cpp</span></a></p></li>
+<li><p><a class="reference internal" href="file_lib_Dialect_CGRA_Transforms_PromoteSharedBuffers.cpp.html#file-lib-dialect-cgra-transforms-promotesharedbuffers-cpp"><span class="std std-ref">File PromoteSharedBuffers.cpp</span></a></p></li>
+<li><p><a class="reference internal" href="file_lib_Dialect_CGRA_Transforms_SplitReductionBias.cpp.html#file-lib-dialect-cgra-transforms-splitreductionbias-cpp"><span class="std std-ref">File SplitReductionBias.cpp</span></a></p></li>
+<li><p><a class="reference internal" href="file_lib_Dialect_CGRA_Transforms_StripStagePrints.cpp.html#file-lib-dialect-cgra-transforms-stripstageprints-cpp"><span class="std std-ref">File StripStagePrints.cpp</span></a></p></li>
+<li><p><a class="reference internal" href="file_lib_Dialect_CGRA_Transforms_UnrollLanes.cpp.html#file-lib-dialect-cgra-transforms-unrolllanes-cpp"><span class="std std-ref">File UnrollLanes.cpp</span></a></p></li>
+<li><p><a class="reference internal" href="file_lib_Dialect_CGRA_Transforms_WidenStorageToI32.cpp.html#file-lib-dialect-cgra-transforms-widenstoragetoi32-cpp"><span class="std std-ref">File WidenStorageToI32.cpp</span></a></p></li>
+</ul>
+</section>
+<section id="namespaces">
+<h2>Namespaces<a class="headerlink" href="#namespaces" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="namespace_mlir.html#namespace-mlir"><span class="std std-ref">Namespace mlir</span></a></p></li>
+<li><p><a class="reference internal" href="namespace_mlir__cgra.html#namespace-mlir-cgra"><span class="std std-ref">Namespace mlir::cgra</span></a></p></li>
+</ul>
+</section>
+<section id="functions">
+<h2>Functions<a class="headerlink" href="#functions" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="function_namespacemlir_1_1cgra_1a84c01366c6039a56133b536cb344e371.html#exhale-function-namespacemlir-1-1cgra-1a84c01366c6039a56133b536cb344e371"><span class="std std-ref">Function mlir::cgra::createCGRAAnnotateDispatchIOPass</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacemlir_1_1cgra_1a1e4331cd546a035f5542a8987fd31cd0.html#exhale-function-namespacemlir-1-1cgra-1a1e4331cd546a035f5542a8987fd31cd0"><span class="std std-ref">Function mlir::cgra::createCGRAAnnotateToCGRAPass</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacemlir_1_1cgra_1a7cbdad716ba96929c87c0dff6cb350da.html#exhale-function-namespacemlir-1-1cgra-1a7cbdad716ba96929c87c0dff6cb350da"><span class="std std-ref">Function mlir::cgra::createCGRAConvToIm2colPass</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacemlir_1_1cgra_1ad0a0baa8ab2ad687038c8c8917413466.html#exhale-function-namespacemlir-1-1cgra-1ad0a0baa8ab2ad687038c8c8917413466"><span class="std std-ref">Function mlir::cgra::createCGRADeployToStrelaPass</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacemlir_1_1cgra_1acb28f5b018af19bce7978ea7da5e9617.html#exhale-function-namespacemlir-1-1cgra-1acb28f5b018af19bce7978ea7da5e9617"><span class="std std-ref">Function mlir::cgra::createCGRADFGOperatorToCGRAPass</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacemlir_1_1cgra_1a03ecac585dc90800bc78ccf1d81d9bd4.html#exhale-function-namespacemlir-1-1cgra-1a03ecac585dc90800bc78ccf1d81d9bd4"><span class="std std-ref">Function mlir::cgra::createCGRAExpandFabricOpsPass</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacemlir_1_1cgra_1af9f858a7bd43f1559515981b65867663.html#exhale-function-namespacemlir-1-1cgra-1af9f858a7bd43f1559515981b65867663"><span class="std std-ref">Function mlir::cgra::createCGRAExpandMemRefCopyPass</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacemlir_1_1cgra_1a3d014b199d0e995df02325f6263ba862.html#exhale-function-namespacemlir-1-1cgra-1a3d014b199d0e995df02325f6263ba862"><span class="std std-ref">Function mlir::cgra::createCGRAExportLoopDFGPass</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacemlir_1_1cgra_1abece3bcd477098d280ebe730d9bcd3e9.html#exhale-function-namespacemlir-1-1cgra-1abece3bcd477098d280ebe730d9bcd3e9"><span class="std std-ref">Function mlir::cgra::createCGRAFuseNestsPass</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacemlir_1_1cgra_1a84a502e0797dcf6367d9d7d6bc5a17c3.html#exhale-function-namespacemlir-1-1cgra-1a84a502e0797dcf6367d9d7d6bc5a17c3"><span class="std std-ref">Function mlir::cgra::createCGRAGenerateDriverPass</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacemlir_1_1cgra_1a056f4479f1bb898e4d10d8f7ae51f5cf.html#exhale-function-namespacemlir-1-1cgra-1a056f4479f1bb898e4d10d8f7ae51f5cf"><span class="std std-ref">Function mlir::cgra::createCGRAHoistReductionUnpackPass</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacemlir_1_1cgra_1abd940b540ec249f00f74179ee50eebee.html#exhale-function-namespacemlir-1-1cgra-1abd940b540ec249f00f74179ee50eebee"><span class="std std-ref">Function mlir::cgra::createCGRALegalizeToI32FuncPass</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacemlir_1_1cgra_1a8fe557785d7eb0d52910f413c0e317f4.html#exhale-function-namespacemlir-1-1cgra-1a8fe557785d7eb0d52910f413c0e317f4"><span class="std std-ref">Function mlir::cgra::createCGRALegalizeToI32Pass</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacemlir_1_1cgra_1a60f0044929b44d2e1fcebf7b76e89575.html#exhale-function-namespacemlir-1-1cgra-1a60f0044929b44d2e1fcebf7b76e89575"><span class="std std-ref">Function mlir::cgra::createCGRANormalizeComparePass</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacemlir_1_1cgra_1a255df917f9f43a08c5b0ca8e0f538adf.html#exhale-function-namespacemlir-1-1cgra-1a255df917f9f43a08c5b0ca8e0f538adf"><span class="std std-ref">Function mlir::cgra::createCGRAOutlineDeployPass</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacemlir_1_1cgra_1a826c612bd4406937c6cf65e2e0eaa4e8.html#exhale-function-namespacemlir-1-1cgra-1a826c612bd4406937c6cf65e2e0eaa4e8"><span class="std std-ref">Function mlir::cgra::createCGRAPackBuffersPass</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacemlir_1_1cgra_1af4311498e999a5ec71d3e97fb128d243.html#exhale-function-namespacemlir-1-1cgra-1af4311498e999a5ec71d3e97fb128d243"><span class="std std-ref">Function mlir::cgra::createCGRAPartitionDFGPass</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacemlir_1_1cgra_1a38503851b80a52498549d45f7342dbb9.html#exhale-function-namespacemlir-1-1cgra-1a38503851b80a52498549d45f7342dbb9"><span class="std std-ref">Function mlir::cgra::createCGRAPredicatedStoreToSelectPass</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacemlir_1_1cgra_1a24e212f021cb6317e230001884437e35.html#exhale-function-namespacemlir-1-1cgra-1a24e212f021cb6317e230001884437e35"><span class="std std-ref">Function mlir::cgra::createCGRAPromoteAccumulatorPass</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacemlir_1_1cgra_1aaeed56d8a4e826e9b82330ac17db9c1c.html#exhale-function-namespacemlir-1-1cgra-1aaeed56d8a4e826e9b82330ac17db9c1c"><span class="std std-ref">Function mlir::cgra::createCGRAPromoteAllocaToGlobalPass</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacemlir_1_1cgra_1a4911527b734e363a67318e32b0666507.html#exhale-function-namespacemlir-1-1cgra-1a4911527b734e363a67318e32b0666507"><span class="std std-ref">Function mlir::cgra::createCGRAPromoteScalarReductionPass</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacemlir_1_1cgra_1af00e9c23d09b8ce5cabe65b8afba1ba3.html#exhale-function-namespacemlir-1-1cgra-1af00e9c23d09b8ce5cabe65b8afba1ba3"><span class="std std-ref">Function mlir::cgra::createCGRAPromoteSharedBuffersPass</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacemlir_1_1cgra_1a9efaf5e9e66e38e923b6aa222886d71e.html#exhale-function-namespacemlir-1-1cgra-1a9efaf5e9e66e38e923b6aa222886d71e"><span class="std std-ref">Function mlir::cgra::createCGRASplitReductionBiasPass</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacemlir_1_1cgra_1a0cd8dfb7b4ce648c49146656b83de4bd.html#exhale-function-namespacemlir-1-1cgra-1a0cd8dfb7b4ce648c49146656b83de4bd"><span class="std std-ref">Function mlir::cgra::createCGRAStrelaToLLVMPass</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacemlir_1_1cgra_1a1f853b256292758c9285e1c7941521b7.html#exhale-function-namespacemlir-1-1cgra-1a1f853b256292758c9285e1c7941521b7"><span class="std std-ref">Function mlir::cgra::createCGRAStripStagePrintsPass</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacemlir_1_1cgra_1a93a6e00ec1355a6243b30c4dd2e79b5f.html#exhale-function-namespacemlir-1-1cgra-1a93a6e00ec1355a6243b30c4dd2e79b5f"><span class="std std-ref">Function mlir::cgra::createCGRAUnrollLanesPass</span></a></p></li>
+<li><p><a class="reference internal" href="function_namespacemlir_1_1cgra_1ab77a86510623f54dc74a1608d18bd7d3.html#exhale-function-namespacemlir-1-1cgra-1ab77a86510623f54dc74a1608d18bd7d3"><span class="std std-ref">Function mlir::cgra::createCGRAWidenStorageToI32Pass</span></a></p></li>
+</ul>
+</section>
+<section id="defines">
+<h2>Defines<a class="headerlink" href="#defines" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="define_Dialect_2CGRA_2Transforms_2Passes_8h_1ab89199f50939908fa0581f7323f23e14.html#exhale-define-dialect-2cgra-2transforms-2passes-8h-1ab89199f50939908fa0581f7323f23e14"><span class="std std-ref">Define GEN_PASS_DECL</span></a></p></li>
+<li><p><a class="reference internal" href="define_Dialect_2CGRA_2Transforms_2Passes_8h_1a50fd6f4ec277edd1b62f2efe4a35eede.html#exhale-define-dialect-2cgra-2transforms-2passes-8h-1a50fd6f4ec277edd1b62f2efe4a35eede"><span class="std std-ref">Define GEN_PASS_REGISTRATION</span></a></p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

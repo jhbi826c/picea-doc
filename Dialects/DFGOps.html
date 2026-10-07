@@ -1,0 +1,821 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>‘dfg’ Dialect &mdash; picea 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/collapsible-lists/css/tree_view.css?v=a885cde7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js?v=73120307"></script>
+      <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js?v=660e4f45"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="‘emithls’ Dialect" href="EmitHLSOps.html" />
+    <link rel="prev" title="‘cgra’ Dialect" href="CGRAOps.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            picea
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Installation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../README.html">About the project</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#guides">Guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#related-projects">Related projects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#development-environment-nix">Development Environment (Nix)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#build-on-ubuntu-24-04-no-nix">Build on Ubuntu 24.04 (no Nix)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#gurobi-license">Gurobi license</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#installing">Installing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#run-the-tests">Run the tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#build-the-documentation">Build the documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#compiling-a-design">Compiling a design</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#running-a-design-on-the-board">Running a design on the board</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#exporting-a-profiled-application-to-mocasin">Exporting a profiled application to Mocasin</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Guides</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../guides/laksa.html">The FPGA Variant using LAKSA backend</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/cgra.html">The CGRA Variant</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">MLIR Dialects</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="Base2Ops.html">‘base2’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="CGRAOps.html">‘cgra’ Dialect</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">‘dfg’ Dialect</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#operations">Operations</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#dfg-channel-dfg-channelop"><code class="docutils literal notranslate"><span class="pre">dfg.channel</span></code> (dfg::ChannelOp)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#attributes">Attributes:</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#results">Results:</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#dfg-embed-dfg-embedop"><code class="docutils literal notranslate"><span class="pre">dfg.embed</span></code> (dfg::EmbedOp)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id1">Attributes:</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#operands">Operands:</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#dfg-instantiate-dfg-instantiateop"><code class="docutils literal notranslate"><span class="pre">dfg.instantiate</span></code> (dfg::InstantiateOp)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id2">Attributes:</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id3">Operands:</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#dfg-loop-dfg-loopop"><code class="docutils literal notranslate"><span class="pre">dfg.loop</span></code> (dfg::LoopOp)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id4">Operands:</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#dfg-operator-dfg-operatorop"><code class="docutils literal notranslate"><span class="pre">dfg.operator</span></code> (dfg::OperatorOp)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id5">Attributes:</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#dfg-output-dfg-outputop"><code class="docutils literal notranslate"><span class="pre">dfg.output</span></code> (dfg::OutputOp)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id6">Operands:</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#dfg-process-dfg-processop"><code class="docutils literal notranslate"><span class="pre">dfg.process</span></code> (dfg::ProcessOp)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id7">Attributes:</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#dfg-pull-dfg-pullop"><code class="docutils literal notranslate"><span class="pre">dfg.pull</span></code> (dfg::PullOp)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id8">Operands:</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id9">Results:</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#dfg-pull-as-memref-dfg-pullasmemrefop"><code class="docutils literal notranslate"><span class="pre">dfg.pull_as_memref</span></code> (dfg::PullAsMemRefOp)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id10">Operands:</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id11">Results:</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#dfg-pull-as-tensor-dfg-pullastensorop"><code class="docutils literal notranslate"><span class="pre">dfg.pull_as_tensor</span></code> (dfg::PullAsTensorOp)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id12">Operands:</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id13">Results:</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#dfg-push-dfg-pushop"><code class="docutils literal notranslate"><span class="pre">dfg.push</span></code> (dfg::PushOp)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id14">Operands:</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#dfg-push-memref-dfg-pushmemrefop"><code class="docutils literal notranslate"><span class="pre">dfg.push_memref</span></code> (dfg::PushMemRefOp)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id15">Operands:</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#dfg-push-tensor-dfg-pushtensorop"><code class="docutils literal notranslate"><span class="pre">dfg.push_tensor</span></code> (dfg::PushTensorOp)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id16">Operands:</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#dfg-region-dfg-regionop"><code class="docutils literal notranslate"><span class="pre">dfg.region</span></code> (dfg::RegionOp)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id17">Attributes:</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#types">Types</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#inputtype">InputType</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#parameters">Parameters:</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#outputtype">OutputType</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id18">Parameters:</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#enums">Enums</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#offloadhardware">OffloadHardware</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#cases">Cases:</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="EmitHLSOps.html">‘emithls’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="FilterOps.html">‘filter’ Dialect</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Passes</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/PICEAConversionPasses.html">PICEA Conversion Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/CGRAPasses.html">CGRA Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/DFGPasses.html">DFG Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/EmitHLSPasses.html">Emit HLS Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/FuncExtPasses.html">Func Ext Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/LinalgExtPasses.html">Linalg Ext Passes</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">C++ API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../api/library_root.html">C++ API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">picea</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">‘dfg’ Dialect</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/Dialects/DFGOps.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <!-- Autogenerated by mlir-tblgen; don't manually edit -->
+<section id="dfg-dialect">
+<h1>‘dfg’ Dialect<a class="headerlink" href="#dfg-dialect" title="Link to this heading"></a></h1>
+<p>The <code class="docutils literal notranslate"><span class="pre">dfg</span></code> dialect groups together a set of types, operations and
+transformations that are useful to implement a structured abstraction
+on dataflow graphs.
+These abstractions are useful for constructing KPN/SDF-like dataflow
+graphs, which include definitions of nodes, edges and their connections.</p>
+<section id="operations">
+<h2>Operations<a class="headerlink" href="#operations" title="Link to this heading"></a></h2>
+<section id="dfg-channel-dfg-channelop">
+<h3><code class="docutils literal notranslate"><span class="pre">dfg.channel</span></code> (dfg::ChannelOp)<a class="headerlink" href="#dfg-channel-dfg-channelop" title="Link to this heading"></a></h3>
+<p><em>Defines a channel with one input and one output port</em></p>
+<p>The <code class="docutils literal notranslate"><span class="pre">channel</span></code> operation produces a typed channel (i.e. an edge in the
+dataflow graph) that links two nodes (i.e. process or operator) in the
+dataflow graph.
+The input of a channel will be connected to an output port of a node,
+which means its type is dfg::InputType, same for output port.</p>
+<p>A channel can also be sized manually with a 32-bit integer, otherwise,
+it indicates an unbounded FIFO channel.
+The token flows in the channel can also be of memref/tensor type, which
+implicitly enables multiple read/write as in KPN MoC.</p>
+<p>Examples:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>%input, %output = dfg.channel() : type
+$input, %output = dfg.channel(size) : shape x type
+</pre></div>
+</div>
+<p>Interfaces: <code class="docutils literal notranslate"><span class="pre">DFG_EdgeInterface</span></code>, <code class="docutils literal notranslate"><span class="pre">MemoryEffectsOpInterface</span></code>, <code class="docutils literal notranslate"><span class="pre">OpAsmOpInterface</span></code></p>
+<section id="attributes">
+<h4>Attributes:<a class="headerlink" href="#attributes" title="Link to this heading"></a></h4>
+<table>
+<tr><th>Attribute</th><th>MLIR Type</th><th>Description</th></tr>
+<tr><td><code>token_type</code></td><td>::mlir::TypeAttr</td><td>any type attribute</td></tr>
+<tr><td><code>buffer_size</code></td><td>::mlir::IntegerAttr</td><td>32-bit signless integer attribute</td></tr>
+</table>
+</section>
+<section id="results">
+<h4>Results:<a class="headerlink" href="#results" title="Link to this heading"></a></h4>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head text-center"><p>Result</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">input_port</span></code></p></td>
+<td><p>Sending channel end type</p></td>
+</tr>
+<tr class="row-odd"><td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">output_port</span></code></p></td>
+<td><p>Receiving channel end type</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="dfg-embed-dfg-embedop">
+<h3><code class="docutils literal notranslate"><span class="pre">dfg.embed</span></code> (dfg::EmbedOp)<a class="headerlink" href="#dfg-embed-dfg-embedop" title="Link to this heading"></a></h3>
+<p><em>Embed a region as a subgraph in another.</em></p>
+<p>The <code class="docutils literal notranslate"><span class="pre">embed</span></code> operation embed a region into another region.
+The syntax and usage of this operation is similar to <code class="docutils literal notranslate"><span class="pre">instantiate</span></code> operation.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">dfg</span><span class="o">.</span><span class="n">region</span> <span class="nd">@child</span> <span class="n">inputs</span><span class="p">(</span><span class="o">...</span><span class="p">)</span> <span class="n">outputs</span><span class="p">(</span><span class="o">...</span><span class="p">)</span> <span class="p">{</span><span class="o">...</span><span class="p">}</span>
+<span class="n">dfg</span><span class="o">.</span><span class="n">region</span> <span class="nd">@parent</span> <span class="n">inputs</span><span class="p">(</span><span class="o">...</span><span class="p">)</span> <span class="n">outputs</span><span class="p">(</span><span class="o">...</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">dfg</span><span class="o">.</span><span class="n">embed</span> <span class="nd">@child</span> <span class="n">inputs</span><span class="p">(</span><span class="o">...</span><span class="p">)</span> <span class="n">outputs</span><span class="p">(</span><span class="o">...</span><span class="p">)</span> <span class="p">:</span> <span class="p">(</span><span class="o">...</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="o">...</span><span class="p">)</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Traits: <code class="docutils literal notranslate"><span class="pre">AttrSizedOperandSegments</span></code></p>
+<p>Interfaces: <code class="docutils literal notranslate"><span class="pre">DFG_GraphInterface</span></code>, <code class="docutils literal notranslate"><span class="pre">DFG_NodeInterface</span></code></p>
+<section id="id1">
+<h4>Attributes:<a class="headerlink" href="#id1" title="Link to this heading"></a></h4>
+<table>
+<tr><th>Attribute</th><th>MLIR Type</th><th>Description</th></tr>
+<tr><td><code>actor</code></td><td>::mlir::SymbolRefAttr</td><td>symbol reference attribute</td></tr>
+<tr><td><code>offloaded</code></td><td>::mlir::dfg::OffloadHardwareAttr</td><td>The hardware back to be offloaded to</td></tr>
+</table>
+</section>
+<section id="operands">
+<h4>Operands:<a class="headerlink" href="#operands" title="Link to this heading"></a></h4>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head text-center"><p>Operand</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">inputs</span></code></p></td>
+<td><p>variadic of Receiving channel end type</p></td>
+</tr>
+<tr class="row-odd"><td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">outputs</span></code></p></td>
+<td><p>variadic of Sending channel end type</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="dfg-instantiate-dfg-instantiateop">
+<h3><code class="docutils literal notranslate"><span class="pre">dfg.instantiate</span></code> (dfg::InstantiateOp)<a class="headerlink" href="#dfg-instantiate-dfg-instantiateop" title="Link to this heading"></a></h3>
+<p><em>Instantiates an DFG node.</em></p>
+<p>The <code class="docutils literal notranslate"><span class="pre">instantiate</span></code> operation instantiate an operator or process in a
+region with a set of inputs and outputs.
+InstantiateOp creates a DFG node with a set of input and output values.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">dfg</span><span class="o">.</span><span class="n">operator</span> <span class="nd">@operator</span> <span class="n">inputs</span><span class="p">(</span><span class="o">...</span><span class="p">)</span> <span class="n">outputs</span><span class="p">(</span><span class="o">...</span><span class="p">)</span> <span class="p">{</span><span class="o">...</span><span class="p">}</span>
+<span class="n">dfg</span><span class="o">.</span><span class="n">process</span> <span class="nd">@process</span> <span class="n">inputs</span><span class="p">(</span><span class="o">...</span><span class="p">)</span> <span class="n">outputs</span><span class="p">(</span><span class="o">...</span><span class="p">)</span> <span class="p">{</span><span class="o">...</span><span class="p">}</span>
+<span class="n">dfg</span><span class="o">.</span><span class="n">region</span> <span class="nd">@graph</span> <span class="n">inputs</span><span class="p">(</span><span class="o">...</span><span class="p">)</span> <span class="n">outputs</span><span class="p">(</span><span class="o">...</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">dfg</span><span class="o">.</span><span class="n">instantiate</span> <span class="nd">@operator</span> <span class="n">inputs</span><span class="p">(</span><span class="o">...</span><span class="p">)</span> <span class="n">outputs</span><span class="p">(</span><span class="o">...</span><span class="p">)</span> <span class="p">:</span> <span class="p">(</span><span class="o">...</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="o">...</span><span class="p">)</span>
+    <span class="n">dfg</span><span class="o">.</span><span class="n">instantiate</span> <span class="nd">@process</span> <span class="n">inputs</span><span class="p">(</span><span class="o">...</span><span class="p">)</span> <span class="n">outputs</span><span class="p">(</span><span class="o">...</span><span class="p">)</span> <span class="p">:</span> <span class="p">(</span><span class="o">...</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="o">...</span><span class="p">)</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Traits: <code class="docutils literal notranslate"><span class="pre">AttrSizedOperandSegments</span></code></p>
+<p>Interfaces: <code class="docutils literal notranslate"><span class="pre">DFG_NodeInterface</span></code></p>
+<section id="id2">
+<h4>Attributes:<a class="headerlink" href="#id2" title="Link to this heading"></a></h4>
+<table>
+<tr><th>Attribute</th><th>MLIR Type</th><th>Description</th></tr>
+<tr><td><code>actor</code></td><td>::mlir::SymbolRefAttr</td><td>symbol reference attribute</td></tr>
+<tr><td><code>offloaded</code></td><td>::mlir::dfg::OffloadHardwareAttr</td><td>The hardware back to be offloaded to</td></tr>
+</table>
+</section>
+<section id="id3">
+<h4>Operands:<a class="headerlink" href="#id3" title="Link to this heading"></a></h4>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head text-center"><p>Operand</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">inputs</span></code></p></td>
+<td><p>variadic of Receiving channel end type</p></td>
+</tr>
+<tr class="row-odd"><td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">outputs</span></code></p></td>
+<td><p>variadic of Sending channel end type</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="dfg-loop-dfg-loopop">
+<h3><code class="docutils literal notranslate"><span class="pre">dfg.loop</span></code> (dfg::LoopOp)<a class="headerlink" href="#dfg-loop-dfg-loopop" title="Link to this heading"></a></h3>
+<p><em>Defines the repeatedly executed body of a process.</em></p>
+<p>The <code class="docutils literal notranslate"><span class="pre">loop</span></code> operation defines the repeatedly executed body of a process.
+During each iteration, operations in the body can pull tokens from the
+process input ports, perform computations, and push tokens to the
+process output ports.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">inputs</span></code> and <code class="docutils literal notranslate"><span class="pre">outputs</span></code> lists identify the process ports that are
+monitored for stream termination. A port is closed when no further
+tokens will be transferred through it. When closure is observed on the
+listed input ports, the process loop terminates and closure propagates
+through its listed output ports. This allows downstream processes, and
+eventually the whole dataflow graph, to shut down.</p>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>dfg.process @add inputs(%a: !dfg.output&lt;type&gt;) outputs(%b: !dfg.input&lt;type&gt;)
+{
+    dfg.loop inputs(%a: !dfg.output&lt;type&gt;) outputs(%b: !dfg.input&lt;type&gt;) {
+        ops ...
+    }
+}
+</pre></div>
+</div>
+<p>Traits: <code class="docutils literal notranslate"><span class="pre">AttrSizedOperandSegments</span></code>, <code class="docutils literal notranslate"><span class="pre">AutomaticAllocationScope</span></code>, <code class="docutils literal notranslate"><span class="pre">HasParent&lt;ProcessOp&gt;</span></code>, <code class="docutils literal notranslate"><span class="pre">NoTerminator</span></code>, <code class="docutils literal notranslate"><span class="pre">RecursiveMemoryEffects</span></code></p>
+<section id="id4">
+<h4>Operands:<a class="headerlink" href="#id4" title="Link to this heading"></a></h4>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head text-center"><p>Operand</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">input_channels</span></code></p></td>
+<td><p>variadic of Receiving channel end type</p></td>
+</tr>
+<tr class="row-odd"><td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">output_channels</span></code></p></td>
+<td><p>variadic of Sending channel end type</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="dfg-operator-dfg-operatorop">
+<h3><code class="docutils literal notranslate"><span class="pre">dfg.operator</span></code> (dfg::OperatorOp)<a class="headerlink" href="#dfg-operator-dfg-operatorop" title="Link to this heading"></a></h3>
+<p><em>Defines an DFG node in SDF MoC</em></p>
+<p>The <code class="docutils literal notranslate"><span class="pre">operator</span></code> operation defines one node (actor) in the SDF dataflow model.
+An operator is a special case of <code class="docutils literal notranslate"><span class="pre">process</span></code>, which only write values into output
+ports once at the end.</p>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">dfg</span><span class="o">.</span><span class="n">operator</span> <span class="nd">@node</span> <span class="n">inputs</span><span class="p">(</span><span class="o">%</span><span class="n">in0</span><span class="p">:</span> <span class="n">i32</span><span class="p">,</span> <span class="o">%</span><span class="n">in1</span><span class="p">:</span> <span class="n">i32</span><span class="p">)</span> <span class="n">outputs</span><span class="p">(</span><span class="o">%</span><span class="n">out0</span><span class="p">:</span> <span class="n">i32</span><span class="p">,</span> <span class="o">%</span><span class="n">out1</span><span class="p">:</span> <span class="n">i32</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">ops</span> <span class="o">...</span>
+    <span class="n">dfg</span><span class="o">.</span><span class="n">output</span> <span class="o">...</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Traits: <code class="docutils literal notranslate"><span class="pre">AffineScope</span></code>, <code class="docutils literal notranslate"><span class="pre">AutomaticAllocationScope</span></code>, <code class="docutils literal notranslate"><span class="pre">HasParent&lt;ModuleOp&gt;</span></code>, <code class="docutils literal notranslate"><span class="pre">IsolatedFromAbove</span></code>, <code class="docutils literal notranslate"><span class="pre">SingleBlockImplicitTerminator&lt;OutputOp&gt;</span></code>, <code class="docutils literal notranslate"><span class="pre">SingleBlock</span></code></p>
+<p>Interfaces: <code class="docutils literal notranslate"><span class="pre">DFG_NodeInterface</span></code>, <code class="docutils literal notranslate"><span class="pre">OpAsmOpInterface</span></code></p>
+<section id="id5">
+<h4>Attributes:<a class="headerlink" href="#id5" title="Link to this heading"></a></h4>
+<table>
+<tr><th>Attribute</th><th>MLIR Type</th><th>Description</th></tr>
+<tr><td><code>sym_name</code></td><td>::mlir::StringAttr</td><td>string attribute</td></tr>
+<tr><td><code>function_type</code></td><td>::mlir::TypeAttr</td><td>type attribute of function type</td></tr>
+</table>
+</section>
+</section>
+<section id="dfg-output-dfg-outputop">
+<h3><code class="docutils literal notranslate"><span class="pre">dfg.output</span></code> (dfg::OutputOp)<a class="headerlink" href="#dfg-output-dfg-outputop" title="Link to this heading"></a></h3>
+<p><em>Terminator for an OperatorOp</em></p>
+<p>Syntax:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>operation ::= `dfg.output` attr-dict ($operands^ `:` type($operands))?
+</pre></div>
+</div>
+<p>Traits: <code class="docutils literal notranslate"><span class="pre">HasParent&lt;OperatorOp&gt;</span></code>, <code class="docutils literal notranslate"><span class="pre">Terminator</span></code></p>
+<section id="id6">
+<h4>Operands:<a class="headerlink" href="#id6" title="Link to this heading"></a></h4>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head text-center"><p>Operand</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">operands</span></code></p></td>
+<td><p>variadic of any non-token type</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="dfg-process-dfg-processop">
+<h3><code class="docutils literal notranslate"><span class="pre">dfg.process</span></code> (dfg::ProcessOp)<a class="headerlink" href="#dfg-process-dfg-processop" title="Link to this heading"></a></h3>
+<p><em>Defines a process in the KPN MoC</em></p>
+<p>The <code class="docutils literal notranslate"><span class="pre">process</span></code> operation defines one node (actor) in the KPN dataflow model.
+A process is a symbol at module scope and can be connected to other processes
+through its input and output ports.</p>
+<p>The port interface is described by <code class="docutils literal notranslate"><span class="pre">function_type</span></code>:</p>
+<ul class="simple">
+<li><p>function inputs represent incoming channel ends</p></li>
+<li><p>function results represent outgoing channel ends</p></li>
+</ul>
+<p>A <code class="docutils literal notranslate"><span class="pre">process</span></code> can have one region with other IRs inside or none with a link to a library call.</p>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>dfg.process @node inputs(%in0: !dfg.output&lt;type&gt;, %in1: !dfg.output&lt;type&gt;)
+                  outputs(%out0: !dfg.input&lt;type&gt;, %out1: !dfg.input&lt;type&gt;)
+{
+    ops ...
+}
+</pre></div>
+</div>
+<p>Traits: <code class="docutils literal notranslate"><span class="pre">AffineScope</span></code>, <code class="docutils literal notranslate"><span class="pre">AutomaticAllocationScope</span></code>, <code class="docutils literal notranslate"><span class="pre">HasParent&lt;ModuleOp&gt;</span></code>, <code class="docutils literal notranslate"><span class="pre">IsolatedFromAbove</span></code>, <code class="docutils literal notranslate"><span class="pre">NoTerminator</span></code></p>
+<p>Interfaces: <code class="docutils literal notranslate"><span class="pre">DFG_NodeInterface</span></code>, <code class="docutils literal notranslate"><span class="pre">OpAsmOpInterface</span></code></p>
+<section id="id7">
+<h4>Attributes:<a class="headerlink" href="#id7" title="Link to this heading"></a></h4>
+<table>
+<tr><th>Attribute</th><th>MLIR Type</th><th>Description</th></tr>
+<tr><td><code>sym_name</code></td><td>::mlir::StringAttr</td><td>string attribute</td></tr>
+<tr><td><code>function_type</code></td><td>::mlir::TypeAttr</td><td>type attribute of function type</td></tr>
+<tr><td><code>multiplicity</code></td><td>::mlir::DenseI64ArrayAttr</td><td>i64 dense array attribute</td></tr>
+</table>
+</section>
+</section>
+<section id="dfg-pull-dfg-pullop">
+<h3><code class="docutils literal notranslate"><span class="pre">dfg.pull</span></code> (dfg::PullOp)<a class="headerlink" href="#dfg-pull-dfg-pullop" title="Link to this heading"></a></h3>
+<p><em>Pulls a token from an input port of a node.</em></p>
+<p>The <code class="docutils literal notranslate"><span class="pre">pull</span></code> operation reads a token out from an input port of a node,
+which is connected via a channel to an output port of another node.
+An optional set of indices must be used if the read port has a shape,
+indicating a set of ports to be chosen from.</p>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>dfg.process @pull inputs(%in0: !dfg.output&lt;type&gt;, %in1: !dfg.output&lt;shapextype&gt;)
+{
+    %0 = arith.constant ... : index
+    %token0 = dfg.pull %in0 : !dfg.output&lt;type&gt;
+    %token1 = dfg.pull %in1[%0] : !dfg.output&lt;shapextype&gt;
+}
+</pre></div>
+</div>
+<p>Interfaces: <code class="docutils literal notranslate"><span class="pre">OpAsmOpInterface</span></code></p>
+<section id="id8">
+<h4>Operands:<a class="headerlink" href="#id8" title="Link to this heading"></a></h4>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head text-center"><p>Operand</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">read_port</span></code></p></td>
+<td><p>Receiving channel end type</p></td>
+</tr>
+<tr class="row-odd"><td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">indices</span></code></p></td>
+<td><p>variadic of index</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="id9">
+<h4>Results:<a class="headerlink" href="#id9" title="Link to this heading"></a></h4>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head text-center"><p>Result</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">token</span></code></p></td>
+<td><p>any non-token type</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="dfg-pull-as-memref-dfg-pullasmemrefop">
+<h3><code class="docutils literal notranslate"><span class="pre">dfg.pull_as_memref</span></code> (dfg::PullAsMemRefOp)<a class="headerlink" href="#dfg-pull-as-memref-dfg-pullasmemrefop" title="Link to this heading"></a></h3>
+<p><em>Pulls as a memref from a shaped input port of a node.</em></p>
+<p>Interfaces: <code class="docutils literal notranslate"><span class="pre">OpAsmOpInterface</span></code></p>
+<section id="id10">
+<h4>Operands:<a class="headerlink" href="#id10" title="Link to this heading"></a></h4>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head text-center"><p>Operand</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">read_port</span></code></p></td>
+<td><p>Receiving channel end type</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="id11">
+<h4>Results:<a class="headerlink" href="#id11" title="Link to this heading"></a></h4>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head text-center"><p>Result</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">token_memref</span></code></p></td>
+<td><p>memref of any non-token type values</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="dfg-pull-as-tensor-dfg-pullastensorop">
+<h3><code class="docutils literal notranslate"><span class="pre">dfg.pull_as_tensor</span></code> (dfg::PullAsTensorOp)<a class="headerlink" href="#dfg-pull-as-tensor-dfg-pullastensorop" title="Link to this heading"></a></h3>
+<p><em>Pulls as a tensor from a shaped input port of a node.</em></p>
+<p>Interfaces: <code class="docutils literal notranslate"><span class="pre">OpAsmOpInterface</span></code></p>
+<section id="id12">
+<h4>Operands:<a class="headerlink" href="#id12" title="Link to this heading"></a></h4>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head text-center"><p>Operand</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">read_port</span></code></p></td>
+<td><p>Receiving channel end type</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="id13">
+<h4>Results:<a class="headerlink" href="#id13" title="Link to this heading"></a></h4>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head text-center"><p>Result</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">token_tensor</span></code></p></td>
+<td><p>ranked tensor of any non-token type values</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="dfg-push-dfg-pushop">
+<h3><code class="docutils literal notranslate"><span class="pre">dfg.push</span></code> (dfg::PushOp)<a class="headerlink" href="#dfg-push-dfg-pushop" title="Link to this heading"></a></h3>
+<p><em>Pushes a token to an output port of a node.</em></p>
+<p>The <code class="docutils literal notranslate"><span class="pre">push</span></code> operation writes a token to an output port of a node,
+which is connected via a channel to an input port of another node.
+An optional set of indices must be used if the port has a shape.</p>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>dfg.process @push outputs(%out0: !dfg.input&lt;type&gt;, %out1: !dfg.input&lt;shapextype&gt;)
+{
+    %0 = arith.constant ... : index
+    %1 = arith.constant ... : type
+    dfg.push %1 to %out0 : !dfg.input&lt;type&gt;
+    dfg.push %1 to %out1[%0] : !dfg.input&lt;shapextype&gt;
+}
+</pre></div>
+</div>
+<section id="id14">
+<h4>Operands:<a class="headerlink" href="#id14" title="Link to this heading"></a></h4>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head text-center"><p>Operand</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">token</span></code></p></td>
+<td><p>any non-token type</p></td>
+</tr>
+<tr class="row-odd"><td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">write_port</span></code></p></td>
+<td><p>Sending channel end type</p></td>
+</tr>
+<tr class="row-even"><td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">indices</span></code></p></td>
+<td><p>variadic of index</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="dfg-push-memref-dfg-pushmemrefop">
+<h3><code class="docutils literal notranslate"><span class="pre">dfg.push_memref</span></code> (dfg::PushMemRefOp)<a class="headerlink" href="#dfg-push-memref-dfg-pushmemrefop" title="Link to this heading"></a></h3>
+<p><em>Pushes a memref to a shaped output port of a node.</em></p>
+<section id="id15">
+<h4>Operands:<a class="headerlink" href="#id15" title="Link to this heading"></a></h4>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head text-center"><p>Operand</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">token_memref</span></code></p></td>
+<td><p>memref of any non-token type values</p></td>
+</tr>
+<tr class="row-odd"><td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">write_port</span></code></p></td>
+<td><p>Sending channel end type</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="dfg-push-tensor-dfg-pushtensorop">
+<h3><code class="docutils literal notranslate"><span class="pre">dfg.push_tensor</span></code> (dfg::PushTensorOp)<a class="headerlink" href="#dfg-push-tensor-dfg-pushtensorop" title="Link to this heading"></a></h3>
+<p><em>Pushes a tensor to a shaped output port of a node.</em></p>
+<section id="id16">
+<h4>Operands:<a class="headerlink" href="#id16" title="Link to this heading"></a></h4>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head text-center"><p>Operand</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">token_tensor</span></code></p></td>
+<td><p>ranked tensor of any non-token type values</p></td>
+</tr>
+<tr class="row-odd"><td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">write_port</span></code></p></td>
+<td><p>Sending channel end type</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="dfg-region-dfg-regionop">
+<h3><code class="docutils literal notranslate"><span class="pre">dfg.region</span></code> (dfg::RegionOp)<a class="headerlink" href="#dfg-region-dfg-regionop" title="Link to this heading"></a></h3>
+<p><em>Defines a region(subgraph) in the DFG.</em></p>
+<p>The <code class="docutils literal notranslate"><span class="pre">region</span></code> operation defines one node(subgraph) or the entire graph in the
+dataflow graph model.
+A region can be embedded into another region as subgraph, which content can
+only be an instantiation of a node(processes/operators/regions) and their
+connections(channels).
+A region’s input/output ports must be connected/used.</p>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>dfg.region @node inputs(%in0: !dfg.output&lt;type&gt;, %in1: !dfg.output&lt;type&gt;)
+                 outputs(%out0: !dfg.input&lt;type&gt;, %out1: !dfg.input&lt;type&gt;)
+{
+    %0:2 = dfg.channel ...
+    dfg.instantiate @process ...
+    dfg.instantiate @operator ...
+    dfg.embed @region ...
+}
+</pre></div>
+</div>
+<p>Traits: <code class="docutils literal notranslate"><span class="pre">IsolatedFromAbove</span></code>, <code class="docutils literal notranslate"><span class="pre">NoTerminator</span></code></p>
+<p>Interfaces: <code class="docutils literal notranslate"><span class="pre">DFG_GraphInterface</span></code>, <code class="docutils literal notranslate"><span class="pre">DFG_NodeInterface</span></code>, <code class="docutils literal notranslate"><span class="pre">OpAsmOpInterface</span></code></p>
+<section id="id17">
+<h4>Attributes:<a class="headerlink" href="#id17" title="Link to this heading"></a></h4>
+<table>
+<tr><th>Attribute</th><th>MLIR Type</th><th>Description</th></tr>
+<tr><td><code>sym_name</code></td><td>::mlir::StringAttr</td><td>string attribute</td></tr>
+<tr><td><code>function_type</code></td><td>::mlir::TypeAttr</td><td>type attribute of function type</td></tr>
+</table>
+</section>
+</section>
+</section>
+<section id="types">
+<h2>Types<a class="headerlink" href="#types" title="Link to this heading"></a></h2>
+<section id="inputtype">
+<h3>InputType<a class="headerlink" href="#inputtype" title="Link to this heading"></a></h3>
+<p><em>Sending channel end type</em></p>
+<p>The <code class="docutils literal notranslate"><span class="pre">input</span></code> type represents the sending end of a dataflow edge
+in a dataflow graph.
+This type takes an optional shape and a scalar MLIR type as
+element type, such as:
+<code class="docutils literal notranslate"><span class="pre">!dfg.input&lt;i32&gt;</span></code>, <code class="docutils literal notranslate"><span class="pre">!dfg.input&lt;2xi32&gt;</span></code>, <code class="docutils literal notranslate"><span class="pre">!dfg.input&lt;2x2xi32&gt;</span></code></p>
+<section id="parameters">
+<h4>Parameters:<a class="headerlink" href="#parameters" title="Link to this heading"></a></h4>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head text-center"><p>Parameter</p></th>
+<th class="head text-center"><p>C++ type</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-center"><p>shape</p></td>
+<td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">::llvm::ArrayRef&lt;int64_t&gt;</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td class="text-center"><p>elementType</p></td>
+<td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">Type</span></code></p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="outputtype">
+<h3>OutputType<a class="headerlink" href="#outputtype" title="Link to this heading"></a></h3>
+<p><em>Receiving channel end type</em></p>
+<p>The <code class="docutils literal notranslate"><span class="pre">output</span></code> type represents the receiving end of a dataflow edge
+in a dataflow graph.
+Details are similar to dfg::InputType.</p>
+<section id="id18">
+<h4>Parameters:<a class="headerlink" href="#id18" title="Link to this heading"></a></h4>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head text-center"><p>Parameter</p></th>
+<th class="head text-center"><p>C++ type</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-center"><p>shape</p></td>
+<td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">::llvm::ArrayRef&lt;int64_t&gt;</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td class="text-center"><p>elementType</p></td>
+<td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">Type</span></code></p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+</section>
+<section id="enums">
+<h2>Enums<a class="headerlink" href="#enums" title="Link to this heading"></a></h2>
+<section id="offloadhardware">
+<h3>OffloadHardware<a class="headerlink" href="#offloadhardware" title="Link to this heading"></a></h3>
+<p><em>The hardware back to be offloaded to</em></p>
+<section id="cases">
+<h4>Cases:<a class="headerlink" href="#cases" title="Link to this heading"></a></h4>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head text-center"><p>Symbol</p></th>
+<th class="head text-center"><p>Value</p></th>
+<th class="head"><p>String</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-center"><p>EmitHLS</p></td>
+<td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">0</span></code></p></td>
+<td><p>emithls</p></td>
+</tr>
+<tr class="row-odd"><td class="text-center"><p>MDC</p></td>
+<td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">1</span></code></p></td>
+<td><p>mdc</p></td>
+</tr>
+<tr class="row-even"><td class="text-center"><p>CGRA</p></td>
+<td class="text-center"><p><code class="docutils literal notranslate"><span class="pre">2</span></code></p></td>
+<td><p>cgra</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="CGRAOps.html" class="btn btn-neutral float-left" title="‘cgra’ Dialect" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="EmitHLSOps.html" class="btn btn-neutral float-right" title="‘emithls’ Dialect" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,46 @@
+
+.. _program_listing_file_lib_Target_EmitCToCPUProfile_TranslationRegistration.cpp:
+
+Program Listing for File TranslationRegistration.cpp
+====================================================
+
+|exhale_lsh| :ref:`Return to documentation for file <file_lib_Target_EmitCToCPUProfile_TranslationRegistration.cpp>` (``lib/Target/EmitCToCPUProfile/TranslationRegistration.cpp``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. code-block:: cpp
+
+   
+   
+   #include "mlir/Dialect/EmitC/IR/EmitC.h"
+   #include "mlir/Tools/mlir-translate/Translation.h"
+   #include "picea-mlir/Target/EmitCToCPUProfile/CPUProfileEmitter.h"
+   
+   using namespace mlir;
+   
+   namespace mlir {
+   
+   void registerEmitCToCPUProfileTranslation()
+   {
+       TranslateFromMLIRRegistration benchmarkRegistration(
+           "emitc-to-cpu-profile",
+           "generate a native per-node cycle benchmark from emitc IR",
+           [](ModuleOp op, llvm::raw_ostream &output) {
+               return picea::translateEmitCToCPUProfile(op, output);
+           },
+           [](DialectRegistry &registry) {
+               registry.insert<emitc::EmitCDialect>();
+           });
+   
+       TranslateFromMLIRRegistration nodesRegistration(
+           "emitc-to-cpu-profile-nodes",
+           "translate outlined emitc nodes to a self-contained C++ source",
+           [](ModuleOp op, llvm::raw_ostream &output) {
+               return picea::translateEmitCToCPUProfileNodes(op, output);
+           },
+           [](DialectRegistry &registry) {
+               registry.insert<emitc::EmitCDialect>();
+           });
+   }
+   
+   } // namespace mlir

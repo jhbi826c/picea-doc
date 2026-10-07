@@ -1,0 +1,172 @@
+
+.. _program_listing_file_build_include_picea-mlir_Dialect_DFG_Interfaces_GraphInterface.h.inc:
+
+Program Listing for File GraphInterface.h.inc
+=============================================
+
+|exhale_lsh| :ref:`Return to documentation for file <file_build_include_picea-mlir_Dialect_DFG_Interfaces_GraphInterface.h.inc>` (``build/include/picea-mlir/Dialect/DFG/Interfaces/GraphInterface.h.inc``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. code-block:: cpp
+
+   /*===- TableGen'erated file -------------------------------------*- C++ -*-===*\
+   |*                                                                            *|
+   |* Interface Declarations                                                     *|
+   |*                                                                            *|
+   |* Automatically generated file, do not edit!                                 *|
+   |*                                                                            *|
+   \*===----------------------------------------------------------------------===*/
+   
+   namespace mlir::dfg {
+   
+   class GraphInterface;
+   
+   } // namespace mlir::dfg
+   namespace mlir::dfg {
+   
+   namespace detail {
+   struct GraphInterfaceInterfaceTraits {
+     struct Concept {
+       std::string (*getGraphName)(const Concept *impl, ::mlir::Operation *);
+       bool (*isSubGraph)(const Concept *impl, ::mlir::Operation *);
+       ::llvm::SmallVector<::mlir::Operation*> (*getGraphNodes)(const Concept *impl, ::mlir::Operation *);
+       ::llvm::SmallVector<::mlir::Operation*> (*getGraphSubGs)(const Concept *impl, ::mlir::Operation *);
+       ::llvm::SmallVector<::mlir::Operation*> (*getGraphEdges)(const Concept *impl, ::mlir::Operation *);
+     };
+     template<typename ConcreteOp>
+     class Model : public Concept {
+     public:
+       using Interface = ::mlir::dfg::GraphInterface;
+       Model() : Concept{getGraphName, isSubGraph, getGraphNodes, getGraphSubGs, getGraphEdges} {}
+   
+       static inline std::string getGraphName(const Concept *impl, ::mlir::Operation *tablegen_opaque_val);
+       static inline bool isSubGraph(const Concept *impl, ::mlir::Operation *tablegen_opaque_val);
+       static inline ::llvm::SmallVector<::mlir::Operation*> getGraphNodes(const Concept *impl, ::mlir::Operation *tablegen_opaque_val);
+       static inline ::llvm::SmallVector<::mlir::Operation*> getGraphSubGs(const Concept *impl, ::mlir::Operation *tablegen_opaque_val);
+       static inline ::llvm::SmallVector<::mlir::Operation*> getGraphEdges(const Concept *impl, ::mlir::Operation *tablegen_opaque_val);
+     };
+     template<typename ConcreteOp>
+     class FallbackModel : public Concept {
+     public:
+       using Interface = ::mlir::dfg::GraphInterface;
+       FallbackModel() : Concept{getGraphName, isSubGraph, getGraphNodes, getGraphSubGs, getGraphEdges} {}
+   
+       static inline std::string getGraphName(const Concept *impl, ::mlir::Operation *tablegen_opaque_val);
+       static inline bool isSubGraph(const Concept *impl, ::mlir::Operation *tablegen_opaque_val);
+       static inline ::llvm::SmallVector<::mlir::Operation*> getGraphNodes(const Concept *impl, ::mlir::Operation *tablegen_opaque_val);
+       static inline ::llvm::SmallVector<::mlir::Operation*> getGraphSubGs(const Concept *impl, ::mlir::Operation *tablegen_opaque_val);
+       static inline ::llvm::SmallVector<::mlir::Operation*> getGraphEdges(const Concept *impl, ::mlir::Operation *tablegen_opaque_val);
+     };
+     template<typename ConcreteModel, typename ConcreteOp>
+     class ExternalModel : public FallbackModel<ConcreteModel> {
+     public:
+       using ConcreteEntity = ConcreteOp;
+       ::llvm::SmallVector<::mlir::Operation*> getGraphNodes(::mlir::Operation *tablegen_opaque_val) const;
+       ::llvm::SmallVector<::mlir::Operation*> getGraphSubGs(::mlir::Operation *tablegen_opaque_val) const;
+       ::llvm::SmallVector<::mlir::Operation*> getGraphEdges(::mlir::Operation *tablegen_opaque_val) const;
+     };
+   };
+   template <typename ConcreteOp>
+   struct GraphInterfaceTrait;
+   
+   } // namespace detail
+   class GraphInterface : public ::mlir::OpInterface<GraphInterface, detail::GraphInterfaceInterfaceTraits> {
+   public:
+     using ::mlir::OpInterface<GraphInterface, detail::GraphInterfaceInterfaceTraits>::OpInterface;
+     template <typename ConcreteOp>
+     struct Trait : public detail::GraphInterfaceTrait<ConcreteOp> {};
+   
+     std::string getGraphName();
+   
+     bool isSubGraph();
+   
+     ::llvm::SmallVector<::mlir::Operation*> getGraphNodes();
+   
+     ::llvm::SmallVector<::mlir::Operation*> getGraphSubGs();
+   
+     ::llvm::SmallVector<::mlir::Operation*> getGraphEdges();
+   };
+   
+   } // namespace mlir::dfg
+   namespace mlir::dfg::detail {
+   
+     template <typename ConcreteOp>
+     struct GraphInterfaceTrait : public ::mlir::OpInterface<GraphInterface, detail::GraphInterfaceInterfaceTraits>::Trait<ConcreteOp> {
+   
+       ::llvm::SmallVector<::mlir::Operation*> getGraphNodes() {
+         // Return an empty block by default
+                   return ::llvm::SmallVector<::mlir::Operation*>();
+       }
+   
+       ::llvm::SmallVector<::mlir::Operation*> getGraphSubGs() {
+         // Return an empty block by default
+                   return ::llvm::SmallVector<::mlir::Operation*>();
+       }
+   
+       ::llvm::SmallVector<::mlir::Operation*> getGraphEdges() {
+         // Return an empty block by default
+                   return ::llvm::SmallVector<::mlir::Operation*>();
+       }
+     };
+   
+   } // namespace mlir::dfg::detail
+   namespace mlir::dfg {
+   
+   template<typename ConcreteOp>
+   std::string detail::GraphInterfaceInterfaceTraits::Model<ConcreteOp>::getGraphName(const Concept *impl, ::mlir::Operation *tablegen_opaque_val) {
+     return (llvm::cast<ConcreteOp>(tablegen_opaque_val)).getGraphName();
+   }
+   template<typename ConcreteOp>
+   bool detail::GraphInterfaceInterfaceTraits::Model<ConcreteOp>::isSubGraph(const Concept *impl, ::mlir::Operation *tablegen_opaque_val) {
+     return (llvm::cast<ConcreteOp>(tablegen_opaque_val)).isSubGraph();
+   }
+   template<typename ConcreteOp>
+   ::llvm::SmallVector<::mlir::Operation*> detail::GraphInterfaceInterfaceTraits::Model<ConcreteOp>::getGraphNodes(const Concept *impl, ::mlir::Operation *tablegen_opaque_val) {
+     return (llvm::cast<ConcreteOp>(tablegen_opaque_val)).getGraphNodes();
+   }
+   template<typename ConcreteOp>
+   ::llvm::SmallVector<::mlir::Operation*> detail::GraphInterfaceInterfaceTraits::Model<ConcreteOp>::getGraphSubGs(const Concept *impl, ::mlir::Operation *tablegen_opaque_val) {
+     return (llvm::cast<ConcreteOp>(tablegen_opaque_val)).getGraphSubGs();
+   }
+   template<typename ConcreteOp>
+   ::llvm::SmallVector<::mlir::Operation*> detail::GraphInterfaceInterfaceTraits::Model<ConcreteOp>::getGraphEdges(const Concept *impl, ::mlir::Operation *tablegen_opaque_val) {
+     return (llvm::cast<ConcreteOp>(tablegen_opaque_val)).getGraphEdges();
+   }
+   template<typename ConcreteOp>
+   std::string detail::GraphInterfaceInterfaceTraits::FallbackModel<ConcreteOp>::getGraphName(const Concept *impl, ::mlir::Operation *tablegen_opaque_val) {
+     return static_cast<const ConcreteOp *>(impl)->getGraphName(tablegen_opaque_val);
+   }
+   template<typename ConcreteOp>
+   bool detail::GraphInterfaceInterfaceTraits::FallbackModel<ConcreteOp>::isSubGraph(const Concept *impl, ::mlir::Operation *tablegen_opaque_val) {
+     return static_cast<const ConcreteOp *>(impl)->isSubGraph(tablegen_opaque_val);
+   }
+   template<typename ConcreteOp>
+   ::llvm::SmallVector<::mlir::Operation*> detail::GraphInterfaceInterfaceTraits::FallbackModel<ConcreteOp>::getGraphNodes(const Concept *impl, ::mlir::Operation *tablegen_opaque_val) {
+     return static_cast<const ConcreteOp *>(impl)->getGraphNodes(tablegen_opaque_val);
+   }
+   template<typename ConcreteOp>
+   ::llvm::SmallVector<::mlir::Operation*> detail::GraphInterfaceInterfaceTraits::FallbackModel<ConcreteOp>::getGraphSubGs(const Concept *impl, ::mlir::Operation *tablegen_opaque_val) {
+     return static_cast<const ConcreteOp *>(impl)->getGraphSubGs(tablegen_opaque_val);
+   }
+   template<typename ConcreteOp>
+   ::llvm::SmallVector<::mlir::Operation*> detail::GraphInterfaceInterfaceTraits::FallbackModel<ConcreteOp>::getGraphEdges(const Concept *impl, ::mlir::Operation *tablegen_opaque_val) {
+     return static_cast<const ConcreteOp *>(impl)->getGraphEdges(tablegen_opaque_val);
+   }
+   template<typename ConcreteModel, typename ConcreteOp>
+   ::llvm::SmallVector<::mlir::Operation*> detail::GraphInterfaceInterfaceTraits::ExternalModel<ConcreteModel, ConcreteOp>::getGraphNodes(::mlir::Operation *tablegen_opaque_val) const {
+   // Return an empty block by default
+                   return ::llvm::SmallVector<::mlir::Operation*>();
+   }
+   template<typename ConcreteModel, typename ConcreteOp>
+   ::llvm::SmallVector<::mlir::Operation*> detail::GraphInterfaceInterfaceTraits::ExternalModel<ConcreteModel, ConcreteOp>::getGraphSubGs(::mlir::Operation *tablegen_opaque_val) const {
+   // Return an empty block by default
+                   return ::llvm::SmallVector<::mlir::Operation*>();
+   }
+   template<typename ConcreteModel, typename ConcreteOp>
+   ::llvm::SmallVector<::mlir::Operation*> detail::GraphInterfaceInterfaceTraits::ExternalModel<ConcreteModel, ConcreteOp>::getGraphEdges(::mlir::Operation *tablegen_opaque_val) const {
+   // Return an empty block by default
+                   return ::llvm::SmallVector<::mlir::Operation*>();
+   }
+   
+   } // namespace mlir::dfg

@@ -1,0 +1,115 @@
+
+.. _program_listing_file_lib_Dialect_CGRA_Transforms_DFGOperatorToCGRA.cpp:
+
+Program Listing for File DFGOperatorToCGRA.cpp
+==============================================
+
+|exhale_lsh| :ref:`Return to documentation for file <file_lib_Dialect_CGRA_Transforms_DFGOperatorToCGRA.cpp>` (``lib/Dialect/CGRA/Transforms/DFGOperatorToCGRA.cpp``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. code-block:: cpp
+
+   
+   
+   #include "mlir/Dialect/Func/IR/FuncOps.h"
+   #include "mlir/IR/BuiltinOps.h"
+   #include "mlir/IR/IRMapping.h"
+   #include "mlir/Pass/Pass.h"
+   #include "picea-mlir/Dialect/CGRA/Transforms/Passes.h"
+   #include "picea-mlir/Dialect/DFG/IR/DFG.h"
+   #include "picea-mlir/Dialect/DFG/IR/DFGOps.h"
+   
+   using namespace mlir;
+   using namespace mlir::dfg;
+   
+   namespace {
+   
+   // An SDF actor whose body is ordinary compute is exactly a function: input
+   // ports are the arguments, the values handed to `dfg.output` are the results.
+   // Converting it back to `func.func` hands the kernel to the pipeline that
+   // already works, instead of duplicating that pipeline on the DFG side. Inverse
+   // of --convert-func-to-dfg, so a kernel round-trips func -> dfg.operator ->
+   // func; inserting the round trip in the production chain leaves the lowered and
+   // annotated IR byte-identical.
+   //
+   // SCOPE: one actor at a time. A multi-actor graph wired with
+   // dfg.channel/push/pull is left alone — that needs the driver to understand
+   // channel liveness.
+   struct CGRADFGOperatorToCGRAPass : public PassWrapper<
+                                          CGRADFGOperatorToCGRAPass,
+                                          OperationPass<ModuleOp>> {
+   
+       MLIR_DEFINE_EXPLICIT_INTERNAL_INLINE_TYPE_ID(CGRADFGOperatorToCGRAPass)
+   
+       StringRef getArgument() const final { return "dfg-operator-to-cgra"; }
+       StringRef getDescription() const final
+       {
+           return "Lower a self-contained dfg.operator to the func.func form the "
+                  "CGRA "
+                  "pipeline compiles (inverse of --convert-func-to-dfg)";
+       }
+   
+       void getDependentDialects(mlir::DialectRegistry &registry) const override
+       { registry.insert<func::FuncDialect>(); }
+   
+       void runOnOperation() override
+       {
+           ModuleOp module = getOperation();
+   
+           // Anything that wires actors together is out of scope (see the note
+           // above); leave the whole module untouched rather than convert half of
+           // it.
+           bool wired = false;
+           module.walk([&](Operation* op) {
+               if (isa<ChannelOp, PushOp, PullOp, InstantiateOp>(op)) wired = true;
+           });
+           if (wired) return;
+   
+           SmallVector<OperatorOp> actors(module.getOps<OperatorOp>());
+           for (OperatorOp actor : actors) {
+               auto ft = actor.getFunctionType();
+               OpBuilder b(actor);
+               auto fn =
+                   func::FuncOp::create(b, actor.getLoc(), actor.getSymName(), ft);
+               // Keep whatever the actor carried (notably llvm.linkage): the CGRA
+               // pipeline runs --symbol-privatize/--symbol-dce, which would drop a
+               // kernel that is no longer externally visible.
+               for (NamedAttribute a : actor->getDiscardableAttrs())
+                   fn->setAttr(a.getName(), a.getValue());
+               Block* entry = fn.addEntryBlock();
+               OpBuilder fb(entry, entry->begin());
+   
+               // The actor's block arguments are its INPUT ports followed by its
+               // OUTPUT ports; only the inputs carry values into the body (the
+               // outputs are delivered by dfg.output), so map just those onto the
+               // function arguments.
+               Block &ab = actor.getBody().front();
+               IRMapping map;
+               unsigned nIn = ft.getNumInputs();
+               for (unsigned i = 0; i < nIn && i < ab.getNumArguments(); ++i)
+                   map.map(ab.getArgument(i), entry->getArgument(i));
+   
+               for (Operation &op : ab) {
+                   if (auto out = dyn_cast<OutputOp>(&op)) {
+                       SmallVector<Value> rets;
+                       for (Value v : out.getOperands())
+                           rets.push_back(map.lookupOrDefault(v));
+                       func::ReturnOp::create(fb, out.getLoc(), rets);
+                       continue;
+                   }
+                   fb.clone(op, map);
+               }
+               // An actor with no dfg.output still needs a terminator.
+               if (entry->empty()
+                   || !entry->back().hasTrait<OpTrait::IsTerminator>())
+                   func::ReturnOp::create(fb, actor.getLoc());
+   
+               actor.erase();
+           }
+       }
+   };
+   } // namespace
+   
+   std::unique_ptr<mlir::Pass> mlir::cgra::createCGRADFGOperatorToCGRAPass()
+   { return std::make_unique<CGRADFGOperatorToCGRAPass>(); }

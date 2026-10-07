@@ -1,0 +1,287 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Program Listing for File EmitCToCPUProfileRunScript.cpp &mdash; picea 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/collapsible-lists/css/tree_view.css?v=a885cde7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js?v=73120307"></script>
+      <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js?v=660e4f45"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            picea
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Installation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../README.html">About the project</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#guides">Guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#related-projects">Related projects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#development-environment-nix">Development Environment (Nix)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#build-on-ubuntu-24-04-no-nix">Build on Ubuntu 24.04 (no Nix)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#gurobi-license">Gurobi license</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#installing">Installing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#run-the-tests">Run the tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#build-the-documentation">Build the documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#compiling-a-design">Compiling a design</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#running-a-design-on-the-board">Running a design on the board</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#exporting-a-profiled-application-to-mocasin">Exporting a profiled application to Mocasin</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Guides</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../guides/laksa.html">The FPGA Variant using LAKSA backend</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/cgra.html">The CGRA Variant</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">MLIR Dialects</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/Base2Ops.html">‘base2’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/CGRAOps.html">‘cgra’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/DFGOps.html">‘dfg’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/EmitHLSOps.html">‘emithls’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/FilterOps.html">‘filter’ Dialect</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Passes</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/PICEAConversionPasses.html">PICEA Conversion Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/CGRAPasses.html">CGRA Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/DFGPasses.html">DFG Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/EmitHLSPasses.html">Emit HLS Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/FuncExtPasses.html">Func Ext Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/LinalgExtPasses.html">Linalg Ext Passes</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">C++ API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="library_root.html">C++ API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">picea</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Program Listing for File EmitCToCPUProfileRunScript.cpp</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/program_listing_file_lib_Target_EmitCToCPUProfileRunScript_EmitCToCPUProfileRunScript.cpp.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="program-listing-for-file-emitctocpuprofilerunscript-cpp">
+<span id="program-listing-file-lib-target-emitctocpuprofilerunscript-emitctocpuprofilerunscript-cpp"></span><h1>Program Listing for File EmitCToCPUProfileRunScript.cpp<a class="headerlink" href="#program-listing-for-file-emitctocpuprofilerunscript-cpp" title="Link to this heading"></a></h1>
+<p>↰ <a class="reference internal" href="file_lib_Target_EmitCToCPUProfileRunScript_EmitCToCPUProfileRunScript.cpp.html#file-lib-target-emitctocpuprofilerunscript-emitctocpuprofilerunscript-cpp"><span class="std std-ref">Return to documentation for file</span></a> (<code class="docutils literal notranslate"><span class="pre">lib/Target/EmitCToCPUProfileRunScript/EmitCToCPUProfileRunScript.cpp</span></code>)</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="c1">// Implementation of the EmitC-to-CPU-profile run-script translation.</span>
+<span class="c1">//</span>
+<span class="c1">// @file</span>
+<span class="c1">// @author     Robert Khasanov (robert.khasanov@tu-dresden.de)</span>
+
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"picea-mlir/Target/EmitCToCPUProfileRunScript/CPUProfileRunScriptEmitter.h"</span>
+
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"llvm/Support/raw_ostream.h"</span>
+
+<span class="k">using</span><span class="w"> </span><span class="k">namespace</span><span class="w"> </span><span class="nn">mlir</span><span class="p">;</span>
+
+<span class="n">LogicalResult</span>
+<span class="nf">picea::translateEmitCToCPUProfileRunScript</span><span class="p">(</span><span class="n">ModuleOp</span><span class="p">,</span><span class="w"> </span><span class="n">raw_ostream</span><span class="w"> </span><span class="o">&amp;</span><span class="n">os</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">os</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="sa">R</span><span class="s">"</span><span class="dl">sh(</span><span class="s">#!/bin/sh</span>
+
+<span class="s"># Generated by resin -t emitc-to-cpu-profile-run-script.</span>
+<span class="s"># Builds and runs the generated per-node CPU benchmark.</span>
+
+<span class="s">set -eu</span>
+
+<span class="s">cd "$(dirname "$0")"</span>
+
+<span class="s">processor_type=CortexA53</span>
+<span class="s">warmup=3</span>
+<span class="s">repetitions=10</span>
+<span class="s">samples=5</span>
+<span class="s">node=</span>
+<span class="s">cpu=</span>
+
+<span class="s">usage()</span>
+<span class="s">{</span>
+<span class="s">    echo "Usage: ./run.sh [options]"</span>
+<span class="s">    echo</span>
+<span class="s">    echo "Options:"</span>
+<span class="s">    echo "  --processor-type NAME  Mocasin processor type (default: CortexA53)"</span>
+<span class="s">    echo "  --warmup N             Warm-up calls per node (default: 3)"</span>
+<span class="s">    echo "  --repetitions N        Calls per measurement (default: 10)"</span>
+<span class="s">    echo "  --samples N            Measurements per node (default: 5)"</span>
+<span class="s">    echo "  --node NAME            Measure only one node"</span>
+<span class="s">    echo "  --cpu ID               Pin the benchmark to one logical CPU"</span>
+<span class="s">    echo "  -h, --help             Show this help"</span>
+<span class="s">}</span>
+
+<span class="s">take_value()</span>
+<span class="s">{</span>
+<span class="s">    if [ "$#" -lt 2 ]; then</span>
+<span class="s">        echo "Error: $1 requires a value" &gt;&amp;2</span>
+<span class="s">        exit 1</span>
+<span class="s">    fi</span>
+<span class="s">}</span>
+
+<span class="s">while [ "$#" -gt 0 ]; do</span>
+<span class="s">    case "$1" in</span>
+<span class="s">        --processor-type)</span>
+<span class="s">            take_value "$@"</span>
+<span class="s">            processor_type=$2</span>
+<span class="s">            shift 2</span>
+<span class="s">            ;;</span>
+<span class="s">        --warmup)</span>
+<span class="s">            take_value "$@"</span>
+<span class="s">            warmup=$2</span>
+<span class="s">            shift 2</span>
+<span class="s">            ;;</span>
+<span class="s">        --repetitions)</span>
+<span class="s">            take_value "$@"</span>
+<span class="s">            repetitions=$2</span>
+<span class="s">            shift 2</span>
+<span class="s">            ;;</span>
+<span class="s">        --samples)</span>
+<span class="s">            take_value "$@"</span>
+<span class="s">            samples=$2</span>
+<span class="s">            shift 2</span>
+<span class="s">            ;;</span>
+<span class="s">        --node)</span>
+<span class="s">            take_value "$@"</span>
+<span class="s">            node=$2</span>
+<span class="s">            shift 2</span>
+<span class="s">            ;;</span>
+<span class="s">        --cpu)</span>
+<span class="s">            take_value "$@"</span>
+<span class="s">            cpu=$2</span>
+<span class="s">            shift 2</span>
+<span class="s">            ;;</span>
+<span class="s">        -h|--help)</span>
+<span class="s">            usage</span>
+<span class="s">            exit 0</span>
+<span class="s">            ;;</span>
+<span class="s">        *)</span>
+<span class="s">            echo "Error: unknown option: $1" &gt;&amp;2</span>
+<span class="s">            usage &gt;&amp;2</span>
+<span class="s">            exit 1</span>
+<span class="s">            ;;</span>
+<span class="s">    esac</span>
+<span class="s">done</span>
+
+<span class="s">case "$processor_type" in</span>
+<span class="s">    *[!A-Za-z0-9_.-]*)</span>
+<span class="s">        echo "Error: processor type contains characters unsafe for a filename" &gt;&amp;2</span>
+<span class="s">        exit 1</span>
+<span class="s">        ;;</span>
+<span class="s">esac</span>
+
+<span class="s">echo "Building benchmark..."</span>
+<span class="s">g++ -O3 -std=c++17 -c nodes.cpp -o nodes.o</span>
+<span class="s">g++ -O3 -std=c++17 -c benchmark.cpp -o benchmark.o</span>
+<span class="s">g++ nodes.o benchmark.o -o benchmark</span>
+
+<span class="s">set -- --processor-type "$processor_type" \</span>
+<span class="s">    --warmup "$warmup" \</span>
+<span class="s">    --repetitions "$repetitions" \</span>
+<span class="s">    --samples "$samples"</span>
+<span class="s">if [ -n "$node" ]; then</span>
+<span class="s">    set -- "$@" --node "$node"</span>
+<span class="s">fi</span>
+
+<span class="s">profile_file="profiles_${processor_type}.yaml"</span>
+<span class="s">echo "Running benchmark with:"</span>
+<span class="s">echo "  processor type: $processor_type"</span>
+<span class="s">echo "  warmup:         $warmup"</span>
+<span class="s">echo "  repetitions:    $repetitions"</span>
+<span class="s">echo "  samples:        $samples"</span>
+<span class="s">echo "  node:           ${node:-all}"</span>
+<span class="s">echo "  output:         $profile_file"</span>
+
+<span class="s">if [ -n "$cpu" ]; then</span>
+<span class="s">    if ! command -v taskset &gt;/dev/null 2&gt;&amp;1; then</span>
+<span class="s">        echo "Error: --cpu requires taskset" &gt;&amp;2</span>
+<span class="s">        exit 1</span>
+<span class="s">    fi</span>
+<span class="s">    echo "  CPU affinity:   $cpu"</span>
+<span class="s">    taskset -c "$cpu" ./benchmark "$@" &gt; "$profile_file"</span>
+<span class="s">else</span>
+<span class="s">    ./benchmark "$@" &gt; "$profile_file"</span>
+<span class="s">fi</span>
+
+<span class="s">cat "$profile_file"</span>
+<span class="dl">)sh</span><span class="s">"</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">success</span><span class="p">();</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

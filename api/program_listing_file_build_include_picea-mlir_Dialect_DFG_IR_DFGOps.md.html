@@ -1,0 +1,614 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Program Listing for File DFGOps.md &mdash; picea 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/collapsible-lists/css/tree_view.css?v=a885cde7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js?v=73120307"></script>
+      <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js?v=660e4f45"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            picea
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Installation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../README.html">About the project</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#guides">Guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#related-projects">Related projects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#development-environment-nix">Development Environment (Nix)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#build-on-ubuntu-24-04-no-nix">Build on Ubuntu 24.04 (no Nix)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#gurobi-license">Gurobi license</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#installing">Installing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#run-the-tests">Run the tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#build-the-documentation">Build the documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#compiling-a-design">Compiling a design</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#running-a-design-on-the-board">Running a design on the board</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#exporting-a-profiled-application-to-mocasin">Exporting a profiled application to Mocasin</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Guides</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../guides/laksa.html">The FPGA Variant using LAKSA backend</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/cgra.html">The CGRA Variant</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">MLIR Dialects</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/Base2Ops.html">‘base2’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/CGRAOps.html">‘cgra’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/DFGOps.html">‘dfg’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/EmitHLSOps.html">‘emithls’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/FilterOps.html">‘filter’ Dialect</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Passes</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/PICEAConversionPasses.html">PICEA Conversion Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/CGRAPasses.html">CGRA Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/DFGPasses.html">DFG Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/EmitHLSPasses.html">Emit HLS Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/FuncExtPasses.html">Func Ext Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/LinalgExtPasses.html">Linalg Ext Passes</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">C++ API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="library_root.html">C++ API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">picea</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Program Listing for File DFGOps.md</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/program_listing_file_build_include_picea-mlir_Dialect_DFG_IR_DFGOps.md.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="program-listing-for-file-dfgops-md">
+<span id="program-listing-file-build-include-picea-mlir-dialect-dfg-ir-dfgops-md"></span><h1>Program Listing for File DFGOps.md<a class="headerlink" href="#program-listing-for-file-dfgops-md" title="Link to this heading"></a></h1>
+<p>↰ <a class="reference internal" href="file_build_include_picea-mlir_Dialect_DFG_IR_DFGOps.md.html#file-build-include-picea-mlir-dialect-dfg-ir-dfgops-md"><span class="std std-ref">Return to documentation for file</span></a> (<code class="docutils literal notranslate"><span class="pre">build/include/picea-mlir/Dialect/DFG/IR/DFGOps.md</span></code>)</p>
+<div class="highlight-markdown notranslate"><div class="highlight"><pre><span></span>&lt;!-- Autogenerated by mlir-tblgen; don't manually edit --&gt;
+
+<span class="gh"># 'dfg' Dialect</span>
+
+The <span class="sb">`dfg`</span> dialect groups together a set of types, operations and
+transformations that are useful to implement a structured abstraction
+on dataflow graphs.
+These abstractions are useful for constructing KPN/SDF-like dataflow
+graphs, which include definitions of nodes, edges and their connections.
+
+
+<span class="gu">## Operations</span>
+
+<span class="gu">### `dfg.channel` (dfg::ChannelOp)</span>
+
+<span class="ge">_Defines a channel with one input and one output port_</span>
+
+The <span class="sb">`channel`</span> operation produces a typed channel (i.e. an edge in the
+dataflow graph) that links two nodes (i.e. process or operator) in the
+dataflow graph.
+The input of a channel will be connected to an output port of a node,
+which means its type is dfg::InputType, same for output port.
+
+A channel can also be sized manually with a 32-bit integer, otherwise,
+it indicates an unbounded FIFO channel.
+The token flows in the channel can also be of memref/tensor type, which
+implicitly enables multiple read/write as in KPN MoC.
+
+Examples:
+<span class="sb">```</span>
+<span class="sb">%input, %output = dfg.channel() : type</span>
+<span class="sb">$input, %output = dfg.channel(size) : shape x type</span>
+<span class="sb">```</span>
+
+Interfaces: <span class="sb">`DFG_EdgeInterface`</span>, <span class="sb">`MemoryEffectsOpInterface`</span>, <span class="sb">`OpAsmOpInterface`</span>
+
+<span class="gu">#### Attributes:</span>
+
+&lt;table&gt;
+&lt;tr&gt;&lt;th&gt;Attribute&lt;/th&gt;&lt;th&gt;MLIR Type&lt;/th&gt;&lt;th&gt;Description&lt;/th&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;&lt;code&gt;token_type&lt;/code&gt;&lt;/td&gt;&lt;td&gt;::mlir::TypeAttr&lt;/td&gt;&lt;td&gt;any type attribute&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;&lt;code&gt;buffer_size&lt;/code&gt;&lt;/td&gt;&lt;td&gt;::mlir::IntegerAttr&lt;/td&gt;&lt;td&gt;32-bit signless integer attribute&lt;/td&gt;&lt;/tr&gt;
+&lt;/table&gt;
+
+<span class="gu">#### Results:</span>
+
+| Result | Description |
+| :----: | ----------- |
+| <span class="sb">`input_port`</span> | Sending channel end type |
+| <span class="sb">`output_port`</span> | Receiving channel end type |
+
+
+
+<span class="gu">### `dfg.embed` (dfg::EmbedOp)</span>
+
+<span class="ge">_Embed a region as a subgraph in another._</span>
+
+The <span class="sb">`embed`</span> operation embed a region into another region.
+The syntax and usage of this operation is similar to <span class="sb">`instantiate`</span> operation.
+
+<span class="sb">```</span>
+<span class="sb">dfg.region @child inputs(...) outputs(...) {...}</span>
+<span class="sb">dfg.region @parent inputs(...) outputs(...) {</span>
+<span class="sb">    dfg.embed @child inputs(...) outputs(...) : (...) -&gt; (...)</span>
+<span class="sb">}</span>
+<span class="sb">```</span>
+
+Traits: <span class="sb">`AttrSizedOperandSegments`</span>
+
+Interfaces: <span class="sb">`DFG_GraphInterface`</span>, <span class="sb">`DFG_NodeInterface`</span>
+
+<span class="gu">#### Attributes:</span>
+
+&lt;table&gt;
+&lt;tr&gt;&lt;th&gt;Attribute&lt;/th&gt;&lt;th&gt;MLIR Type&lt;/th&gt;&lt;th&gt;Description&lt;/th&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;&lt;code&gt;actor&lt;/code&gt;&lt;/td&gt;&lt;td&gt;::mlir::SymbolRefAttr&lt;/td&gt;&lt;td&gt;symbol reference attribute&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;&lt;code&gt;offloaded&lt;/code&gt;&lt;/td&gt;&lt;td&gt;::mlir::dfg::OffloadHardwareAttr&lt;/td&gt;&lt;td&gt;The hardware back to be offloaded to&lt;/td&gt;&lt;/tr&gt;
+&lt;/table&gt;
+
+<span class="gu">#### Operands:</span>
+
+| Operand | Description |
+| :-----: | ----------- |
+| <span class="sb">`inputs`</span> | variadic of Receiving channel end type |
+| <span class="sb">`outputs`</span> | variadic of Sending channel end type |
+
+
+
+<span class="gu">### `dfg.instantiate` (dfg::InstantiateOp)</span>
+
+<span class="ge">_Instantiates an DFG node._</span>
+
+The <span class="sb">`instantiate`</span> operation instantiate an operator or process in a
+region with a set of inputs and outputs.
+InstantiateOp creates a DFG node with a set of input and output values.
+
+<span class="sb">```</span>
+<span class="sb">dfg.operator @operator inputs(...) outputs(...) {...}</span>
+<span class="sb">dfg.process @process inputs(...) outputs(...) {...}</span>
+<span class="sb">dfg.region @graph inputs(...) outputs(...) {</span>
+<span class="sb">    dfg.instantiate @operator inputs(...) outputs(...) : (...) -&gt; (...)</span>
+<span class="sb">    dfg.instantiate @process inputs(...) outputs(...) : (...) -&gt; (...)</span>
+<span class="sb">}</span>
+<span class="sb">```</span>
+
+Traits: <span class="sb">`AttrSizedOperandSegments`</span>
+
+Interfaces: <span class="sb">`DFG_NodeInterface`</span>
+
+<span class="gu">#### Attributes:</span>
+
+&lt;table&gt;
+&lt;tr&gt;&lt;th&gt;Attribute&lt;/th&gt;&lt;th&gt;MLIR Type&lt;/th&gt;&lt;th&gt;Description&lt;/th&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;&lt;code&gt;actor&lt;/code&gt;&lt;/td&gt;&lt;td&gt;::mlir::SymbolRefAttr&lt;/td&gt;&lt;td&gt;symbol reference attribute&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;&lt;code&gt;offloaded&lt;/code&gt;&lt;/td&gt;&lt;td&gt;::mlir::dfg::OffloadHardwareAttr&lt;/td&gt;&lt;td&gt;The hardware back to be offloaded to&lt;/td&gt;&lt;/tr&gt;
+&lt;/table&gt;
+
+<span class="gu">#### Operands:</span>
+
+| Operand | Description |
+| :-----: | ----------- |
+| <span class="sb">`inputs`</span> | variadic of Receiving channel end type |
+| <span class="sb">`outputs`</span> | variadic of Sending channel end type |
+
+
+
+<span class="gu">### `dfg.loop` (dfg::LoopOp)</span>
+
+<span class="ge">_Defines the repeatedly executed body of a process._</span>
+
+The <span class="sb">`loop`</span> operation defines the repeatedly executed body of a process.
+During each iteration, operations in the body can pull tokens from the
+process input ports, perform computations, and push tokens to the
+process output ports.
+
+The <span class="sb">`inputs`</span> and <span class="sb">`outputs`</span> lists identify the process ports that are
+monitored for stream termination. A port is closed when no further
+tokens will be transferred through it. When closure is observed on the
+listed input ports, the process loop terminates and closure propagates
+through its listed output ports. This allows downstream processes, and
+eventually the whole dataflow graph, to shut down.
+
+Example:
+<span class="sb">```</span>
+<span class="sb">dfg.process @add inputs(%a: !dfg.output&lt;type&gt;) outputs(%b: !dfg.input&lt;type&gt;)</span>
+<span class="sb">{</span>
+<span class="sb">    dfg.loop inputs(%a: !dfg.output&lt;type&gt;) outputs(%b: !dfg.input&lt;type&gt;) {</span>
+<span class="sb">        ops ...</span>
+<span class="sb">    }</span>
+<span class="sb">}</span>
+<span class="sb">```</span>
+
+Traits: <span class="sb">`AttrSizedOperandSegments`</span>, <span class="sb">`AutomaticAllocationScope`</span>, <span class="sb">`HasParent&lt;ProcessOp&gt;`</span>, <span class="sb">`NoTerminator`</span>, <span class="sb">`RecursiveMemoryEffects`</span>
+
+<span class="gu">#### Operands:</span>
+
+| Operand | Description |
+| :-----: | ----------- |
+| <span class="sb">`input_channels`</span> | variadic of Receiving channel end type |
+| <span class="sb">`output_channels`</span> | variadic of Sending channel end type |
+
+
+
+<span class="gu">### `dfg.operator` (dfg::OperatorOp)</span>
+
+<span class="ge">_Defines an DFG node in SDF MoC_</span>
+
+The <span class="sb">`operator`</span> operation defines one node (actor) in the SDF dataflow model.
+An operator is a special case of <span class="sb">`process`</span>, which only write values into output
+ports once at the end.
+
+Example:
+<span class="sb">```</span>
+<span class="sb">dfg.operator @node inputs(%in0: i32, %in1: i32) outputs(%out0: i32, %out1: i32)</span>
+<span class="sb">{</span>
+<span class="sb">    ops ...</span>
+<span class="sb">    dfg.output ...</span>
+<span class="sb">}</span>
+<span class="sb">```</span>
+
+Traits: <span class="sb">`AffineScope`</span>, <span class="sb">`AutomaticAllocationScope`</span>, <span class="sb">`HasParent&lt;ModuleOp&gt;`</span>, <span class="sb">`IsolatedFromAbove`</span>, <span class="sb">`SingleBlockImplicitTerminator&lt;OutputOp&gt;`</span>, <span class="sb">`SingleBlock`</span>
+
+Interfaces: <span class="sb">`DFG_NodeInterface`</span>, <span class="sb">`OpAsmOpInterface`</span>
+
+<span class="gu">#### Attributes:</span>
+
+&lt;table&gt;
+&lt;tr&gt;&lt;th&gt;Attribute&lt;/th&gt;&lt;th&gt;MLIR Type&lt;/th&gt;&lt;th&gt;Description&lt;/th&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;&lt;code&gt;sym_name&lt;/code&gt;&lt;/td&gt;&lt;td&gt;::mlir::StringAttr&lt;/td&gt;&lt;td&gt;string attribute&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;&lt;code&gt;function_type&lt;/code&gt;&lt;/td&gt;&lt;td&gt;::mlir::TypeAttr&lt;/td&gt;&lt;td&gt;type attribute of function type&lt;/td&gt;&lt;/tr&gt;
+&lt;/table&gt;
+
+
+
+<span class="gu">### `dfg.output` (dfg::OutputOp)</span>
+
+<span class="ge">_Terminator for an OperatorOp_</span>
+
+Syntax:
+
+<span class="sb">```</span>
+<span class="sb">operation ::= `dfg.output` attr-dict ($operands^ `:` type($operands))?</span>
+<span class="sb">```</span>
+
+Traits: <span class="sb">`HasParent&lt;OperatorOp&gt;`</span>, <span class="sb">`Terminator`</span>
+
+<span class="gu">#### Operands:</span>
+
+| Operand | Description |
+| :-----: | ----------- |
+| <span class="sb">`operands`</span> | variadic of any non-token type |
+
+
+
+<span class="gu">### `dfg.process` (dfg::ProcessOp)</span>
+
+<span class="ge">_Defines a process in the KPN MoC_</span>
+
+The <span class="sb">`process`</span> operation defines one node (actor) in the KPN dataflow model.
+A process is a symbol at module scope and can be connected to other processes
+through its input and output ports.
+
+The port interface is described by <span class="sb">`function_type`</span>:
+<span class="k">-</span><span class="w"> </span>function inputs represent incoming channel ends
+<span class="k">-</span><span class="w"> </span>function results represent outgoing channel ends
+
+A <span class="sb">`process`</span> can have one region with other IRs inside or none with a link to a library call.
+
+Example:
+<span class="sb">```</span>
+<span class="sb">dfg.process @node inputs(%in0: !dfg.output&lt;type&gt;, %in1: !dfg.output&lt;type&gt;)</span>
+<span class="sb">                  outputs(%out0: !dfg.input&lt;type&gt;, %out1: !dfg.input&lt;type&gt;)</span>
+<span class="sb">{</span>
+<span class="sb">    ops ...</span>
+<span class="sb">}</span>
+<span class="sb">```</span>
+
+Traits: <span class="sb">`AffineScope`</span>, <span class="sb">`AutomaticAllocationScope`</span>, <span class="sb">`HasParent&lt;ModuleOp&gt;`</span>, <span class="sb">`IsolatedFromAbove`</span>, <span class="sb">`NoTerminator`</span>
+
+Interfaces: <span class="sb">`DFG_NodeInterface`</span>, <span class="sb">`OpAsmOpInterface`</span>
+
+<span class="gu">#### Attributes:</span>
+
+&lt;table&gt;
+&lt;tr&gt;&lt;th&gt;Attribute&lt;/th&gt;&lt;th&gt;MLIR Type&lt;/th&gt;&lt;th&gt;Description&lt;/th&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;&lt;code&gt;sym_name&lt;/code&gt;&lt;/td&gt;&lt;td&gt;::mlir::StringAttr&lt;/td&gt;&lt;td&gt;string attribute&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;&lt;code&gt;function_type&lt;/code&gt;&lt;/td&gt;&lt;td&gt;::mlir::TypeAttr&lt;/td&gt;&lt;td&gt;type attribute of function type&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;&lt;code&gt;multiplicity&lt;/code&gt;&lt;/td&gt;&lt;td&gt;::mlir::DenseI64ArrayAttr&lt;/td&gt;&lt;td&gt;i64 dense array attribute&lt;/td&gt;&lt;/tr&gt;
+&lt;/table&gt;
+
+
+
+<span class="gu">### `dfg.pull` (dfg::PullOp)</span>
+
+<span class="ge">_Pulls a token from an input port of a node._</span>
+
+The <span class="sb">`pull`</span> operation reads a token out from an input port of a node,
+which is connected via a channel to an output port of another node.
+An optional set of indices must be used if the read port has a shape,
+indicating a set of ports to be chosen from.
+
+Example:
+<span class="sb">```</span>
+<span class="sb">dfg.process @pull inputs(%in0: !dfg.output&lt;type&gt;, %in1: !dfg.output&lt;shapextype&gt;)</span>
+<span class="sb">{</span>
+<span class="sb">    %0 = arith.constant ... : index</span>
+<span class="sb">    %token0 = dfg.pull %in0 : !dfg.output&lt;type&gt;</span>
+<span class="sb">    %token1 = dfg.pull %in1[%0] : !dfg.output&lt;shapextype&gt;</span>
+<span class="sb">}</span>
+<span class="sb">```</span>
+
+Interfaces: <span class="sb">`OpAsmOpInterface`</span>
+
+<span class="gu">#### Operands:</span>
+
+| Operand | Description |
+| :-----: | ----------- |
+| <span class="sb">`read_port`</span> | Receiving channel end type |
+| <span class="sb">`indices`</span> | variadic of index |
+
+<span class="gu">#### Results:</span>
+
+| Result | Description |
+| :----: | ----------- |
+| <span class="sb">`token`</span> | any non-token type |
+
+
+
+<span class="gu">### `dfg.pull_as_memref` (dfg::PullAsMemRefOp)</span>
+
+<span class="ge">_Pulls as a memref from a shaped input port of a node._</span>
+
+Interfaces: <span class="sb">`OpAsmOpInterface`</span>
+
+<span class="gu">#### Operands:</span>
+
+| Operand | Description |
+| :-----: | ----------- |
+| <span class="sb">`read_port`</span> | Receiving channel end type |
+
+<span class="gu">#### Results:</span>
+
+| Result | Description |
+| :----: | ----------- |
+| <span class="sb">`token_memref`</span> | memref of any non-token type values |
+
+
+
+<span class="gu">### `dfg.pull_as_tensor` (dfg::PullAsTensorOp)</span>
+
+<span class="ge">_Pulls as a tensor from a shaped input port of a node._</span>
+
+Interfaces: <span class="sb">`OpAsmOpInterface`</span>
+
+<span class="gu">#### Operands:</span>
+
+| Operand | Description |
+| :-----: | ----------- |
+| <span class="sb">`read_port`</span> | Receiving channel end type |
+
+<span class="gu">#### Results:</span>
+
+| Result | Description |
+| :----: | ----------- |
+| <span class="sb">`token_tensor`</span> | ranked tensor of any non-token type values |
+
+
+
+<span class="gu">### `dfg.push` (dfg::PushOp)</span>
+
+<span class="ge">_Pushes a token to an output port of a node._</span>
+
+The <span class="sb">`push`</span> operation writes a token to an output port of a node,
+which is connected via a channel to an input port of another node.
+An optional set of indices must be used if the port has a shape.
+
+Example:
+<span class="sb">```</span>
+<span class="sb">dfg.process @push outputs(%out0: !dfg.input&lt;type&gt;, %out1: !dfg.input&lt;shapextype&gt;)</span>
+<span class="sb">{</span>
+<span class="sb">    %0 = arith.constant ... : index</span>
+<span class="sb">    %1 = arith.constant ... : type</span>
+<span class="sb">    dfg.push %1 to %out0 : !dfg.input&lt;type&gt;</span>
+<span class="sb">    dfg.push %1 to %out1[%0] : !dfg.input&lt;shapextype&gt;</span>
+<span class="sb">}</span>
+<span class="sb">```</span>
+
+<span class="gu">#### Operands:</span>
+
+| Operand | Description |
+| :-----: | ----------- |
+| <span class="sb">`token`</span> | any non-token type |
+| <span class="sb">`write_port`</span> | Sending channel end type |
+| <span class="sb">`indices`</span> | variadic of index |
+
+
+
+<span class="gu">### `dfg.push_memref` (dfg::PushMemRefOp)</span>
+
+<span class="ge">_Pushes a memref to a shaped output port of a node._</span>
+
+<span class="gu">#### Operands:</span>
+
+| Operand | Description |
+| :-----: | ----------- |
+| <span class="sb">`token_memref`</span> | memref of any non-token type values |
+| <span class="sb">`write_port`</span> | Sending channel end type |
+
+
+
+<span class="gu">### `dfg.push_tensor` (dfg::PushTensorOp)</span>
+
+<span class="ge">_Pushes a tensor to a shaped output port of a node._</span>
+
+<span class="gu">#### Operands:</span>
+
+| Operand | Description |
+| :-----: | ----------- |
+| <span class="sb">`token_tensor`</span> | ranked tensor of any non-token type values |
+| <span class="sb">`write_port`</span> | Sending channel end type |
+
+
+
+<span class="gu">### `dfg.region` (dfg::RegionOp)</span>
+
+<span class="ge">_Defines a region(subgraph) in the DFG._</span>
+
+The <span class="sb">`region`</span> operation defines one node(subgraph) or the entire graph in the
+dataflow graph model.
+A region can be embedded into another region as subgraph, which content can
+only be an instantiation of a node(processes/operators/regions) and their
+connections(channels).
+A region's input/output ports must be connected/used.
+
+Example:
+<span class="sb">```</span>
+<span class="sb">dfg.region @node inputs(%in0: !dfg.output&lt;type&gt;, %in1: !dfg.output&lt;type&gt;)</span>
+<span class="sb">                 outputs(%out0: !dfg.input&lt;type&gt;, %out1: !dfg.input&lt;type&gt;)</span>
+<span class="sb">{</span>
+<span class="sb">    %0:2 = dfg.channel ...</span>
+<span class="sb">    dfg.instantiate @process ...</span>
+<span class="sb">    dfg.instantiate @operator ...</span>
+<span class="sb">    dfg.embed @region ...</span>
+<span class="sb">}</span>
+<span class="sb">```</span>
+
+Traits: <span class="sb">`IsolatedFromAbove`</span>, <span class="sb">`NoTerminator`</span>
+
+Interfaces: <span class="sb">`DFG_GraphInterface`</span>, <span class="sb">`DFG_NodeInterface`</span>, <span class="sb">`OpAsmOpInterface`</span>
+
+<span class="gu">#### Attributes:</span>
+
+&lt;table&gt;
+&lt;tr&gt;&lt;th&gt;Attribute&lt;/th&gt;&lt;th&gt;MLIR Type&lt;/th&gt;&lt;th&gt;Description&lt;/th&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;&lt;code&gt;sym_name&lt;/code&gt;&lt;/td&gt;&lt;td&gt;::mlir::StringAttr&lt;/td&gt;&lt;td&gt;string attribute&lt;/td&gt;&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;&lt;code&gt;function_type&lt;/code&gt;&lt;/td&gt;&lt;td&gt;::mlir::TypeAttr&lt;/td&gt;&lt;td&gt;type attribute of function type&lt;/td&gt;&lt;/tr&gt;
+&lt;/table&gt;
+
+
+
+<span class="gu">## Types</span>
+
+<span class="gu">### InputType</span>
+
+<span class="ge">_Sending channel end type_</span>
+
+The <span class="sb">`input`</span> type represents the sending end of a dataflow edge
+in a dataflow graph.
+This type takes an optional shape and a scalar MLIR type as
+element type, such as:
+<span class="sb">`!dfg.input&lt;i32&gt;`</span>, <span class="sb">`!dfg.input&lt;2xi32&gt;`</span>, <span class="sb">`!dfg.input&lt;2x2xi32&gt;`</span>
+
+<span class="gu">#### Parameters:</span>
+
+| Parameter | C++ type | Description |
+| :-------: | :-------: | ----------- |
+| shape | <span class="sb">`::llvm::ArrayRef&lt;int64_t&gt;`</span> |  |
+| elementType | <span class="sb">`Type`</span> |  |
+
+<span class="gu">### OutputType</span>
+
+<span class="ge">_Receiving channel end type_</span>
+
+The <span class="sb">`output`</span> type represents the receiving end of a dataflow edge
+in a dataflow graph.
+Details are similar to dfg::InputType.
+
+<span class="gu">#### Parameters:</span>
+
+| Parameter | C++ type | Description |
+| :-------: | :-------: | ----------- |
+| shape | <span class="sb">`::llvm::ArrayRef&lt;int64_t&gt;`</span> |  |
+| elementType | <span class="sb">`Type`</span> |  |
+
+<span class="gu">## Enums</span>
+
+<span class="gu">### OffloadHardware</span>
+
+<span class="ge">_The hardware back to be offloaded to_</span>
+
+<span class="gu">#### Cases:</span>
+
+| Symbol | Value | String |
+| :----: | :---: | ------ |
+| EmitHLS | <span class="sb">`0`</span> | emithls |
+| MDC | <span class="sb">`1`</span> | mdc |
+| CGRA | <span class="sb">`2`</span> | cgra |
+</pre></div>
+</div>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
