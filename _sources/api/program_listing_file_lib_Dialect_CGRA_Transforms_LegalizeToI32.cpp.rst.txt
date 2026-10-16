@@ -1,0 +1,1302 @@
+
+.. _program_listing_file_lib_Dialect_CGRA_Transforms_LegalizeToI32.cpp:
+
+Program Listing for File LegalizeToI32.cpp
+==========================================
+
+|exhale_lsh| :ref:`Return to documentation for file <file_lib_Dialect_CGRA_Transforms_LegalizeToI32.cpp>` (``lib/Dialect/CGRA/Transforms/LegalizeToI32.cpp``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. code-block:: cpp
+
+   
+   
+   
+   #include "mlir/Dialect/Arith/IR/Arith.h"
+   #include "mlir/Dialect/Func/IR/FuncOps.h"
+   #include "mlir/IR/Builders.h"
+   #include "mlir/IR/BuiltinOps.h"
+   #include "mlir/IR/BuiltinTypes.h"
+   #include "mlir/IR/IRMapping.h"
+   #include "mlir/IR/Matchers.h"
+   #include "mlir/IR/PatternMatch.h"
+   #include "mlir/Interfaces/SideEffectInterfaces.h"
+   #include "mlir/Pass/Pass.h"
+   #include "mlir/Pass/PassManager.h"
+   #include "mlir/Transforms/DialectConversion.h"
+   #include "picea-mlir/Dialect/CGRA/IR/CGRA.h"
+   #include "picea-mlir/Dialect/CGRA/Transforms/Passes.h"
+   
+   #include "llvm/ADT/DenseMap.h"
+   #include "llvm/Support/raw_ostream.h"
+   
+   using namespace mlir;
+   
+   //===----------------------------------------------------------------------===//
+   // Helpers
+   //===----------------------------------------------------------------------===//
+   
+   namespace {
+   
+   struct I64Pair {
+       Value hi; // most-significant 32 bits
+       Value lo; // least-significant 32 bits
+   };
+   
+   struct RewriteState {
+       OpBuilder &b;
+       Location loc;
+       Type i32Ty;
+   
+       // Maps an original i64 Value to its (hi,lo) pair after lowering.
+       llvm::DenseMap<Value, I64Pair> i64Map;
+       // Maps an original i8  Value to its i32 replacement.
+       llvm::DenseMap<Value, Value> i8Map;
+   
+       RewriteState(OpBuilder &b, Location loc)
+               : b(b),
+                 loc(loc),
+                 i32Ty(b.getIntegerType(32))
+       {}
+   
+       //------------------------------------------------------------------
+       // Constant factories
+       //------------------------------------------------------------------
+       Value cst(int32_t v)
+       { return arith::ConstantIntOp::create(b, loc, i32Ty, v); }
+   
+       //------------------------------------------------------------------
+       // Retrieve a lowered i32 Value for an original value.
+       //------------------------------------------------------------------
+       Value get32(Value orig)
+       {
+           if (auto it = i8Map.find(orig); it != i8Map.end()) return it->second;
+           assert(orig.getType().isInteger(32) || orig.getType().isInteger(1));
+           return orig;
+       }
+   
+       I64Pair get64(Value orig)
+       {
+           auto it = i64Map.find(orig);
+           assert(it != i64Map.end() && "i64 value not yet lowered");
+           return it->second;
+       }
+   
+       void map8(Value orig, Value replacement) { i8Map[orig] = replacement; }
+   
+       void map64(Value orig, I64Pair pair) { i64Map[orig] = pair; }
+   
+       I64Pair add64(I64Pair a, I64Pair b_)
+       {
+           Value lo = arith::AddIOp::create(this->b, loc, a.lo, b_.lo);
+           // Carry-out of the unsigned low-limb add, computed branch-free with
+           // only and/or/xor/shift — NO unsigned compare. The CGRA comparator
+           // realises only signed >0/==0, so a `cmpi ult` carry (what a naive
+           // lowering emits, and what the sltu instruction does on the CPU) would
+           // not be fabric-mappable. Instead:
+           //   carry = ((a & b) | ((a ^ b) & ~sum)) >>u 31         [Hacker's
+           //   Delight]
+           // (validated bit-exact against the native i64 add by
+           // src/tests/dfg_equiv).
+           Value gen = arith::AndIOp::create(this->b, loc, a.lo, b_.lo);
+           Value prp = arith::XOrIOp::create(this->b, loc, a.lo, b_.lo);
+           Value nsum = arith::XOrIOp::create(this->b, loc, lo, cst(-1)); // ~sum
+           Value pn = arith::AndIOp::create(this->b, loc, prp, nsum);
+           Value cor = arith::OrIOp::create(this->b, loc, gen, pn);
+           Value carryI = arith::ShRUIOp::create(this->b, loc, cor, cst(31));
+           Value hi0 = arith::AddIOp::create(this->b, loc, a.hi, b_.hi);
+           Value hi = arith::AddIOp::create(this->b, loc, hi0, carryI);
+           return {hi, lo};
+       }
+   
+       I64Pair signExtend32To64(Value v)
+       {
+           Value c31 = cst(31);
+           Value hi = arith::ShRSIOp::create(b, loc, v, c31);
+           return {hi, v};
+       }
+   
+       I64Pair zeroExtend32To64(Value v) { return {cst(0), v}; }
+   
+       // Unsigned high 32 bits of the 32x32->64 product a*b. Used for the low-limb
+       // partial product of a 64-bit multiply, where both limbs are UNSIGNED (an
+       // earlier version used a *signed* high-multiply here, which corrupted the
+       // high word whenever exactly one operand's low limb had bit 31 set, e.g.
+       // 1 * -1). The middle sum is split so no intermediate addition can lose a
+       // carry: mid = ll_hi + lh_lo + hl_lo <= 3*0xFFFF, well within 32 bits, and
+       // the final sum is correct mod 2^32 (the true high word is < 2^32).
+       Value mulhu32(Value a, Value bb)
+       {
+           Value c16 = cst(16), m = cst(0xFFFF);
+           Value al = arith::AndIOp::create(b, loc, a, m);
+           Value ah = arith::ShRUIOp::create(b, loc, a, c16);
+           Value bl = arith::AndIOp::create(b, loc, bb, m);
+           Value bh = arith::ShRUIOp::create(b, loc, bb, c16);
+   
+           Value ll = arith::MulIOp::create(b, loc, al, bl);
+           Value lh = arith::MulIOp::create(b, loc, al, bh);
+           Value hl = arith::MulIOp::create(b, loc, ah, bl);
+           Value hh = arith::MulIOp::create(b, loc, ah, bh);
+   
+           Value ll_hi = arith::ShRUIOp::create(b, loc, ll, c16);
+           Value lh_lo = arith::AndIOp::create(b, loc, lh, m);
+           Value lh_hi = arith::ShRUIOp::create(b, loc, lh, c16);
+           Value hl_lo = arith::AndIOp::create(b, loc, hl, m);
+           Value hl_hi = arith::ShRUIOp::create(b, loc, hl, c16);
+   
+           Value mid = arith::AddIOp::create(b, loc, ll_hi, lh_lo);
+           mid = arith::AddIOp::create(b, loc, mid, hl_lo);
+           Value midhi = arith::ShRUIOp::create(b, loc, mid, c16);
+   
+           Value hi = arith::AddIOp::create(b, loc, hh, lh_hi);
+           hi = arith::AddIOp::create(b, loc, hi, hl_hi);
+           hi = arith::AddIOp::create(b, loc, hi, midhi);
+           return hi;
+       }
+   
+       // ── funnel cross-terms ──────────────────────────────────────────────────
+       // A 64-bit shift by a variable amount `n` (0 <= n < 32) needs a cross term
+       // that moves bits between the two halves: `v << (32-n)` or `v >> (32-n)`.
+       // When n == 0 that becomes a shift by 32, which is out-of-range for an i32
+       // shift and therefore poison in LLVM. Guard it: the cross term is 0 when
+       // n == 0 (nothing crosses between halves). This is the shift's identity
+       // case, and getting it wrong made a shift-by-0 yield garbage.
+       Value crossLeft(Value v, Value shamt)
+       {
+           Value c32 = cst(32), c0 = cst(0);
+           Value amt = arith::SubIOp::create(b, loc, c32, shamt);
+           Value sh = arith::ShLIOp::create(b, loc, v, amt);
+           Value isZero =
+               arith::CmpIOp::create(b, loc, arith::CmpIPredicate::eq, shamt, c0);
+           return arith::SelectOp::create(b, loc, isZero, c0, sh);
+       }
+       Value crossRight(Value v, Value shamt)
+       {
+           Value c32 = cst(32), c0 = cst(0);
+           Value amt = arith::SubIOp::create(b, loc, c32, shamt);
+           Value sh = arith::ShRUIOp::create(b, loc, v, amt);
+           Value isZero =
+               arith::CmpIOp::create(b, loc, arith::CmpIPredicate::eq, shamt, c0);
+           return arith::SelectOp::create(b, loc, isZero, c0, sh);
+       }
+   
+       I64Pair shl64(I64Pair val, Value shamt)
+       {
+           Value c0 = cst(0);
+           Value c32 = cst(32);
+   
+           Value lt32 = arith::CmpIOp::create(
+               b,
+               loc,
+               arith::CmpIPredicate::slt,
+               shamt,
+               c32);
+           Value shm32 = arith::SubIOp::create(b, loc, shamt, c32);
+   
+           Value lo_shl = arith::ShLIOp::create(b, loc, val.lo, shamt);
+           Value hi_from_lo = crossRight(val.lo, shamt);
+           Value hi_shl = arith::ShLIOp::create(b, loc, val.hi, shamt);
+           Value hi_case_lt = arith::OrIOp::create(b, loc, hi_shl, hi_from_lo);
+   
+           Value hi_case_ge = arith::ShLIOp::create(b, loc, val.lo, shm32);
+   
+           Value new_lo = arith::SelectOp::create(b, loc, lt32, lo_shl, c0);
+           Value new_hi =
+               arith::SelectOp::create(b, loc, lt32, hi_case_lt, hi_case_ge);
+           return {new_hi, new_lo};
+       }
+   
+       I64Pair shrsi64(I64Pair val, Value shamt)
+       {
+           Value c32 = cst(32);
+           Value c31 = cst(31);
+   
+           Value lt32 = arith::CmpIOp::create(
+               b,
+               loc,
+               arith::CmpIPredicate::slt,
+               shamt,
+               c32);
+           Value shm32 = arith::SubIOp::create(b, loc, shamt, c32);
+   
+           Value lo_shr_n = arith::ShRUIOp::create(b, loc, val.lo, shamt);
+           Value hi_shl_32mn = crossLeft(val.hi, shamt);
+           Value lo_case_lt = arith::OrIOp::create(b, loc, lo_shr_n, hi_shl_32mn);
+           Value hi_case_lt = arith::ShRSIOp::create(b, loc, val.hi, shamt);
+   
+           Value lo_case_ge = arith::ShRSIOp::create(b, loc, val.hi, shm32);
+           Value hi_case_ge = arith::ShRSIOp::create(b, loc, val.hi, c31);
+   
+           Value new_lo =
+               arith::SelectOp::create(b, loc, lt32, lo_case_lt, lo_case_ge);
+           Value new_hi =
+               arith::SelectOp::create(b, loc, lt32, hi_case_lt, hi_case_ge);
+           return {new_hi, new_lo};
+       }
+   };
+   
+   //===----------------------------------------------------------------------===//
+   // Per-operation lowering logic
+   //===----------------------------------------------------------------------===//
+   
+   // Bit-width of a narrow integer (2..31) this pass widens to i32; 0 for i1,
+   // i32+, or non-integer. A narrow int is represented as an i32 holding its low
+   // `w` bits; arith.extsi/extui reconstruct sign/zero extension.
+   static unsigned narrowWidth(Type t)
+   {
+       if (auto it = dyn_cast<IntegerType>(t))
+           if (it.getWidth() > 1 && it.getWidth() < 32) return it.getWidth();
+       return 0;
+   }
+   // Low-`w`-bits mask (0xFF for i8, 0xF for i4, …).
+   static int32_t lowMask(unsigned w) { return (int32_t)(((uint64_t)1 << w) - 1); }
+   
+   bool lowerOp(Operation* op, RewriteState &state)
+   {
+       OpBuilder &b = state.b;
+       b.setInsertionPoint(op);
+       Location loc = op->getLoc();
+   
+       Type i32Ty = state.i32Ty;
+       auto cst = [&](int32_t v) { return state.cst(v); };
+   
+       if (auto c = dyn_cast<arith::ConstantIntOp>(op)) {
+           Type t = c.getType();
+           if (t.isInteger(64)) {
+               int64_t val = c.value();
+               Value hi = arith::ConstantIntOp::create(
+                   b,
+                   loc,
+                   i32Ty,
+                   (int32_t)(val >> 32));
+               Value lo = arith::ConstantIntOp::create(
+                   b,
+                   loc,
+                   i32Ty,
+                   (int32_t)(val & 0xFFFFFFFF));
+               state.map64(c.getResult(), {hi, lo});
+               return true;
+           }
+           if (unsigned w = narrowWidth(t)) {
+               Value wide = arith::ConstantIntOp::create(
+                   b,
+                   loc,
+                   i32Ty,
+                   (int32_t)(c.value() & lowMask(w)));
+               state.map8(c.getResult(), wide);
+               return true;
+           }
+           return true;
+       }
+   
+       if (auto ext = dyn_cast<arith::ExtSIOp>(op)) {
+           Type srcTy = ext.getIn().getType();
+           Type dstTy = ext.getType();
+           Value src = ext.getIn();
+   
+           if (unsigned w = narrowWidth(srcTy); w && dstTy.isInteger(32)) {
+               Value wide = state.get32(src);
+               Value sh = cst(32 - w); // sign-extend the low w bits
+               Value sl = arith::ShLIOp::create(b, loc, wide, sh);
+               Value sr = arith::ShRSIOp::create(b, loc, sl, sh);
+               ext.getResult().replaceAllUsesWith(sr);
+               return true;
+           }
+           if (srcTy.isInteger(32) && dstTy.isInteger(64)) {
+               Value src32 = state.get32(src);
+               state.map64(ext.getResult(), state.signExtend32To64(src32));
+               return true;
+           }
+           if (unsigned w = narrowWidth(srcTy); w && dstTy.isInteger(64)) {
+               Value wide = state.get32(src);
+               Value sh = cst(32 - w);
+               Value sl = arith::ShLIOp::create(b, loc, wide, sh);
+               Value sr = arith::ShRSIOp::create(b, loc, sl, sh);
+               state.map64(ext.getResult(), state.signExtend32To64(sr));
+               return true;
+           }
+           // narrow -> wider-but-still-narrow (e.g. i8 -> i16): sign-extend the
+           // low srcW bits; the i32-held result carries the (value-preserving)
+           // sign-extended value in its low dstW bits.
+           if (unsigned ws = narrowWidth(srcTy), wd = narrowWidth(dstTy);
+               ws && wd) {
+               Value wide = state.get32(src);
+               Value sh = cst(32 - ws);
+               Value sl = arith::ShLIOp::create(b, loc, wide, sh);
+               Value sr = arith::ShRSIOp::create(b, loc, sl, sh);
+               state.map8(ext.getResult(), sr);
+               return true;
+           }
+           llvm::errs() << "Unhandled extsi: " << *op << "\n";
+           return false;
+       }
+   
+       if (auto ext = dyn_cast<arith::ExtUIOp>(op)) {
+           Type srcTy = ext.getIn().getType();
+           Type dstTy = ext.getType();
+           Value src = ext.getIn();
+   
+           if (dstTy.isInteger(32)
+               && (srcTy.isInteger(1) || srcTy.isInteger(32))) {
+               ext.getResult().replaceAllUsesWith(src);
+               return true;
+           }
+   
+           if (unsigned w = narrowWidth(srcTy); w && dstTy.isInteger(32)) {
+               Value wide = state.get32(src);
+               if (wide.getType().isInteger(32)) {
+                   Value m = cst(lowMask(w));
+                   Value masked = arith::AndIOp::create(b, loc, wide, m);
+                   ext.getResult().replaceAllUsesWith(masked);
+                   return true;
+               }
+               ext.getResult().replaceAllUsesWith(wide);
+               return true;
+           }
+           if (unsigned w = narrowWidth(srcTy); w && dstTy.isInteger(64)) {
+               Value wide = state.get32(src);
+               Value m = cst(lowMask(w));
+               Value masked = arith::AndIOp::create(b, loc, wide, m);
+               state.map64(ext.getResult(), state.zeroExtend32To64(masked));
+               return true;
+           }
+           if (srcTy.isInteger(32) && dstTy.isInteger(64)) {
+               Value src32 = state.get32(src);
+               state.map64(ext.getResult(), state.zeroExtend32To64(src32));
+               return true;
+           }
+           // narrow -> wider-but-still-narrow (e.g. i8 -> i16): zero-extend the
+           // low srcW bits.
+           if (unsigned ws = narrowWidth(srcTy), wd = narrowWidth(dstTy);
+               ws && wd) {
+               Value wide = state.get32(src);
+               Value masked =
+                   arith::AndIOp::create(b, loc, wide, cst(lowMask(ws)));
+               state.map8(ext.getResult(), masked);
+               return true;
+           }
+   
+           llvm::errs() << "Unhandled extui: " << *op << "\n";
+           return false;
+       }
+   
+       if (auto tr = dyn_cast<arith::TruncIOp>(op)) {
+           Type srcTy = tr.getIn().getType();
+           Type dstTy = tr.getType();
+           Value src = tr.getIn();
+   
+           if (srcTy.isInteger(64) && dstTy.isInteger(32)) {
+               I64Pair pair = state.get64(src);
+               tr.getResult().replaceAllUsesWith(pair.lo);
+               return true;
+           }
+           if (unsigned w = narrowWidth(dstTy); w && srcTy.isInteger(64)) {
+               I64Pair pair = state.get64(src);
+               Value m = cst(lowMask(w));
+               Value masked = arith::AndIOp::create(b, loc, pair.lo, m);
+               state.map8(tr.getResult(), masked);
+               return true;
+           }
+           if (unsigned w = narrowWidth(dstTy); w && srcTy.isInteger(32)) {
+               Value src32 = state.get32(src);
+               Value m = cst(lowMask(w));
+               Value masked = arith::AndIOp::create(b, loc, src32, m);
+               state.map8(tr.getResult(), masked);
+               return true;
+           }
+           // narrow -> narrower (e.g. i16 -> i8): keep the low dstW bits.
+           if (unsigned wd = narrowWidth(dstTy), ws = narrowWidth(srcTy);
+               wd && ws) {
+               Value src32 = state.get32(src);
+               Value masked =
+                   arith::AndIOp::create(b, loc, src32, cst(lowMask(wd)));
+               state.map8(tr.getResult(), masked);
+               return true;
+           }
+           llvm::errs() << "Unhandled trunci: " << *op << "\n";
+           return false;
+       }
+   
+       if (auto add = dyn_cast<arith::AddIOp>(op)) {
+           if (add.getType().isInteger(64)) {
+               I64Pair a = state.get64(add.getLhs());
+               I64Pair b_ = state.get64(add.getRhs());
+               state.map64(add.getResult(), state.add64(a, b_));
+               return true;
+           }
+           if (narrowWidth(
+                   add.getType())) { // raw narrow add: low w bits are exact in i32
+               Value r = arith::AddIOp::create(
+                   b,
+                   loc,
+                   state.get32(add.getLhs()),
+                   state.get32(add.getRhs()));
+               state.map8(add.getResult(), r);
+               return true;
+           }
+           return true;
+       }
+   
+       if (auto sub = dyn_cast<arith::SubIOp>(op)) {
+           if (sub.getType().isInteger(64)) {
+               I64Pair a = state.get64(sub.getLhs());
+               I64Pair bv = state.get64(sub.getRhs());
+               Value neg1 = cst(-1);
+               Value nb_lo = arith::XOrIOp::create(b, loc, bv.lo, neg1);
+               Value nb_hi = arith::XOrIOp::create(b, loc, bv.hi, neg1);
+               I64Pair nb = {nb_hi, nb_lo};
+               I64Pair one64 = {cst(0), cst(1)};
+               I64Pair neg64 = state.add64(nb, one64);
+               state.map64(sub.getResult(), state.add64(a, neg64));
+               return true;
+           }
+           if (narrowWidth(
+                   sub.getType())) { // raw narrow sub: low w bits are exact in i32
+               Value r = arith::SubIOp::create(
+                   b,
+                   loc,
+                   state.get32(sub.getLhs()),
+                   state.get32(sub.getRhs()));
+               state.map8(sub.getResult(), r);
+               return true;
+           }
+           return true;
+       }
+   
+       if (auto mul = dyn_cast<arith::MulIOp>(op)) {
+           if (mul.getType().isInteger(64)) {
+               I64Pair a = state.get64(mul.getLhs());
+               I64Pair bv = state.get64(mul.getRhs());
+               // A constant multiplier that is a non-negative power of two (a
+               // common quantization rescale, e.g. 2^30) becomes a shift —
+               // avoiding the full 32x32->64 partial-product expansion, whose
+               // multiply-by-zero partials (for a constant with zero 16-bit limbs)
+               // otherwise bloat the DFG and fragment it. Check both operands
+               // (multiply is commutative).
+               APInt cVal;
+               Value cstMul = matchPattern(mul.getRhs(), m_ConstantInt(&cVal))
+                                  ? mul.getRhs()
+                              : matchPattern(mul.getLhs(), m_ConstantInt(&cVal))
+                                  ? mul.getLhs()
+                                  : Value();
+               if (cstMul && cVal.isNonNegative() && cVal.isPowerOf2()) {
+                   I64Pair v =
+                       (cstMul == mul.getRhs()) ? a : bv; // shift the NON-constant
+                   Value sh = state.cst((int32_t)cVal.exactLogBase2());
+                   state.map64(mul.getResult(), state.shl64(v, sh));
+                   return true;
+               }
+               // lo*lo full width: keep its low 32 as the result low word, and its
+               // UNSIGNED high 32 as the base of the result high word; then add
+               // the two low-32 cross products a.lo*b.hi and a.hi*b.lo.
+               Value prod_lo = arith::MulIOp::create(b, loc, a.lo, bv.lo);
+               Value mulhi = state.mulhu32(a.lo, bv.lo);
+               Value cross1 = arith::MulIOp::create(b, loc, a.lo, bv.hi);
+               Value cross2 = arith::MulIOp::create(b, loc, a.hi, bv.lo);
+               Value prod_hi0 = arith::AddIOp::create(b, loc, mulhi, cross1);
+               Value prod_hi = arith::AddIOp::create(b, loc, prod_hi0, cross2);
+               state.map64(mul.getResult(), {prod_hi, prod_lo});
+               return true;
+           }
+           if (narrowWidth(
+                   mul.getType())) { // raw narrow mul: low w bits are exact in i32
+               Value r = arith::MulIOp::create(
+                   b,
+                   loc,
+                   state.get32(mul.getLhs()),
+                   state.get32(mul.getRhs()));
+               state.map8(mul.getResult(), r);
+               return true;
+           }
+           return true;
+       }
+   
+       if (auto op_ = dyn_cast<arith::AndIOp>(op)) {
+           if (op_.getType().isInteger(64)) {
+               I64Pair a = state.get64(op_.getLhs());
+               I64Pair b_ = state.get64(op_.getRhs());
+               Value hi = arith::AndIOp::create(b, loc, a.hi, b_.hi);
+               Value lo = arith::AndIOp::create(b, loc, a.lo, b_.lo);
+               state.map64(op_.getResult(), {hi, lo});
+               return true;
+           }
+           if (narrowWidth(op_.getType())) {
+               Value r = arith::AndIOp::create(
+                   b,
+                   loc,
+                   state.get32(op_.getLhs()),
+                   state.get32(op_.getRhs()));
+               state.map8(op_.getResult(), r);
+               return true;
+           }
+           return true;
+       }
+   
+       if (auto op_ = dyn_cast<arith::OrIOp>(op)) {
+           if (op_.getType().isInteger(64)) {
+               I64Pair a = state.get64(op_.getLhs());
+               I64Pair b_ = state.get64(op_.getRhs());
+               Value hi = arith::OrIOp::create(b, loc, a.hi, b_.hi);
+               Value lo = arith::OrIOp::create(b, loc, a.lo, b_.lo);
+               state.map64(op_.getResult(), {hi, lo});
+               return true;
+           }
+           if (narrowWidth(op_.getType())) {
+               Value r = arith::OrIOp::create(
+                   b,
+                   loc,
+                   state.get32(op_.getLhs()),
+                   state.get32(op_.getRhs()));
+               state.map8(op_.getResult(), r);
+               return true;
+           }
+           return true;
+       }
+   
+       if (auto op_ = dyn_cast<arith::XOrIOp>(op)) {
+           if (op_.getType().isInteger(64)) {
+               I64Pair a = state.get64(op_.getLhs());
+               I64Pair b_ = state.get64(op_.getRhs());
+               Value hi = arith::XOrIOp::create(b, loc, a.hi, b_.hi);
+               Value lo = arith::XOrIOp::create(b, loc, a.lo, b_.lo);
+               state.map64(op_.getResult(), {hi, lo});
+               return true;
+           }
+           if (narrowWidth(op_.getType())) {
+               Value r = arith::XOrIOp::create(
+                   b,
+                   loc,
+                   state.get32(op_.getLhs()),
+                   state.get32(op_.getRhs()));
+               state.map8(op_.getResult(), r);
+               return true;
+           }
+           return true;
+       }
+   
+       if (auto op_ = dyn_cast<arith::ShLIOp>(op)) {
+           if (op_.getType().isInteger(64)) {
+               I64Pair val = state.get64(op_.getLhs());
+               Value shamt;
+               if (op_.getRhs().getType().isInteger(64))
+                   shamt = state.get64(op_.getRhs()).lo;
+               else
+                   shamt = state.get32(op_.getRhs());
+               state.map64(op_.getResult(), state.shl64(val, shamt));
+               return true;
+           }
+           return true;
+       }
+   
+       if (auto op_ = dyn_cast<arith::ShRUIOp>(op)) {
+           if (op_.getType().isInteger(64)) {
+               I64Pair val = state.get64(op_.getLhs());
+               Value shamt;
+               if (op_.getRhs().getType().isInteger(64))
+                   shamt = state.get64(op_.getRhs()).lo;
+               else
+                   shamt = state.get32(op_.getRhs());
+   
+               Value c0 = cst(0);
+               Value c32 = cst(32);
+               Value lt32 = arith::CmpIOp::create(
+                   b,
+                   loc,
+                   arith::CmpIPredicate::slt,
+                   shamt,
+                   c32);
+               Value shm32 = arith::SubIOp::create(b, loc, shamt, c32);
+   
+               Value lo_shr_n = arith::ShRUIOp::create(b, loc, val.lo, shamt);
+               Value hi_shl_32mn = state.crossLeft(val.hi, shamt);
+               Value lo_case_lt =
+                   arith::OrIOp::create(b, loc, lo_shr_n, hi_shl_32mn);
+               Value hi_case_lt = arith::ShRUIOp::create(b, loc, val.hi, shamt);
+   
+               Value lo_case_ge = arith::ShRUIOp::create(b, loc, val.hi, shm32);
+               Value hi_case_ge = c0;
+   
+               Value new_lo =
+                   arith::SelectOp::create(b, loc, lt32, lo_case_lt, lo_case_ge);
+               Value new_hi =
+                   arith::SelectOp::create(b, loc, lt32, hi_case_lt, hi_case_ge);
+               state.map64(op_.getResult(), {new_hi, new_lo});
+               return true;
+           }
+           return true;
+       }
+   
+       if (auto op_ = dyn_cast<arith::ShRSIOp>(op)) {
+           if (op_.getType().isInteger(64)) {
+               I64Pair val = state.get64(op_.getLhs());
+               Value shamt;
+               if (op_.getRhs().getType().isInteger(64))
+                   shamt = state.get64(op_.getRhs()).lo;
+               else
+                   shamt = state.get32(op_.getRhs());
+               state.map64(op_.getResult(), state.shrsi64(val, shamt));
+               return true;
+           }
+           return true;
+       }
+   
+       if (auto cmp = dyn_cast<arith::CmpIOp>(op)) {
+           Type operandTy = cmp.getLhs().getType();
+           if (operandTy.isInteger(64)) {
+               I64Pair a = state.get64(cmp.getLhs());
+               I64Pair bv = state.get64(cmp.getRhs());
+               auto pred = cmp.getPredicate();
+   
+               Value hi_eq = arith::CmpIOp::create(
+                   b,
+                   loc,
+                   arith::CmpIPredicate::eq,
+                   a.hi,
+                   bv.hi);
+               Value lo_eq = arith::CmpIOp::create(
+                   b,
+                   loc,
+                   arith::CmpIPredicate::eq,
+                   a.lo,
+                   bv.lo);
+               Value eq64 = arith::AndIOp::create(b, loc, hi_eq, lo_eq);
+   
+               Value result;
+               switch (pred) {
+               case arith::CmpIPredicate::eq: result = eq64; break;
+               case arith::CmpIPredicate::ne:
+               {
+                   Value ne_hi = arith::CmpIOp::create(
+                       b,
+                       loc,
+                       arith::CmpIPredicate::ne,
+                       a.hi,
+                       bv.hi);
+                   Value ne_lo = arith::CmpIOp::create(
+                       b,
+                       loc,
+                       arith::CmpIPredicate::ne,
+                       a.lo,
+                       bv.lo);
+                   result = arith::OrIOp::create(b, loc, ne_hi, ne_lo);
+                   break;
+               }
+               case arith::CmpIPredicate::slt:
+               {
+                   Value hi_lt = arith::CmpIOp::create(
+                       b,
+                       loc,
+                       arith::CmpIPredicate::slt,
+                       a.hi,
+                       bv.hi);
+                   Value lo_lt = arith::CmpIOp::create(
+                       b,
+                       loc,
+                       arith::CmpIPredicate::ult,
+                       a.lo,
+                       bv.lo);
+                   Value both = arith::AndIOp::create(b, loc, hi_eq, lo_lt);
+                   result = arith::OrIOp::create(b, loc, hi_lt, both);
+                   break;
+               }
+               case arith::CmpIPredicate::sle:
+               {
+                   Value hi_lt = arith::CmpIOp::create(
+                       b,
+                       loc,
+                       arith::CmpIPredicate::slt,
+                       a.hi,
+                       bv.hi);
+                   Value lo_le = arith::CmpIOp::create(
+                       b,
+                       loc,
+                       arith::CmpIPredicate::ule,
+                       a.lo,
+                       bv.lo);
+                   Value both = arith::AndIOp::create(b, loc, hi_eq, lo_le);
+                   result = arith::OrIOp::create(b, loc, hi_lt, both);
+                   break;
+               }
+               case arith::CmpIPredicate::sgt:
+               {
+                   Value hi_gt = arith::CmpIOp::create(
+                       b,
+                       loc,
+                       arith::CmpIPredicate::sgt,
+                       a.hi,
+                       bv.hi);
+                   Value lo_gt = arith::CmpIOp::create(
+                       b,
+                       loc,
+                       arith::CmpIPredicate::ugt,
+                       a.lo,
+                       bv.lo);
+                   Value both = arith::AndIOp::create(b, loc, hi_eq, lo_gt);
+                   result = arith::OrIOp::create(b, loc, hi_gt, both);
+                   break;
+               }
+               case arith::CmpIPredicate::sge:
+               {
+                   Value hi_gt = arith::CmpIOp::create(
+                       b,
+                       loc,
+                       arith::CmpIPredicate::sgt,
+                       a.hi,
+                       bv.hi);
+                   Value lo_ge = arith::CmpIOp::create(
+                       b,
+                       loc,
+                       arith::CmpIPredicate::uge,
+                       a.lo,
+                       bv.lo);
+                   Value both = arith::AndIOp::create(b, loc, hi_eq, lo_ge);
+                   result = arith::OrIOp::create(b, loc, hi_gt, both);
+                   break;
+               }
+               case arith::CmpIPredicate::ult:
+               {
+                   Value hi_lt = arith::CmpIOp::create(
+                       b,
+                       loc,
+                       arith::CmpIPredicate::ult,
+                       a.hi,
+                       bv.hi);
+                   Value lo_lt = arith::CmpIOp::create(
+                       b,
+                       loc,
+                       arith::CmpIPredicate::ult,
+                       a.lo,
+                       bv.lo);
+                   Value both = arith::AndIOp::create(b, loc, hi_eq, lo_lt);
+                   result = arith::OrIOp::create(b, loc, hi_lt, both);
+                   break;
+               }
+               case arith::CmpIPredicate::ule:
+               {
+                   Value hi_lt = arith::CmpIOp::create(
+                       b,
+                       loc,
+                       arith::CmpIPredicate::ult,
+                       a.hi,
+                       bv.hi);
+                   Value lo_le = arith::CmpIOp::create(
+                       b,
+                       loc,
+                       arith::CmpIPredicate::ule,
+                       a.lo,
+                       bv.lo);
+                   Value both = arith::AndIOp::create(b, loc, hi_eq, lo_le);
+                   result = arith::OrIOp::create(b, loc, hi_lt, both);
+                   break;
+               }
+               case arith::CmpIPredicate::ugt:
+               {
+                   Value hi_gt = arith::CmpIOp::create(
+                       b,
+                       loc,
+                       arith::CmpIPredicate::ugt,
+                       a.hi,
+                       bv.hi);
+                   Value lo_gt = arith::CmpIOp::create(
+                       b,
+                       loc,
+                       arith::CmpIPredicate::ugt,
+                       a.lo,
+                       bv.lo);
+                   Value both = arith::AndIOp::create(b, loc, hi_eq, lo_gt);
+                   result = arith::OrIOp::create(b, loc, hi_gt, both);
+                   break;
+               }
+               case arith::CmpIPredicate::uge:
+               {
+                   Value hi_gt = arith::CmpIOp::create(
+                       b,
+                       loc,
+                       arith::CmpIPredicate::ugt,
+                       a.hi,
+                       bv.hi);
+                   Value lo_ge = arith::CmpIOp::create(
+                       b,
+                       loc,
+                       arith::CmpIPredicate::uge,
+                       a.lo,
+                       bv.lo);
+                   Value both = arith::AndIOp::create(b, loc, hi_eq, lo_ge);
+                   result = arith::OrIOp::create(b, loc, hi_gt, both);
+                   break;
+               }
+               }
+               cmp.getResult().replaceAllUsesWith(result);
+               return true;
+           }
+           if (unsigned w = narrowWidth(operandTy)) {
+               // A narrow value is carried as an i32 holding only its LOW w BITS,
+               // so the i32 word is NOT the number: i8 -128 is held as 0x80 =
+               // +128, and the bits above w are unconstrained for a computed value
+               // (`addi`/`muli` keep only the low w bits exact). Comparing the raw
+               // words therefore gives the wrong answer — a quantized clamp `cmpi
+               // sgt, %x, 127 : i8` fired for every negative activation and pinned
+               // a whole layer to +127. Normalise both sides to their true i32
+               // value first: sign-extend for a signed predicate, mask for an
+               // unsigned or (in)equality one.
+               bool isSigned = false;
+               switch (cmp.getPredicate()) {
+               case arith::CmpIPredicate::slt:
+               case arith::CmpIPredicate::sle:
+               case arith::CmpIPredicate::sgt:
+               case arith::CmpIPredicate::sge: isSigned = true; break;
+               default: break;
+               }
+               Value sh = cst(32 - w), mask = cst(lowMask(w));
+               auto normalize = [&](Value v) -> Value {
+                   Value raw = state.get32(v);
+                   if (!isSigned) return arith::AndIOp::create(b, loc, raw, mask);
+                   Value sl = arith::ShLIOp::create(b, loc, raw, sh);
+                   return arith::ShRSIOp::create(b, loc, sl, sh);
+               };
+               Value newCmp = arith::CmpIOp::create(
+                   b,
+                   loc,
+                   cmp.getPredicate(),
+                   normalize(cmp.getLhs()),
+                   normalize(cmp.getRhs()));
+               cmp.getResult().replaceAllUsesWith(newCmp);
+               return true;
+           }
+           return true;
+       }
+   
+       if (auto sel = dyn_cast<arith::SelectOp>(op)) {
+           Type t = sel.getType();
+           if (t.isInteger(64)) {
+               I64Pair tv = state.get64(sel.getTrueValue());
+               I64Pair fv = state.get64(sel.getFalseValue());
+               Value cond = sel.getCondition();
+               Value hi = arith::SelectOp::create(b, loc, cond, tv.hi, fv.hi);
+               Value lo = arith::SelectOp::create(b, loc, cond, tv.lo, fv.lo);
+               state.map64(sel.getResult(), {hi, lo});
+               return true;
+           }
+           if (narrowWidth(t)) {
+               Value tv32 = state.get32(sel.getTrueValue());
+               Value fv32 = state.get32(sel.getFalseValue());
+               Value res =
+                   arith::SelectOp::create(b, loc, sel.getCondition(), tv32, fv32);
+               state.map8(sel.getResult(), res);
+               return true;
+           }
+           return true;
+       }
+   
+       if (auto mx = dyn_cast<arith::MaxSIOp>(op)) {
+           Type t = mx.getType();
+           if (t.isInteger(64)) {
+               I64Pair a = state.get64(mx.getLhs());
+               I64Pair bv = state.get64(mx.getRhs());
+               Value hi_eq = arith::CmpIOp::create(
+                   b,
+                   loc,
+                   arith::CmpIPredicate::eq,
+                   a.hi,
+                   bv.hi);
+               Value hi_gt = arith::CmpIOp::create(
+                   b,
+                   loc,
+                   arith::CmpIPredicate::sgt,
+                   a.hi,
+                   bv.hi);
+               Value lo_gt = arith::CmpIOp::create(
+                   b,
+                   loc,
+                   arith::CmpIPredicate::ugt,
+                   a.lo,
+                   bv.lo);
+               Value both = arith::AndIOp::create(b, loc, hi_eq, lo_gt);
+               Value cond = arith::OrIOp::create(b, loc, hi_gt, both);
+               Value hi = arith::SelectOp::create(b, loc, cond, a.hi, bv.hi);
+               Value lo = arith::SelectOp::create(b, loc, cond, a.lo, bv.lo);
+               state.map64(mx.getResult(), {hi, lo});
+               return true;
+           }
+           Value lhs = state.get32(mx.getLhs());
+           Value rhs = state.get32(mx.getRhs());
+           Value cond =
+               arith::CmpIOp::create(b, loc, arith::CmpIPredicate::sgt, lhs, rhs);
+           Value res = arith::SelectOp::create(b, loc, cond, lhs, rhs);
+           mx.getResult().replaceAllUsesWith(res);
+           return true;
+       }
+   
+       if (auto mn = dyn_cast<arith::MinSIOp>(op)) {
+           Type t = mn.getType();
+           if (t.isInteger(64)) {
+               I64Pair a = state.get64(mn.getLhs());
+               I64Pair bv = state.get64(mn.getRhs());
+               Value hi_eq = arith::CmpIOp::create(
+                   b,
+                   loc,
+                   arith::CmpIPredicate::eq,
+                   a.hi,
+                   bv.hi);
+               Value hi_lt = arith::CmpIOp::create(
+                   b,
+                   loc,
+                   arith::CmpIPredicate::slt,
+                   a.hi,
+                   bv.hi);
+               Value lo_lt = arith::CmpIOp::create(
+                   b,
+                   loc,
+                   arith::CmpIPredicate::ult,
+                   a.lo,
+                   bv.lo);
+               Value both = arith::AndIOp::create(b, loc, hi_eq, lo_lt);
+               Value cond = arith::OrIOp::create(b, loc, hi_lt, both);
+               Value hi = arith::SelectOp::create(b, loc, cond, a.hi, bv.hi);
+               Value lo = arith::SelectOp::create(b, loc, cond, a.lo, bv.lo);
+               state.map64(mn.getResult(), {hi, lo});
+               return true;
+           }
+           Value lhs = state.get32(mn.getLhs());
+           Value rhs = state.get32(mn.getRhs());
+           Value cond =
+               arith::CmpIOp::create(b, loc, arith::CmpIPredicate::slt, lhs, rhs);
+           Value res = arith::SelectOp::create(b, loc, cond, lhs, rhs);
+           mn.getResult().replaceAllUsesWith(res);
+           return true;
+       }
+   
+       return true;
+   }
+   
+   //===----------------------------------------------------------------------===//
+   // The pass itself
+   //===----------------------------------------------------------------------===//
+   
+   struct CGRALegalizeToI32FuncPass : public PassWrapper<
+                                          CGRALegalizeToI32FuncPass,
+                                          OperationPass<func::FuncOp>> {
+   
+       MLIR_DEFINE_EXPLICIT_INTERNAL_INLINE_TYPE_ID(CGRALegalizeToI32FuncPass)
+   
+       StringRef getArgument() const override { return "legalize-to-i32-func"; }
+       StringRef getDescription() const override
+       { return "Lower i8/i64 arith ops to i32-only sequences (per-function)"; }
+   
+       void runOnOperation() override
+       {
+           func::FuncOp func = getOperation();
+   
+           // This pass legalizes i8/i64 *arithmetic* assuming all memory (stream)
+           // storage is already i32; it cannot widen narrow-integer MEMREFS — e.g.
+           // a quantized NN whose activations are stored as memref<...xi8>. Detect
+           // that up front and fail with an actionable diagnostic, rather than
+           // crashing deep in the rewrite (get32 asserting on an i8 loaded from
+           // memory). Such storage must be widened to i32 before this pass runs.
+           auto narrowMemref = [](Type t) {
+               auto mr = dyn_cast<MemRefType>(t);
+               return mr && narrowWidth(mr.getElementType()) != 0;
+           };
+           WalkResult narrow = func.walk([&](Operation* op) {
+               for (Type t : op->getOperandTypes())
+                   if (narrowMemref(t)) return WalkResult::interrupt();
+               for (Type t : op->getResultTypes())
+                   if (narrowMemref(t)) return WalkResult::interrupt();
+               return WalkResult::advance();
+           });
+           if (narrow.wasInterrupted()) {
+               func.emitError(
+                   "legalize-to-i32: i8/i16 memref storage is not supported "
+                   "(this pass legalizes arithmetic, not storage); widen the "
+                   "narrow memrefs to i32 before --legalize-to-i32");
+               return signalPassFailure();
+           }
+   
+           OpBuilder b(func.getContext());
+           Location loc = func.getLoc();
+           Type i32Ty = b.getIntegerType(32);
+   
+           SmallVector<Type> newArgTypes;
+           SmallVector<std::pair<unsigned, unsigned>> argIndexMap;
+   
+           Block &entry = func.getBody().front();
+           for (BlockArgument arg : entry.getArguments()) {
+               argIndexMap.push_back(
+                   {arg.getArgNumber(), (unsigned)newArgTypes.size()});
+               if (narrowWidth(arg.getType()) || arg.getType().isInteger(32)
+                   || arg.getType().isInteger(1)) {
+                   newArgTypes.push_back(i32Ty);
+               } else if (arg.getType().isInteger(64)) {
+                   newArgTypes.push_back(i32Ty); // hi
+                   newArgTypes.push_back(i32Ty); // lo
+               } else {
+                   newArgTypes.push_back(arg.getType());
+               }
+           }
+   
+           SmallVector<Type> newResultTypes;
+           for (Type rt : func.getFunctionType().getResults())
+               if (narrowWidth(rt) || rt.isInteger(64))
+                   newResultTypes.push_back(i32Ty);
+               else
+                   newResultTypes.push_back(rt);
+   
+           func.setFunctionType(b.getFunctionType(newArgTypes, newResultTypes));
+   
+           RewriteState state(b, loc);
+           b.setInsertionPointToStart(&entry);
+   
+           for (auto [oldIdx, newIdx] : argIndexMap) {
+               BlockArgument oldArg = entry.getArgument(oldIdx);
+               Type oldTy = oldArg.getType();
+   
+               if (oldTy.isInteger(64)) {
+                   BlockArgument hiArg = entry.addArgument(i32Ty, loc);
+                   BlockArgument loArg = entry.addArgument(i32Ty, loc);
+                   state.map64(oldArg, {hiArg, loArg});
+               } else if (narrowWidth(oldTy)) {
+                   // Mirror the i64 handling: append a fresh i32 argument holding
+                   // the caller's value and map the narrow arg to it, but leave
+                   // the OLD narrow arg (still typed iN) in place so a use like
+                   // `extsi %arg : iN to i32` still matches the narrow-ext handler
+                   // (which reconstructs the sign). The old arg is erased after
+                   // the worklist + DCE.
+                   BlockArgument newArg = entry.addArgument(i32Ty, loc);
+                   state.map8(oldArg, newArg);
+               } else if (oldTy.isInteger(32) || oldTy.isInteger(1)) {
+                   oldArg.setType(i32Ty);
+               }
+               // else: memref / index / float / etc. — the function signature kept
+               // this argument's type (above), so leave the block argument
+               // unchanged too. (Forcing every non-i8/i64 arg to i32 here mistyped
+               // memref arguments.)
+           }
+   
+           SmallVector<Operation*> worklist;
+           func.walk([&](Operation* op) { worklist.push_back(op); });
+   
+           for (Operation* op : worklist) {
+               if (isa<func::FuncOp>(op)) continue;
+   
+               if (auto ret = dyn_cast<func::ReturnOp>(op)) {
+                   b.setInsertionPoint(ret);
+                   SmallVector<Value> newOperands;
+                   for (Value v : ret.getOperands()) {
+                       Type t = v.getType();
+                       if (unsigned w = narrowWidth(t)) {
+                           Value wide = state.get32(v);
+                           Value m = arith::ConstantIntOp::create(
+                               b,
+                               loc,
+                               i32Ty,
+                               lowMask(w));
+                           newOperands.push_back(
+                               arith::AndIOp::create(b, loc, wide, m));
+                       } else if (t.isInteger(64)) {
+                           newOperands.push_back(state.get64(v).lo);
+                       } else {
+                           newOperands.push_back(v);
+                       }
+                   }
+                   ret->setOperands(newOperands);
+                   continue;
+               }
+   
+               if (!lowerOp(op, state)) {
+                   op->emitError("LegalizeToI32: unhandled op");
+                   signalPassFailure();
+                   return;
+               }
+           }
+   
+           bool changed = true;
+           while (changed) {
+               changed = false;
+               SmallVector<Operation*> dead;
+               func.walk([&](Operation* op) {
+                   // Only reap ops that are actually dead: no uses AND no side
+                   // effects. Without the effect check this erased side-effecting
+                   // result-less ops — affine.store and the affine.for loops
+                   // themselves — deleting the kernel.
+                   if (op->use_empty() && isMemoryEffectFree(op)
+                       && !op->hasTrait<OpTrait::IsTerminator>()
+                       && !isa<func::FuncOp>(op))
+                       dead.push_back(op);
+               });
+               for (Operation* op : dead) {
+                   op->erase();
+                   changed = true;
+               }
+           }
+   
+           // Erase the original i64/narrow arguments — each was replaced by
+           // appended i32 argument(s). Done AFTER the worklist + DCE: while the
+           // ops that consumed those args are being lowered they still reference
+           // the old (iN/i64-typed) arguments, so a use like `extsi %arg : iN to
+           // i32` still matches the narrow handler; only once those ops are gone
+           // is the old arg use-free and erasable.
+           SmallVector<unsigned> toErase;
+           for (auto [oldIdx, newIdx] : argIndexMap) {
+               Type t = entry.getArgument(oldIdx).getType();
+               if (t.isInteger(64) || narrowWidth(t)) toErase.push_back(oldIdx);
+           }
+           for (unsigned idx : llvm::reverse(toErase)) entry.eraseArgument(idx);
+       }
+   };
+   
+   // Legalize ONLY the arithmetic inside @p func's cgra.deploy regions, leaving
+   // host code and the function's arguments untouched. This is the `deploy-only`
+   // mode: run AFTER --annotate-to-cgra so the offloaded loops are already
+   // wrapped, so only the code that actually reaches the fabric is legalized and
+   // host arithmetic keeps its native i8/i64 form. Returns failure on an unhandled
+   // op.
+   static LogicalResult legalizeDeployRegionsOnly(func::FuncOp func)
+   {
+       SmallVector<cgra::DeployOp> deploys;
+       func.walk([&](cgra::DeployOp d) { deploys.push_back(d); });
+       if (deploys.empty())
+           return success(); // pure host function: nothing offloaded, leave it
+                             // alone
+   
+       // Same storage guard as the whole-function path, scoped to the deploy
+       // bodies: this pass legalizes arithmetic, not narrow memref storage (widen
+       // those first).
+       auto narrowMemref = [](Type t) {
+           auto mr = dyn_cast<MemRefType>(t);
+           return mr && narrowWidth(mr.getElementType()) != 0;
+       };
+       for (cgra::DeployOp dep : deploys) {
+           WalkResult n = dep.getBody().walk([&](Operation* op) {
+               for (Type t : op->getOperandTypes())
+                   if (narrowMemref(t)) return WalkResult::interrupt();
+               for (Type t : op->getResultTypes())
+                   if (narrowMemref(t)) return WalkResult::interrupt();
+               return WalkResult::advance();
+           });
+           if (n.wasInterrupted()) {
+               dep.emitError(
+                   "legalize-to-i32: i8/i16 memref storage is not supported "
+                   "(widen the narrow memrefs to i32 before --legalize-to-i32)");
+               return failure();
+           }
+       }
+   
+       OpBuilder b(func.getContext());
+       RewriteState state(b, func.getLoc());
+   
+       // Sink i8/i64/narrow constants used inside a deploy but defined outside it,
+       // so the region is self-contained: get32/get64 require every narrow/i64
+       // value to be mapped as it is lowered, and a constant hoisted into host
+       // code would be unmapped. i32/index constants need no sinking (get32
+       // returns them as-is).
+       llvm::SmallPtrSet<Operation*, 8> sunkOrigs;
+       for (cgra::DeployOp dep : deploys) {
+           Block &blk = dep.getBody().front();
+           llvm::DenseMap<Operation*, Value> clones;
+           dep.getBody().walk([&](Operation* op) {
+               for (OpOperand &use : op->getOpOperands()) {
+                   Operation* def = use.get().getDefiningOp();
+                   if (!def || dep->isAncestor(def)
+                       || !isa<arith::ConstantOp>(def))
+                       continue;
+                   Type t = use.get().getType();
+                   if (!t.isInteger(64) && !narrowWidth(t)) continue;
+                   Value &c = clones[def];
+                   if (!c) {
+                       OpBuilder cb(&blk, blk.begin());
+                       c = cb.clone(*def)->getResult(0);
+                   }
+                   use.set(c);
+                   sunkOrigs.insert(def);
+               }
+           });
+       }
+       // Reap any sunk original constant left dead in the host scope (its only
+       // uses were inside the deploy and are now the sunk clones). Guard on
+       // use_empty so a constant still shared with host code is kept.
+       for (Operation* o : sunkOrigs)
+           if (o->use_empty()) o->erase();
+   
+       // Legalize every op inside the deploy regions, in program order.
+       SmallVector<Operation*> worklist;
+       for (cgra::DeployOp dep : deploys)
+           dep.getBody().walk([&](Operation* op) { worklist.push_back(op); });
+       for (Operation* op : worklist) {
+           if (op->hasTrait<OpTrait::IsTerminator>())
+               continue; // cgra.yield / affine.yield
+           if (!lowerOp(op, state)) {
+               op->emitError("LegalizeToI32: unhandled op");
+               return failure();
+           }
+       }
+   
+       // DCE the now-dead original narrow/i64 ops, within the regions (same guard
+       // as the whole-function path: never reap a side-effecting op).
+       bool changed = true;
+       while (changed) {
+           changed = false;
+           SmallVector<Operation*> dead;
+           for (cgra::DeployOp dep : deploys)
+               dep.getBody().walk([&](Operation* op) {
+                   if (op->use_empty() && isMemoryEffectFree(op)
+                       && !op->hasTrait<OpTrait::IsTerminator>())
+                       dead.push_back(op);
+               });
+           for (Operation* op : dead) {
+               op->erase();
+               changed = true;
+           }
+       }
+       return success();
+   }
+   
+   struct CGRALegalizeToI32Pass
+           : public PassWrapper<CGRALegalizeToI32Pass, OperationPass<ModuleOp>> {
+   
+       MLIR_DEFINE_EXPLICIT_INTERNAL_INLINE_TYPE_ID(CGRALegalizeToI32Pass)
+   
+       CGRALegalizeToI32Pass() = default;
+       CGRALegalizeToI32Pass(const CGRALegalizeToI32Pass &o) : PassWrapper(o) {}
+   
+       StringRef getArgument() const override { return "legalize-to-i32"; }
+       StringRef getDescription() const override
+       { return "Lower i8/i64 arith ops to i32-only sequences"; }
+   
+       // When set, legalize only the arithmetic inside cgra.deploy regions and
+       // leave host code + function arguments in their native form. Run AFTER
+       // --annotate-to-cgra. Default (false) legalizes every function whole.
+       Pass::Option<bool> deployOnly{
+           *this,
+           "deploy-only",
+           llvm::cl::desc(
+               "Legalize only ops inside cgra.deploy regions, leaving host "
+               "code and function arguments untouched (run after "
+               "--annotate-to-cgra)"),
+           llvm::cl::init(false)};
+   
+       void runOnOperation() override
+       {
+           ModuleOp module = getOperation();
+           if (deployOnly) {
+               module.walk([&](func::FuncOp func) {
+                   if (failed(legalizeDeployRegionsOnly(func)))
+                       signalPassFailure();
+               });
+               return;
+           }
+           module.walk([&](func::FuncOp func) {
+               OpPassManager pm("func.func");
+               pm.addPass(cgra::createCGRALegalizeToI32FuncPass());
+               if (failed(runPipeline(pm, func))) signalPassFailure();
+           });
+       }
+   };
+   
+   } // namespace
+   
+   std::unique_ptr<Pass> cgra::createCGRALegalizeToI32FuncPass()
+   { return std::make_unique<CGRALegalizeToI32FuncPass>(); }
+   
+   std::unique_ptr<mlir::Pass> cgra::createCGRALegalizeToI32Pass()
+   { return std::make_unique<CGRALegalizeToI32Pass>(); }

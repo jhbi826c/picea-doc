@@ -1,0 +1,37 @@
+
+.. _program_listing_file_include_picea-mlir_Conversion_Passes.h:
+
+Program Listing for File Passes.h
+=================================
+
+|exhale_lsh| :ref:`Return to documentation for file <file_include_picea-mlir_Conversion_Passes.h>` (``include/picea-mlir/Conversion/Passes.h``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. code-block:: cpp
+
+   
+   
+   #pragma once
+   
+   #include "picea-mlir/Conversion/AffineToEmitHLS/AffineToEmitHLS.h"
+   #include "picea-mlir/Conversion/ArithToEmitHLS/ArithToEmitHLS.h"
+   #include "picea-mlir/Conversion/Base2ToEmitHLS/Base2ToEmitHLS.h"
+   #include "picea-mlir/Conversion/DFGToEmitHLS/DFGToEmitHLS.h"
+   #include "picea-mlir/Conversion/FilterToLinalg/FilterToLinalg.h"
+   #include "picea-mlir/Conversion/FuncToDFG/FuncToDFG.h"
+   #include "picea-mlir/Conversion/IndexToEmitHLS/IndexToEmitHLS.h"
+   #include "picea-mlir/Conversion/LinalgToPICEALoops/LinalgToPICEALoops.h"
+   #include "picea-mlir/Conversion/MemRefPadToPICEALoops/MemRefPadToPICEALoops.h"
+   #include "picea-mlir/Conversion/ReshapedCopyToLoops/ReshapedCopyToLoops.h"
+   
+   namespace mlir::picea {
+   
+   //===- Generated passes ---------------------------------------------------===//
+   
+   #define GEN_PASS_REGISTRATION
+   #include "picea-mlir/Conversion/Passes.h.inc"
+   
+   //===----------------------------------------------------------------------===//
+   
+   } // namespace mlir::picea

@@ -1,0 +1,147 @@
+
+.. _program_listing_file_lib_Dialect_CGRA_Transforms_AnnotateDispatchIO.cpp:
+
+Program Listing for File AnnotateDispatchIO.cpp
+===============================================
+
+|exhale_lsh| :ref:`Return to documentation for file <file_lib_Dialect_CGRA_Transforms_AnnotateDispatchIO.cpp>` (``lib/Dialect/CGRA/Transforms/AnnotateDispatchIO.cpp``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. code-block:: cpp
+
+   
+   
+   // Walk every cgra.deploy region inside a func.func and classify each of its
+   // streams (the ins operands) into:
+   //
+   //   input_args  – stream indices only read inside the region
+   //   output_args – stream indices only written inside the region
+   //   inout_args  – stream indices both read and written
+   //
+   // The indices are into the deploy's stream list, which is uniform whether a
+   // stream is a function argument, an alloca, or a module-level memref.global
+   // (for an outlined argument-stream kernel the stream index equals the enclosing
+   // function's argument index, so the numbering is unchanged for that path). The
+   // classification is based on affine.load (read) and affine.store (write)
+   // patterns anywhere in the deploy body. The indices are stored as
+   // DenseI32ArrayAttr attributes on the cgra.deploy op so downstream passes and
+   // driver-generation tools can consume structured data instead of re-parsing the
+   // loop body.
+   
+   #include "mlir/Dialect/Affine/IR/AffineOps.h"
+   #include "mlir/Dialect/Func/IR/FuncOps.h"
+   #include "mlir/IR/Builders.h"
+   #include "mlir/Pass/Pass.h"
+   #include "picea-mlir/Dialect/CGRA/IR/CGRA.h"
+   #include "picea-mlir/Dialect/CGRA/Transforms/CGRAAnalysisUtils.h"
+   #include "picea-mlir/Dialect/CGRA/Transforms/Passes.h"
+   
+   #include "llvm/ADT/DenseSet.h"
+   #include "llvm/ADT/SmallVector.h"
+   #include "llvm/Support/raw_ostream.h"
+   
+   using namespace mlir;
+   
+   namespace {
+   
+   struct CGRAAnnotateDispatchIOPass : public PassWrapper<
+                                           CGRAAnnotateDispatchIOPass,
+                                           OperationPass<func::FuncOp>> {
+   
+       MLIR_DEFINE_EXPLICIT_INTERNAL_INLINE_TYPE_ID(CGRAAnnotateDispatchIOPass)
+   
+       StringRef getArgument() const final { return "annotate-dispatch-io"; }
+       StringRef getDescription() const final
+       {
+           return "Annotate cgra.deploy ops with input/output/inout memref arg "
+                  "indices";
+       }
+   
+       void getDependentDialects(DialectRegistry &registry) const override
+       { registry.insert<cgra::CGRADialect, affine::AffineDialect>(); }
+   
+       void runOnOperation() override
+       {
+           func::FuncOp funcOp = getOperation();
+           if (funcOp.empty()) return;
+   
+           Block &entry = funcOp.getBody().front();
+   
+           funcOp.walk([&](cgra::DeployOp deployOp) {
+               Block &body = deployOp.getBody().front();
+               ValueRange streams = deployOp.getStreams();
+   
+               // Stream index (into the deploy's ins operands) of a memref used in
+               // the body, or -1. annotate-to-cgra remaps every stream use to a
+               // region block argument, so a body memref is that block argument
+               // and its number is the stream index — uniform whether the stream
+               // is a function argument, an alloca, or a module-level global.
+               // Legacy hand-written IR that captures a value directly (a deploy
+               // with no ins whose body uses the function args, or a func arg
+               // passed as a stream operand) falls back to the func-argument index
+               // / a match against the stream operands.
+               auto streamIdx = [&](Value memref) -> int {
+                   if (auto ba = dyn_cast<BlockArgument>(memref)) {
+                       if (ba.getOwner() == &body) return (int)ba.getArgNumber();
+                       if (ba.getOwner() == &entry) return (int)ba.getArgNumber();
+                   }
+                   for (auto [i, s] : llvm::enumerate(streams))
+                       if (s == memref) return (int)i;
+                   return -1;
+               };
+   
+               llvm::DenseSet<unsigned> loaded, stored;
+               deployOp.getBody().walk([&](Operation* op) {
+                   if (auto load = dyn_cast<affine::AffineLoadOp>(op)) {
+                       int a = streamIdx(load.getMemRef());
+                       if (a >= 0) loaded.insert((unsigned)a);
+                   } else if (auto store = dyn_cast<affine::AffineStoreOp>(op)) {
+                       int a = streamIdx(store.getMemRef());
+                       if (a >= 0) stored.insert((unsigned)a);
+                   }
+               });
+   
+               SmallVector<int32_t> inputs, outputs, inouts;
+               for (unsigned idx : loaded)
+                   if (stored.count(idx))
+                       inouts.push_back((int32_t)idx);
+                   else
+                       inputs.push_back((int32_t)idx);
+               for (unsigned idx : stored)
+                   if (!loaded.count(idx)) outputs.push_back((int32_t)idx);
+   
+               llvm::sort(inputs);
+               llvm::sort(outputs);
+               llvm::sort(inouts);
+   
+               // dispatch_size = product of the per-loop trip counts (the STRELA
+               // element count downstream --cgra-deploy-to-llvm uses). See
+               // productOfConstant- TripCounts for why it is (upper - lower) and
+               // the shared definition.
+               bool allConst = true;
+               int64_t dispatchSize = cgra::productOfConstantTripCounts(
+                   deployOp.getBody(),
+                   &allConst);
+   
+               OpBuilder b(funcOp.getContext());
+               if (!inputs.empty())
+                   deployOp->setAttr("input_args", b.getDenseI32ArrayAttr(inputs));
+               if (!outputs.empty())
+                   deployOp->setAttr(
+                       "output_args",
+                       b.getDenseI32ArrayAttr(outputs));
+               if (!inouts.empty())
+                   deployOp->setAttr("inout_args", b.getDenseI32ArrayAttr(inouts));
+               if (allConst)
+                   deployOp->setAttr(
+                       "dispatch_size",
+                       b.getI64IntegerAttr(dispatchSize));
+           });
+       }
+   };
+   
+   } // namespace
+   
+   std::unique_ptr<mlir::Pass> cgra::createCGRAAnnotateDispatchIOPass()
+   { return std::make_unique<CGRAAnnotateDispatchIOPass>(); }

@@ -1,0 +1,43 @@
+
+.. _program_listing_file_lib_Dialect_Base2_IR_Base2Base.cpp:
+
+Program Listing for File Base2Base.cpp
+======================================
+
+|exhale_lsh| :ref:`Return to documentation for file <file_lib_Dialect_Base2_IR_Base2Base.cpp>` (``lib/Dialect/Base2/IR/Base2Base.cpp``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. code-block:: cpp
+
+   
+   
+   #include "picea-mlir/Dialect/Base2/IR/Base2Base.h"
+   
+   #include "picea-mlir/Dialect/Base2/Interfaces/BitSequenceAttrInterface.h"
+   #include "picea-mlir/Dialect/Base2/Interfaces/BitSequenceTypeInterface.h"
+   
+   using namespace mlir;
+   using namespace mlir::base2;
+   
+   //===- Generated implementation -------------------------------------------===//
+   
+   #include "picea-mlir/Dialect/Base2/IR/Base2Base.cpp.inc"
+   
+   //===----------------------------------------------------------------------===//
+   
+   //===----------------------------------------------------------------------===//
+   // Base2Dialect
+   //===----------------------------------------------------------------------===//
+   
+   void Base2Dialect::initialize()
+   {
+       registerOps();
+       registerTypes();
+       registerAttributes();
+   
+       // Make built-in integer and float types and attributes participate in
+       // the BitSequenceType / BitSequenceAttr interfaces.
+       registerBitSequenceTypeModels(*getContext());
+       registerBitSequenceAttrModels(*getContext());
+   }

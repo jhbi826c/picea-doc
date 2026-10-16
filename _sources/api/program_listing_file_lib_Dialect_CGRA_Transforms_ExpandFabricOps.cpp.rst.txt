@@ -1,0 +1,271 @@
+
+.. _program_listing_file_lib_Dialect_CGRA_Transforms_ExpandFabricOps.cpp:
+
+Program Listing for File ExpandFabricOps.cpp
+============================================
+
+|exhale_lsh| :ref:`Return to documentation for file <file_lib_Dialect_CGRA_Transforms_ExpandFabricOps.cpp>` (``lib/Dialect/CGRA/Transforms/ExpandFabricOps.cpp``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. code-block:: cpp
+
+   
+   
+   //===- ExpandFabricOps.cpp - div/rem/math -> fabric ALU sequences ---------===//
+   //
+   // The fabric ALU realises {add, sub, mul, shl, shr, and, or, xor} plus a
+   // compare against zero and a mux. This pass expands two families that would
+   // otherwise keep their whole loop on the host, into ops --export-loop-dfg
+   // already emits.
+   //
+   // Divide/remainder by a power-of-two constant (width-generic, m = 2^k - 1):
+   //   divui x -> x >>u k                 remui x -> x & m
+   //   divsi x -> (x + bias) >>s k        remsi x -> x - ((x + bias) & ~m)
+   //   floordivsi x -> x >>s k            ceildivsi x -> (x >>s k) + bump
+   //   ceildivui  x -> (x >>u k) + bump
+   //   bias = (x >>s N-1) >>u (N-k)       bump = ((x & m) + m) >>u k
+   // A negative divisor is the positive case with the quotient negated. A
+   // non-power-of-two divisor is declined.
+   //
+   // math integer intrinsics (32-bit only):
+   //   absi x -> (x ^ s) - s, s = x >>s 31    ctpop -> SWAR    ctlz/cttz -> via
+   //   ctpop
+   //
+   // Rationale, FU costs and the exactness argument: docs/guides/cgra.md.
+   //
+   //===----------------------------------------------------------------------===//
+   
+   #include "mlir/Dialect/Arith/IR/Arith.h"
+   #include "mlir/Dialect/Math/IR/Math.h"
+   #include "mlir/IR/Builders.h"
+   #include "mlir/Pass/Pass.h"
+   #include "picea-mlir/Dialect/CGRA/Transforms/CGRAAnalysisUtils.h"
+   #include "picea-mlir/Dialect/CGRA/Transforms/Passes.h"
+   
+   #include "llvm/ADT/STLExtras.h"
+   #include "llvm/ADT/SmallVector.h"
+   
+   using namespace mlir;
+   
+   namespace {
+   
+   struct Emitter {
+       OpBuilder b;
+       Location loc;
+       IntegerType ty;
+   
+       Emitter(Operation* op)
+               : b(op),
+                 loc(op->getLoc()),
+                 ty(cast<IntegerType>(
+                     getElementTypeOrSelf(op->getResultTypes()[0])))
+       {}
+   
+       unsigned width() const { return ty.getWidth(); }
+   
+       Value k(int64_t v)
+       { return arith::ConstantOp::create(b, loc, b.getIntegerAttr(ty, v)); }
+       Value kAP(const llvm::APInt &v)
+       { return arith::ConstantOp::create(b, loc, b.getIntegerAttr(ty, v)); }
+       Value add(Value x, Value y) { return arith::AddIOp::create(b, loc, x, y); }
+       Value sub(Value x, Value y) { return arith::SubIOp::create(b, loc, x, y); }
+       Value mul(Value x, Value y) { return arith::MulIOp::create(b, loc, x, y); }
+       Value andi(Value x, Value y) { return arith::AndIOp::create(b, loc, x, y); }
+       Value ori(Value x, Value y) { return arith::OrIOp::create(b, loc, x, y); }
+       Value xori(Value x, Value y) { return arith::XOrIOp::create(b, loc, x, y); }
+       Value shl(Value x, int64_t n)
+       { return arith::ShLIOp::create(b, loc, x, k(n)); }
+       Value shrs(Value x, int64_t n)
+       { return arith::ShRSIOp::create(b, loc, x, k(n)); }
+       Value shru(Value x, int64_t n)
+       { return arith::ShRUIOp::create(b, loc, x, k(n)); }
+       Value neg(Value x) { return sub(k(0), x); }
+   
+       Value truncBias(Value x, unsigned kk)
+       { return shru(shrs(x, width() - 1), width() - kk); }
+   
+       Value ceilBump(Value x, unsigned kk)
+       {
+           Value m = kAP(llvm::APInt::getLowBitsSet(width(), kk));
+           return shru(add(andi(x, m), m), kk);
+       }
+   };
+   
+   //===- 1. Divide / remainder by a power of two ----------------------------===//
+   
+   // Expands one div/rem op, or returns null if its divisor is not a power-of-two
+   // constant (the caller then leaves the op alone).
+   static Value expandDivRem(Operation* op)
+   {
+       auto d = cgra::fabricPow2Divisor(op);
+       if (!d) return nullptr;
+   
+       Emitter e(op);
+       Value x = op->getOperand(0);
+       unsigned kk = d->k, N = e.width();
+   
+       // Divisor +-1: the quotient is +-x and the remainder is 0, with no shift to
+       // build (and `truncBias` would shift by N, which is undefined).
+       if (kk == 0) {
+           if (isa<arith::RemSIOp, arith::RemUIOp>(op)) return e.k(0);
+           return d->negative ? e.neg(x) : x;
+       }
+       llvm::APInt mask = llvm::APInt::getLowBitsSet(N, kk); // 2^k - 1
+   
+       if (isa<arith::DivUIOp>(op)) return e.shru(x, kk);
+       if (isa<arith::RemUIOp>(op)) return e.andi(x, e.kAP(mask));
+       // A shift already rounds toward -inf, so floor is the shift itself and ceil
+       // is the shift plus one wherever the division was not exact.
+       if (isa<arith::FloorDivSIOp>(op)) return e.shrs(x, kk);
+       if (isa<arith::CeilDivSIOp>(op))
+           return e.add(e.shrs(x, kk), e.ceilBump(x, kk));
+       if (isa<arith::CeilDivUIOp>(op))
+           return e.add(e.shru(x, kk), e.ceilBump(x, kk));
+   
+       Value bias = e.truncBias(x, kk);
+       if (isa<arith::DivSIOp>(op)) {
+           Value q = e.shrs(e.add(x, bias), kk);
+           return d->negative ? e.neg(q) : q;
+       }
+       // remsi: x - trunc(x/2^k)*2^k, with the multiply folded into the mask. The
+       // divisor's SIGN does not reach the remainder (C: `x % -8 == x % 8`).
+       Value floored = e.andi(e.add(x, bias), e.kAP(~mask));
+       return e.sub(x, floored);
+   }
+   
+   //===- 2. math integer intrinsics -----------------------------------------===//
+   
+   // Population count of a 32-bit value: the classic SWAR halve-and-add followed
+   // by the 0x01010101 multiply that sums the four byte-lane counts into the top
+   // byte.
+   static Value emitCtPop(Emitter &e, Value x)
+   {
+       Value m1 = e.k(0x55555555), m2 = e.k(0x33333333), m4 = e.k(0x0F0F0F0F);
+       x = e.sub(x, e.andi(e.shru(x, 1), m1));
+       x = e.add(e.andi(x, m2), e.andi(e.shru(x, 2), m2));
+       x = e.andi(e.add(x, e.shru(x, 4)), m4);
+       return e.shru(e.mul(x, e.k(0x01010101)), 24);
+   }
+   
+   // Expands one math intrinsic, or returns null if this pass does not handle it.
+   static Value expandMath(Operation* op)
+   {
+       if (!cgra::isFabricExpandableMathOp(op)) return nullptr;
+   
+       Emitter e(op);
+       Value x = op->getOperand(0);
+   
+       // abs(x) = (x ^ s) - s with s = x >>s N-1 (0 or -1): for x >= 0 this is x,
+       // for x < 0 it is ~x + 1. Branch-free, and no compare unit is consumed.
+       if (isa<math::AbsIOp>(op)) {
+           Value s = e.shrs(x, e.width() - 1);
+           return e.sub(e.xori(x, s), s);
+       }
+       if (isa<math::CtPopOp>(op)) return emitCtPop(e, x);
+       if (isa<math::CountLeadingZerosOp>(op)) {
+           // Smear the highest set bit down over every lower bit, so the leading
+           // zeros are the only zeros left, then count the ones. ctlz(0) = 32 - 0
+           // = 32.
+           for (int s : {1, 2, 4, 8, 16}) x = e.ori(x, e.shru(x, s));
+           return e.sub(e.k(32), emitCtPop(e, x));
+       }
+       // cttz(x) = ctpop((x & -x) - 1): `x & -x` isolates the lowest set bit, and
+       // subtracting one turns it into a mask of exactly the trailing zeros.
+       // cttz(0) = ctpop(0 - 1) = ctpop(~0) = 32.
+       Value lowest = e.andi(x, e.neg(x));
+       return emitCtPop(e, e.sub(lowest, e.k(1)));
+   }
+   
+   class CGRAExpandFabricOpsPass
+           : public PassWrapper<CGRAExpandFabricOpsPass, OperationPass<ModuleOp>> {
+   public:
+       MLIR_DEFINE_EXPLICIT_INTERNAL_INLINE_TYPE_ID(CGRAExpandFabricOpsPass)
+   
+       StringRef getArgument() const final { return "expand-fabric-ops"; }
+       StringRef getDescription() const final
+       {
+           return "Expand power-of-two divide/remainder and math integer "
+                  "intrinsics "
+                  "into fabric-native ALU sequences";
+       }
+   
+       void getDependentDialects(DialectRegistry &registry) const override
+       { registry.insert<arith::ArithDialect, math::MathDialect>(); }
+   
+       // arith.shrsi -> logical shift + sign correction.
+       //
+       // The fabric has NO arithmetic right shift: FU_data_superpolyvalent.sv
+       // declares `din_1_i` UNSIGNED, so opcode 5 (`>>>`) and opcode 4 (`>>`) are
+       // the same instruction. The identity is `x >>s n == ((x >>u n) ^ sb) - sb`
+       // with `sb = 1 << (31 - n)`; with a RUNTIME amount `sb` must be computed
+       // too.
+       //
+       // This belongs HERE, with the other "the ALU cannot do this, emit a
+       // sequence that can" rewrites, and not in --export-loop-dfg where it used
+       // to live. Doing it in the exporter meant the SAME cost was restated in
+       // three places — the exporter synthesised the nodes, --partition-cgra-dfg
+       // re-declared them as 3 (or 5) FUs, and the deadlock analysis weighted
+       // depth by a third copy — and they drifted: the analysis counted MLIR ops,
+       // so a depth-3 skew looked like depth 1 and it missed the very
+       // configurations it was written for. Expanding in the IR makes the exporter
+       // a 1:1 translation, deletes both cost restatements, and brings the rewrite
+       // under src/tests/fabric_equiv/run.sh, which compares before/after over ~4M
+       // inputs.
+       Value expandShrSI(Operation* op)
+       {
+           auto sr = dyn_cast<arith::ShRSIOp>(op);
+           if (!sr) return {};
+           Emitter e(sr);
+           Value x = sr.getLhs(), n = sr.getRhs();
+           APInt c;
+           if (matchPattern(n, m_ConstantInt(&c))) {
+               int64_t v = c.getSExtValue();
+               if (v <= 0 || v >= 32) return {}; // 0 and out-of-range: leave alone
+               int64_t sb = int64_t(1) << (31 - v);
+               Value t = e.shru(x, v);
+               return e.sub(e.xori(t, e.k(sb)), e.k(sb));
+           }
+           // Runtime amount: sb = 1 << (31 - n).
+           Value t = arith::ShRUIOp::create(e.b, e.loc, x, n);
+           Value m = arith::SubIOp::create(e.b, e.loc, e.k(31), n);
+           Value sb = arith::ShLIOp::create(e.b, e.loc, e.k(1), m);
+           return e.sub(e.xori(t, sb), sb);
+       }
+   
+       void runOnOperation() override
+       {
+           // To FIXPOINT, not one pass: the div/rem and math expansions themselves
+           // emit arith.shrsi (the `shrs` helper builds one for a sign spill), so
+           // a single collect-then-rewrite leaves those behind — and since the
+           // fabric shift FU is logical, an un-expanded one would silently
+           // zero-fill for negative values. The exporter now hard-errors on a
+           // surviving shrsi, which is what caught this. Terminates: shrsi expands
+           // to shru/xori/subi, none of which is expandable.
+           for (unsigned round = 0; round < 8; ++round) {
+               SmallVector<Operation*> work;
+               getOperation().walk([&](Operation* op) {
+                   if (cgra::fabricPow2Divisor(op)
+                       || cgra::isFabricExpandableMathOp(op)
+                       || isa<arith::ShRSIOp>(op))
+                       work.push_back(op);
+               });
+               bool changed = false;
+               for (Operation* op : work) {
+                   Value rep = expandDivRem(op);
+                   if (!rep) rep = expandMath(op);
+                   if (!rep) rep = expandShrSI(op);
+                   if (!rep) continue;
+                   op->getResult(0).replaceAllUsesWith(rep);
+                   op->erase();
+                   changed = true;
+               }
+               if (!changed) break;
+           }
+       }
+   };
+   
+   } // namespace
+   
+   std::unique_ptr<mlir::Pass> cgra::createCGRAExpandFabricOpsPass()
+   { return std::make_unique<CGRAExpandFabricOpsPass>(); }

@@ -1,0 +1,62 @@
+
+.. _program_listing_file_build_include_picea-mlir_Dialect_Base2_IR_Base2Types.h.inc:
+
+Program Listing for File Base2Types.h.inc
+=========================================
+
+|exhale_lsh| :ref:`Return to documentation for file <file_build_include_picea-mlir_Dialect_Base2_IR_Base2Types.h.inc>` (``build/include/picea-mlir/Dialect/Base2/IR/Base2Types.h.inc``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. code-block:: cpp
+
+   /*===- TableGen'erated file -------------------------------------*- C++ -*-===*\
+   |*                                                                            *|
+   |* TypeDef Declarations                                                       *|
+   |*                                                                            *|
+   |* Automatically generated file, do not edit!                                 *|
+   |*                                                                            *|
+   \*===----------------------------------------------------------------------===*/
+   
+   #ifdef GET_TYPEDEF_CLASSES
+   #undef GET_TYPEDEF_CLASSES
+   
+   
+   namespace mlir {
+   class AsmParser;
+   class AsmPrinter;
+   } // namespace mlir
+   namespace mlir::base2 {
+   
+   class FixedType;
+   namespace detail {
+   
+   struct FixedTypeStorage;
+   
+   } // namespace detail
+   class FixedType : public ::mlir::Type::TypeBase<FixedType, ::mlir::Type, detail::FixedTypeStorage, ::mlir::base2::BitSequenceType::Trait, ::mlir::MemRefElementTypeInterface::Trait> {
+   public:
+     using Base::Base;
+     //===------------------------------------------------------------------===//
+     // BitSequenceType Methods
+     //===------------------------------------------------------------------===//
+   
+     unsigned getBitWidth() const;
+     static constexpr ::llvm::StringLiteral name = "base2.fixed";
+     static constexpr ::llvm::StringLiteral dialectName = "base2";
+     static FixedType get(::mlir::MLIRContext *context, unsigned integerBits, unsigned fractionalBits);
+     static constexpr ::llvm::StringLiteral getMnemonic() {
+       return {"fixed"};
+     }
+   
+     static ::mlir::Type parse(::mlir::AsmParser &odsParser);
+     void print(::mlir::AsmPrinter &odsPrinter) const;
+     unsigned getIntegerBits() const;
+     unsigned getFractionalBits() const;
+   };
+   
+   } // namespace mlir::base2
+   MLIR_DECLARE_EXPLICIT_TYPE_ID(::mlir::base2::FixedType)
+   
+   #endif // GET_TYPEDEF_CLASSES
+   

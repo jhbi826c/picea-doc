@@ -1,0 +1,41 @@
+
+.. _program_listing_file_lib_Target_EmitCToLaksaRef_TranslationRegistration.cpp:
+
+Program Listing for File TranslationRegistration.cpp
+====================================================
+
+|exhale_lsh| :ref:`Return to documentation for file <file_lib_Target_EmitCToLaksaRef_TranslationRegistration.cpp>` (``lib/Target/EmitCToLaksaRef/TranslationRegistration.cpp``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. code-block:: cpp
+
+   
+   
+   #include "mlir/Dialect/EmitC/IR/EmitC.h"
+   #include "mlir/Tools/mlir-translate/Translation.h"
+   #include "picea-mlir/Target/EmitCToLaksaRef/LaksaRefEmitter.h"
+   
+   using namespace mlir;
+   
+   namespace mlir {
+   
+   //===----------------------------------------------------------------------===//
+   // Translation registration
+   //===----------------------------------------------------------------------===//
+   
+   void registerEmitCToLaksaRefTranslation()
+   {
+       TranslateFromMLIRRegistration reg(
+           "emitc-to-laksa-ref",
+           "translate the emitc IR of the scalar reference to a C program "
+           "checking the board's output against it",
+           [](ModuleOp op, raw_ostream &output) {
+               return picea::translateEmitCToLaksaRef(op, output);
+           },
+           [](DialectRegistry &registry) {
+               registry.insert<emitc::EmitCDialect>();
+           });
+   }
+   
+   } // namespace mlir

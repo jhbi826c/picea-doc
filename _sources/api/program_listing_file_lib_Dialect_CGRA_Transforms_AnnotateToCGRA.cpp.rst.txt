@@ -1,0 +1,190 @@
+
+.. _program_listing_file_lib_Dialect_CGRA_Transforms_AnnotateToCGRA.cpp:
+
+Program Listing for File AnnotateToCGRA.cpp
+===========================================
+
+|exhale_lsh| :ref:`Return to documentation for file <file_lib_Dialect_CGRA_Transforms_AnnotateToCGRA.cpp>` (``lib/Dialect/CGRA/Transforms/AnnotateToCGRA.cpp``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. code-block:: cpp
+
+   
+   
+   #include "mlir/Dialect/Affine/IR/AffineOps.h"
+   #include "mlir/Dialect/Arith/IR/Arith.h"
+   #include "mlir/Dialect/Func/IR/FuncOps.h"
+   #include "mlir/IR/IRMapping.h"
+   #include "mlir/Pass/Pass.h"
+   #include "picea-mlir/Dialect/CGRA/IR/CGRA.h"
+   #include "picea-mlir/Dialect/CGRA/Transforms/CGRAAnalysisUtils.h"
+   #include "picea-mlir/Dialect/CGRA/Transforms/Passes.h"
+   
+   #include "llvm/ADT/SetVector.h"
+   
+   using namespace mlir;
+   
+   namespace {
+   struct CGRAAnnotateToCGRAPass : public PassWrapper<
+                                       CGRAAnnotateToCGRAPass,
+                                       OperationPass<func::FuncOp>> {
+   
+       MLIR_DEFINE_EXPLICIT_INTERNAL_INLINE_TYPE_ID(CGRAAnnotateToCGRAPass)
+   
+       StringRef getArgument() const final { return "annotate-to-cgra"; }
+       StringRef getDescription() const final
+       {
+           return "Wrap affine.for loops in cgra.deploy regions for CGRA "
+                  "offloading";
+       }
+   
+       void getDependentDialects(mlir::DialectRegistry &registry) const override
+       { registry.insert<cgra::CGRADialect>(); }
+   
+       // A loop is a CGRA kernel if it both reads and writes memory — it streams
+       // data in, computes, and streams a result out. This keeps the real kernel
+       // shapes (reductions like `s += a[i]*b[i]`, elementwise maps like `b[i] =
+       // a[i]+1`, `a[i] += b[i]`, and in-place self-maps like `a[i] = relu(a[i])`)
+       // while leaving on the host the two shapes that only surround a kernel:
+       //   * initialisation loops that only store (e.g. a[i] = i) — no load;
+       //   * printf/dump loops that only load an already-computed array — no
+       //   store.
+       // An in-place self-map (the loaded array is also the stored one, no
+       // distinct input) is a valid streamed kernel on STRELA: the fabric reads
+       // the array on an IMN and writes it back on an OMN (the stream is
+       // classified `inout` downstream by --annotate-dispatch-io). It is offloaded
+       // too.
+       static bool hasComputation(affine::AffineForOp forOp)
+       {
+           bool stored = false, loaded = false;
+           forOp.walk([&](affine::AffineStoreOp) { stored = true; });
+           forOp.walk([&](affine::AffineLoadOp) { loaded = true; });
+           if (!stored || !loaded)
+               return false; // needs both a genuine input read and an output write
+           // …and something to actually COMPUTE. A pure copy (`b[i] = a[i]`, or
+           // the gather that --conv-to-im2col emits) has no arithmetic: offloading
+           // it burns a configuration to move data the core could copy directly.
+           // It also breaks the pipeline, because --export-loop-dfg refuses to
+           // emit a DFG for a nest with no arith op (isComputationLoop), so the
+           // driver would emit a config whose bitstream never exists. Keep the two
+           // in agreement. THE shared predicate — the same one --export-loop-dfg
+           // gates on, so a nest that becomes a cgra.deploy here is guaranteed to
+           // become a .dot there. This was a second, independent copy of the arith
+           // check and it had drifted: the exporter also refused a nest containing
+           // an LLVM::CallOp and this did not, so a deploy could be created that
+           // never produced a bitstream. Take the MORE RESTRICTIVE condition.
+           return cgra::hasFabricArith(forOp) && !cgra::hasHostCall(forOp);
+       }
+   
+       void runOnOperation() override
+       {
+           func::FuncOp funcOp = getOperation();
+   
+           // Only wrap the outermost affine.for of each maximal loop nest: collect
+           // every affine.for that does not itself sit inside another affine.for.
+           // Cloning the outermost loop pulls its entire nested body along with
+           // it, so a multi-level nest ends up under a single cgra.deploy instead
+           // of one nested cgra.deploy per loop level. Collect first, then mutate,
+           // so erasing outer loops doesn't invalidate the walk.
+           llvm::SmallVector<affine::AffineForOp> topLevelLoops;
+           funcOp.walk([&](affine::AffineForOp forOp) {
+               if (!forOp->getParentOfType<affine::AffineForOp>()
+                   && hasComputation(forOp))
+                   topLevelLoops.push_back(forOp);
+           });
+   
+           for (affine::AffineForOp forOp : topLevelLoops) {
+               // Offloadability gate. The CGRA legalization passes
+               // (--legalize-to-i32,
+               // --affine-to-cgra, --normalize-cgra-compare,
+               // --predicated-store-to-select) rewrite i8/i64 arith, max/min,
+               // ext/trunc and unsupported compares into fabric-native ops. They
+               // run WHOLE-MODULE — in the shipped pipelines BEFORE this pass — so
+               // those ops are usually already lowered by the time we get here;
+               // the classification is deliberately order-independent (it treats
+               // them as Ok either way). Only reject an op that NO CGRA transform
+               // can ever turn into a fabric op (float, integer divide/remainder,
+               // math, a call): that loop can never run on the fabric, so it is a
+               // hard error and is left on the host. An unrecognised op is a
+               // warning only (it may still be handled downstream, or be harmless)
+               // and the loop is offloaded as before.
+               Operation* unlowerable = nullptr;
+               forOp.walk([&](Operation* op) {
+                   if (cgra::classifyFabricOp(op)
+                       == cgra::FabricOpSupport::Unlowerable) {
+                       unlowerable = op;
+                       return WalkResult::interrupt();
+                   }
+                   return WalkResult::advance();
+               });
+               if (unlowerable) {
+                   unlowerable->emitError("annotate-to-cgra: '")
+                       << unlowerable->getName().getStringRef()
+                       << "' has no STRELA fabric equivalent and cannot be "
+                          "legalized to one; "
+                          "the enclosing loop is not offloadable (left on the "
+                          "host)";
+                   signalPassFailure();
+                   continue; // do not wrap it in cgra.deploy
+               }
+               forOp.walk([&](Operation* op) {
+                   if (cgra::classifyFabricOp(op)
+                       == cgra::FabricOpSupport::Unknown)
+                       op->emitWarning("annotate-to-cgra: '")
+                           << op->getName().getStringRef()
+                           << "' is not known to be CGRA-mappable (e.g. an "
+                              "unsigned compare — "
+                              "the fabric comparator is signed >0/==0 only — or "
+                              "an unrecognised "
+                              "op); offloading anyway, verify it survives "
+                              "--export-loop-dfg and "
+                              "the mapper";
+               });
+   
+               OpBuilder builder(forOp);
+   
+               // The kernel's streams are the memref values the loop uses that are
+               // defined outside it (function arguments, allocas, globals). They
+               // become explicit operands of cgra.deploy, and the region receives
+               // them as block arguments, so the offloaded data flow is explicit
+               // rather than captured.
+               llvm::SetVector<Value> streams;
+               forOp.walk([&](Operation* op) {
+                   for (Value v : op->getOperands())
+                       if (isa<MemRefType>(v.getType())) {
+                           Operation* d = v.getDefiningOp();
+                           if (!d || !forOp->isAncestor(d)) streams.insert(v);
+                       }
+               });
+               SmallVector<Value> streamVec(streams.begin(), streams.end());
+   
+               auto deployOp = cgra::DeployOp::create(
+                   builder,
+                   forOp.getLoc(),
+                   streamVec,
+                   forOp.getResultTypes());
+   
+               Block* bodyBlock = &deployOp.getBody().front();
+               // Clone the loop into the region, rewriting each stream use to the
+               // matching block argument (non-memref captures such as constants
+               // are left as-is).
+               IRMapping map;
+               for (auto [i, s] : llvm::enumerate(streamVec))
+                   map.map(s, bodyBlock->getArgument(i));
+               OpBuilder bodyBuilder(bodyBlock, bodyBlock->begin());
+               Operation* clonedOp = bodyBuilder.clone(*forOp.getOperation(), map);
+               cgra::YieldOp::create(
+                   bodyBuilder,
+                   forOp.getLoc(),
+                   clonedOp->getResults());
+   
+               forOp.replaceAllUsesWith(deployOp.getResults());
+               forOp.erase();
+           }
+       }
+   };
+   } // namespace
+   
+   std::unique_ptr<mlir::Pass> mlir::cgra::createCGRAAnnotateToCGRAPass()
+   { return std::make_unique<CGRAAnnotateToCGRAPass>(); }

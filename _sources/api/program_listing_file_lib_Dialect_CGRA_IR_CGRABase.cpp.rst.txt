@@ -1,0 +1,48 @@
+
+.. _program_listing_file_lib_Dialect_CGRA_IR_CGRABase.cpp:
+
+Program Listing for File CGRABase.cpp
+=====================================
+
+|exhale_lsh| :ref:`Return to documentation for file <file_lib_Dialect_CGRA_IR_CGRABase.cpp>` (``lib/Dialect/CGRA/IR/CGRABase.cpp``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. code-block:: cpp
+
+   
+   
+   #include "mlir/Dialect/Arith/IR/Arith.h"
+   #include "mlir/IR/Builders.h"
+   #include "mlir/IR/OpImplementation.h"
+   #include "picea-mlir/Dialect/CGRA/IR/CGRA.h"
+   
+   using namespace mlir;
+   using namespace mlir::cgra;
+   
+   //===----------------------------------------------------------------------===//
+   // CGRA dialect.
+   //===----------------------------------------------------------------------===//
+   
+   #include "picea-mlir/Dialect/CGRA/IR/CGRABase.cpp.inc"
+   
+   void CGRADialect::initialize()
+   {
+       addOperations<
+   #define GET_OP_LIST
+   #include "picea-mlir/Dialect/CGRA/IR/CGRAOps.cpp.inc"
+           >();
+   }
+   
+   mlir::Operation* CGRADialect::materializeConstant(
+       mlir::OpBuilder &builder,
+       mlir::Attribute value,
+       mlir::Type type,
+       mlir::Location loc)
+   {
+       return mlir::arith::ConstantOp::create(
+           builder,
+           loc,
+           type,
+           mlir::cast<mlir::DenseElementsAttr>(value));
+   }

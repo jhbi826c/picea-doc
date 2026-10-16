@@ -1,0 +1,626 @@
+
+.. _program_listing_file_build_include_picea-mlir_Dialect_EmitHLS_EmitHLSEnums.h.inc:
+
+Program Listing for File EmitHLSEnums.h.inc
+===========================================
+
+|exhale_lsh| :ref:`Return to documentation for file <file_build_include_picea-mlir_Dialect_EmitHLS_EmitHLSEnums.h.inc>` (``build/include/picea-mlir/Dialect/EmitHLS/EmitHLSEnums.h.inc``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. code-block:: cpp
+
+   /*===- TableGen'erated file -------------------------------------*- C++ -*-===*\
+   |*                                                                            *|
+   |* Enum Utility Declarations                                                  *|
+   |*                                                                            *|
+   |* Automatically generated file, do not edit!                                 *|
+   |* From: EmitHLSEnums.td                                                      *|
+   |*                                                                            *|
+   \*===----------------------------------------------------------------------===*/
+   
+   namespace mlir::emithls {
+   
+   // #pragma HLS array_partition type=?
+   enum class ArrayPartitionType : uint32_t {
+     cyclic = 0,
+     block = 1,
+     complete = 2,
+   };
+   
+   ::std::optional<ArrayPartitionType> symbolizeArrayPartitionType(uint32_t);
+   ::llvm::StringRef stringifyArrayPartitionType(ArrayPartitionType);
+   ::std::optional<ArrayPartitionType> symbolizeArrayPartitionType(::llvm::StringRef);
+   inline constexpr unsigned getMaxEnumValForArrayPartitionType() {
+     return 2;
+   }
+   
+   
+   inline ::llvm::StringRef stringifyEnum(ArrayPartitionType enumValue) {
+     return stringifyArrayPartitionType(enumValue);
+   }
+   
+   template <typename EnumType>
+   ::std::optional<EnumType> symbolizeEnum(::llvm::StringRef);
+   
+   template <>
+   inline ::std::optional<ArrayPartitionType> symbolizeEnum<ArrayPartitionType>(::llvm::StringRef str) {
+     return symbolizeArrayPartitionType(str);
+   }
+   
+   class ArrayPartitionTypeAttr : public ::mlir::IntegerAttr {
+   public:
+     using ValueType = ArrayPartitionType;
+     using ::mlir::IntegerAttr::IntegerAttr;
+     static bool classof(::mlir::Attribute attr);
+     static ArrayPartitionTypeAttr get(::mlir::MLIRContext *context, ArrayPartitionType val);
+     ArrayPartitionType getValue() const;
+   };
+   
+   } // namespace mlir::emithls
+   
+   namespace mlir {
+   template <typename T, typename>
+   struct FieldParser;
+   
+   template<>
+   struct FieldParser<::mlir::emithls::ArrayPartitionType, ::mlir::emithls::ArrayPartitionType> {
+     template <typename ParserT>
+     static FailureOr<::mlir::emithls::ArrayPartitionType> parse(ParserT &parser) {
+       // Parse the keyword/string containing the enum.
+       std::string enumKeyword;
+       auto loc = parser.getCurrentLocation();
+       if (failed(parser.parseOptionalKeywordOrString(&enumKeyword)))
+         return parser.emitError(loc, "expected keyword for #pragma HLS array_partition type=?");
+   
+       // Symbolize the keyword.
+       if (::std::optional<::mlir::emithls::ArrayPartitionType> attr = ::mlir::emithls::symbolizeEnum<::mlir::emithls::ArrayPartitionType>(enumKeyword))
+         return *attr;
+       return parser.emitError(loc, "expected one of [cyclic, block, complete] for #pragma HLS array_partition type=?, got: ") << enumKeyword;
+     }
+   };
+   
+   template<>
+   struct FieldParser<std::optional<::mlir::emithls::ArrayPartitionType>, std::optional<::mlir::emithls::ArrayPartitionType>> {
+     template <typename ParserT>
+     static FailureOr<std::optional<::mlir::emithls::ArrayPartitionType>> parse(ParserT &parser) {
+       // Parse the keyword/string containing the enum.
+       std::string enumKeyword;
+       auto loc = parser.getCurrentLocation();
+       if (failed(parser.parseOptionalKeywordOrString(&enumKeyword, {"cyclic", "block", "complete"})))
+         return std::optional<::mlir::emithls::ArrayPartitionType>{};
+   
+       // Symbolize the keyword.
+       if (::std::optional<::mlir::emithls::ArrayPartitionType> attr = ::mlir::emithls::symbolizeEnum<::mlir::emithls::ArrayPartitionType>(enumKeyword))
+         return attr;
+       return parser.emitError(loc, "expected one of [cyclic, block, complete] for #pragma HLS array_partition type=?, got: ") << enumKeyword;
+     }
+   };
+   } // namespace mlir
+   
+   namespace llvm {
+   inline ::llvm::raw_ostream &operator<<(::llvm::raw_ostream &p, ::mlir::emithls::ArrayPartitionType value) {
+     auto valueStr = stringifyEnum(value);
+     return p << valueStr;
+   }
+   } // namespace llvm
+   
+   namespace llvm {
+   template<> struct DenseMapInfo<::mlir::emithls::ArrayPartitionType> {
+     using StorageInfo = ::llvm::DenseMapInfo<uint32_t>;
+   
+     static unsigned getHashValue(const ::mlir::emithls::ArrayPartitionType &val) {
+       return StorageInfo::getHashValue(static_cast<uint32_t>(val));
+     }
+   
+     static bool isEqual(const ::mlir::emithls::ArrayPartitionType &lhs, const ::mlir::emithls::ArrayPartitionType &rhs) {
+       return lhs == rhs;
+     }
+   };
+   }
+   
+   namespace mlir::emithls {
+   
+   // #pragma HLS bind_storage impl=?
+   enum class BindStorageImpl : uint32_t {
+     bram = 0,
+     lutram = 1,
+     srl = 2,
+   };
+   
+   ::std::optional<BindStorageImpl> symbolizeBindStorageImpl(uint32_t);
+   ::llvm::StringRef stringifyBindStorageImpl(BindStorageImpl);
+   ::std::optional<BindStorageImpl> symbolizeBindStorageImpl(::llvm::StringRef);
+   inline constexpr unsigned getMaxEnumValForBindStorageImpl() {
+     return 2;
+   }
+   
+   
+   inline ::llvm::StringRef stringifyEnum(BindStorageImpl enumValue) {
+     return stringifyBindStorageImpl(enumValue);
+   }
+   
+   template <typename EnumType>
+   ::std::optional<EnumType> symbolizeEnum(::llvm::StringRef);
+   
+   template <>
+   inline ::std::optional<BindStorageImpl> symbolizeEnum<BindStorageImpl>(::llvm::StringRef str) {
+     return symbolizeBindStorageImpl(str);
+   }
+   
+   class BindStorageImplAttr : public ::mlir::IntegerAttr {
+   public:
+     using ValueType = BindStorageImpl;
+     using ::mlir::IntegerAttr::IntegerAttr;
+     static bool classof(::mlir::Attribute attr);
+     static BindStorageImplAttr get(::mlir::MLIRContext *context, BindStorageImpl val);
+     BindStorageImpl getValue() const;
+   };
+   
+   } // namespace mlir::emithls
+   
+   namespace mlir {
+   template <typename T, typename>
+   struct FieldParser;
+   
+   template<>
+   struct FieldParser<::mlir::emithls::BindStorageImpl, ::mlir::emithls::BindStorageImpl> {
+     template <typename ParserT>
+     static FailureOr<::mlir::emithls::BindStorageImpl> parse(ParserT &parser) {
+       // Parse the keyword/string containing the enum.
+       std::string enumKeyword;
+       auto loc = parser.getCurrentLocation();
+       if (failed(parser.parseOptionalKeywordOrString(&enumKeyword)))
+         return parser.emitError(loc, "expected keyword for #pragma HLS bind_storage impl=?");
+   
+       // Symbolize the keyword.
+       if (::std::optional<::mlir::emithls::BindStorageImpl> attr = ::mlir::emithls::symbolizeEnum<::mlir::emithls::BindStorageImpl>(enumKeyword))
+         return *attr;
+       return parser.emitError(loc, "expected one of [bram, lutram, srl] for #pragma HLS bind_storage impl=?, got: ") << enumKeyword;
+     }
+   };
+   
+   template<>
+   struct FieldParser<std::optional<::mlir::emithls::BindStorageImpl>, std::optional<::mlir::emithls::BindStorageImpl>> {
+     template <typename ParserT>
+     static FailureOr<std::optional<::mlir::emithls::BindStorageImpl>> parse(ParserT &parser) {
+       // Parse the keyword/string containing the enum.
+       std::string enumKeyword;
+       auto loc = parser.getCurrentLocation();
+       if (failed(parser.parseOptionalKeywordOrString(&enumKeyword, {"bram", "lutram", "srl"})))
+         return std::optional<::mlir::emithls::BindStorageImpl>{};
+   
+       // Symbolize the keyword.
+       if (::std::optional<::mlir::emithls::BindStorageImpl> attr = ::mlir::emithls::symbolizeEnum<::mlir::emithls::BindStorageImpl>(enumKeyword))
+         return attr;
+       return parser.emitError(loc, "expected one of [bram, lutram, srl] for #pragma HLS bind_storage impl=?, got: ") << enumKeyword;
+     }
+   };
+   } // namespace mlir
+   
+   namespace llvm {
+   inline ::llvm::raw_ostream &operator<<(::llvm::raw_ostream &p, ::mlir::emithls::BindStorageImpl value) {
+     auto valueStr = stringifyEnum(value);
+     return p << valueStr;
+   }
+   } // namespace llvm
+   
+   namespace llvm {
+   template<> struct DenseMapInfo<::mlir::emithls::BindStorageImpl> {
+     using StorageInfo = ::llvm::DenseMapInfo<uint32_t>;
+   
+     static unsigned getHashValue(const ::mlir::emithls::BindStorageImpl &val) {
+       return StorageInfo::getHashValue(static_cast<uint32_t>(val));
+     }
+   
+     static bool isEqual(const ::mlir::emithls::BindStorageImpl &lhs, const ::mlir::emithls::BindStorageImpl &rhs) {
+       return lhs == rhs;
+     }
+   };
+   }
+   
+   namespace mlir::emithls {
+   
+   // #pragma HLS bind_storage type=?
+   enum class BindStorageType : uint32_t {
+     fifo = 0,
+     ram_1p = 1,
+     ram_2p = 2,
+     rom_1p = 3,
+     rom_2p = 4,
+   };
+   
+   ::std::optional<BindStorageType> symbolizeBindStorageType(uint32_t);
+   ::llvm::StringRef stringifyBindStorageType(BindStorageType);
+   ::std::optional<BindStorageType> symbolizeBindStorageType(::llvm::StringRef);
+   inline constexpr unsigned getMaxEnumValForBindStorageType() {
+     return 4;
+   }
+   
+   
+   inline ::llvm::StringRef stringifyEnum(BindStorageType enumValue) {
+     return stringifyBindStorageType(enumValue);
+   }
+   
+   template <typename EnumType>
+   ::std::optional<EnumType> symbolizeEnum(::llvm::StringRef);
+   
+   template <>
+   inline ::std::optional<BindStorageType> symbolizeEnum<BindStorageType>(::llvm::StringRef str) {
+     return symbolizeBindStorageType(str);
+   }
+   
+   class BindStorageTypeAttr : public ::mlir::IntegerAttr {
+   public:
+     using ValueType = BindStorageType;
+     using ::mlir::IntegerAttr::IntegerAttr;
+     static bool classof(::mlir::Attribute attr);
+     static BindStorageTypeAttr get(::mlir::MLIRContext *context, BindStorageType val);
+     BindStorageType getValue() const;
+   };
+   
+   } // namespace mlir::emithls
+   
+   namespace mlir {
+   template <typename T, typename>
+   struct FieldParser;
+   
+   template<>
+   struct FieldParser<::mlir::emithls::BindStorageType, ::mlir::emithls::BindStorageType> {
+     template <typename ParserT>
+     static FailureOr<::mlir::emithls::BindStorageType> parse(ParserT &parser) {
+       // Parse the keyword/string containing the enum.
+       std::string enumKeyword;
+       auto loc = parser.getCurrentLocation();
+       if (failed(parser.parseOptionalKeywordOrString(&enumKeyword)))
+         return parser.emitError(loc, "expected keyword for #pragma HLS bind_storage type=?");
+   
+       // Symbolize the keyword.
+       if (::std::optional<::mlir::emithls::BindStorageType> attr = ::mlir::emithls::symbolizeEnum<::mlir::emithls::BindStorageType>(enumKeyword))
+         return *attr;
+       return parser.emitError(loc, "expected one of [fifo, ram_1p, ram_2p, rom_1p, rom_2p] for #pragma HLS bind_storage type=?, got: ") << enumKeyword;
+     }
+   };
+   
+   template<>
+   struct FieldParser<std::optional<::mlir::emithls::BindStorageType>, std::optional<::mlir::emithls::BindStorageType>> {
+     template <typename ParserT>
+     static FailureOr<std::optional<::mlir::emithls::BindStorageType>> parse(ParserT &parser) {
+       // Parse the keyword/string containing the enum.
+       std::string enumKeyword;
+       auto loc = parser.getCurrentLocation();
+       if (failed(parser.parseOptionalKeywordOrString(&enumKeyword, {"fifo", "ram_1p", "ram_2p", "rom_1p", "rom_2p"})))
+         return std::optional<::mlir::emithls::BindStorageType>{};
+   
+       // Symbolize the keyword.
+       if (::std::optional<::mlir::emithls::BindStorageType> attr = ::mlir::emithls::symbolizeEnum<::mlir::emithls::BindStorageType>(enumKeyword))
+         return attr;
+       return parser.emitError(loc, "expected one of [fifo, ram_1p, ram_2p, rom_1p, rom_2p] for #pragma HLS bind_storage type=?, got: ") << enumKeyword;
+     }
+   };
+   } // namespace mlir
+   
+   namespace llvm {
+   inline ::llvm::raw_ostream &operator<<(::llvm::raw_ostream &p, ::mlir::emithls::BindStorageType value) {
+     auto valueStr = stringifyEnum(value);
+     return p << valueStr;
+   }
+   } // namespace llvm
+   
+   namespace llvm {
+   template<> struct DenseMapInfo<::mlir::emithls::BindStorageType> {
+     using StorageInfo = ::llvm::DenseMapInfo<uint32_t>;
+   
+     static unsigned getHashValue(const ::mlir::emithls::BindStorageType &val) {
+       return StorageInfo::getHashValue(static_cast<uint32_t>(val));
+     }
+   
+     static bool isEqual(const ::mlir::emithls::BindStorageType &lhs, const ::mlir::emithls::BindStorageType &rhs) {
+       return lhs == rhs;
+     }
+   };
+   }
+   
+   namespace mlir::emithls {
+   
+   // predicate for comparison operation
+   enum class CmpPredicate : uint32_t {
+     eq = 0,
+     ne = 1,
+     lt = 2,
+     le = 3,
+     gt = 4,
+     ge = 5,
+   };
+   
+   ::std::optional<CmpPredicate> symbolizeCmpPredicate(uint32_t);
+   ::llvm::StringRef stringifyCmpPredicate(CmpPredicate);
+   ::std::optional<CmpPredicate> symbolizeCmpPredicate(::llvm::StringRef);
+   inline constexpr unsigned getMaxEnumValForCmpPredicate() {
+     return 5;
+   }
+   
+   
+   inline ::llvm::StringRef stringifyEnum(CmpPredicate enumValue) {
+     return stringifyCmpPredicate(enumValue);
+   }
+   
+   template <typename EnumType>
+   ::std::optional<EnumType> symbolizeEnum(::llvm::StringRef);
+   
+   template <>
+   inline ::std::optional<CmpPredicate> symbolizeEnum<CmpPredicate>(::llvm::StringRef str) {
+     return symbolizeCmpPredicate(str);
+   }
+   
+   class CmpPredicateAttr : public ::mlir::IntegerAttr {
+   public:
+     using ValueType = CmpPredicate;
+     using ::mlir::IntegerAttr::IntegerAttr;
+     static bool classof(::mlir::Attribute attr);
+     static CmpPredicateAttr get(::mlir::MLIRContext *context, CmpPredicate val);
+     CmpPredicate getValue() const;
+   };
+   
+   } // namespace mlir::emithls
+   
+   namespace mlir {
+   template <typename T, typename>
+   struct FieldParser;
+   
+   template<>
+   struct FieldParser<::mlir::emithls::CmpPredicate, ::mlir::emithls::CmpPredicate> {
+     template <typename ParserT>
+     static FailureOr<::mlir::emithls::CmpPredicate> parse(ParserT &parser) {
+       // Parse the keyword/string containing the enum.
+       std::string enumKeyword;
+       auto loc = parser.getCurrentLocation();
+       if (failed(parser.parseOptionalKeywordOrString(&enumKeyword)))
+         return parser.emitError(loc, "expected keyword for predicate for comparison operation");
+   
+       // Symbolize the keyword.
+       if (::std::optional<::mlir::emithls::CmpPredicate> attr = ::mlir::emithls::symbolizeEnum<::mlir::emithls::CmpPredicate>(enumKeyword))
+         return *attr;
+       return parser.emitError(loc, "expected one of [eq, ne, lt, le, gt, ge] for predicate for comparison operation, got: ") << enumKeyword;
+     }
+   };
+   
+   template<>
+   struct FieldParser<std::optional<::mlir::emithls::CmpPredicate>, std::optional<::mlir::emithls::CmpPredicate>> {
+     template <typename ParserT>
+     static FailureOr<std::optional<::mlir::emithls::CmpPredicate>> parse(ParserT &parser) {
+       // Parse the keyword/string containing the enum.
+       std::string enumKeyword;
+       auto loc = parser.getCurrentLocation();
+       if (failed(parser.parseOptionalKeywordOrString(&enumKeyword, {"eq", "ne", "lt", "le", "gt", "ge"})))
+         return std::optional<::mlir::emithls::CmpPredicate>{};
+   
+       // Symbolize the keyword.
+       if (::std::optional<::mlir::emithls::CmpPredicate> attr = ::mlir::emithls::symbolizeEnum<::mlir::emithls::CmpPredicate>(enumKeyword))
+         return attr;
+       return parser.emitError(loc, "expected one of [eq, ne, lt, le, gt, ge] for predicate for comparison operation, got: ") << enumKeyword;
+     }
+   };
+   } // namespace mlir
+   
+   namespace llvm {
+   inline ::llvm::raw_ostream &operator<<(::llvm::raw_ostream &p, ::mlir::emithls::CmpPredicate value) {
+     auto valueStr = stringifyEnum(value);
+     return p << valueStr;
+   }
+   } // namespace llvm
+   
+   namespace llvm {
+   template<> struct DenseMapInfo<::mlir::emithls::CmpPredicate> {
+     using StorageInfo = ::llvm::DenseMapInfo<uint32_t>;
+   
+     static unsigned getHashValue(const ::mlir::emithls::CmpPredicate &val) {
+       return StorageInfo::getHashValue(static_cast<uint32_t>(val));
+     }
+   
+     static bool isEqual(const ::mlir::emithls::CmpPredicate &lhs, const ::mlir::emithls::CmpPredicate &rhs) {
+       return lhs == rhs;
+     }
+   };
+   }
+   
+   namespace mlir::emithls {
+   
+   // fused operator such as `+=`
+   enum class FusedOperator : uint32_t {
+     add = 0,
+     sub = 1,
+     mul = 2,
+   };
+   
+   ::std::optional<FusedOperator> symbolizeFusedOperator(uint32_t);
+   ::llvm::StringRef stringifyFusedOperator(FusedOperator);
+   ::std::optional<FusedOperator> symbolizeFusedOperator(::llvm::StringRef);
+   inline constexpr unsigned getMaxEnumValForFusedOperator() {
+     return 2;
+   }
+   
+   
+   inline ::llvm::StringRef stringifyEnum(FusedOperator enumValue) {
+     return stringifyFusedOperator(enumValue);
+   }
+   
+   template <typename EnumType>
+   ::std::optional<EnumType> symbolizeEnum(::llvm::StringRef);
+   
+   template <>
+   inline ::std::optional<FusedOperator> symbolizeEnum<FusedOperator>(::llvm::StringRef str) {
+     return symbolizeFusedOperator(str);
+   }
+   
+   class FusedOperatorAttr : public ::mlir::IntegerAttr {
+   public:
+     using ValueType = FusedOperator;
+     using ::mlir::IntegerAttr::IntegerAttr;
+     static bool classof(::mlir::Attribute attr);
+     static FusedOperatorAttr get(::mlir::MLIRContext *context, FusedOperator val);
+     FusedOperator getValue() const;
+   };
+   
+   } // namespace mlir::emithls
+   
+   namespace mlir {
+   template <typename T, typename>
+   struct FieldParser;
+   
+   template<>
+   struct FieldParser<::mlir::emithls::FusedOperator, ::mlir::emithls::FusedOperator> {
+     template <typename ParserT>
+     static FailureOr<::mlir::emithls::FusedOperator> parse(ParserT &parser) {
+       // Parse the keyword/string containing the enum.
+       std::string enumKeyword;
+       auto loc = parser.getCurrentLocation();
+       if (failed(parser.parseOptionalKeywordOrString(&enumKeyword)))
+         return parser.emitError(loc, "expected keyword for fused operator such as `+=`");
+   
+       // Symbolize the keyword.
+       if (::std::optional<::mlir::emithls::FusedOperator> attr = ::mlir::emithls::symbolizeEnum<::mlir::emithls::FusedOperator>(enumKeyword))
+         return *attr;
+       return parser.emitError(loc, "expected one of [add, sub, mul] for fused operator such as `+=`, got: ") << enumKeyword;
+     }
+   };
+   
+   template<>
+   struct FieldParser<std::optional<::mlir::emithls::FusedOperator>, std::optional<::mlir::emithls::FusedOperator>> {
+     template <typename ParserT>
+     static FailureOr<std::optional<::mlir::emithls::FusedOperator>> parse(ParserT &parser) {
+       // Parse the keyword/string containing the enum.
+       std::string enumKeyword;
+       auto loc = parser.getCurrentLocation();
+       if (failed(parser.parseOptionalKeywordOrString(&enumKeyword, {"add", "sub", "mul"})))
+         return std::optional<::mlir::emithls::FusedOperator>{};
+   
+       // Symbolize the keyword.
+       if (::std::optional<::mlir::emithls::FusedOperator> attr = ::mlir::emithls::symbolizeEnum<::mlir::emithls::FusedOperator>(enumKeyword))
+         return attr;
+       return parser.emitError(loc, "expected one of [add, sub, mul] for fused operator such as `+=`, got: ") << enumKeyword;
+     }
+   };
+   } // namespace mlir
+   
+   namespace llvm {
+   inline ::llvm::raw_ostream &operator<<(::llvm::raw_ostream &p, ::mlir::emithls::FusedOperator value) {
+     auto valueStr = stringifyEnum(value);
+     return p << valueStr;
+   }
+   } // namespace llvm
+   
+   namespace llvm {
+   template<> struct DenseMapInfo<::mlir::emithls::FusedOperator> {
+     using StorageInfo = ::llvm::DenseMapInfo<uint32_t>;
+   
+     static unsigned getHashValue(const ::mlir::emithls::FusedOperator &val) {
+       return StorageInfo::getHashValue(static_cast<uint32_t>(val));
+     }
+   
+     static bool isEqual(const ::mlir::emithls::FusedOperator &lhs, const ::mlir::emithls::FusedOperator &rhs) {
+       return lhs == rhs;
+     }
+   };
+   }
+   
+   namespace mlir::emithls {
+   
+   // ##pragma HLS HLS pipeline style=?
+   enum class PipelineStyle : uint32_t {
+     stp = 0,
+     flp = 1,
+     frp = 2,
+   };
+   
+   ::std::optional<PipelineStyle> symbolizePipelineStyle(uint32_t);
+   ::llvm::StringRef stringifyPipelineStyle(PipelineStyle);
+   ::std::optional<PipelineStyle> symbolizePipelineStyle(::llvm::StringRef);
+   inline constexpr unsigned getMaxEnumValForPipelineStyle() {
+     return 2;
+   }
+   
+   
+   inline ::llvm::StringRef stringifyEnum(PipelineStyle enumValue) {
+     return stringifyPipelineStyle(enumValue);
+   }
+   
+   template <typename EnumType>
+   ::std::optional<EnumType> symbolizeEnum(::llvm::StringRef);
+   
+   template <>
+   inline ::std::optional<PipelineStyle> symbolizeEnum<PipelineStyle>(::llvm::StringRef str) {
+     return symbolizePipelineStyle(str);
+   }
+   
+   class PipelineStyleAttr : public ::mlir::IntegerAttr {
+   public:
+     using ValueType = PipelineStyle;
+     using ::mlir::IntegerAttr::IntegerAttr;
+     static bool classof(::mlir::Attribute attr);
+     static PipelineStyleAttr get(::mlir::MLIRContext *context, PipelineStyle val);
+     PipelineStyle getValue() const;
+   };
+   
+   } // namespace mlir::emithls
+   
+   namespace mlir {
+   template <typename T, typename>
+   struct FieldParser;
+   
+   template<>
+   struct FieldParser<::mlir::emithls::PipelineStyle, ::mlir::emithls::PipelineStyle> {
+     template <typename ParserT>
+     static FailureOr<::mlir::emithls::PipelineStyle> parse(ParserT &parser) {
+       // Parse the keyword/string containing the enum.
+       std::string enumKeyword;
+       auto loc = parser.getCurrentLocation();
+       if (failed(parser.parseOptionalKeywordOrString(&enumKeyword)))
+         return parser.emitError(loc, "expected keyword for ##pragma HLS HLS pipeline style=?");
+   
+       // Symbolize the keyword.
+       if (::std::optional<::mlir::emithls::PipelineStyle> attr = ::mlir::emithls::symbolizeEnum<::mlir::emithls::PipelineStyle>(enumKeyword))
+         return *attr;
+       return parser.emitError(loc, "expected one of [stp, flp, frp] for ##pragma HLS HLS pipeline style=?, got: ") << enumKeyword;
+     }
+   };
+   
+   template<>
+   struct FieldParser<std::optional<::mlir::emithls::PipelineStyle>, std::optional<::mlir::emithls::PipelineStyle>> {
+     template <typename ParserT>
+     static FailureOr<std::optional<::mlir::emithls::PipelineStyle>> parse(ParserT &parser) {
+       // Parse the keyword/string containing the enum.
+       std::string enumKeyword;
+       auto loc = parser.getCurrentLocation();
+       if (failed(parser.parseOptionalKeywordOrString(&enumKeyword, {"stp", "flp", "frp"})))
+         return std::optional<::mlir::emithls::PipelineStyle>{};
+   
+       // Symbolize the keyword.
+       if (::std::optional<::mlir::emithls::PipelineStyle> attr = ::mlir::emithls::symbolizeEnum<::mlir::emithls::PipelineStyle>(enumKeyword))
+         return attr;
+       return parser.emitError(loc, "expected one of [stp, flp, frp] for ##pragma HLS HLS pipeline style=?, got: ") << enumKeyword;
+     }
+   };
+   } // namespace mlir
+   
+   namespace llvm {
+   inline ::llvm::raw_ostream &operator<<(::llvm::raw_ostream &p, ::mlir::emithls::PipelineStyle value) {
+     auto valueStr = stringifyEnum(value);
+     return p << valueStr;
+   }
+   } // namespace llvm
+   
+   namespace llvm {
+   template<> struct DenseMapInfo<::mlir::emithls::PipelineStyle> {
+     using StorageInfo = ::llvm::DenseMapInfo<uint32_t>;
+   
+     static unsigned getHashValue(const ::mlir::emithls::PipelineStyle &val) {
+       return StorageInfo::getHashValue(static_cast<uint32_t>(val));
+     }
+   
+     static bool isEqual(const ::mlir::emithls::PipelineStyle &lhs, const ::mlir::emithls::PipelineStyle &rhs) {
+       return lhs == rhs;
+     }
+   };
+   }
+   

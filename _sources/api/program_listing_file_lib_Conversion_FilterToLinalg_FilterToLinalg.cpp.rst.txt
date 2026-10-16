@@ -1,0 +1,201 @@
+
+.. _program_listing_file_lib_Conversion_FilterToLinalg_FilterToLinalg.cpp:
+
+Program Listing for File FilterToLinalg.cpp
+===========================================
+
+|exhale_lsh| :ref:`Return to documentation for file <file_lib_Conversion_FilterToLinalg_FilterToLinalg.cpp>` (``lib/Conversion/FilterToLinalg/FilterToLinalg.cpp``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. code-block:: cpp
+
+   
+   
+   #include "picea-mlir/Conversion/FilterToLinalg/FilterToLinalg.h"
+   
+   #include "mlir/Dialect/Arith/IR/Arith.h"
+   #include "mlir/Dialect/Linalg/IR/Linalg.h"
+   #include "mlir/IR/PatternMatch.h"
+   #include "picea-mlir/Dialect/Base2/Analysis/BitSequence.h"
+   #include "picea-mlir/Dialect/Base2/IR/Base2Attributes.h"
+   #include "picea-mlir/Dialect/Base2/IR/Base2Ops.h"
+   #include "picea-mlir/Dialect/Base2/IR/Base2Types.h"
+   #include "picea-mlir/Dialect/Base2/Interfaces/BitSequenceTypeInterface.h"
+   #include "picea-mlir/Dialect/Filter/IR/FilterBase.h"
+   #include "picea-mlir/Dialect/Filter/IR/FilterOps.h"
+   
+   #include <llvm/Support/Debug.h>
+   #include <mlir/IR/AffineMap.h>
+   #include <mlir/IR/ValueRange.h>
+   
+   #define DEBUG_TYPE "filter-to-linalg"
+   #define PICEA_DEBUG(X)                                                         \
+       LLVM_DEBUG(llvm::dbgs() << "[filter-to-linalg] "; X; llvm::dbgs() << "\n")
+   
+   namespace mlir {
+   #define GEN_PASS_DEF_CONVERTFILTERTOLINALG
+   #include "picea-mlir/Conversion/Passes.h.inc"
+   } // namespace mlir
+   
+   using namespace mlir;
+   using namespace mlir::linalg;
+   
+   namespace {
+   struct ConvertFIRToConvGeneric : OpConversionPattern<filter::FIROp> {
+       using OpConversionPattern<filter::FIROp>::OpConversionPattern;
+   
+       ConvertFIRToConvGeneric(TypeConverter &typeConverter, MLIRContext* context)
+               : OpConversionPattern<filter::FIROp>(typeConverter, context) {};
+   
+       LogicalResult matchAndRewrite(
+           filter::FIROp op,
+           filter::FIROpAdaptor,
+           ConversionPatternRewriter &rewriter) const override
+       {
+           auto loc = op.getLoc();
+           auto ctx = rewriter.getContext();
+   
+           auto input = op.getInput();
+           auto inputSize = input.getType().getNumElements();
+           auto coeff = op.getCoefficient();
+           auto coeffSize = coeff.getType().getNumElements();
+   
+           auto dataTy = cast<base2::FixedType>(coeff.getType().getElementType());
+           PICEA_DEBUG(
+               llvm::dbgs()
+               << "Found data with fixed type <" << dataTy.getIntegerBits() << ", "
+               << dataTy.getFractionalBits() << ">");
+           auto padSize = coeffSize - 1;
+           auto paddedSize = inputSize + padSize;
+   
+           // Zeros need to be padded at the beginning of the input tensor to make
+           // sure the output tensor has the same size as input
+           auto zeroPad = base2::ConstantOp::create(
+               rewriter,
+               loc,
+               base2::BitsAttr::get(
+                   dataTy,
+                   base2::BitSequence::zeros(dataTy.getBitWidth())));
+           PICEA_DEBUG(
+               llvm::dbgs()
+               << "Created constant with value 0 to be padded in front of input");
+           SmallVector<OpFoldResult> lowPadIdx, highPadIdx;
+           lowPadIdx.push_back(rewriter.getIndexAttr(padSize));
+           highPadIdx.push_back(rewriter.getIndexAttr(0));
+           Value padOp = tensor::PadOp::create(
+               rewriter,
+               loc,
+               RankedTensorType::get(paddedSize, dataTy),
+               input,
+               lowPadIdx,
+               highPadIdx,
+               zeroPad.getResult());
+           // Preapare the empty tensor with the same data type
+           Value resultTensor =
+               tensor::EmptyOp::create(rewriter, loc, inputSize, dataTy);
+           // Affine maps for 1-d convolution
+           SmallVector<AffineMap> affineMaps;
+           AffineExpr d0 = mlir::getAffineDimExpr(0, ctx);
+           AffineExpr d1 = mlir::getAffineDimExpr(1, ctx);
+           AffineExpr slideExpr = d0 + d1;
+           affineMaps.push_back(AffineMap::get(2, 0, slideExpr));
+           affineMaps.push_back(AffineMap::get(2, 0, d1));
+           affineMaps.push_back(AffineMap::get(2, 0, d0));
+           // Iterator types
+           SmallVector<utils::IteratorType> iteratorTypes = {
+               utils::IteratorType::parallel,
+               utils::IteratorType::reduction};
+           // Create the generic operation
+           auto castedTy = base2::FixedType::get(
+               ctx,
+               dataTy.getIntegerBits() * 2 + 1,
+               dataTy.getFractionalBits() * 2);
+           auto genericOp = GenericOp::create(
+               rewriter,
+               loc,
+               resultTensor.getType(),
+               ValueRange{padOp, coeff},
+               resultTensor,
+               affineMaps,
+               iteratorTypes,
+               /*doc*/ "",
+               /*libraryCall*/ "",
+               [&](OpBuilder &nestedBuilder,
+                   Location nestedLoc,
+                   ValueRange blockArgs) {
+                   Value castInput = base2::ArithCastOp::create(
+                       nestedBuilder,
+                       nestedLoc,
+                       castedTy,
+                       blockArgs[0]);
+                   Value castCoeff = base2::ArithCastOp::create(
+                       nestedBuilder,
+                       nestedLoc,
+                       castedTy,
+                       blockArgs[1]);
+                   Value mul = base2::ArithMulOp::create(
+                       nestedBuilder,
+                       nestedLoc,
+                       ValueRange{castInput, castCoeff});
+                   Value castIterArg = base2::ArithCastOp::create(
+                       nestedBuilder,
+                       nestedLoc,
+                       castedTy,
+                       blockArgs[2]);
+                   Value add = base2::ArithAddOp::create(
+                       nestedBuilder,
+                       nestedLoc,
+                       ValueRange{mul, castIterArg});
+                   Value castAdd = base2::ArithCastOp::create(
+                       nestedBuilder,
+                       nestedLoc,
+                       dataTy,
+                       add);
+                   linalg::YieldOp::create(nestedBuilder, nestedLoc, castAdd);
+               });
+           rewriter.replaceOp(op, genericOp);
+           PICEA_DEBUG(
+               llvm::dbgs() << "Replace FIR with equivalent 1-D convolution.");
+   
+           return success();
+       }
+   };
+   } // namespace
+   
+   void mlir::populateFilterToLinalgConversionPatterns(
+       TypeConverter &typeConverter,
+       RewritePatternSet &patterns)
+   { patterns.add<ConvertFIRToConvGeneric>(typeConverter, patterns.getContext()); }
+   
+   namespace {
+   struct ConvertFilterToLinalgPass
+           : public impl::ConvertFilterToLinalgBase<ConvertFilterToLinalgPass> {
+       void runOnOperation() final;
+   };
+   } // namespace
+   
+   void ConvertFilterToLinalgPass::runOnOperation()
+   {
+       ConversionTarget target(getContext());
+       RewritePatternSet patterns(&getContext());
+   
+       TypeConverter converter;
+       converter.addConversion([&](Type type) { return type; });
+   
+       populateFilterToLinalgConversionPatterns(converter, patterns);
+   
+       target.addLegalDialect<LinalgDialect>();
+       target.addIllegalOp<filter::FIROp>();
+       target.markUnknownOpDynamicallyLegal([](Operation*) { return true; });
+   
+       if (failed(applyPartialConversion(
+               getOperation(),
+               target,
+               std::move(patterns)))) {
+           signalPassFailure();
+       }
+   }
+   
+   std::unique_ptr<Pass> mlir::createConvertFilterToLinalgPass()
+   { return std::make_unique<ConvertFilterToLinalgPass>(); }

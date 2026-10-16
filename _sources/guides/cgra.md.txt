@@ -1,0 +1,118 @@
+# The CGRA Variant
+
+`picea` lowers a marked loop nest onto a **STRELA CGRA** attached to an **X-HEEP RISC-V** core, emitting a C driver that programs the fabric over MMIO and runs on Verilator.
+The custom work lives in the `cgra` dialect and its transformation passes.
+
+This page is the narrative reference: what each stage is for and why it is shaped the way it is.
+The exhaustive per-pass option lists are generated from the tablegen sources and live under {doc}`/Passes/CGRAPasses`; the operation definitions under {doc}`/Dialects/CGRAOps`.
+
+## 1. Overview
+
+The input is either a C program (lowered to affine MLIR by Polygeist's `cgeist`) or a quantized `linalg`-on-tensors model.
+From there:
+
+1. The front end legalizes the datapath to 32-bit and rewrites the loop body into the operations the fabric ALU actually has (§3).
+2. `--annotate-to-cgra` marks each offloadable loop nest with `cgra.deploy`, and `--outline-cgra-deploy` splits it from the host code (§4).
+3. Buffers that cross a deploy boundary are given symbols and packed (§5).
+4. Two branches then meet in the generated driver:
+   - the **software** branch (§6) emits the STRELA MMIO application;
+   - the **hardware** branch (§7) exports a data-flow graph for the elastic-cgra Gurobi mapper, which returns placement, bitstream and the IMN/OMN channel map.
+
+Because both branches must agree on which loops went to the fabric and in what order, the passes they share are grouped into named pipelines (§8) rather than being spelled out per call site.
+
+## 2. Dialect operations
+
+Defined in `include/picea-mlir/Dialect/CGRA/IR/`:
+
+| Operation | Purpose |
+|---|---|
+| `cgra.deploy` | Marks a loop nest for offload. Its `ins(streams)` operands make the offloaded data flow explicit. |
+| `cgra.yield` | Terminator of a `cgra.deploy` region. |
+| `cgra.strela_write` | A single 32-bit volatile MMIO write to a symbolically-named STRELA control register. |
+| `cgra.strela_read` | The same, for a read. |
+
+The STRELA registers are named symbolically on the ops; the concrete MMIO addresses are resolved only at `--strela-to-llvm`, so the register map lives in exactly one place.
+
+## 3. Front-end legalization
+
+The fabric has a narrow, straight-line, 32-bit datapath.
+Four passes bring an arbitrary loop body into that form:
+
+- `--widen-storage-to-i32` retypes i4/i8/i16 memref **storage** to i32 with load/store boundary casts.
+  It runs before legalization.
+- `--legalize-to-i32` rewrites narrow and i64 **arithmetic** into i32 sequences, preserving results exactly.
+  `--legalize-to-i32-func` is the single-function variant.
+- `--predicated-store-to-select` turns a predicated `affine.store` into an `arith.select`, removing control flow from the body.
+- `--normalize-cgra-compare` folds every predicate into an expression on the operand, because the compare FU tests against zero and realizes only `>0` and `==0`.
+
+  The sign-bit-flip identity used for unsigned compares, and the `+1` used for `<=`/`>=`, both assume no wraparound at the integer extremes.
+- `--expand-fabric-ops` expands div/rem by a power of two and the integer `math` intrinsics into fabric ALU sequences.
+
+`--annotate-to-cgra` treats a loop containing an operation that no CGRA transform can lower to a fabric operation (float, integer divide/remainder, `math`, `call`) as a hard error rather than silently keeping it on the host.
+The classification lives in `cgra::classifyFabricOp` (`Transforms/CGRAAnalysisUtils.h`).
+
+## 4. Marking, outlining and dispatch
+
+- `--annotate-to-cgra` wraps each offloadable outermost loop in `cgra.deploy`.
+- `--outline-cgra-deploy` splits the kernel from the host code into `<H>_init` / `<H>_kernel` / `<H>_post`.
+  A bare kernel is outlined too under `drop-host`.
+- `--annotate-dispatch-io` classifies each stream as input, output or inout and stamps `dispatch_size`.
+
+Supporting rewrites that reshape a nest into something offloadable at all: `--promote-accumulator`, `--split-reduction-bias`, `--promote-scalar-reduction` (§8), `--fuse-cgra-nests`, `--unroll-lanes`, `--partition-cgra-dfg`, `--conv-to-im2col`, `--expand-memref-copy`, `--hoist-reduction-unpack`, `--strip-stage-prints`.
+
+`--dfg-operator-to-cgra` bridges the DFG dialect to this path for the tensor/`linalg` front end.
+
+## 5. Buffer placement
+
+- `--promote-alloca-to-global` gives a stack-allocated buffer static storage.
+  It belongs to the **pre**-annotate phase: it must run before the nests are wrapped.
+- `--promote-shared-buffers` gives every cross-deploy buffer a symbol.
+- `--pack-cgra-buffers` shares storage between intermediates whose live ranges do not overlap.
+
+## 6. Driver generation (software branch)
+
+`--generate-cgra-driver` writes the GR-HEEP / X-HEEP STRELA application (`main.c` + `dataset.h`).
+It picks one of two emitters from the IR:
+
+- **single-deploy**, chosen when the streams are function arguments.
+  It declares the arrays, calls the outlined `<base>_init` and `_post`, programs and starts the fabric, then waits on the interrupt.
+- **multi-config**, chosen when the streams are module-level `memref.global`.
+  It emits one configuration per deploy, run consecutively and in place.
+
+Either way the streams and dispatch metadata come from the IR, and the result is checked against a reference transliterated from the deploy loops.
+
+A **heterogeneous** whole-model driver is also supported: fabric configurations for the streamable nests, CPU code for the convolutions and reductions that stay on the host, and a buffer registry threading arrays between them.
+
+Options: `output`, `iomap`, `iomap-prefix`, `bitstream-sym`, `bitstream-header`, `name`, `sim`, `hoist-descriptors`, `watch-buffers`, `ck-only`, `no-deployed-metric`, `x86-golden`, `max-dispatch`, `interleaved-kb`, `progress-every`, `no-reference`.
+
+Lowering to the actual MMIO sequence is two further passes:
+
+- `--cgra-deploy-to-strela` turns each `cgra.deploy` into the `strela_write` and `strela_read` programming sequence, optionally permuted by the mapper's `io_map.json`.
+- `--strela-to-llvm` turns the `strela_*` ops into volatile `llvm.load` and `llvm.store` at the resolved MMIO addresses.
+
+## 7. DFG export (hardware branch)
+
+`--export-loop-dfg` writes one GraphViz `.dot` per fabric-streamable loop for the elastic-cgra ILP mapper: FU nodes for arith, shift, logical, select and compare; width casts are pass-through; `shrui` is corrected for the fabric's arithmetic-only right shift.
+
+An unexpanded operation reaching this pass is a **hard error**, not a warning: the shipped DFG-export rules run `picea-opt` with its output discarded, so a warning would be thrown away and the mapper would silently receive an incomplete graph.
+
+## 8. Pipelines
+
+Declared in `include/picea-mlir/Conversion/ConvertToCGRA/ConvertToCGRA.h` and registered by `picea::registerConvertToCGRAPipelines()`.
+
+| Flag | Passes |
+|---|---|
+| `--legalize-fabric-body` | `predicated-store-to-select` → `normalize-cgra-compare` → `expand-fabric-ops` |
+| `--shape-cgra-reductions` | `promote-accumulator` → `split-reduction-bias` → `promote-scalar-reduction` |
+| `--place-cgra-buffers` | `promote-shared-buffers` → `pack-cgra-buffers` |
+| `--cgra-deploy-to-llvm` | `cgra-deploy-to-strela` → `strela-to-llvm` |
+
+`--legalize-fabric-body` is a **correctness** device, not tidiness.
+Those three passes must run before `--annotate-to-cgra` (which decides fabric-vs-CPU) *and* before `--export-loop-dfg` (which emits the `.dot` for the loops annotate chose).
+If the two sites ever diverge, the driver's configuration indices and the mapper's bitstream indices silently stop matching.
+One flag makes them identical by construction.
+
+`--shape-cgra-reductions` has a real **order** dependency.
+The fabric accumulator is an FU that starts from zero and is fed by a load-accumulate-store nest, and the three passes converge on that single invariant from different directions: `promote-accumulator` may leave a `C = 1*C + reduce` seed that only `split-reduction-bias` can make zero-seeded (`isFabricStreamable` then keeps any survivor on the CPU), while `promote-scalar-reduction` handles the opposite shape, a top-level scalar `iter_args` nest that stores nothing.
+
+`--place-cgra-buffers` is deliberately only the two post-annotation passes; `--promote-alloca-to-global` cannot join the group because it has to run before the nests are wrapped.

@@ -1,0 +1,241 @@
+
+.. _program_listing_file_lib_Dialect_CGRA_Transforms_PredicatedStoreToSelect.cpp:
+
+Program Listing for File PredicatedStoreToSelect.cpp
+====================================================
+
+|exhale_lsh| :ref:`Return to documentation for file <file_lib_Dialect_CGRA_Transforms_PredicatedStoreToSelect.cpp>` (``lib/Dialect/CGRA/Transforms/PredicatedStoreToSelect.cpp``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. code-block:: cpp
+
+   
+   
+   //===- PredicatedStoreToSelect.cpp - scf.if -> arith.select ---------------===//
+   //
+   // The CGRA datapath has no control flow: the offload heuristic and
+   // export-loop-dfg expect a straight-line load → compute → store, and the
+   // exporter emits NO NODE for an `scf.if`, so one that survives silently drops
+   // whatever it guards out of the DFG. This pass removes the two shapes a compute
+   // loop produces:
+   //
+   //  - A predicated STORE — `scf.if %c { affine.store %v, %m[%i] }` with no else
+   //  —
+   //    writes %v only when %c holds and otherwise leaves %m[%i] unchanged. It
+   //    becomes `affine.store select(%c, %v, %m[%i]), %m[%i]`, the same value in
+   //    both cases (relu `if x<0 { x=0 }` becomes `x = select(x<0, 0, x)`).
+   //
+   //  - A VALUE-PRODUCING `scf.if` — a conditional assignment to a local, which
+   //    Polygeist gives results and a mandatory else. Both arms are hoisted in
+   //    front of the op and each result becomes `select(%c, then, else)`. Only
+   //    when both arms are free of memory effects: speculating a pure op is always
+   //    sound (the select discards the unused arm), but speculating a load may
+   //    address an element that is only in bounds under the condition.
+   //
+   // Either way the loop becomes a plain data-flow kernel the fabric can map.
+   //
+   //===----------------------------------------------------------------------===//
+   
+   #include "mlir/Dialect/Affine/IR/AffineOps.h"
+   #include "mlir/Dialect/Arith/IR/Arith.h"
+   #include "mlir/Dialect/MemRef/IR/MemRef.h"
+   #include "mlir/Dialect/SCF/IR/SCF.h"
+   #include "mlir/IR/Builders.h"
+   #include "mlir/Interfaces/SideEffectInterfaces.h"
+   #include "mlir/Pass/Pass.h"
+   #include "picea-mlir/Dialect/CGRA/Transforms/Passes.h"
+   
+   #include "llvm/ADT/STLExtras.h"
+   #include "llvm/ADT/SmallVector.h"
+   
+   using namespace mlir;
+   
+   namespace {
+   
+   // Classifies a region's single block: {ok, store}. `ok` is false when the block
+   // holds anything other than at most one affine.store plus its terminator;
+   // `store` is null for an effect-free (empty) block.
+   static std::pair<bool, affine::AffineStoreOp> classifyBlock(Block &block)
+   {
+       affine::AffineStoreOp store;
+       for (Operation &op : block) {
+           if (op.hasTrait<OpTrait::IsTerminator>()) continue;
+           auto s = dyn_cast<affine::AffineStoreOp>(&op);
+           if (!s || store) return {false, nullptr};
+           store = s;
+       }
+       return {true, store};
+   }
+   
+   // Two memrefs alias the same storage: the same SSA value, or two get_global ops
+   // of the same symbol (Polygeist emits a fresh get_global per branch).
+   static bool sameMemref(Value a, Value b)
+   {
+       if (a == b) return true;
+       auto ga = a.getDefiningOp<memref::GetGlobalOp>();
+       auto gb = b.getDefiningOp<memref::GetGlobalOp>();
+       return ga && gb && ga.getName() == gb.getName();
+   }
+   
+   // Whether two affine.stores write the same element (same memref, map,
+   // operands).
+   static bool sameLocation(affine::AffineStoreOp a, affine::AffineStoreOp b)
+   {
+       if (!sameMemref(a.getMemRef(), b.getMemRef())) return false;
+       if (a.getAffineMap() != b.getAffineMap()) return false;
+       if (a.getMapOperands().size() != b.getMapOperands().size()) return false;
+       for (auto [x, y] : llvm::zip(a.getMapOperands(), b.getMapOperands()))
+           if (x != y) return false;
+       return true;
+   }
+   
+   // Whether every op in @p block can be hoisted out of its branch and executed
+   // unconditionally. Speculating a PURE op is always sound — its result is simply
+   // discarded by the select — but anything with a memory effect is not: a store
+   // would corrupt the untaken path, and even a LOAD may address an element that
+   // is only in bounds when the condition holds. So the bar is no memory effects
+   // at all, which is what an arithmetic ternary (the offloadable case) satisfies.
+   static bool isSpeculatable(Block &block)
+   {
+       for (Operation &op : block) {
+           if (op.hasTrait<OpTrait::IsTerminator>()) continue;
+           if (!isMemoryEffectFree(&op)) return false;
+       }
+       return true;
+   }
+   
+   // If-converts a VALUE-PRODUCING `scf.if` into `arith.select`s: both arms are
+   // hoisted in front of the op and each result becomes a select between the two
+   // yielded values. Leaves @p ifOp untouched unless it has results, both regions,
+   // and pure arms.
+   //
+   // Needed because the datapath has no control flow at all, and --export-loop-dfg
+   // emits no node for an `scf.if` — a surviving one does not fail loudly, it just
+   // drops the value it yields out of the DFG. Polygeist emits this shape for a
+   // data-dependent conditional assignment (`if (a[i] > 0) s = a[i]; else s =
+   // -a[i];` with `s` a local), which is a plain mux on the fabric once converted.
+   static void ifConvertValues(scf::IfOp ifOp)
+   {
+       if (ifOp.getNumResults() == 0 || ifOp.getElseRegion().empty()) return;
+       Block &thenBlk = ifOp.getThenRegion().front();
+       Block &elseBlk = ifOp.getElseRegion().front();
+       if (!isSpeculatable(thenBlk) || !isSpeculatable(elseBlk)) return;
+   
+       auto thenYield = cast<scf::YieldOp>(thenBlk.getTerminator());
+       auto elseYield = cast<scf::YieldOp>(elseBlk.getTerminator());
+       // Snapshot the yielded values before the terminators are erased below.
+       SmallVector<Value> thenVals(thenYield.getOperands());
+       SmallVector<Value> elseVals(elseYield.getOperands());
+   
+       // Hoist both bodies (minus their terminators) to just before the if, so the
+       // yielded values are defined in the enclosing block by the time the selects
+       // reference them. Neither arm can use the other's values, so order is free.
+       Operation* ip = ifOp;
+       thenYield.erase();
+       elseYield.erase();
+       ip->getBlock()->getOperations().splice(
+           ip->getIterator(),
+           thenBlk.getOperations());
+       ip->getBlock()->getOperations().splice(
+           ip->getIterator(),
+           elseBlk.getOperations());
+   
+       OpBuilder b(ifOp);
+       for (auto [res, t, e] : llvm::zip(ifOp.getResults(), thenVals, elseVals))
+           res.replaceAllUsesWith(
+               arith::SelectOp::create(
+                   b,
+                   ifOp.getLoc(),
+                   ifOp.getCondition(),
+                   t,
+                   e));
+       ifOp.erase();
+   }
+   
+   // Rewrites one predicated store, or leaves @p ifOp untouched if it does not
+   // match `scf.if %c { affine.store } [else { affine.store <same location> }]`
+   // with no results. The "otherwise" value is the else-branch store (if any) or
+   // the current contents of the location.
+   static void rewritePredicatedStore(scf::IfOp ifOp)
+   {
+       if (ifOp.getNumResults() != 0) return ifConvertValues(ifOp);
+   
+       auto [thenOk, thenStore] = classifyBlock(ifOp.getThenRegion().front());
+       if (!thenOk || !thenStore) return;
+   
+       Value elseVal;
+       if (!ifOp.getElseRegion().empty()) {
+           auto [elseOk, elseStore] = classifyBlock(ifOp.getElseRegion().front());
+           if (!elseOk) return;
+           if (elseStore) {
+               // `if { store t } else { store e }` to the same element → select(c,
+               // t, e).
+               if (!sameLocation(thenStore, elseStore)) return;
+               elseVal = elseStore.getValueToStore();
+           }
+       }
+   
+       OpBuilder b(ifOp);
+       Location loc = ifOp.getLoc();
+       if (!elseVal) // absent/empty else: the store is only taken when the cond
+                     // holds.
+           elseVal = affine::AffineLoadOp::create(
+               b,
+               loc,
+               thenStore.getMemRef(),
+               thenStore.getAffineMap(),
+               thenStore.getMapOperands());
+       Value sel = arith::SelectOp::create(
+           b,
+           loc,
+           ifOp.getCondition(),
+           thenStore.getValueToStore(),
+           elseVal);
+       affine::AffineStoreOp::create(
+           b,
+           loc,
+           sel,
+           thenStore.getMemRef(),
+           thenStore.getAffineMap(),
+           thenStore.getMapOperands());
+       ifOp.erase();
+   }
+   
+   class CGRAPredicatedStoreToSelectPass : public PassWrapper<
+                                               CGRAPredicatedStoreToSelectPass,
+                                               OperationPass<ModuleOp>> {
+   public:
+       MLIR_DEFINE_EXPLICIT_INTERNAL_INLINE_TYPE_ID(
+           CGRAPredicatedStoreToSelectPass)
+   
+       StringRef getArgument() const final { return "predicated-store-to-select"; }
+       StringRef getDescription() const final
+       {
+           return "Remove scf.if from compute loops: predicated affine.stores "
+                  "become "
+                  "affine.store of arith.select, value-producing ifs are "
+                  "if-converted";
+       }
+   
+       void getDependentDialects(DialectRegistry &registry) const override
+       {
+           registry.insert<
+               affine::AffineDialect,
+               arith::ArithDialect,
+               scf::SCFDialect>();
+       }
+   
+       void runOnOperation() override
+       {
+           // Collect first: rewritePredicatedStore erases the op it visits.
+           SmallVector<scf::IfOp> work;
+           getOperation().walk([&](scf::IfOp ifOp) { work.push_back(ifOp); });
+           for (scf::IfOp ifOp : work) rewritePredicatedStore(ifOp);
+       }
+   };
+   
+   } // namespace
+   
+   std::unique_ptr<mlir::Pass> cgra::createCGRAPredicatedStoreToSelectPass()
+   { return std::make_unique<CGRAPredicatedStoreToSelectPass>(); }

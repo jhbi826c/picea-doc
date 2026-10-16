@@ -1,0 +1,40 @@
+
+.. _program_listing_file_include_picea-mlir-c_Dialect_CGRA.h:
+
+Program Listing for File CGRA.h
+===============================
+
+|exhale_lsh| :ref:`Return to documentation for file <file_include_picea-mlir-c_Dialect_CGRA.h>` (``include/picea-mlir-c/Dialect/CGRA.h``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. code-block:: cpp
+
+   //===-- picea-mlir-c/Dialect/CGRA.h - C API for CGRA dialect -----*- C-*-===//
+   //
+   // @author  Jiahong Bi (jiahong.bi@tu-dresden.de)
+   //===----------------------------------------------------------------------===//
+   
+   #ifndef PICEA_MLIR_C_DIALECT_CGRA_H
+   #define PICEA_MLIR_C_DIALECT_CGRA_H
+   
+   #include "mlir-c/IR.h"
+   #include "mlir-c/Support.h"
+   
+   #ifdef __cplusplus
+   extern "C" {
+   #endif
+   
+   MLIR_DECLARE_CAPI_DIALECT_REGISTRATION(CGRA, cgra);
+   
+   #ifdef __cplusplus
+   }
+   #endif
+   
+   //===---------------------------------------------------------------------===//
+   // Pass Registration
+   //===---------------------------------------------------------------------===//
+   
+   #include "picea-mlir/Dialect/CGRA/Transforms/Passes.capi.h.inc"
+   
+   #endif

@@ -1,0 +1,100 @@
+
+.. _program_listing_file_build_include_picea-mlir_Dialect_DFG_Interfaces_EdgeInterface.h.inc:
+
+Program Listing for File EdgeInterface.h.inc
+============================================
+
+|exhale_lsh| :ref:`Return to documentation for file <file_build_include_picea-mlir_Dialect_DFG_Interfaces_EdgeInterface.h.inc>` (``build/include/picea-mlir/Dialect/DFG/Interfaces/EdgeInterface.h.inc``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. code-block:: cpp
+
+   /*===- TableGen'erated file -------------------------------------*- C++ -*-===*\
+   |*                                                                            *|
+   |* Interface Declarations                                                     *|
+   |*                                                                            *|
+   |* Automatically generated file, do not edit!                                 *|
+   |*                                                                            *|
+   \*===----------------------------------------------------------------------===*/
+   
+   namespace mlir::dfg {
+   
+   class EdgeInterface;
+   
+   } // namespace mlir::dfg
+   namespace mlir::dfg {
+   
+   namespace detail {
+   struct EdgeInterfaceInterfaceTraits {
+     struct Concept {
+       ::mlir::Operation*(*getInputConnectedOp)(const Concept *impl, ::mlir::Operation *);
+       ::mlir::Operation*(*getOutputConnectedOp)(const Concept *impl, ::mlir::Operation *);
+     };
+     template<typename ConcreteOp>
+     class Model : public Concept {
+     public:
+       using Interface = ::mlir::dfg::EdgeInterface;
+       Model() : Concept{getInputConnectedOp, getOutputConnectedOp} {}
+   
+       static inline ::mlir::Operation*getInputConnectedOp(const Concept *impl, ::mlir::Operation *tablegen_opaque_val);
+       static inline ::mlir::Operation*getOutputConnectedOp(const Concept *impl, ::mlir::Operation *tablegen_opaque_val);
+     };
+     template<typename ConcreteOp>
+     class FallbackModel : public Concept {
+     public:
+       using Interface = ::mlir::dfg::EdgeInterface;
+       FallbackModel() : Concept{getInputConnectedOp, getOutputConnectedOp} {}
+   
+       static inline ::mlir::Operation*getInputConnectedOp(const Concept *impl, ::mlir::Operation *tablegen_opaque_val);
+       static inline ::mlir::Operation*getOutputConnectedOp(const Concept *impl, ::mlir::Operation *tablegen_opaque_val);
+     };
+     template<typename ConcreteModel, typename ConcreteOp>
+     class ExternalModel : public FallbackModel<ConcreteModel> {
+     public:
+       using ConcreteEntity = ConcreteOp;
+     };
+   };
+   template <typename ConcreteOp>
+   struct EdgeInterfaceTrait;
+   
+   } // namespace detail
+   class EdgeInterface : public ::mlir::OpInterface<EdgeInterface, detail::EdgeInterfaceInterfaceTraits> {
+   public:
+     using ::mlir::OpInterface<EdgeInterface, detail::EdgeInterfaceInterfaceTraits>::OpInterface;
+     template <typename ConcreteOp>
+     struct Trait : public detail::EdgeInterfaceTrait<ConcreteOp> {};
+   
+     ::mlir::Operation*getInputConnectedOp();
+   
+     ::mlir::Operation*getOutputConnectedOp();
+   };
+   
+   } // namespace mlir::dfg
+   namespace mlir::dfg::detail {
+   
+     template <typename ConcreteOp>
+     struct EdgeInterfaceTrait : public ::mlir::OpInterface<EdgeInterface, detail::EdgeInterfaceInterfaceTraits>::Trait<ConcreteOp> {
+     };
+   
+   } // namespace mlir::dfg::detail
+   namespace mlir::dfg {
+   
+   template<typename ConcreteOp>
+   ::mlir::Operation*detail::EdgeInterfaceInterfaceTraits::Model<ConcreteOp>::getInputConnectedOp(const Concept *impl, ::mlir::Operation *tablegen_opaque_val) {
+     return (llvm::cast<ConcreteOp>(tablegen_opaque_val)).getInputConnectedOp();
+   }
+   template<typename ConcreteOp>
+   ::mlir::Operation*detail::EdgeInterfaceInterfaceTraits::Model<ConcreteOp>::getOutputConnectedOp(const Concept *impl, ::mlir::Operation *tablegen_opaque_val) {
+     return (llvm::cast<ConcreteOp>(tablegen_opaque_val)).getOutputConnectedOp();
+   }
+   template<typename ConcreteOp>
+   ::mlir::Operation*detail::EdgeInterfaceInterfaceTraits::FallbackModel<ConcreteOp>::getInputConnectedOp(const Concept *impl, ::mlir::Operation *tablegen_opaque_val) {
+     return static_cast<const ConcreteOp *>(impl)->getInputConnectedOp(tablegen_opaque_val);
+   }
+   template<typename ConcreteOp>
+   ::mlir::Operation*detail::EdgeInterfaceInterfaceTraits::FallbackModel<ConcreteOp>::getOutputConnectedOp(const Concept *impl, ::mlir::Operation *tablegen_opaque_val) {
+     return static_cast<const ConcreteOp *>(impl)->getOutputConnectedOp(tablegen_opaque_val);
+   }
+   
+   } // namespace mlir::dfg

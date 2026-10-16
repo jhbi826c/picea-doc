@@ -1,0 +1,72 @@
+
+.. _program_listing_file_include_picea-mlir_Dialect_Base2_Interfaces_BitSequenceTypeInterface.h:
+
+Program Listing for File BitSequenceTypeInterface.h
+===================================================
+
+|exhale_lsh| :ref:`Return to documentation for file <file_include_picea-mlir_Dialect_Base2_Interfaces_BitSequenceTypeInterface.h>` (``include/picea-mlir/Dialect/Base2/Interfaces/BitSequenceTypeInterface.h``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. code-block:: cpp
+
+   
+   
+   #pragma once
+   
+   #include "mlir/IR/OpDefinition.h"
+   
+   //===- Generated includes -------------------------------------------------===//
+   
+   #include "picea-mlir/Dialect/Base2/Interfaces/BitSequenceTypeInterface.h.inc"
+   
+   //===----------------------------------------------------------------------===//
+   
+   namespace mlir::base2 {
+   
+   //===----------------------------------------------------------------------===//
+   // BitSequenceLikeType
+   //===----------------------------------------------------------------------===//
+   
+   class BitSequenceLikeType : public Type {
+   public:
+       using Type::Type;
+   
+       [[nodiscard]] static bool classof(BitSequenceType) { return true; }
+       [[nodiscard]] static bool classof(ShapedType type)
+       { return isa<BitSequenceType>(type.getElementType()); }
+       [[nodiscard]] static bool classof(Type type)
+       {
+           if (isa<BitSequenceType>(type)) return true;
+           if (const auto shapedTy = dyn_cast<ShapedType>(type))
+               return classof(shapedTy);
+   
+           return false;
+       }
+   
+       /*implicit*/ BitSequenceLikeType(BitSequenceType type)
+               : Type(cast<Type>(type).getImpl())
+       {}
+   
+       [[nodiscard]] BitSequenceType getElementType() const
+       {
+           if (const auto self = dyn_cast<BitSequenceType>(*this)) return self;
+   
+           return cast<BitSequenceType>(cast<ShapedType>(*this).getElementType());
+       }
+   
+       [[nodiscard]] BitSequenceLikeType
+       getSameShape(BitSequenceType elementTy) const
+       {
+           assert(elementTy);
+   
+           if (isa<BitSequenceType>(*this)) return elementTy;
+   
+           return cast<BitSequenceLikeType>(
+               cast<ShapedType>(*this).cloneWith(std::nullopt, elementTy));
+       }
+   };
+   
+   void registerBitSequenceTypeModels(MLIRContext &ctx);
+   
+   } // namespace mlir::base2

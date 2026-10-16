@@ -1,0 +1,586 @@
+
+.. _program_listing_file_lib_Dialect_CGRA_Transforms_OutlineCGRADeploy.cpp:
+
+Program Listing for File OutlineCGRADeploy.cpp
+==============================================
+
+|exhale_lsh| :ref:`Return to documentation for file <file_lib_Dialect_CGRA_Transforms_OutlineCGRADeploy.cpp>` (``lib/Dialect/CGRA/Transforms/OutlineCGRADeploy.cpp``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. code-block:: cpp
+
+   
+   
+   // Splits a host function around its cgra.deploy into three functions sharing
+   // the stream memrefs by argument:
+   //
+   //   func @H(<memrefs>) { <init>; cgra.deploy {<loop>}; <post>; return }
+   //     =>  @H_init / @H_kernel / @H_post, and @H calling the three
+   //
+   // @H_kernel is then a stand-alone CGRA kernel (streams are arguments) and
+   // @H_init/@H_post are the host hooks the driver calls. Runs after
+   // --annotate-to-cgra, before --annotate-dispatch-io.
+   //
+   // Only a deploy whose streams survive as real memrefs can be outlined.
+   // With `drop-host` @H is erased instead, and a dynamic memref<?xT> stream is
+   // retyped to the static stream size so the outlined functions are C-callable.
+   
+   #include "mlir/Dialect/Affine/IR/AffineOps.h"
+   #include "mlir/Dialect/Func/IR/FuncOps.h"
+   #include "mlir/Dialect/MemRef/IR/MemRef.h"
+   #include "mlir/IR/Builders.h"
+   #include "mlir/IR/BuiltinOps.h"
+   #include "mlir/IR/BuiltinTypes.h"
+   #include "mlir/IR/IRMapping.h"
+   #include "mlir/Interfaces/SideEffectInterfaces.h"
+   #include "mlir/Pass/Pass.h"
+   #include "picea-mlir/Dialect/CGRA/IR/CGRA.h"
+   #include "picea-mlir/Dialect/CGRA/Transforms/CGRAAnalysisUtils.h"
+   #include "picea-mlir/Dialect/CGRA/Transforms/Passes.h"
+   
+   #include "llvm/ADT/SetVector.h"
+   #include "llvm/ADT/SmallPtrSet.h"
+   #include "llvm/ADT/SmallVector.h"
+   
+   #include <functional>
+   
+   using namespace mlir;
+   
+   namespace {
+   
+   // Ops that own or name data and therefore stay in the host function H (their
+   // memref results are shared into the outlined functions as arguments);
+   // constants stay too and are re-cloned into each outlined function on demand.
+   static bool staysInHost(Operation* op)
+   {
+       return isa<memref::AllocaOp, memref::AllocOp, memref::GetGlobalOp>(op)
+              || op->hasTrait<OpTrait::ConstantLike>();
+   }
+   
+   // A pointer argument reaches MLIR as a dynamic memref (memref<?xT>, or
+   // memref<?x?xT> for a 2-D array), which the bare-pointer ABI cannot lower (no
+   // static size). Give each dynamic dimension a static size from the deploy loop
+   // nest — @p loopCounts holds the per-level trip counts, outer to inner. A 1-D
+   // stream takes the full stream length (product of all trip counts, since a
+   // flattened array is indexed a[i*M+j]); a rank-N stream takes trip count k for
+   // dimension k. Over-sizing a scalar accumulator is harmless: the CGRA stream
+   // length comes from the access pattern, not this backing size, and the
+   // generated driver allocates the same size.
+   static Type staticizeStream(Type ty, ArrayRef<int64_t> loopCounts)
+   {
+       auto mr = dyn_cast<MemRefType>(ty);
+       if (!mr || loopCounts.empty()) return ty;
+       int64_t rank = mr.getRank();
+       if (rank == 1) {
+           if (!mr.isDynamicDim(0)) return ty;
+           int64_t prod = 1;
+           for (int64_t c : loopCounts) prod *= c;
+           return prod > 0 ? MemRefType::get({prod}, mr.getElementType()) : ty;
+       }
+       if (rank > 1 && (int64_t)loopCounts.size() >= rank) {
+           SmallVector<int64_t> shape(mr.getShape().begin(), mr.getShape().end());
+           for (int64_t d = 0; d < rank; ++d)
+               if (mr.isDynamicDim(d)) {
+                   if (loopCounts[d] <= 0)
+                       return ty; // cannot size this dim: leave the memref
+                                  // untouched
+                   shape[d] = loopCounts[d];
+               }
+           return MemRefType::get(shape, mr.getElementType());
+       }
+       return ty;
+   }
+   
+   struct CGRAOutlineDeployPass
+           : public PassWrapper<CGRAOutlineDeployPass, OperationPass<ModuleOp>> {
+   
+       MLIR_DEFINE_EXPLICIT_INTERNAL_INLINE_TYPE_ID(CGRAOutlineDeployPass)
+   
+       CGRAOutlineDeployPass() = default;
+       CGRAOutlineDeployPass(const CGRAOutlineDeployPass &o) : PassWrapper(o) {}
+   
+       // When set, erase the host function instead of rewriting it to call the
+       // outlined parts: the module keeps only <H>_init/<H>_kernel/<H>_post (each
+       // taking the streams by argument), and a C driver supplies main() and calls
+       // them. When unset, the host function is kept and calls the three in place.
+       Pass::Option<bool> dropHost{
+           *this,
+           "drop-host",
+           llvm::cl::desc("Erase the host function; keep only init/kernel/post"),
+           llvm::cl::init(false)};
+   
+       StringRef getArgument() const final { return "outline-cgra-deploy"; }
+       StringRef getDescription() const final
+       {
+           return "Outline a cgra.deploy and its surrounding host code into "
+                  "<H>_init / <H>_kernel / <H>_post functions sharing the streams";
+       }
+   
+       void getDependentDialects(DialectRegistry &reg) const override
+       {
+           reg.insert<
+               cgra::CGRADialect,
+               func::FuncDialect,
+               memref::MemRefDialect>();
+       }
+   
+       // Build `func @name(shared...)` containing clones of `ops` (in order), with
+       // the shared values remapped to the arguments and constant live-ins cloned
+       // in.
+       func::FuncOp makeFunc(
+           StringRef name,
+           ArrayRef<Operation*> ops,
+           ArrayRef<Value> shared,
+           ArrayRef<int64_t> loopCounts,
+           ModuleOp module,
+           Location loc)
+       {
+           OpBuilder mb(module.getBodyRegion());
+           mb.setInsertionPointToEnd(module.getBody());
+           SmallVector<Type> argTys;
+           for (Value v : shared)
+               argTys.push_back(staticizeStream(v.getType(), loopCounts));
+           auto fn =
+               func::FuncOp::create(mb, loc, name, mb.getFunctionType(argTys, {}));
+           Block* entry = fn.addEntryBlock();
+           OpBuilder b(entry, entry->begin());
+   
+           // Map each shared value to its argument. When a dynamic memref was
+           // staticized the argument type differs, but affine load/store verify on
+           // any ranked memref, so the cloned ops operate directly on the
+           // static-sized argument.
+           IRMapping map;
+           for (auto [i, v] : llvm::enumerate(shared))
+               map.map(v, entry->getArgument(i));
+   
+           // A buffer backed by a memref.global is RE-MATERIALISED here rather
+           // than read from the argument. The argument stays (so call sites are
+           // unchanged), but the body refers to the symbol — which is the only
+           // buffer identity that survives outlining. The multi-config driver
+           // emitter uses it to recognise that a stream in config 7 and a stream
+           // in config 23 are the same array; without it every (config, stream)
+           // pair looks like a fresh buffer, and a partitioned network declared
+           // 292 arrays (9.6 MB) instead of 34, with the configurations reading
+           // and writing different copies.
+           // Record, per argument, the global symbol it stands for (empty when it
+           // is not global-backed). Re-materialising the global below leaves the
+           // argument DEAD, so this attribute is the only remaining way for
+           // --generate-cgra-driver to know what to pass when it synthesises a
+           // call to this segment — which it must do for main_init / main_stageK /
+           // main_post once drop-host has removed the call site. Record which
+           // global each argument stands for, but do NOT re-materialise the
+           // get_global inside the callee. Cloning it made the body reference the
+           // global directly, and `picea-translate` then emits `@sym = private
+           // global …` in <K>.ll — a SECOND copy of the array, unrelated to the
+           // one dataset.h defines and the fabric streams. The host segment filled
+           // the private duplicate, so the convolutions read a buffer of zeros.
+           // The callee must use its ARGUMENTS, which are the driver's real
+           // arrays. (The identity problem the cloning was meant to solve no
+           // longer exists: with the host preserved, --generate-cgra-driver takes
+           // buffer identity from the actual call-site operands and the inline
+           // deploys.)
+           SmallVector<Attribute> argGlobals;
+           for (Value v : shared) {
+               auto g = v.getDefiningOp<memref::GetGlobalOp>();
+               argGlobals.push_back(
+                   mb.getStringAttr(g ? g.getName() : StringRef("")));
+           }
+           fn->setAttr("cgra.arg_globals", mb.getArrayAttr(argGlobals));
+   
+           // Clone constant live-ins (used anywhere, including nested regions)
+           // that are defined outside the outlined ops, so operands resolve inside
+           // the new func.
+           llvm::SmallPtrSet<Operation*, 8> inSet(ops.begin(), ops.end());
+           // Re-clone pure live-ins used by the outlined ops but defined outside
+           // them: constants AND pure global-address math (llvm.mlir.addressof /
+           // getelementptr for printf format strings, etc.). Without this the
+           // clones keep referencing ops left in the host function, which
+           // `drop-host` then erases -> "operation destroyed but still has uses".
+           // Operands are cloned first (recursion) so the whole chain resolves in
+           // dependency order.
+           std::function<bool(Value)> reclone = [&](Value v) -> bool {
+               if (map.contains(v))
+                   return true; // already available (arg, constant, or an earlier
+                                // clone)
+               Operation* d = v.getDefiningOp();
+               if (!d || inSet.count(d)) return false;
+               bool ok = d->hasTrait<OpTrait::ConstantLike>()
+                         || (isMemoryEffectFree(d) && d->getDialect()
+                             && d->getDialect()->getNamespace() == "llvm");
+               if (!ok) return false;
+               for (Value o : d->getOperands())
+                   if (!reclone(o)) return false;
+               b.clone(*d, map); // clone(op, map) also maps d's results into `map`
+               return true;
+           };
+           for (Operation* op : ops)
+               op->walk([&](Operation* inner) {
+                   for (Value v : inner->getOperands()) (void)reclone(v);
+               });
+   
+           for (Operation* op : ops) b.clone(*op, map);
+   
+           // The callee must use its ARGUMENTS, not the global symbol.
+           //
+           // The `map` above already redirects the get_globals that sit OUTSIDE
+           // the outlined region (they are live-ins, so they became arguments).
+           // But a get_global INSIDE the region is one of `ops` and was just
+           // cloned in verbatim — and the buffer-placement passes do leave those
+           // behind. Such a clone lowers to `@sym = private global …` in <K>.ll: a
+           // SECOND, unrelated copy of the array. The segment then reads and
+           // writes the duplicate while the driver and the fabric use the real one
+           // from dataset.h, so every store the segment performs is lost and every
+           // load it does reads zeros.
+           //
+           // That silently cost `tfm_relu` the last `N mod 4` outputs (its lane
+           // remainder is real compute in main_post) and made EVERY kernel's
+           // result print as zeros. It is invisible to the driver's SUCCESS check
+           // whenever the reference path calls the same segment — both sides then
+           // read the same duplicate and agree — so `-cpucheck` is what catches
+           // it.
+           SmallVector<memref::GetGlobalOp> dead;
+           fn.walk([&](memref::GetGlobalOp gg) {
+               for (auto [i, sym] : llvm::enumerate(argGlobals)) {
+                   if (cast<StringAttr>(sym).getValue() != gg.getName()) continue;
+                   BlockArgument a = entry->getArgument(i);
+                   // A staticized argument can have a different (more precise)
+                   // type than the global; only fold when they agree, so nothing
+                   // is silently retyped.
+                   if (a.getType() != gg.getType()) continue;
+                   gg.getResult().replaceAllUsesWith(a);
+                   dead.push_back(gg);
+                   return;
+               }
+           });
+           for (memref::GetGlobalOp gg : dead) gg.erase();
+   
+           // A cloned cgra.deploy had its stream operands remapped to the
+           // (possibly staticized) function arguments; make its region block
+           // arguments match their operands again so the op verifies and the body
+           // runs on the static memrefs.
+           fn.walk([&](cgra::DeployOp dep) {
+               Block &db = dep.getBody().front();
+               for (auto [arg, operand] :
+                    llvm::zip(db.getArguments(), dep.getStreams()))
+                   arg.setType(operand.getType());
+           });
+   
+           func::ReturnOp::create(b, loc);
+           return fn;
+       }
+   
+       void runOnOperation() override
+       {
+           ModuleOp module = getOperation();
+   
+           SmallVector<func::FuncOp> hosts;
+           module.walk([&](func::FuncOp fn) {
+               if (fn.isDeclaration()) return;
+               // A host is any function with at least one cgra.deploy in its entry
+               // block.
+               for (Operation &op : fn.getBody().front())
+                   if (isa<cgra::DeployOp>(&op)) {
+                       hosts.push_back(fn);
+                       break;
+                   }
+           });
+   
+           for (func::FuncOp H : hosts) outline(H, module);
+       }
+   
+       // One outlined piece: a name and the ops it contains (a host segment's ops,
+       // or a single cgra.deploy). Segments and kernels alternate in program
+       // order.
+       struct Piece {
+           std::string name;
+           SmallVector<Operation*> ops;
+       };
+   
+       void outline(func::FuncOp H, ModuleOp module)
+       {
+           Block &entry = H.getBody().front();
+   
+           // Partition the entry block into host segments separated by the
+           // deploys, in program order: seg0, deploy0, seg1, deploy1, ..., segN. A
+           // function with a single kernel yields the familiar init / kernel /
+           // post; several kernels add numbered kernels and inter-kernel host
+           // stages. Whatever feeds the function's TERMINATOR has to stay in the
+           // host. The terminator is never outlined, so moving one of its
+           // producers into a segment function and erasing the original destroys
+           // an operation the `return` still uses — lenet hands its result back
+           // through a `memref.collapse_shape` of the output buffer and aborted
+           // the whole pass with "operation destroyed but still has uses". These
+           // are address computations (views, casts), not work: leaving them
+           // behind costs nothing, and the C driver ignores the return value
+           // anyway.
+           llvm::SmallPtrSet<Operation*, 8> feedsTerminator;
+           if (Operation* term = entry.getTerminator()) {
+               SmallVector<Value> work(
+                   term->getOperands().begin(),
+                   term->getOperands().end());
+               while (!work.empty()) {
+                   Operation* d = work.pop_back_val().getDefiningOp();
+                   if (!d || d->getBlock() != &entry
+                       || !feedsTerminator.insert(d).second)
+                       continue;
+                   work.append(d->getOperands().begin(), d->getOperands().end());
+               }
+           }
+   
+           SmallVector<SmallVector<Operation*>> segments(1);
+           SmallVector<cgra::DeployOp> deploys;
+           for (Operation &op : entry) {
+               if (auto d = dyn_cast<cgra::DeployOp>(&op)) {
+                   deploys.push_back(d);
+                   segments.emplace_back();
+                   continue;
+               }
+               if (op.hasTrait<OpTrait::IsTerminator>() || staysInHost(&op)
+                   || feedsTerminator.contains(&op))
+                   continue;
+               segments.back().push_back(&op);
+           }
+           if (deploys.empty()) return;
+   
+           bool anyHost = false;
+           for (auto &seg : segments) anyHost |= !seg.empty();
+           // A single kernel with no surrounding host code is a bare kernel (the
+           // whole function body IS the deploy). In the default host-preserving
+           // mode leave it untouched. Under drop-host (driver generation) still
+           // outline it, so it becomes @<H>_kernel (with empty
+           // @<H>_init/@<H>_post): generate-cgra-driver looks up @<base>_kernel
+           // and treats absent/empty init/post as no-ops, so a bare kernel is
+           // drivable without any hand-written host init/post.
+           if (deploys.size() == 1 && !anyHost && !dropHost) return;
+   
+           // Name each piece by role, in execution order.
+           unsigned n = deploys.size();
+           auto segName = [&](unsigned i) -> std::string {
+               if (i == 0) return "_init";
+               if (i == n) return "_post";
+               return "_stage" + std::to_string(i);
+           };
+           auto kernName = [&](unsigned i) -> std::string {
+               return i == 0 ? "_kernel" : "_kernel" + std::to_string(i);
+           };
+   
+           SmallVector<Piece> pieces;
+           SmallVector<Operation*>
+               outlinedOps; // every op we will erase, program order
+           for (unsigned i = 0; i <= n; ++i) {
+               if (!segments[i].empty() || i == 0 || i == n) {
+                   pieces.push_back({segName(i), segments[i]});
+                   outlinedOps.append(segments[i].begin(), segments[i].end());
+               }
+               if (i < n) {
+                   pieces.push_back({kernName(i), {deploys[i].getOperation()}});
+                   outlinedOps.push_back(deploys[i].getOperation());
+               }
+           }
+   
+           // Shared streams: memref values used by any piece but defined in H
+           // (block arguments, allocas, globals) — these become the shared
+           // arguments. A cgra.deploy names its streams explicitly, so take them
+           // from its operands rather than walking its body (whose memrefs are the
+           // deploy's own block arguments); fall back to walking for a legacy
+           // stream-less deploy.
+           llvm::SetVector<Value> shared;
+           auto consider = [&](Value v) {
+               if (!isa<MemRefType>(v.getType())) return;
+               Operation* d = v.getDefiningOp();
+               if (!d || staysInHost(d)) // block arg, or alloca/global in H
+                   shared.insert(v);
+           };
+           auto collect = [&](Operation* op) {
+               if (auto dep = dyn_cast<cgra::DeployOp>(op);
+                   dep && !dep.getStreams().empty()) {
+                   for (Value v : dep.getStreams()) consider(v);
+                   return;
+               }
+               op->walk([&](Operation* inner) {
+                   for (Value v : inner->getOperands()) consider(v);
+               });
+           };
+           for (Operation* op : outlinedOps) collect(op);
+           SmallVector<Value> sharedVec(shared.begin(), shared.end());
+   
+           // Whether a shared stream is a function argument or a local alloca —
+           // the case where turning it into a shared argument enables the full
+           // kernel pipeline.
+           bool hasArgOrAlloca = false;
+           for (Value v : sharedVec) {
+               if (isa<BlockArgument>(v)) {
+                   hasArgOrAlloca = true;
+                   break;
+               }
+               Operation* d = v.getDefiningOp();
+               if (d && isa<memref::AllocaOp, memref::AllocOp>(d)) {
+                   hasArgOrAlloca = true;
+                   break;
+               }
+           }
+   
+           // Outlining a deploy is only NECESSARY when a shared stream has no
+           // static shape (a pointer-derived function argument), because the
+           // outlined function's bare-pointer signature then has to be staticized.
+           // When every stream is static — module globals and local allocs alike —
+           // the deploys can stay INLINE, and for a multi-config kernel they
+           // SHOULD: that is the shape --generate-cgra-driver reads natively. It
+           // walks the host body in program order for the configuration sequence,
+           // takes buffer identity from the actual alloc/get_global values, and
+           // calls the host segments through their real call sites. Erasing the
+           // host instead forces all three to be RECONSTRUCTED, which is where the
+           // missing init/stage calls, the one-nest reference and the null-pointer
+           // arguments all came from. Restricted to >1 deploy because the
+           // single-config emitter requires an outlined <base>_kernel to exist.
+           bool allStatic = true;
+           for (Value v : sharedVec) {
+               auto mrt = dyn_cast<MemRefType>(v.getType());
+               if (!mrt || !mrt.hasStaticShape()) {
+                   allStatic = false;
+                   break;
+               }
+           }
+           // Keep the deploys inline whenever every stream is static — for ANY
+           // number of them. There is only one driver emitter now, and it reads
+           // inline deploys, so the
+           // ">1 deploy" restriction that used to protect the single-config
+           // emitter is gone.
+           bool keepDeploysInline = !hasArgOrAlloca || allStatic;
+   
+           // A kernel over module-level GLOBALS (the multi-config route) is driven
+           // by generate-cgra-driver reading the inline deploys, so the deploys
+           // are NOT outlined. But under drop-host the C driver still wants
+           // LLVM-lowered init/ post to CALL: outline ONLY the host segments into
+           // <H>_init/<H>_stageK/ <H>_post(sharedVec) and replace each with a call
+           // in place, leaving the deploys inline. The globals are static-shaped,
+           // so the outlined functions are C-callable under the bare-pointer ABI
+           // with no staticizing. Without drop-host (host preserved) a globals
+           // kernel is left entirely untouched.
+           if (keepDeploysInline) {
+               if (dropHost) {
+                   Location loc = H.getLoc();
+                   std::string base = H.getName().str();
+                   // Hoist a fresh get_global for each shared stream to the
+                   // FUNCTION ENTRY, so every inserted call is dominated by its
+                   // argument. The original get_globals may sit mid-function
+                   // (Polygeist emits one right before each use), which would not
+                   // dominate a call inserted at an earlier deploy. (CSE later
+                   // folds the duplicates; kernels whose globals are already at
+                   // the top are unaffected.) A static memref.alloc/alloca is
+                   // hoisted (MOVED, not cloned — the storage has to stay unique)
+                   // for the same reason: an alloc emitted mid-body does not
+                   // dominate a call inserted at an earlier deploy, which is
+                   // exactly the "operand #N does not dominate this use" a local
+                   // pad buffer produces. It is pure storage with no operands, so
+                   // moving it to the entry is safe.
+                   OpBuilder hb(&H.getBody().front(), H.getBody().front().begin());
+                   Operation* hoistPoint = nullptr;
+                   for (Value v : sharedVec) {
+                       Operation* d = v.getDefiningOp();
+                       if (d && isa<memref::AllocOp, memref::AllocaOp>(d)
+                           && d->getNumOperands() == 0
+                           && d->getBlock() == &H.getBody().front()) {
+                           if (hoistPoint)
+                               d->moveAfter(hoistPoint);
+                           else
+                               d->moveBefore(&H.getBody().front().front());
+                           hoistPoint = d;
+                       }
+                   }
+                   SmallVector<Value> callArgs;
+                   for (Value v : sharedVec)
+                       if (auto gg = v.getDefiningOp<memref::GetGlobalOp>())
+                           callArgs.push_back(
+                               hb.clone(*gg.getOperation())->getResult(0));
+                       else
+                           callArgs.push_back(v);
+                   bool changed = false;
+                   for (unsigned i = 0; i <= n; ++i) {
+                       if (segments[i].empty()) continue;
+                       func::FuncOp fn = makeFunc(
+                           base + segName(i),
+                           segments[i],
+                           sharedVec,
+                           /*loopCounts=*/{},
+                           module,
+                           loc);
+                       OpBuilder b(module.getContext());
+                       if (i < n)
+                           b.setInsertionPoint(deploys[i]);
+                       else
+                           b.setInsertionPointAfter(deploys[n - 1]);
+                       func::CallOp::create(b, loc, fn, callArgs);
+                       changed = true;
+                   }
+                   // Erase every outlined segment op in reverse PROGRAM order
+                   // (across all segments), so a value defined in an earlier
+                   // segment (e.g. a printf format-string getelementptr shared by
+                   // prints in several segments) is removed only after every later
+                   // use of it.
+                   if (changed) {
+                       SmallVector<Operation*> all;
+                       for (auto &seg : segments)
+                           all.append(seg.begin(), seg.end());
+                       for (Operation* op : llvm::reverse(all)) op->erase();
+                   }
+               }
+               return;
+           }
+   
+           Location loc = H.getLoc();
+           std::string base = H.getName().str();
+   
+           // Give dynamic (pointer-derived) streams a static size so the outlined
+           // functions are C-callable under the bare-pointer ABI. Only in
+           // drop-host mode: when H is kept it calls them with its own (dynamic)
+           // memrefs, so the signatures must match those unchanged. With several
+           // kernels the shared arguments carry one signature, so size to the
+           // largest kernel (a safe over-allocation for the smaller ones).
+           SmallVector<int64_t> loopCounts;
+           if (dropHost) {
+               int64_t best = 0;
+               for (cgra::DeployOp d : deploys) {
+                   auto counts = cgra::perfectNestTripCounts(d.getBody());
+                   int64_t prod = 1;
+                   for (int64_t c : counts) prod *= c;
+                   if (prod > best) {
+                       best = prod;
+                       loopCounts = counts;
+                   }
+               }
+           }
+   
+           // Create the outlined functions, in execution order, and (unless
+           // drop-host) remember them so H can call them in the same order.
+           SmallVector<func::FuncOp> outlinedFns;
+           for (Piece &p : pieces)
+               outlinedFns.push_back(makeFunc(
+                   base + p.name,
+                   p.ops,
+                   sharedVec,
+                   loopCounts,
+                   module,
+                   loc));
+   
+           // drop-host: the C driver provides main() and calls the pieces, so keep
+           // only the outlined functions and erase the host wrapper entirely.
+           if (dropHost) {
+               H.erase();
+               return;
+           }
+   
+           // Otherwise rewrite H: call the pieces in order (passing the shared
+           // streams) where the first kernel was, then remove the outlined ops.
+           OpBuilder b(deploys.front());
+           for (func::FuncOp fn : outlinedFns)
+               func::CallOp::create(b, loc, fn, sharedVec);
+           for (Operation* op : llvm::reverse(outlinedOps)) op->erase();
+       }
+   };
+   
+   } // namespace
+   
+   std::unique_ptr<mlir::Pass> cgra::createCGRAOutlineDeployPass()
+   { return std::make_unique<CGRAOutlineDeployPass>(); }

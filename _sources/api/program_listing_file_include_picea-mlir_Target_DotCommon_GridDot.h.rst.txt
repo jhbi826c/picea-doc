@@ -1,0 +1,41 @@
+
+.. _program_listing_file_include_picea-mlir_Target_DotCommon_GridDot.h:
+
+Program Listing for File GridDot.h
+==================================
+
+|exhale_lsh| :ref:`Return to documentation for file <file_include_picea-mlir_Target_DotCommon_GridDot.h>` (``include/picea-mlir/Target/DotCommon/GridDot.h``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. code-block:: cpp
+
+   
+   
+   #pragma once
+   
+   #include "mlir/Support/LLVM.h"
+   
+   #include <string>
+   
+   namespace mlir::picea {
+   
+   struct GridDotNode {
+       std::string name;
+       std::string label;
+       std::string shape;
+   };
+   
+   struct GridDotEdge {
+       std::string src;
+       std::string dst;
+       std::string label;
+   };
+   
+   std::string emitGridDot(
+       StringRef title,
+       StringRef bendPrefix,
+       ArrayRef<GridDotNode> nodes,
+       ArrayRef<GridDotEdge> edges);
+   
+   } // namespace mlir::picea

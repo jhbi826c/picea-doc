@@ -1,0 +1,50 @@
+
+.. _program_listing_file_include_picea-mlir_InitAllPasses.h:
+
+Program Listing for File InitAllPasses.h
+========================================
+
+|exhale_lsh| :ref:`Return to documentation for file <file_include_picea-mlir_InitAllPasses.h>` (``include/picea-mlir/InitAllPasses.h``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. code-block:: cpp
+
+   
+   
+   #include "picea-mlir/Conversion/ConvertToCGRA/ConvertToCGRA.h"
+   #include "picea-mlir/Conversion/ConvertToDFG/ConvertToDFG.h"
+   #include "picea-mlir/Conversion/ConvertToEmitC/ConvertToEmitC.h"
+   #include "picea-mlir/Conversion/ConvertToEmitHLS/ConvertToEmitHLS.h"
+   #include "picea-mlir/Conversion/Passes.h"
+   #include "picea-mlir/Dialect/CGRA/Transforms/Passes.h"
+   #include "picea-mlir/Dialect/DFG/Transforms/Passes.h"
+   #include "picea-mlir/Dialect/EmitHLS/Transforms/Passes.h"
+   #include "picea-mlir/Dialect/Func/Transforms/Passes.h"
+   #include "picea-mlir/Dialect/Linalg/Transforms/Passes.h"
+   
+   #include <mlir/IR/DialectRegistry.h>
+   #include <mlir/InitAllDialects.h>
+   
+   namespace mlir {
+   
+   inline void registerAllPICEAMLIRPasses()
+   {
+       // Transformation passes
+       cgra::registerCGRAPasses();
+       dfg::registerDFGPasses();
+       emithls::registerEmitHLSPasses();
+       func::registerFuncExtPasses();
+       linalg::registerLinalgExtPasses();
+   
+       // Conversion passes
+       picea::registerPICEAConversionPasses();
+   
+       // Conversion pipelines
+       picea::registerConvertToCGRAPipelines();
+       picea::registerConvertToEmitCPipelines();
+       picea::registerConvertToDFGPipeline();
+       picea::registerConvertToEmitHLSPipelines();
+   }
+   
+   } // namespace mlir

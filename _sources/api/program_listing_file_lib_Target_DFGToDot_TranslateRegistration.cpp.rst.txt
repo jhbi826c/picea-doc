@@ -1,0 +1,44 @@
+
+.. _program_listing_file_lib_Target_DFGToDot_TranslateRegistration.cpp:
+
+Program Listing for File TranslateRegistration.cpp
+==================================================
+
+|exhale_lsh| :ref:`Return to documentation for file <file_lib_Target_DFGToDot_TranslateRegistration.cpp>` (``lib/Target/DFGToDot/TranslateRegistration.cpp``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. code-block:: cpp
+
+   
+   
+   #include "mlir/InitAllDialects.h"
+   #include "mlir/Tools/mlir-translate/Translation.h"
+   #include "picea-mlir/Dialect/DFG/IR/DFG.h"
+   #include "picea-mlir/Target/DFGToDot/DotEmitter.h"
+   
+   using namespace mlir;
+   
+   namespace mlir {
+   
+   //===----------------------------------------------------------------------===//
+   // Translation registration
+   //===----------------------------------------------------------------------===//
+   
+   void registerDFGToDotTranslation()
+   {
+       TranslateFromMLIRRegistration reg(
+           "dfg-to-dot",
+           "translate DFG graph to Dot representation",
+           [](Operation* op, raw_ostream &output) {
+               return dfg::translateDFGToDot(op, output);
+           },
+           [](DialectRegistry &registry) {
+               // Actor bodies retain computation dialects after DFG extraction,
+               // even though the exporter only uses the graph topology.
+               registerAllDialects(registry);
+               registry.insert<dfg::DFGDialect>();
+           });
+   }
+   
+   } // namespace mlir

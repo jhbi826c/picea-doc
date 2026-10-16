@@ -1,0 +1,29 @@
+
+.. _program_listing_file_include_picea-mlir_Target_EmitHLSToFPGAModelProfile_FPGAModelProfileEmitter.h:
+
+Program Listing for File FPGAModelProfileEmitter.h
+==================================================
+
+|exhale_lsh| :ref:`Return to documentation for file <file_include_picea-mlir_Target_EmitHLSToFPGAModelProfile_FPGAModelProfileEmitter.h>` (``include/picea-mlir/Target/EmitHLSToFPGAModelProfile/FPGAModelProfileEmitter.h``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. code-block:: cpp
+
+   
+   
+   #pragma once
+   
+   #include "mlir/IR/BuiltinOps.h"
+   #include "mlir/Support/LogicalResult.h"
+   
+   namespace llvm {
+   class raw_ostream;
+   } // namespace llvm
+   
+   namespace mlir::emithls {
+   
+   LogicalResult
+   translateEmitHLSToFPGAModelProfile(ModuleOp op, llvm::raw_ostream &os);
+   
+   } // namespace mlir::emithls

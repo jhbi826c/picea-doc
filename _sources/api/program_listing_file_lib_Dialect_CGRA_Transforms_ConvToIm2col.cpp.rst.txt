@@ -1,0 +1,511 @@
+
+.. _program_listing_file_lib_Dialect_CGRA_Transforms_ConvToIm2col.cpp:
+
+Program Listing for File ConvToIm2col.cpp
+=========================================
+
+|exhale_lsh| :ref:`Return to documentation for file <file_lib_Dialect_CGRA_Transforms_ConvToIm2col.cpp>` (``lib/Dialect/CGRA/Transforms/ConvToIm2col.cpp``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. code-block:: cpp
+
+   
+   
+   #include "mlir/Dialect/Affine/IR/AffineOps.h"
+   #include "mlir/Dialect/Arith/IR/Arith.h"
+   #include "mlir/Dialect/Func/IR/FuncOps.h"
+   #include "mlir/Dialect/MemRef/IR/MemRef.h"
+   #include "mlir/IR/BuiltinOps.h"
+   #include "mlir/IR/IRMapping.h"
+   #include "mlir/IR/Matchers.h"
+   #include "mlir/Pass/Pass.h"
+   #include "picea-mlir/Dialect/CGRA/Transforms/Passes.h"
+   
+   using namespace mlir;
+   
+   // im2col does not pay on this machine: conv_gen 0.50-0.59x, conv_mc 1.00-1.01x,
+   // qconv's gather 78.6% of its CGRA region. A larger K does not fix it.
+   // For a PLAIN int32 convolution the gather is a pure copy, so it has no DFG and
+   // stays on the host in main_init — outside both cycle counters, so those
+   // kernels' reported figures exclude this pass's cost. Quantized kernels are
+   // unaffected:
+   // --hoist-reduction-unpack folds the int8 unpack in, making the gather a
+   // deploy. Measurements and analysis: docs/TODO.md C5.
+   
+   namespace {
+   
+   // A matched reduction nest:
+   //   for P... (parallel, index the store)
+   //     for R... (reduction, innermost, do NOT index the store)
+   //       acc = out[P]; ...; out[P] = acc + f(loads)
+   // covering both a plain 2-D convolution
+   //   for oh,ow,kh,kw: out[oh][ow] += in[oh+kh][ow+kw]*wgt[kh][kw]
+   // and the multi-channel quantized form the MYRTUS networks lower to
+   //   for n,oh,ow,f,kh,kw,c: out[n][oh][ow][f] += g(in[n][oh+kh][ow+kw][c],
+   //   w[f][kh][kw][c])
+   struct Nest {
+       SmallVector<affine::AffineForOp> loops; // outermost..innermost
+       SmallVector<affine::AffineForOp> par, red;
+       affine::AffineLoadOp accLoad;
+       affine::AffineStoreOp accStore;
+       arith::AddIOp acc;
+       SmallVector<affine::AffineLoadOp> operands; // non-accumulator loads
+       int64_t K = 1; // flattened reduction trip count
+   };
+   
+   static int64_t tripOf(affine::AffineForOp f)
+   {
+       if (!f.hasConstantLowerBound() || !f.hasConstantUpperBound()
+           || f.getStepAsInt() != 1)
+           return -1;
+       return f.getConstantUpperBound() - f.getConstantLowerBound();
+   }
+   
+   // The single loop directly nested in @p f (perfect nest), else null.
+   static affine::AffineForOp soleInner(affine::AffineForOp f)
+   {
+       affine::AffineForOp inner;
+       for (Operation &op : f.getBody()->without_terminator()) {
+           if (auto l = dyn_cast<affine::AffineForOp>(op)) {
+               if (inner) return nullptr;
+               inner = l;
+           } else {
+               return nullptr;
+           }
+       }
+       return inner;
+   }
+   
+   struct CGRAConvToIm2colPass : public PassWrapper<
+                                     CGRAConvToIm2colPass,
+                                     OperationPass<func::FuncOp>> {
+   
+       MLIR_DEFINE_EXPLICIT_INTERNAL_INLINE_TYPE_ID(CGRAConvToIm2colPass)
+   
+       StringRef getArgument() const final { return "conv-to-im2col"; }
+       StringRef getDescription() const final
+       {
+           return "Rewrite a patch-gathering reduction nest (convolution) into "
+                  "im2col "
+                  "buffers plus a 1-D dot product the CGRA can stream";
+       }
+   
+       void getDependentDialects(mlir::DialectRegistry &registry) const override
+       {
+           registry.insert<
+               affine::AffineDialect,
+               arith::ArithDialect,
+               memref::MemRefDialect>();
+       }
+   
+       // Is @p ld already contiguous when the reduction IVs are walked row-major?
+       // True when they occupy the TRAILING memref dims, in nesting order, as bare
+       // IVs — which the convolution weight `w[f][kh][kw][c]` satisfies while the
+       // activation `in[n][oh+kh][ow+kw][c]` does not (its reduction IVs are ADDED
+       // to parallel ones, i.e. the patch is 2-D).
+       //
+       // We gather BOTH anyway, and only use this to decide whether the nest is
+       // worth rewriting at all. Streaming a contiguous operand straight from its
+       // own memref would need a 1-D view of it, and neither way works end to end:
+       // a `memref.collapse_shape` does not survive --finalize-memref-to-llvm, and
+       // recovering (kh,kw,c) from q with floordiv/mod produces an index the
+       // driver's stream analysis rejects (it is not affine in the dims).
+       // Re-copying the weight is cheap next to the activation buffer (residual: 2
+       // KB vs 253 KB).
+       bool contiguousInReduction(affine::AffineLoadOp ld, Nest &n)
+       {
+           AffineMap m = ld.getAffineMap();
+           unsigned rank = m.getNumResults();
+           if (rank < n.red.size()) return false;
+           unsigned first = rank - n.red.size();
+           for (unsigned i = 0; i < n.red.size(); ++i) {
+               auto dim = dyn_cast<AffineDimExpr>(m.getResult(first + i));
+               if (!dim) return false;
+               if (ld.getMapOperands()[dim.getPosition()]
+                   != n.red[i].getInductionVar())
+                   return false;
+           }
+           // …and no reduction IV may appear in the leading dims.
+           for (unsigned i = 0; i < first; ++i) {
+               bool bad = false;
+               m.getResult(i).walk([&](AffineExpr e) {
+                   if (auto d = dyn_cast<AffineDimExpr>(e))
+                       for (auto r : n.red)
+                           if (ld.getMapOperands()[d.getPosition()]
+                               == r.getInductionVar())
+                               bad = true;
+               });
+               if (bad) return false;
+           }
+           return true;
+       }
+   
+       bool match(affine::AffineForOp top, Nest &n)
+       {
+           n.loops.push_back(top);
+           while (auto in = soleInner(n.loops.back())) n.loops.push_back(in);
+           if (n.loops.size() < 3) return false;
+           for (auto l : n.loops)
+               if (tripOf(l) < 1) return false;
+   
+           Block* body = n.loops.back().getBody();
+           affine::AffineStoreOp store;
+           SmallVector<affine::AffineLoadOp> loads;
+           SmallVector<arith::AddIOp> adds;
+           for (Operation &op : body->without_terminator()) {
+               if (op.getNumRegions()) return false;
+               if (auto l = dyn_cast<affine::AffineLoadOp>(op))
+                   loads.push_back(l);
+               else if (auto s = dyn_cast<affine::AffineStoreOp>(op)) {
+                   if (store) return false;
+                   store = s;
+               } else if (auto a = dyn_cast<arith::AddIOp>(op))
+                   adds.push_back(a);
+               else if (!isa<arith::ArithDialect>(op.getDialect()))
+                   return false;
+           }
+           if (!store || loads.size() < 2) return false;
+   
+           // Parallel IVs = those indexing the store; the rest are reduction IVs
+           // and must be the INNERMOST contiguous block (that is the shape the
+           // fabric's accumulator wants once they are flattened into one
+           // dimension).
+           SmallVector<Value> storeIdx(store.getMapOperands());
+           bool seenRed = false;
+           for (auto l : n.loops) {
+               if (llvm::is_contained(storeIdx, l.getInductionVar())) {
+                   if (seenRed)
+                       return false; // a parallel loop inside a reduction loop
+                   n.par.push_back(l);
+               } else {
+                   seenRed = true;
+                   n.red.push_back(l);
+                   n.K *= tripOf(l);
+               }
+           }
+           if (n.red.empty() || n.par.empty() || n.K < 2) return false;
+   
+           // The accumulator: load of the stored location, feeding the add that is
+           // stored.
+           for (auto l : loads)
+               if (l.getMemRef() == store.getMemRef()
+                   && l.getAffineMap() == store.getAffineMap()
+                   && SmallVector<Value>(l.getMapOperands()) == storeIdx)
+                   n.accLoad = l;
+           if (!n.accLoad) return false;
+           for (auto a : adds)
+               if ((a.getLhs() == n.accLoad.getResult()
+                    || a.getRhs() == n.accLoad.getResult())
+                   && a.getResult() == store.getValueToStore())
+                   n.acc = a;
+           if (!n.acc) return false;
+           n.accStore = store;
+   
+           for (auto l : loads)
+               if (l != n.accLoad) n.operands.push_back(l);
+           // Only rewrite a SLIDING WINDOW. The signature is an index in which a
+           // reduction IV is ADDED to a parallel one (`in[oh+kh]`), i.e. the patch
+           // moves with the output — that is what makes the access 2-D and
+           // inexpressible as one (addr, stride, size) descriptor.
+           //
+           // Without this gate a matmul also matches (`C[i][j] += A[i][k]*B[k][j]`
+           // is a reduction nest whose `B[k][j]` has its reduction IV outside the
+           // trailing dim), and im2col would divert kernels that already run well
+           // — matmul needs no gather, just --promote-accumulator.
+           for (auto l : n.operands) {
+               AffineMap m = l.getAffineMap();
+               for (unsigned r = 0; r < m.getNumResults(); ++r) {
+                   auto add = dyn_cast<AffineBinaryOpExpr>(m.getResult(r));
+                   if (!add || add.getKind() != AffineExprKind::Add) continue;
+                   // Both addends must be BARE induction variables (coefficient
+                   // 1). A flattened matmul index `A[i*K + k]` also adds a
+                   // parallel and a reduction IV, but the parallel one is SCALED
+                   // by a dimension size — that is a linearised 2-D index, not an
+                   // overlapping window, and gathering it would just copy A. A
+                   // true window is `oh + kh`: both coefficients 1.
+                   SmallVector<AffineExpr> addends{add.getLHS(), add.getRHS()};
+                   bool bareRed = false, barePar = false;
+                   int64_t redTrip = 0;
+                   for (AffineExpr a : addends) {
+                       auto d = dyn_cast<AffineDimExpr>(a);
+                       if (!d) continue;
+                       Value iv = l.getMapOperands()[d.getPosition()];
+                       for (auto rr : n.red)
+                           if (iv == rr.getInductionVar()) {
+                               bareRed = true;
+                               redTrip = tripOf(rr);
+                           }
+                       for (auto pp : n.par)
+                           if (iv == pp.getInductionVar()) barePar = true;
+                   }
+                   // …and the window must actually SLIDE. A 1x1 convolution (the
+                   // pointwise half of every depthwise-separable block) still
+                   // indexes `in[oh + kh]`, but `kh` has a trip count of ONE: the
+                   // "patch" is a single point, so the gather degenerates into a
+                   // full copy of the input for no reuse at all — 281 KB of
+                   // `im2col_buf` on tiny_kws, whose 4 pointwise convs are exactly
+                   // this shape. A 1x1 conv is a matmul over the channel dim and
+                   // takes the ordinary --shape-cgra-reductions path instead.
+                   if (bareRed && barePar && redTrip > 1) return true;
+               }
+           }
+           return false;
+       }
+   
+       // Flattened row-major index expression over @p ivs, using dim positions
+       // base..base+ivs.size(), scaled by @p unit.
+       AffineExpr flatten(
+           ArrayRef<affine::AffineForOp> ivs,
+           unsigned base,
+           int64_t unit,
+           MLIRContext* ctx)
+       {
+           AffineExpr e = getAffineConstantExpr(0, ctx);
+           int64_t stride = unit;
+           for (int i = (int)ivs.size() - 1; i >= 0; --i) {
+               e = e + getAffineDimExpr(base + i, ctx) * stride;
+               stride *= tripOf(ivs[i]);
+           }
+           return e;
+       }
+   
+       memref::GlobalOp declareGlobal(
+           ModuleOp mod,
+           int64_t n,
+           Type elt,
+           StringRef hint,
+           Location loc)
+       {
+           std::string name = hint.str();
+           unsigned k = 0;
+           while (mod.lookupSymbol(name))
+               name = hint.str() + "_" + std::to_string(k++);
+           OpBuilder gb(mod.getBodyRegion());
+           gb.setInsertionPointToStart(mod.getBody());
+           auto ty = MemRefType::get({n}, elt);
+           auto zero = DenseElementsAttr::get(
+               RankedTensorType::get({n}, elt),
+               gb.getZeroAttr(elt));
+           return memref::GlobalOp::create(
+               gb,
+               loc,
+               StringRef(name),
+               gb.getStringAttr("private"),
+               ty,
+               cast<Attribute>(zero),
+               false,
+               IntegerAttr());
+       }
+   
+       // Build a nest over `ivs` and run `emit` in its innermost body.
+       void buildNest(
+           OpBuilder &b,
+           Location loc,
+           ArrayRef<affine::AffineForOp> ivs,
+           SmallVectorImpl<Value> &newIVs,
+           function_ref<void(OpBuilder &)> emit)
+       {
+           if (ivs.empty()) {
+               emit(b);
+               return;
+           }
+           auto f = affine::AffineForOp::create(b, loc, 0, tripOf(ivs.front()));
+           newIVs.push_back(f.getInductionVar());
+           OpBuilder ib(f.getBody(), f.getBody()->begin());
+           buildNest(ib, loc, ivs.drop_front(), newIVs, emit);
+       }
+   
+       void rewrite(Nest &n, DenseMap<unsigned, memref::GlobalOp> &shared)
+       {
+           func::FuncOp fn = n.loops.front()->getParentOfType<func::FuncOp>();
+           Location loc = n.loops.front().getLoc();
+           Type elt = n.accLoad.getType();
+           MLIRContext* ctx = fn.getContext();
+           OpBuilder b(n.loops.front());
+   
+           // Which operands need gathering, and over which parallel IVs each
+           // depends.
+           struct Gather {
+               affine::AffineLoadOp ld;
+               SmallVector<affine::AffineForOp> par; // parallel IVs it uses
+               int64_t rows = 1;
+               Value buf;
+           };
+           SmallVector<Gather> gathers;
+           for (auto ld : n.operands) {
+               Gather g;
+               g.ld = ld;
+               for (auto p : n.par)
+                   if (llvm::is_contained(
+                           ld.getMapOperands(),
+                           p.getInductionVar())) {
+                       g.par.push_back(p);
+                       g.rows *= tripOf(p);
+                   }
+               gathers.push_back(std::move(g));
+           }
+   
+           // One SHARED buffer per gather slot, PRE-SIZED to the largest use in
+           // the function (see runOnOperation). Giving every convolution its own
+           // would not fit: residual's three convs would need 253+253+220 KB
+           // against ~512 KB of interleaved RAM, while reusing one 253 KB buffer
+           // does — and reuse is safe because each gather is emitted immediately
+           // before the reduction consuming it. The sizing must happen BEFORE any
+           // rewriting: growing a global afterwards leaves earlier
+           // `memref.get_global` ops with a stale, mismatched type.
+           for (auto [i, g] : llvm::enumerate(gathers))
+               gathers[i].buf = memref::GetGlobalOp::create(
+                   b,
+                   loc,
+                   cast<MemRefType>(shared[i].getType()),
+                   shared[i].getName());
+   
+           // ---- the gather nests: buf[flat(par)*K + flat(red)] = <original load>
+           // ----
+           for (Gather &g : gathers) {
+               SmallVector<affine::AffineForOp> all(g.par);
+               all.append(n.red.begin(), n.red.end());
+               SmallVector<Value> ivs;
+               buildNest(b, loc, all, ivs, [&](OpBuilder &ib) {
+                   IRMapping map;
+                   for (auto [i, l] : llvm::enumerate(all))
+                       map.map(l.getInductionVar(), ivs[i]);
+                   SmallVector<Value> idx;
+                   for (Value v : g.ld.getMapOperands())
+                       idx.push_back(map.lookupOrDefault(v));
+                   Value val = affine::AffineLoadOp::create(
+                       ib,
+                       loc,
+                       g.ld.getMemRef(),
+                       g.ld.getAffineMap(),
+                       idx);
+                   AffineExpr e = flatten(g.par, 0, n.K, ctx)
+                                  + flatten(n.red, g.par.size(), 1, ctx);
+                   affine::AffineStoreOp::create(
+                       ib,
+                       loc,
+                       val,
+                       g.buf,
+                       AffineMap::get(ivs.size(), 0, e),
+                       ivs);
+               });
+           }
+   
+           // ---- the reduction: parallel nest + one q loop over K ----
+           SmallVector<Value> pIVs;
+           buildNest(b, loc, n.par, pIVs, [&](OpBuilder &pb) {
+               IRMapping pm;
+               for (auto [i, p] : llvm::enumerate(n.par))
+                   pm.map(p.getInductionVar(), pIVs[i]);
+               Value zero =
+                   arith::ConstantOp::create(pb, loc, pb.getIntegerAttr(elt, 0));
+               auto q = affine::AffineForOp::create(
+                   pb,
+                   loc,
+                   0,
+                   n.K,
+                   1,
+                   ValueRange{zero});
+               Block* qb = q.getBody();
+               if (!qb->empty() && qb->back().hasTrait<OpTrait::IsTerminator>())
+                   qb->back().erase();
+               OpBuilder ib(qb, qb->end());
+   
+               IRMapping bm(pm);
+               // Gathered operands read their buffer at [flat(par)*K + q].
+               for (Gather &g : gathers) {
+                   SmallVector<Value> ops;
+                   for (auto p : g.par)
+                       ops.push_back(pm.lookup(p.getInductionVar()));
+                   ops.push_back(q.getInductionVar());
+                   AffineExpr e = flatten(g.par, 0, n.K, ctx)
+                                  + getAffineDimExpr(g.par.size(), ctx);
+                   bm.map(
+                       g.ld.getResult(),
+                       affine::AffineLoadOp::create(
+                           ib,
+                           loc,
+                           g.buf,
+                           AffineMap::get(ops.size(), 0, e),
+                           ops)
+                           .getResult());
+               }
+               // Clone the body arithmetic, feeding the accumulator from
+               // iter_args.
+               bm.map(n.accLoad.getResult(), q.getRegionIterArgs()[0]);
+               Value yielded;
+               for (Operation &op :
+                    n.loops.back().getBody()->without_terminator()) {
+                   if (isa<affine::AffineLoadOp, affine::AffineStoreOp>(op))
+                       continue;
+                   Operation* c = ib.clone(op, bm);
+                   if (&op == n.acc.getOperation()) yielded = c->getResult(0);
+               }
+               affine::AffineYieldOp::create(ib, loc, ValueRange{yielded});
+   
+               SmallVector<Value> sidx;
+               for (Value v : n.accStore.getMapOperands())
+                   sidx.push_back(pm.lookupOrDefault(v));
+               affine::AffineStoreOp::create(
+                   pb,
+                   loc,
+                   q.getResult(0),
+                   n.accStore.getMemRef(),
+                   n.accStore.getAffineMap(),
+                   sidx);
+           });
+   
+           n.loops.front().erase();
+       }
+   
+       // Elements a load needs in its slot: (product of the parallel trips it
+       // uses) * K.
+       int64_t slotSize(affine::AffineLoadOp ld, Nest &n)
+       {
+           int64_t rows = 1;
+           for (auto p : n.par)
+               if (llvm::is_contained(ld.getMapOperands(), p.getInductionVar()))
+                   rows *= tripOf(p);
+           return rows * n.K;
+       }
+   
+       void runOnOperation() override
+       {
+           func::FuncOp fn = getOperation();
+           SmallVector<affine::AffineForOp> tops;
+           for (Block &blk : fn.getBody())
+               for (Operation &op : blk)
+                   if (auto f = dyn_cast<affine::AffineForOp>(&op))
+                       tops.push_back(f);
+   
+           // Pass 1: match everything first, so the shared buffers can be declared
+           // at their final size before any IR is rewritten.
+           SmallVector<Nest, 4> nests;
+           for (affine::AffineForOp t : tops) {
+               Nest n;
+               if (match(t, n)) nests.push_back(std::move(n));
+           }
+           if (nests.empty()) return;
+   
+           DenseMap<unsigned, int64_t> need;
+           for (Nest &n : nests)
+               for (auto [i, ld] : llvm::enumerate(n.operands))
+                   need[i] = std::max(need[i], slotSize(ld, n));
+   
+           ModuleOp mod = fn->getParentOfType<ModuleOp>();
+           Type elt = nests.front().accLoad.getType();
+           Location loc = nests.front().loops.front().getLoc();
+           DenseMap<unsigned, memref::GlobalOp> shared;
+           for (auto &kv : need)
+               shared[kv.first] =
+                   declareGlobal(mod, kv.second, elt, "im2col_buf", loc);
+   
+           // Pass 2: rewrite.
+           for (Nest &n : nests) rewrite(n, shared);
+       }
+   };
+   } // namespace
+   
+   std::unique_ptr<mlir::Pass> mlir::cgra::createCGRAConvToIm2colPass()
+   { return std::make_unique<CGRAConvToIm2colPass>(); }

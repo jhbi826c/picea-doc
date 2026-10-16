@@ -1,0 +1,42 @@
+
+.. _program_listing_file_include_picea-mlir_Dialect_Base2_IR_Base2Types.h:
+
+Program Listing for File Base2Types.h
+=====================================
+
+|exhale_lsh| :ref:`Return to documentation for file <file_include_picea-mlir_Dialect_Base2_IR_Base2Types.h>` (``include/picea-mlir/Dialect/Base2/IR/Base2Types.h``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. code-block:: cpp
+
+   
+   
+   #pragma once
+   
+   #include "mlir/IR/BuiltinAttributeInterfaces.h"
+   #include "mlir/IR/Types.h"
+   #include "picea-mlir/Dialect/Base2/IR/Base2Attributes.h"
+   #include "picea-mlir/Dialect/Base2/Interfaces/BitSequenceTypeInterface.h"
+   
+   //===- Generated Includes -------------------------------------------------===//
+   
+   #define GET_TYPEDEF_CLASSES
+   #include "picea-mlir/Dialect/Base2/IR/Base2Types.h.inc"
+   
+   //===----------------------------------------------------------------------===//
+   
+   namespace mlir::base2 {
+   
+   //===----------------------------------------------------------------------===//
+   // FixedType
+   //===----------------------------------------------------------------------===//
+   
+   //===----------------------------------------------------------------------===//
+   // BitSequenceTypeInterface Methods
+   //===----------------------------------------------------------------------===//
+   
+   inline unsigned FixedType::getBitWidth() const
+   { return getIntegerBits() + getFractionalBits() + 1; }
+   
+   } // namespace mlir::base2

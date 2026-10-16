@@ -1,0 +1,124 @@
+
+.. _program_listing_file_build_include_picea-mlir_Dialect_Base2_IR_Base2Attributes.h.inc:
+
+Program Listing for File Base2Attributes.h.inc
+==============================================
+
+|exhale_lsh| :ref:`Return to documentation for file <file_build_include_picea-mlir_Dialect_Base2_IR_Base2Attributes.h.inc>` (``build/include/picea-mlir/Dialect/Base2/IR/Base2Attributes.h.inc``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. code-block:: cpp
+
+   /*===- TableGen'erated file -------------------------------------*- C++ -*-===*\
+   |*                                                                            *|
+   |* AttrDef Declarations                                                       *|
+   |*                                                                            *|
+   |* Automatically generated file, do not edit!                                 *|
+   |*                                                                            *|
+   \*===----------------------------------------------------------------------===*/
+   
+   #ifdef GET_ATTRDEF_CLASSES
+   #undef GET_ATTRDEF_CLASSES
+   
+   
+   namespace mlir {
+   class AsmParser;
+   class AsmPrinter;
+   } // namespace mlir
+   namespace mlir::base2 {
+   
+   class BitsAttr;
+   class DenseBitsAttr;
+   namespace detail {
+   
+   struct BitsAttrStorage;
+   
+   } // namespace detail
+   class BitsAttr : public ::mlir::Attribute::AttrBase<BitsAttr, ::mlir::Attribute, detail::BitsAttrStorage, ::mlir::TypedAttr::Trait, ::mlir::base2::BitSequenceAttr::Trait> {
+   public:
+     using Base::Base;
+     static constexpr ::llvm::StringLiteral name = "base2.bits";
+     static constexpr ::llvm::StringLiteral dialectName = "base2";
+     using Base::getChecked;
+     static BitsAttr get(BitSequenceType type, const BitSequence &value);
+     static BitsAttr getChecked(::llvm::function_ref<::mlir::InFlightDiagnostic()> emitError, BitSequenceType type, const BitSequence &value);
+     static ::llvm::LogicalResult verify(::llvm::function_ref<::mlir::InFlightDiagnostic()> emitError, ::mlir::Type type, BitSequence value);
+     static ::llvm::LogicalResult verifyInvariants(::llvm::function_ref<::mlir::InFlightDiagnostic()> emitError, ::mlir::Type type, BitSequence value);
+     static constexpr ::llvm::StringLiteral getMnemonic() {
+       return {"bits"};
+     }
+   
+     static ::mlir::Attribute parse(::mlir::AsmParser &odsParser, ::mlir::Type odsType);
+     void print(::mlir::AsmPrinter &odsPrinter) const;
+     ::mlir::Type getType() const;
+     BitSequence getValue() const;
+   };
+   namespace detail {
+   
+   struct DenseBitsAttrStorage;
+   
+   } // namespace detail
+   class DenseBitsAttr : public ::mlir::Attribute::AttrBase<DenseBitsAttr, ::mlir::Attribute, detail::DenseBitsAttrStorage, ::mlir::TypedAttr::Trait, ::mlir::ElementsAttr::Trait> {
+   public:
+     using Base::Base;
+     public:
+         ::mlir::ShapedType getShapedType() const
+         {
+             return cast<::mlir::ShapedType>(
+                 ::mlir::TypedAttr(*this).getType());
+         }
+   
+         //===--------------------------------------------------------------===//
+         // ElementsAttrInterface
+         //===--------------------------------------------------------------===//
+   
+         using ContiguousIterableTypesT =
+             std::tuple<std::uint8_t, std::uint64_t>;
+   
+         auto try_value_begin_impl(OverloadToken<std::uint8_t>) const
+         {
+             return getData().try_value_begin<std::uint8_t>();
+         }
+         auto try_value_begin_impl(OverloadToken<std::uint64_t>) const
+         {
+             return getData().try_value_begin<std::uint64_t>();
+         }
+   
+         using NonContiguousIterableTypesT = std::tuple<BitSequence>;
+   
+         auto try_value_begin_impl(OverloadToken<BitSequence>) const
+         {
+             const auto bitWidth =
+                 cast<BitSequenceType>(getElementType()).getBitWidth();
+             return mlir::success(
+                 llvm::map_range(
+                     getData().getValues<llvm::APInt>(),
+                     [=](const llvm::APInt &raw) {
+                         return BitSequence(raw).getLSB(bitWidth);
+                     })
+                     .begin());
+         }
+     static constexpr ::llvm::StringLiteral name = "base2.dense_bits";
+     static constexpr ::llvm::StringLiteral dialectName = "base2";
+     using Base::getChecked;
+     static DenseBitsAttr get(::mlir::ShapedType type, const DenseIntElementsAttr data);
+     static DenseBitsAttr getChecked(::llvm::function_ref<::mlir::InFlightDiagnostic()> emitError, ::mlir::ShapedType type, const DenseIntElementsAttr data);
+     static ::llvm::LogicalResult verify(::llvm::function_ref<::mlir::InFlightDiagnostic()> emitError, ::mlir::Type type, DenseIntElementsAttr data);
+     static ::llvm::LogicalResult verifyInvariants(::llvm::function_ref<::mlir::InFlightDiagnostic()> emitError, ::mlir::Type type, DenseIntElementsAttr data);
+     static constexpr ::llvm::StringLiteral getMnemonic() {
+       return {"dense_bits"};
+     }
+   
+     static ::mlir::Attribute parse(::mlir::AsmParser &odsParser, ::mlir::Type odsType);
+     void print(::mlir::AsmPrinter &odsPrinter) const;
+     ::mlir::Type getType() const;
+     DenseIntElementsAttr getData() const;
+   };
+   
+   } // namespace mlir::base2
+   MLIR_DECLARE_EXPLICIT_TYPE_ID(::mlir::base2::BitsAttr)
+   MLIR_DECLARE_EXPLICIT_TYPE_ID(::mlir::base2::DenseBitsAttr)
+   
+   #endif // GET_ATTRDEF_CLASSES
+   

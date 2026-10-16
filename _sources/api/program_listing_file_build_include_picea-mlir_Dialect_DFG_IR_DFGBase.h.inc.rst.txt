@@ -1,0 +1,47 @@
+
+.. _program_listing_file_build_include_picea-mlir_Dialect_DFG_IR_DFGBase.h.inc:
+
+Program Listing for File DFGBase.h.inc
+======================================
+
+|exhale_lsh| :ref:`Return to documentation for file <file_build_include_picea-mlir_Dialect_DFG_IR_DFGBase.h.inc>` (``build/include/picea-mlir/Dialect/DFG/IR/DFGBase.h.inc``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. code-block:: cpp
+
+   /*===- TableGen'erated file -------------------------------------*- C++ -*-===*\
+   |*                                                                            *|
+   |* Dialect Declarations                                                       *|
+   |*                                                                            *|
+   |* Automatically generated file, do not edit!                                 *|
+   |* From: DFGOps.td                                                            *|
+   |*                                                                            *|
+   \*===----------------------------------------------------------------------===*/
+   
+   namespace mlir::dfg {
+   
+   class DFGDialect : public ::mlir::Dialect {
+     explicit DFGDialect(::mlir::MLIRContext *context);
+   
+     void initialize();
+     friend class ::mlir::MLIRContext;
+   public:
+     ~DFGDialect() override;
+     static constexpr ::llvm::StringLiteral getDialectNamespace() {
+       return ::llvm::StringLiteral("dfg");
+     }
+   
+     ::mlir::Type parseType(::mlir::DialectAsmParser &parser) const override;
+   
+     void printType(::mlir::Type type,
+                    ::mlir::DialectAsmPrinter &os) const override;
+   
+       private:
+           void registerOps();
+           void registerTypes();
+           void registerAttributes();
+       };
+   
+   } // namespace mlir::dfg
+   MLIR_DECLARE_EXPLICIT_TYPE_ID(::mlir::dfg::DFGDialect)

@@ -1,0 +1,230 @@
+
+.. _program_listing_file_lib_Dialect_CGRA_Transforms_PackCGRABuffers.cpp:
+
+Program Listing for File PackCGRABuffers.cpp
+============================================
+
+|exhale_lsh| :ref:`Return to documentation for file <file_lib_Dialect_CGRA_Transforms_PackCGRABuffers.cpp>` (``lib/Dialect/CGRA/Transforms/PackCGRABuffers.cpp``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. code-block:: cpp
+
+   
+   
+   #include "mlir/Dialect/Affine/IR/AffineOps.h"
+   #include "mlir/Dialect/Func/IR/FuncOps.h"
+   #include "mlir/Dialect/MemRef/IR/MemRef.h"
+   #include "mlir/IR/BuiltinOps.h"
+   #include "mlir/Pass/Pass.h"
+   #include "picea-mlir/Dialect/CGRA/IR/CGRA.h"
+   #include "picea-mlir/Dialect/CGRA/Transforms/Passes.h"
+   
+   #include "llvm/ADT/DenseMap.h"
+   #include "llvm/ADT/MapVector.h"
+   
+   using namespace mlir;
+   
+   namespace {
+   
+   // A partitioned network declares one intermediate array per layer boundary and
+   // per cut-crossing value, but they are used strictly sequentially. Each
+   // otherwise gets its own array in dataset.h plus a golden_<name> mirror, which
+   // on residual came to 61% of the interleaved bank.
+   //
+   // Live-range analysis over the top-level op sequence, then a linear scan onto a
+   // pool of shared buffers. Packing the streams packs their goldens with them.
+   //
+   // Conservative: a buffer is live from FIRST to LAST reference, two may share a
+   // slot only if their ranges are strictly disjoint, and anything escaping the
+   // function (returned, constant-initialised, externally symbolled) is never
+   // packed.
+   struct CGRAPackBuffersPass
+           : public PassWrapper<CGRAPackBuffersPass, OperationPass<ModuleOp>> {
+   
+       MLIR_DEFINE_EXPLICIT_INTERNAL_INLINE_TYPE_ID(CGRAPackBuffersPass)
+   
+       StringRef getArgument() const final { return "pack-cgra-buffers"; }
+       StringRef getDescription() const final
+       {
+           return "Share one buffer between intermediates whose live ranges are "
+                  "disjoint";
+       }
+   
+       void getDependentDialects(mlir::DialectRegistry &registry) const override
+       { registry.insert<memref::MemRefDialect>(); }
+   
+       void runOnOperation() override
+       {
+           ModuleOp module = getOperation();
+   
+           // Only meaningful once the deploys exist and there are several of them;
+           // a single-config kernel has nothing to pack.
+           unsigned deploys = 0;
+           module.walk([&](cgra::DeployOp) { ++deploys; });
+           if (deploys < 2) return;
+   
+           // The intermediates: private, zero-initialised globals. A global
+           // carrying real data is a weight/constant, and an externally visible
+           // one may be read by code this pass cannot see — neither is packable.
+           llvm::MapVector<StringRef, memref::GlobalOp> candidates;
+           module.walk([&](memref::GlobalOp g) {
+               if (g.getConstant() || !g.getSymVisibility()
+                   || *g.getSymVisibility() != "private")
+                   return;
+               auto init = g.getInitialValue();
+               if (init) {
+                   auto elems = dyn_cast<ElementsAttr>(*init);
+                   if (!elems || !elems.isSplat())
+                       return; // has real data: a weight table
+                   auto splat =
+                       dyn_cast<IntegerAttr>(elems.getSplatValue<Attribute>());
+                   if (!splat || splat.getInt() != 0) return;
+               }
+               candidates.insert({g.getSymName(), g});
+           });
+           if (candidates.size() < 2) return;
+   
+           for (auto func : module.getOps<func::FuncOp>()) {
+               if (func.isExternal()) return;
+               packInto(func, candidates);
+           }
+       }
+   
+       void packInto(
+           func::FuncOp func,
+           llvm::MapVector<StringRef, memref::GlobalOp> &candidates)
+       {
+           Block &body = func.getBody().front();
+   
+           // Index the top-level operations; a buffer's live range is expressed in
+           // these.
+           DenseMap<Operation*, unsigned> index;
+           unsigned n = 0;
+           for (Operation &op : body) index[&op] = n++;
+   
+           struct Range {
+               unsigned first = ~0u, last = 0;
+               SmallVector<memref::GetGlobalOp> gets;
+               MemRefType type;
+               bool escapes = false;
+           };
+           llvm::MapVector<StringRef, Range> ranges;
+   
+           body.walk([&](memref::GetGlobalOp get) {
+               auto it = candidates.find(get.getName());
+               if (it == candidates.end()) return;
+               Range &r = ranges[get.getName()];
+               r.type = cast<MemRefType>(get.getType());
+               r.gets.push_back(get);
+               // Only actual READS and WRITES extend the live range. The
+               // memref.get_global itself does not: every one of them is hoisted
+               // to the top of the function, so counting the address-taking makes
+               // every buffer look live from op 0 and nothing can ever share a
+               // slot (it packed 2 of 29 arrays that way).
+               for (Operation* user : get.getResult().getUsers()) {
+                   // Only a direct read, write or fabric dispatch is a use this
+                   // pass can reason about. Anything else — a terminator, or a
+                   // VIEW such as memref.collapse_shape that hands the buffer
+                   // onward (lenet returns its result through one) — may outlive
+                   // the ranges computed here, so the buffer keeps its own
+                   // storage. A func.call is a USE, not an escape: under the
+                   // merged driver route every shared buffer is handed to the
+                   // outlined host segments
+                   // (`call @main_init(...)`, `@main_stageN`, `@main_post`), and
+                   // the callee reads and writes the array during the call without
+                   // retaining it. The call is a top-level op, so the live-range
+                   // update below already covers it.
+                   //
+                   // UNVALIDATED: this was written on the theory that call-passed
+                   // buffers were being marked un-packable, before discovering the
+                   // pass is not wired into the pipeline at all
+                   // (`--pack-cgra-buffers` appears nowhere in src/Makefile). With
+                   // the pass added explicitly, residual still pools 0 buffers, so
+                   // something ELSE also makes it inert. Do not treat this as a
+                   // fix.
+                   if (!isa<
+                           affine::AffineLoadOp,
+                           affine::AffineStoreOp,
+                           cgra::DeployOp,
+                           func::CallOp>(user))
+                       r.escapes = true;
+                   for (Operation* o = user; o; o = o->getParentOp())
+                       if (o->getBlock() == &body) {
+                           r.first = std::min(r.first, index[o]);
+                           r.last = std::max(r.last, index[o]);
+                           break;
+                       }
+               }
+           });
+   
+           // Linear scan, per exact memref type so no reinterpretation is needed.
+           // Buffers are considered in order of first use; a slot is reusable once
+           // its previous occupant's last use is strictly behind the new
+           // occupant's first use.
+           DenseMap<MemRefType, SmallVector<std::pair<unsigned, StringRef>>> slots;
+           DenseMap<StringRef, StringRef> assign; // buffer -> slot buffer
+           SmallVector<StringRef> order;
+           for (auto &kv : ranges) order.push_back(kv.first);
+           llvm::stable_sort(order, [&](StringRef a, StringRef b) {
+               return ranges[a].first < ranges[b].first;
+           });
+   
+           for (StringRef name : order) {
+               Range &r = ranges[name];
+               if (r.escapes) {
+                   assign[name] = name; // keep its own storage
+                   continue;
+               }
+               auto &byType = slots[r.type];
+               bool placed = false;
+               for (auto &slot : byType) {
+                   if (slot.first < r.first) { // previous occupant already dead
+                       assign[name] = slot.second;
+                       slot.first = r.last;
+                       placed = true;
+                       break;
+                   }
+               }
+               if (!placed) {
+                   byType.push_back(
+                       {r.last, name}); // this buffer becomes a new slot
+                   assign[name] = name;
+               }
+           }
+   
+           // Rewrite the get_globals of every packed buffer onto its slot.
+           unsigned packed = 0;
+           for (auto &kv : ranges) {
+               StringRef to = assign[kv.first];
+               if (to == kv.first) continue;
+               ++packed;
+               for (memref::GetGlobalOp get : kv.second.gets)
+                   get.setNameAttr(SymbolRefAttr::get(get.getContext(), to));
+               // Mark the slot as POOLED. It now holds several unrelated
+               // intermediates over the run, so its final contents are whatever
+               // the last occupant left — meaningless as a result.
+               // --generate-cgra-driver must not snapshot it as a network output:
+               // the "written last, never read after" rule that predates this pass
+               // classifies every slot that way (a pool is written and read
+               // cyclically, so its LAST touch is legitimately a write), and
+               // residual/ tiny_kws then spent tens of KB of .bss mirroring
+               // scratch.
+               if (auto slot = candidates.lookup(to))
+                   slot->setAttr("cgra.pooled", UnitAttr::get(slot.getContext()));
+           }
+           if (!packed) return;
+   
+           // Drop the globals that no longer back anything.
+           ModuleOp module = func->getParentOfType<ModuleOp>();
+           DenseSet<StringRef> stillUsed;
+           module.walk(
+               [&](memref::GetGlobalOp g) { stillUsed.insert(g.getName()); });
+           for (auto &kv : candidates)
+               if (!stillUsed.contains(kv.first)) kv.second.erase();
+       }
+   };
+   } // namespace
+   
+   std::unique_ptr<mlir::Pass> mlir::cgra::createCGRAPackBuffersPass()
+   { return std::make_unique<CGRAPackBuffersPass>(); }

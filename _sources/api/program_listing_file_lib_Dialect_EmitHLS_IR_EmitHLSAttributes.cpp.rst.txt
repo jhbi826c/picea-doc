@@ -1,0 +1,183 @@
+
+.. _program_listing_file_lib_Dialect_EmitHLS_IR_EmitHLSAttributes.cpp:
+
+Program Listing for File EmitHLSAttributes.cpp
+==============================================
+
+|exhale_lsh| :ref:`Return to documentation for file <file_lib_Dialect_EmitHLS_IR_EmitHLSAttributes.cpp>` (``lib/Dialect/EmitHLS/IR/EmitHLSAttributes.cpp``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. code-block:: cpp
+
+   
+   
+   #include "picea-mlir/Dialect/EmitHLS/IR/EmitHLSAttributes.h"
+   
+   #include "mlir/IR/Builders.h"
+   #include "mlir/IR/DialectImplementation.h"
+   #include "picea-mlir/Dialect/EmitHLS/IR/EmitHLS.h"
+   #include "picea-mlir/Dialect/EmitHLS/IR/EmitHLSTypes.h"
+   
+   #include "llvm/ADT/TypeSwitch.h"
+   
+   using namespace mlir;
+   using namespace mlir::emithls;
+   
+   //===- Generated implementation -------------------------------------------===//
+   
+   #define GET_ATTRDEF_CLASSES
+   #include "picea-mlir/Dialect/EmitHLS/IR/EmitHLSAttributes.cpp.inc"
+   
+   //===----------------------------------------------------------------------===//
+   
+   //===----------------------------------------------------------------------===//
+   // FixedAttr
+   //===----------------------------------------------------------------------===//
+   
+   LogicalResult FixedAttr::verify(
+       llvm::function_ref<InFlightDiagnostic()> emitError,
+       Type type,
+       ::mlir::base2::BitSequence value)
+   {
+       const auto fixedTy = dyn_cast<FixedType>(type);
+       if (!fixedTy) return emitError() << "`" << type << "` is not a `FixedType`";
+   
+       if (value.size() != static_cast<unsigned>(fixedTy.getTotalBits()))
+           return emitError()
+                  << "bit width (" << value.size() << ") does not match result ("
+                  << fixedTy.getTotalBits() << ")";
+   
+       return success();
+   }
+   
+   //===----------------------------------------------------------------------===//
+   // DenseFixedAttr
+   //===----------------------------------------------------------------------===//
+   
+   Attribute DenseFixedAttr::parse(AsmParser &parser, Type)
+   {
+       // `<`
+       if (parser.parseLess()) return Attribute{};
+   
+       // $type
+       const auto typeLoc = parser.getCurrentLocation();
+       Type type;
+       if (parser.parseType(type)) return Attribute{};
+       // `=`
+       if (parser.parseEqual()) return Attribute{};
+   
+       // Type must be a ShapedType.
+       const auto shapedTy = dyn_cast<ShapedType>(type);
+       if (!shapedTy) {
+           parser.emitError(typeLoc) << "`" << type << "` is not a `ShapedType`";
+           return Attribute{};
+       }
+   
+       // Shape must be static.
+       if (!shapedTy.hasStaticShape()) {
+           parser.emitError(typeLoc)
+               << "`" << type << "` does not have a static shape";
+           return Attribute{};
+       }
+   
+       // Element type must be a FixedType.
+       const auto elementTy = dyn_cast<FixedType>(shapedTy.getElementType());
+       if (!elementTy) {
+           parser.emitError(typeLoc)
+               << "`" << shapedTy.getElementType() << "` is not a `FixedType`";
+           return Attribute{};
+       }
+   
+       // The DenseIntElementsAttr stores signless integers.
+       const auto denseTy = shapedTy.cloneWith(
+           std::nullopt,
+           IntegerType::get(parser.getContext(), elementTy.getTotalBits()));
+   
+       // $data
+       DenseIntElementsAttr data;
+       if (parser.parseAttribute(data, denseTy)) return Attribute{};
+   
+       // `>`
+       if (parser.parseGreater()) return Attribute{};
+   
+       return parser.getChecked<DenseFixedAttr>(
+           parser.getContext(),
+           shapedTy,
+           data);
+   }
+   
+   void DenseFixedAttr::print(AsmPrinter &printer) const
+   {
+       // `<`
+       printer << "<";
+   
+       // $type
+       printer << getType();
+       // `=`
+       printer << " = ";
+   
+       // $data
+       printer.printAttributeWithoutType(getData());
+   
+       // `>`
+       printer << ">";
+   }
+   
+   LogicalResult DenseFixedAttr::verify(
+       function_ref<InFlightDiagnostic()> emitError,
+       Type type,
+       DenseIntElementsAttr data)
+   {
+       // Type must be a ShapedType.
+       const auto shapedTy = dyn_cast_or_null<ShapedType>(type);
+       if (!shapedTy)
+           return emitError() << "`" << type << "` is not a `ShapedType`";
+   
+       // Shape must be static.
+       if (!shapedTy.hasStaticShape())
+           return emitError() << "`" << type << "` does not have a static shape";
+   
+       // Element type must be a FixedType.
+       const auto elementTy = dyn_cast<FixedType>(shapedTy.getElementType());
+       if (!elementTy)
+           return emitError()
+                  << "`" << shapedTy.getElementType() << "` is not a `FixedType`";
+   
+       // Data must be present.
+       if (!data) return emitError() << "expected data";
+   
+       // Shapes must match.
+       if (data.getType().getShape() != shapedTy.getShape()) {
+           auto diag = emitError() << "data shape {";
+           const auto printSz = [&](auto sz) {
+               if (ShapedType::isDynamic(sz))
+                   diag << "?";
+               else
+                   diag << sz;
+           };
+           llvm::interleaveComma(data.getType().getShape(), diag, printSz);
+           diag << "} does not match result shape {";
+           llvm::interleaveComma(shapedTy.getShape(), diag);
+           return diag << "}";
+       }
+   
+       // Data must store appropriately sized signless integers.
+       const auto bitWidth = elementTy.getTotalBits();
+       if (!data.getElementType().isSignlessInteger(bitWidth))
+           return emitError() << "expected i" << bitWidth << " data";
+   
+       return success();
+   }
+   
+   //===----------------------------------------------------------------------===//
+   // EmitHLSDialect
+   //===----------------------------------------------------------------------===//
+   
+   void EmitHLSDialect::registerAttributes()
+   {
+       addAttributes<
+   #define GET_ATTRDEF_LIST
+   #include "picea-mlir/Dialect/EmitHLS/IR/EmitHLSAttributes.cpp.inc"
+           >();
+   }

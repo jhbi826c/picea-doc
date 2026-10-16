@@ -1,0 +1,102 @@
+
+.. _program_listing_file_build_include_picea-mlir_Dialect_DFG_Interfaces_TypeInterface.h.inc:
+
+Program Listing for File TypeInterface.h.inc
+============================================
+
+|exhale_lsh| :ref:`Return to documentation for file <file_build_include_picea-mlir_Dialect_DFG_Interfaces_TypeInterface.h.inc>` (``build/include/picea-mlir/Dialect/DFG/Interfaces/TypeInterface.h.inc``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. code-block:: cpp
+
+   /*===- TableGen'erated file -------------------------------------*- C++ -*-===*\
+   |*                                                                            *|
+   |* Interface Declarations                                                     *|
+   |*                                                                            *|
+   |* Automatically generated file, do not edit!                                 *|
+   |*                                                                            *|
+   \*===----------------------------------------------------------------------===*/
+   
+   namespace mlir::dfg {
+   
+   class TypeInterface;
+   
+   } // namespace mlir::dfg
+   namespace mlir::dfg {
+   
+   namespace detail {
+   struct TypeInterfaceInterfaceTraits {
+     struct Concept {
+       ::mlir::Type (*getBaseType)(const Concept *impl, ::mlir::Type );
+     };
+     template<typename ConcreteType>
+     class Model : public Concept {
+     public:
+       using Interface = ::mlir::dfg::TypeInterface;
+       Model() : Concept{getBaseType} {}
+   
+       static inline ::mlir::Type getBaseType(const Concept *impl, ::mlir::Type tablegen_opaque_val);
+     };
+     template<typename ConcreteType>
+     class FallbackModel : public Concept {
+     public:
+       using Interface = ::mlir::dfg::TypeInterface;
+       FallbackModel() : Concept{getBaseType} {}
+   
+       static inline ::mlir::Type getBaseType(const Concept *impl, ::mlir::Type tablegen_opaque_val);
+     };
+     template<typename ConcreteModel, typename ConcreteType>
+     class ExternalModel : public FallbackModel<ConcreteModel> {
+     public:
+       using ConcreteEntity = ConcreteType;
+       ::mlir::Type getBaseType(::mlir::Type tablegen_opaque_val) const;
+     };
+   };
+   template <typename ConcreteType>
+   struct TypeInterfaceTrait;
+   
+   } // namespace detail
+   class TypeInterface : public ::mlir::TypeInterface<TypeInterface, detail::TypeInterfaceInterfaceTraits> {
+   public:
+     using ::mlir::TypeInterface<TypeInterface, detail::TypeInterfaceInterfaceTraits>::TypeInterface;
+     template <typename ConcreteType>
+     struct Trait : public detail::TypeInterfaceTrait<ConcreteType> {};
+   
+     ::mlir::Type getBaseType() const;
+   };
+   
+   } // namespace mlir::dfg
+   namespace mlir::dfg::detail {
+   
+     template <typename ConcreteType>
+     struct TypeInterfaceTrait : public ::mlir::TypeInterface<TypeInterface, detail::TypeInterfaceInterfaceTraits>::Trait<ConcreteType> {
+   
+       ::mlir::Type getBaseType() const {
+         auto shape = (*static_cast<const ConcreteType *>(this)).getShape();
+                   if (shape.empty())
+                       return (*static_cast<const ConcreteType *>(this)).getElementType();
+                   return ::mlir::MemRefType::get(shape, (*static_cast<const ConcreteType *>(this)).getElementType());
+       }
+     };
+   
+   } // namespace mlir::dfg::detail
+   namespace mlir::dfg {
+   
+   template<typename ConcreteType>
+   ::mlir::Type detail::TypeInterfaceInterfaceTraits::Model<ConcreteType>::getBaseType(const Concept *impl, ::mlir::Type tablegen_opaque_val) {
+     return (::llvm::cast<ConcreteType>(tablegen_opaque_val)).getBaseType();
+   }
+   template<typename ConcreteType>
+   ::mlir::Type detail::TypeInterfaceInterfaceTraits::FallbackModel<ConcreteType>::getBaseType(const Concept *impl, ::mlir::Type tablegen_opaque_val) {
+     return static_cast<const ConcreteType *>(impl)->getBaseType(tablegen_opaque_val);
+   }
+   template<typename ConcreteModel, typename ConcreteType>
+   ::mlir::Type detail::TypeInterfaceInterfaceTraits::ExternalModel<ConcreteModel, ConcreteType>::getBaseType(::mlir::Type tablegen_opaque_val) const {
+   auto shape = (::llvm::cast<ConcreteType>(tablegen_opaque_val)).getShape();
+                   if (shape.empty())
+                       return (::llvm::cast<ConcreteType>(tablegen_opaque_val)).getElementType();
+                   return ::mlir::MemRefType::get(shape, (::llvm::cast<ConcreteType>(tablegen_opaque_val)).getElementType());
+   }
+   
+   } // namespace mlir::dfg

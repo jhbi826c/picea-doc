@@ -1,0 +1,121 @@
+
+.. _program_listing_file_build_include_picea-mlir_Dialect_DFG_DFGEnums.h.inc:
+
+Program Listing for File DFGEnums.h.inc
+=======================================
+
+|exhale_lsh| :ref:`Return to documentation for file <file_build_include_picea-mlir_Dialect_DFG_DFGEnums.h.inc>` (``build/include/picea-mlir/Dialect/DFG/DFGEnums.h.inc``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. code-block:: cpp
+
+   /*===- TableGen'erated file -------------------------------------*- C++ -*-===*\
+   |*                                                                            *|
+   |* Enum Utility Declarations                                                  *|
+   |*                                                                            *|
+   |* Automatically generated file, do not edit!                                 *|
+   |* From: DFGEnums.td                                                          *|
+   |*                                                                            *|
+   \*===----------------------------------------------------------------------===*/
+   
+   namespace mlir::dfg {
+   
+   // The hardware back to be offloaded to
+   enum class OffloadHardware : uint32_t {
+     EmitHLS = 0,
+     MDC = 1,
+     CGRA = 2,
+   };
+   
+   ::std::optional<OffloadHardware> symbolizeOffloadHardware(uint32_t);
+   ::llvm::StringRef stringifyOffloadHardware(OffloadHardware);
+   ::std::optional<OffloadHardware> symbolizeOffloadHardware(::llvm::StringRef);
+   inline constexpr unsigned getMaxEnumValForOffloadHardware() {
+     return 2;
+   }
+   
+   
+   inline ::llvm::StringRef stringifyEnum(OffloadHardware enumValue) {
+     return stringifyOffloadHardware(enumValue);
+   }
+   
+   template <typename EnumType>
+   ::std::optional<EnumType> symbolizeEnum(::llvm::StringRef);
+   
+   template <>
+   inline ::std::optional<OffloadHardware> symbolizeEnum<OffloadHardware>(::llvm::StringRef str) {
+     return symbolizeOffloadHardware(str);
+   }
+   
+   class OffloadHardwareAttr : public ::mlir::IntegerAttr {
+   public:
+     using ValueType = OffloadHardware;
+     using ::mlir::IntegerAttr::IntegerAttr;
+     static bool classof(::mlir::Attribute attr);
+     static OffloadHardwareAttr get(::mlir::MLIRContext *context, OffloadHardware val);
+     OffloadHardware getValue() const;
+   };
+   
+   } // namespace mlir::dfg
+   
+   namespace mlir {
+   template <typename T, typename>
+   struct FieldParser;
+   
+   template<>
+   struct FieldParser<::mlir::dfg::OffloadHardware, ::mlir::dfg::OffloadHardware> {
+     template <typename ParserT>
+     static FailureOr<::mlir::dfg::OffloadHardware> parse(ParserT &parser) {
+       // Parse the keyword/string containing the enum.
+       std::string enumKeyword;
+       auto loc = parser.getCurrentLocation();
+       if (failed(parser.parseOptionalKeywordOrString(&enumKeyword)))
+         return parser.emitError(loc, "expected keyword for The hardware back to be offloaded to");
+   
+       // Symbolize the keyword.
+       if (::std::optional<::mlir::dfg::OffloadHardware> attr = ::mlir::dfg::symbolizeEnum<::mlir::dfg::OffloadHardware>(enumKeyword))
+         return *attr;
+       return parser.emitError(loc, "expected one of [emithls, mdc, cgra] for The hardware back to be offloaded to, got: ") << enumKeyword;
+     }
+   };
+   
+   template<>
+   struct FieldParser<std::optional<::mlir::dfg::OffloadHardware>, std::optional<::mlir::dfg::OffloadHardware>> {
+     template <typename ParserT>
+     static FailureOr<std::optional<::mlir::dfg::OffloadHardware>> parse(ParserT &parser) {
+       // Parse the keyword/string containing the enum.
+       std::string enumKeyword;
+       auto loc = parser.getCurrentLocation();
+       if (failed(parser.parseOptionalKeywordOrString(&enumKeyword, {"emithls", "mdc", "cgra"})))
+         return std::optional<::mlir::dfg::OffloadHardware>{};
+   
+       // Symbolize the keyword.
+       if (::std::optional<::mlir::dfg::OffloadHardware> attr = ::mlir::dfg::symbolizeEnum<::mlir::dfg::OffloadHardware>(enumKeyword))
+         return attr;
+       return parser.emitError(loc, "expected one of [emithls, mdc, cgra] for The hardware back to be offloaded to, got: ") << enumKeyword;
+     }
+   };
+   } // namespace mlir
+   
+   namespace llvm {
+   inline ::llvm::raw_ostream &operator<<(::llvm::raw_ostream &p, ::mlir::dfg::OffloadHardware value) {
+     auto valueStr = stringifyEnum(value);
+     return p << valueStr;
+   }
+   } // namespace llvm
+   
+   namespace llvm {
+   template<> struct DenseMapInfo<::mlir::dfg::OffloadHardware> {
+     using StorageInfo = ::llvm::DenseMapInfo<uint32_t>;
+   
+     static unsigned getHashValue(const ::mlir::dfg::OffloadHardware &val) {
+       return StorageInfo::getHashValue(static_cast<uint32_t>(val));
+     }
+   
+     static bool isEqual(const ::mlir::dfg::OffloadHardware &lhs, const ::mlir::dfg::OffloadHardware &rhs) {
+       return lhs == rhs;
+     }
+   };
+   }
+   

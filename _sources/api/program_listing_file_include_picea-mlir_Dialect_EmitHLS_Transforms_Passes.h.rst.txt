@@ -1,0 +1,51 @@
+
+.. _program_listing_file_include_picea-mlir_Dialect_EmitHLS_Transforms_Passes.h:
+
+Program Listing for File Passes.h
+=================================
+
+|exhale_lsh| :ref:`Return to documentation for file <file_include_picea-mlir_Dialect_EmitHLS_Transforms_Passes.h>` (``include/picea-mlir/Dialect/EmitHLS/Transforms/Passes.h``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. code-block:: cpp
+
+   
+   
+   #pragma once
+   
+   #include "mlir/IR/PatternMatch.h"
+   #include "mlir/Pass/Pass.h"
+   
+   #include <memory>
+   #include <mlir/Transforms/DialectConversion.h>
+   
+   namespace mlir::emithls {
+   
+   //===- Generated passes ---------------------------------------------------===//
+   
+   #define GEN_PASS_DECL
+   #include "picea-mlir/Dialect/EmitHLS/Transforms/Passes.h.inc"
+   
+   //===----------------------------------------------------------------------===//
+   
+   std::unique_ptr<Pass> createEmitHLSAddIOFunctionsPass();
+   std::unique_ptr<Pass> createEmitHLSFoldExpressionPass();
+   std::unique_ptr<Pass> createEmitHLSFuseOperatorPass();
+   std::unique_ptr<Pass> createEmitHLSInsertIncludesPass();
+   std::unique_ptr<Pass> createEmitHLSLoopFusionPass();
+   std::unique_ptr<Pass> createEmitHLSMergeCastChainPass();
+   std::unique_ptr<Pass> createEmitHLSPragmaDSEPass();
+   std::unique_ptr<Pass>
+   createEmitHLSPragmaDSEPass(int64_t availableBRAM, int64_t availableDSP);
+   std::unique_ptr<Pass> createEmitHLSPragmaInsertionPass();
+   std::unique_ptr<Pass> createEmitHLSResolveHelpersPass();
+   
+   //===----------------------------------------------------------------------===//
+   // Registration
+   //===----------------------------------------------------------------------===//
+   
+   #define GEN_PASS_REGISTRATION
+   #include "picea-mlir/Dialect/EmitHLS/Transforms/Passes.h.inc"
+   
+   } // namespace mlir::emithls

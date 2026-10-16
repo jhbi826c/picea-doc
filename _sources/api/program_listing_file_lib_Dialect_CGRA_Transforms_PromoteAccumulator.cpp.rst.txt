@@ -1,0 +1,331 @@
+
+.. _program_listing_file_lib_Dialect_CGRA_Transforms_PromoteAccumulator.cpp:
+
+Program Listing for File PromoteAccumulator.cpp
+===============================================
+
+|exhale_lsh| :ref:`Return to documentation for file <file_lib_Dialect_CGRA_Transforms_PromoteAccumulator.cpp>` (``lib/Dialect/CGRA/Transforms/PromoteAccumulator.cpp``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. code-block:: cpp
+
+   
+   
+   #include "mlir/Dialect/Affine/IR/AffineOps.h"
+   #include "mlir/Dialect/Arith/IR/Arith.h"
+   #include "mlir/Dialect/Func/IR/FuncOps.h"
+   #include "mlir/Dialect/MemRef/IR/MemRef.h"
+   #include "mlir/IR/IRMapping.h"
+   #include "mlir/IR/Matchers.h"
+   #include "mlir/Pass/Pass.h"
+   #include "picea-mlir/Dialect/CGRA/Transforms/Passes.h"
+   
+   using namespace mlir;
+   
+   namespace {
+   
+   // Two memref values denote the same buffer if they are the same SSA value or
+   // two `memref.get_global` of the same symbol (Polygeist emits one get_global
+   // per use, so SSA identity alone would miss the initialisation nest).
+   static bool sameBuffer(Value a, Value b)
+   {
+       if (a == b) return true;
+       auto ga = a.getDefiningOp<memref::GetGlobalOp>();
+       auto gb = b.getDefiningOp<memref::GetGlobalOp>();
+       return ga && gb && ga.getName() == gb.getName();
+   }
+   
+   // True if @p v is a literal integer zero.
+   static bool isZeroConst(Value v)
+   {
+       APInt c;
+       return matchPattern(v, m_ConstantInt(&c)) && c.isZero();
+   }
+   
+   struct CGRAPromoteAccumulatorPass : public PassWrapper<
+                                           CGRAPromoteAccumulatorPass,
+                                           OperationPass<func::FuncOp>> {
+   
+       MLIR_DEFINE_EXPLICIT_INTERNAL_INLINE_TYPE_ID(CGRAPromoteAccumulatorPass)
+   
+       StringRef getArgument() const final { return "promote-accumulator"; }
+       StringRef getDescription() const final
+       {
+           return "Rewrite an in-memory reduction accumulator (C[i][j] += …) into "
+                  "a "
+                  "loop-carried iter_args value so the nest can be offloaded";
+       }
+   
+       void getDependentDialects(mlir::DialectRegistry &registry) const override
+       {
+           registry.insert<
+               affine::AffineDialect,
+               arith::ArithDialect,
+               memref::MemRefDialect>();
+       }
+   
+       // Is @p mem provably all-zero everywhere before @p before (same block)?
+       //
+       // We need this because the promoted reduction is SEEDED WITH ZERO: the
+       // fabric's accumulator FU always starts from zero (--export-loop-dfg
+       // hard-codes initial_value=0), so dropping the `C[i][j]` seed is only sound
+       // when that element is already zero. The shape we accept is the one C
+       // front-ends emit — an initialisation nest that stores a literal 0 over the
+       // whole buffer, with no other writes between it and the reduction:
+       //     for i, j:  C[i][j] = 0;      <-- covers all `numElems` elements
+       //     for i, j, k: C[i][j] += …    <-- `before`
+       static bool provablyZeroBefore(Value mem, Operation* before)
+       {
+           auto mrt = dyn_cast<MemRefType>(mem.getType());
+           if (!mrt || !mrt.hasStaticShape()) return false;
+           int64_t numElems = 1;
+           for (int64_t d : mrt.getShape()) numElems *= d;
+   
+           bool sawZeroInit = false;
+           for (Operation* op = before->getPrevNode(); op;
+                op = op->getPrevNode()) {
+               // Any call could write through the buffer — give up.
+               if (isa<func::CallOp>(op)) return false;
+               auto nest = dyn_cast<affine::AffineForOp>(op);
+               if (!nest) {
+                   // A bare store to mem before the reduction invalidates the
+                   // proof.
+                   if (auto st = dyn_cast<affine::AffineStoreOp>(op))
+                       if (sameBuffer(st.getMemRef(), mem)) return false;
+                   continue;
+               }
+               // Does this nest write mem?
+               bool writes = false, onlyZero = true;
+               nest.walk([&](affine::AffineStoreOp st) {
+                   if (!sameBuffer(st.getMemRef(), mem)) return;
+                   writes = true;
+                   if (!isZeroConst(st.getValueToStore())) onlyZero = false;
+               });
+               if (!writes) continue;
+               if (!onlyZero) return false;
+               // It zeroes mem — but only counts if it covers every element.
+               // Require a perfect constant-bound nest whose trip counts multiply
+               // to numElems.
+               int64_t trips = 1;
+               bool ok = true;
+               nest.walk([&](affine::AffineForOp l) {
+                   if (!l.hasConstantLowerBound() || !l.hasConstantUpperBound()
+                       || l.getStepAsInt() != 1) {
+                       ok = false;
+                       return;
+                   }
+                   trips *= l.getConstantUpperBound() - l.getConstantLowerBound();
+               });
+               if (!ok || trips != numElems) return false;
+               sawZeroInit = true;
+               break; // nearest writer found and it zeroes the whole buffer
+           }
+           return sawZeroInit;
+       }
+   
+       // Rewrite one innermost loop whose body accumulates into memory.
+       //
+       //   for k:  t = M[e]; …; s = t + x; M[e] = s      (e invariant in k)
+       // becomes
+       //   r = for k iter_args(acc = 0): …; yield acc + x
+       //   M[e] = r
+       //
+       // which is exactly the shape gemm/mm already map onto the fabric. Without
+       // it `M[e]` stays a stream whose stride is 0 (it does not vary with k), and
+       // a zero-length stream never starts its memory node — the fabric then never
+       // signals done (see the guard in --generate-cgra-driver).
+       bool tryPromote(affine::AffineForOp loop)
+       {
+           if (loop.getNumIterOperands() != 0) return false; // already carried
+           Block* body = loop.getBody();
+   
+           affine::AffineLoadOp accLoad;
+           affine::AffineStoreOp accStore;
+           for (Operation &op : body->without_terminator()) {
+               if (op.getNumRegions()) return false;
+               if (auto l = dyn_cast<affine::AffineLoadOp>(op)) {
+                   // Candidate accumulator load: index invariant in this loop.
+                   if (llvm::is_contained(
+                           l.getMapOperands(),
+                           loop.getInductionVar()))
+                       continue;
+                   if (accLoad) return false; // two invariant loads — ambiguous
+                   accLoad = l;
+               } else if (auto s = dyn_cast<affine::AffineStoreOp>(op)) {
+                   if (accStore) return false; // more than one store
+                   accStore = s;
+               }
+           }
+           if (!accLoad || !accStore) return false;
+           if (accLoad.getMemRef() != accStore.getMemRef()
+               || accLoad.getAffineMap() != accStore.getAffineMap()
+               || ArrayRef<Value>(SmallVector<Value>(accLoad.getMapOperands()))
+                      != ArrayRef<Value>(
+                          SmallVector<Value>(accStore.getMapOperands())))
+               return false;
+           // No OTHER access to that buffer inside the loop.
+           for (Operation &op : body->without_terminator()) {
+               if (auto l = dyn_cast<affine::AffineLoadOp>(op))
+                   if (l.getMemRef() == accLoad.getMemRef() && l != accLoad)
+                       return false;
+           }
+           // The stored value must be `acc + x` (the reduction operator we can
+           // seed with zero and re-associate).
+           auto add = accStore.getValueToStore().getDefiningOp<arith::AddIOp>();
+           if (!add) return false;
+           if (add.getLhs() != accLoad.getResult()
+               && add.getRhs() != accLoad.getResult())
+               return false;
+           // The loaded value must feed ONLY that add.
+           if (!accLoad.getResult().hasOneUse()) return false;
+   
+           // CRITICAL: every ENCLOSING loop must make the accumulator index VARY.
+           // Seeding with zero and storing after this loop is only equivalent when
+           // this loop is the *only* one accumulating into that element. A
+           // convolution
+           //     for oh, ow, kh, kw:  out[oh][ow] += in[oh+kh][ow+kw] * w[kh][kw]
+           // accumulates over kh AND kw: promoting just `kw` and storing the
+           // kw-sum would OVERWRITE out[oh][ow] on every kh instead of
+           // accumulating. Requiring the index to vary with each enclosing IV (as
+           // it does for matmul's i/j) rejects that.
+           // ...with one exception: a loop that runs EXACTLY ONCE is not a
+           // reduction dimension at all. Its induction variable is a constant, its
+           // body executes a single time, so promoting the inner loop still
+           // accumulates into the element exactly once and the overwrite hazard
+           // above cannot arise. TOSA emits these routinely — a 1x1 POINTWISE
+           // convolution arrives as `for kh<1, kw<1, c<64`, and since kh/kw do not
+           // index the store, the unqualified rule rejected every pointwise layer
+           // of an imported model. On tiny_kws that left five nests of 512 000
+           // MACs each on the CPU: 83% of the whole fabric-path time, and the
+           // reason the model ran at only 1.21x.
+           for (Operation* p = loop->getParentOp(); p; p = p->getParentOp()) {
+               auto pf = dyn_cast<affine::AffineForOp>(p);
+               if (!pf) break;
+               if (pf.hasConstantLowerBound() && pf.hasConstantUpperBound()) {
+                   int64_t lb = pf.getConstantLowerBound(),
+                           ub = pf.getConstantUpperBound();
+                   int64_t step = pf.getStepAsInt();
+                   if (step > 0 && ub > lb && (ub - lb + step - 1) / step == 1)
+                       continue; // single iteration — transparent
+               }
+               if (!llvm::is_contained(
+                       accStore.getMapOperands(),
+                       pf.getInductionVar()))
+                   return false;
+           }
+           // Seeding with zero is only sound if the buffer is already zero. Scan
+           // from the OUTERMOST enclosing loop: the initialisation nest is a
+           // sibling of the whole reduction nest, not of this innermost loop.
+           Operation* outermost = loop.getOperation();
+           while (auto p = outermost->getParentOfType<affine::AffineForOp>())
+               outermost = p.getOperation();
+           // When it is NOT provably zero, promote anyway but seed the iter_args
+           // with the accumulator's own `C[idx]` hoisted out of the loop. That is
+           // pure loop-invariant code motion, so it is exact for ANY prior
+           // contents — and it is the shape a quantized network arrives in: TOSA
+           // seeds a dense/conv accumulator with the BIAS broadcast, never with
+           // zero, so requiring a zero proof left every layer of an imported
+           // .tflite model unpromoted. The resulting `C = 1*C + reduce` is then
+           // what --split-reduction-bias turns into the fabric-mappable
+           // (zero-seeded reduction + elementwise bias) pair.
+           bool zeroSeed = provablyZeroBefore(accLoad.getMemRef(), outermost);
+           // The load-seeded form is only useful if --split-reduction-bias can
+           // then turn it into a zero-seeded reduction plus an elementwise bias;
+           // otherwise the seed strands, isFabricStreamable refuses the nest, and
+           // a kernel that used to export a DFG stops (matmul_alloca8 did exactly
+           // that). Split needs a statically shaped module-level global — it
+           // materialises a temp of the same type and rewrites whole-buffer
+           // accesses — so require that here rather than leaving the two passes to
+           // disagree. A dynamic or argument accumulator keeps the pre-existing
+           // behaviour: not promoted at all.
+           if (!zeroSeed) {
+               auto mrt = dyn_cast<MemRefType>(accLoad.getMemRef().getType());
+               if (!mrt || !mrt.hasStaticShape()
+                   || !accLoad.getMemRef().getDefiningOp<memref::GetGlobalOp>())
+                   return false;
+           }
+   
+           // --- rewrite ---
+           OpBuilder b(loop);
+           Location loc = loop.getLoc();
+           Value seed;
+           if (zeroSeed)
+               seed = arith::ConstantOp::create(
+                   b,
+                   loc,
+                   b.getIntegerAttr(accLoad.getType(), 0));
+           else
+               seed = affine::AffineLoadOp::create(
+                   b,
+                   loc,
+                   accLoad.getMemRef(),
+                   accLoad.getAffineMap(),
+                   accLoad.getMapOperands());
+           auto newLoop = affine::AffineForOp::create(
+               b,
+               loc,
+               loop.getLowerBoundOperands(),
+               loop.getLowerBoundMap(),
+               loop.getUpperBoundOperands(),
+               loop.getUpperBoundMap(),
+               loop.getStepAsInt(),
+               ValueRange{seed});
+   
+           // Mark a load-seeded loop so --split-reduction-bias knows THIS is the
+           // one it must split (and, just as importantly, that every other
+           // load-seeded shape in the module is none of its business — matching
+           // those blindly corrupted tfm_gemver's unrolled top-level reductions).
+           if (!zeroSeed)
+               newLoop->setAttr(
+                   "cgra.load_seeded",
+                   UnitAttr::get(newLoop.getContext()));
+           Block* nb = newLoop.getBody();
+           // The iter_args builder may or may not have added a terminator; drop it
+           // and append our own yield after the cloned body.
+           if (!nb->empty() && nb->back().hasTrait<OpTrait::IsTerminator>())
+               nb->back().erase();
+           OpBuilder bb(nb, nb->end());
+           IRMapping map;
+           map.map(loop.getInductionVar(), newLoop.getInductionVar());
+           map.map(accLoad.getResult(), newLoop.getRegionIterArgs()[0]);
+           Value yielded;
+           for (Operation &op : body->without_terminator()) {
+               if (&op == accLoad.getOperation() || &op == accStore.getOperation())
+                   continue;
+               Operation* c = bb.clone(op, map);
+               if (&op == add.getOperation()) yielded = c->getResult(0);
+           }
+           if (!yielded) return false;
+           affine::AffineYieldOp::create(bb, loc, ValueRange{yielded});
+   
+           b.setInsertionPointAfter(newLoop);
+           affine::AffineStoreOp::create(
+               b,
+               loc,
+               newLoop.getResult(0),
+               accStore.getMemRef(),
+               accStore.getAffineMap(),
+               accStore.getMapOperands());
+           loop.erase();
+           return true;
+       }
+   
+       void runOnOperation() override
+       {
+           func::FuncOp fn = getOperation();
+           SmallVector<affine::AffineForOp> innermost;
+           fn.walk([&](affine::AffineForOp l) {
+               bool nested = false;
+               l.walk([&](affine::AffineForOp inner) {
+                   if (inner != l) nested = true;
+               });
+               if (!nested) innermost.push_back(l);
+           });
+           for (affine::AffineForOp l : innermost) (void)tryPromote(l);
+       }
+   };
+   } // namespace
+   
+   std::unique_ptr<mlir::Pass> mlir::cgra::createCGRAPromoteAccumulatorPass()
+   { return std::make_unique<CGRAPromoteAccumulatorPass>(); }

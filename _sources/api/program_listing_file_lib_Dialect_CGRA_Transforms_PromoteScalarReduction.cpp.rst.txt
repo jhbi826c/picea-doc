@@ -1,0 +1,187 @@
+
+.. _program_listing_file_lib_Dialect_CGRA_Transforms_PromoteScalarReduction.cpp:
+
+Program Listing for File PromoteScalarReduction.cpp
+===================================================
+
+|exhale_lsh| :ref:`Return to documentation for file <file_lib_Dialect_CGRA_Transforms_PromoteScalarReduction.cpp>` (``lib/Dialect/CGRA/Transforms/PromoteScalarReduction.cpp``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. code-block:: cpp
+
+   
+   
+   #include "mlir/Dialect/Affine/IR/AffineOps.h"
+   #include "mlir/Dialect/Arith/IR/Arith.h"
+   #include "mlir/Dialect/Func/IR/FuncOps.h"
+   #include "mlir/Dialect/MemRef/IR/MemRef.h"
+   #include "mlir/IR/IRMapping.h"
+   #include "mlir/Pass/Pass.h"
+   #include "picea-mlir/Dialect/CGRA/IR/CGRA.h"
+   #include "picea-mlir/Dialect/CGRA/Transforms/Passes.h"
+   
+   using namespace mlir;
+   
+   namespace {
+   struct CGRAPromoteScalarReductionPass : public PassWrapper<
+                                               CGRAPromoteScalarReductionPass,
+                                               OperationPass<func::FuncOp>> {
+   
+       MLIR_DEFINE_EXPLICIT_INTERNAL_INLINE_TYPE_ID(CGRAPromoteScalarReductionPass)
+   
+       StringRef getArgument() const final { return "promote-scalar-reduction"; }
+       StringRef getDescription() const final
+       {
+           return "Bufferize a top-level affine.for scalar accumulator "
+                  "(iter_args) "
+                  "into a 1-element memref so the nest becomes CGRA-offloadable";
+       }
+   
+       void getDependentDialects(mlir::DialectRegistry &registry) const override
+       {
+           registry.insert<
+               affine::AffineDialect,
+               arith::ArithDialect,
+               memref::MemRefDialect>();
+       }
+   
+       // A kernel keeping its accumulator in iter_args and returning it as a
+       // scalar
+       // (`int mac(a,b){ for(i) y += a[i]*b[i]; return y; }`) STORES nothing, so
+       // --annotate-to-cgra — which requires both a load and a store — never
+       // offloads it. Promoting the accumulator into a 1-element memref gives it
+       // the load-accumulate- store shape the pipeline already maps.
+       //
+       // The gate is narrow so the pass is inert on kernels that already work: the
+       // loop must be TOP-LEVEL (mm/gemm/twomm/threemm carry their reduction in an
+       // inner loop) and its results must feed the function's `return` (gemver's
+       // top-level reductions store to a buffer, so an output stream already
+       // exists).
+       static bool isPromotableScalarReduction(affine::AffineForOp forOp)
+       {
+           if (forOp.getNumIterOperands() == 0 || forOp->getNumResults() == 0)
+               return false;
+           // Outermost loop only: an inner reduction already lives inside a
+           // storing nest.
+           if (forOp->getParentOfType<affine::AffineForOp>()) return false;
+           // Scalar accumulators only (the fabric streams 32-bit scalars).
+           for (Value init : forOp.getInits())
+               if (!init.getType().isIntOrFloat()) return false;
+           // The reduction must BE the function result: if the caller already
+           // stores it to a memref, the output buffer exists and the existing path
+           // owns that nest.
+           for (Value res : forOp.getResults())
+               for (Operation* user : res.getUsers())
+                   if (!isa<func::ReturnOp>(user)) return false;
+           // Must genuinely stream an input, and must not already store anything
+           // -- a nest that stores is either already in buffer form or a mixed
+           // shape we leave to the existing path.
+           bool loaded = false, stored = false;
+           forOp.walk([&](affine::AffineLoadOp) { loaded = true; });
+           forOp.walk([&](affine::AffineStoreOp) { stored = true; });
+           return loaded && !stored;
+       }
+   
+       void promote(func::FuncOp func, affine::AffineForOp forOp)
+       {
+           Location loc = forOp.getLoc();
+           Block &entry = func.getBody().front();
+   
+           // Index the accumulator with a CONSTANT affine map (`buf[0]`) rather
+           // than a constant index Value: an SSA operand that is not a loop
+           // induction variable is not renderable by the driver's reference
+           // transliterator.
+           AffineMap zeroMap =
+               AffineMap::get(0, 0, getAffineConstantExpr(0, func.getContext()));
+   
+           // Accumulator buffers live at the function entry so they dominate both
+           // the seeding store and the post-loop read-back.
+           OpBuilder eb(&entry, entry.begin());
+           SmallVector<Value> bufs;
+           for (Value init : forOp.getInits())
+               bufs.push_back(
+                   memref::AllocaOp::create(
+                       eb,
+                       loc,
+                       MemRefType::get({1}, init.getType())));
+   
+           OpBuilder b(forOp);
+           // Seed each accumulator with the loop's init value.
+           for (auto [buf, init] : llvm::zip(bufs, forOp.getInits()))
+               affine::AffineStoreOp::create(
+                   b,
+                   loc,
+                   init,
+                   buf,
+                   zeroMap,
+                   ValueRange{});
+   
+           // Same trip count, no loop-carried values.
+           auto newFor = affine::AffineForOp::create(
+               b,
+               loc,
+               forOp.getLowerBoundOperands(),
+               forOp.getLowerBoundMap(),
+               forOp.getUpperBoundOperands(),
+               forOp.getUpperBoundMap(),
+               forOp.getStepAsInt());
+   
+           Block* newBody = newFor.getBody();
+           OpBuilder bb(newBody, newBody->begin());
+   
+           IRMapping map;
+           map.map(forOp.getInductionVar(), newFor.getInductionVar());
+           // The carried value becomes a load of the accumulator at the top of the
+           // body...
+           for (auto [buf, arg] : llvm::zip(bufs, forOp.getRegionIterArgs()))
+               map.map(
+                   arg,
+                   affine::AffineLoadOp::create(
+                       bb,
+                       loc,
+                       buf,
+                       zeroMap,
+                       ValueRange{})
+                       .getResult());
+           for (Operation &op : forOp.getBody()->without_terminator())
+               bb.clone(op, map);
+           // ...and the yielded value becomes a store of it at the bottom.
+           auto yield =
+               cast<affine::AffineYieldOp>(forOp.getBody()->getTerminator());
+           for (auto [buf, v] : llvm::zip(bufs, yield.getOperands()))
+               affine::AffineStoreOp::create(
+                   bb,
+                   loc,
+                   map.lookupOrDefault(v),
+                   buf,
+                   zeroMap,
+                   ValueRange{});
+   
+           // Read the finished accumulator back for whatever used the loop result.
+           b.setInsertionPointAfter(newFor);
+           for (auto [res, buf] : llvm::zip(forOp.getResults(), bufs))
+               res.replaceAllUsesWith(
+                   affine::AffineLoadOp::create(
+                       b,
+                       loc,
+                       buf,
+                       zeroMap,
+                       ValueRange{}));
+           forOp.erase();
+       }
+   
+       void runOnOperation() override
+       {
+           func::FuncOp func = getOperation();
+           SmallVector<affine::AffineForOp> targets;
+           func.walk([&](affine::AffineForOp forOp) {
+               if (isPromotableScalarReduction(forOp)) targets.push_back(forOp);
+           });
+           for (affine::AffineForOp forOp : targets) promote(func, forOp);
+       }
+   };
+   } // namespace
+   
+   std::unique_ptr<mlir::Pass> mlir::cgra::createCGRAPromoteScalarReductionPass()
+   { return std::make_unique<CGRAPromoteScalarReductionPass>(); }

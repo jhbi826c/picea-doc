@@ -1,0 +1,78 @@
+
+.. _program_listing_file_include_picea-mlir-c_Dialect_Base2.h:
+
+Program Listing for File Base2.h
+================================
+
+|exhale_lsh| :ref:`Return to documentation for file <file_include_picea-mlir-c_Dialect_Base2.h>` (``include/picea-mlir-c/Dialect/Base2.h``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. code-block:: cpp
+
+   //===-- picea-mlir-c/Dialect/Base2.h - C API for Base2 dialect -------*-
+   //C-*-===//
+   //
+   // @author  Jiahong Bi (jiahong.bi@tu-dresden.de)
+   //===----------------------------------------------------------------------===//
+   
+   #ifndef PICEA_MLIR_C_DIALECT_BASE2_H
+   #define PICEA_MLIR_C_DIALECT_BASE2_H
+   
+   #include "mlir-c/IR.h"
+   #include "mlir-c/Support.h"
+   
+   #ifdef __cplusplus
+   extern "C" {
+   #endif
+   
+   MLIR_DECLARE_CAPI_DIALECT_REGISTRATION(Base2, base2);
+   
+   //===---------------------------------------------------------------------===//
+   // FixedType
+   //===---------------------------------------------------------------------===//
+   
+   MLIR_CAPI_EXPORTED bool mlirTypeIsAFixedType(MlirType type);
+   
+   MLIR_CAPI_EXPORTED MlirType mlirFixedTypeGet(
+       MlirContext ctx,
+       unsigned integerBits,
+       unsigned fractionalBits);
+   
+   MLIR_CAPI_EXPORTED unsigned mlirFixedTypeGetIntegerBits(MlirType type);
+   
+   MLIR_CAPI_EXPORTED unsigned mlirFixedTypeGetFractionalBits(MlirType type);
+   
+   //===---------------------------------------------------------------------===//
+   // BitsAttr
+   //===---------------------------------------------------------------------===//
+   
+   MLIR_CAPI_EXPORTED bool mlirAttributeIsABitsAttr(MlirAttribute attr);
+   
+   MLIR_CAPI_EXPORTED MlirAttribute mlirBitsAttrGet(MlirType type, uint64_t value);
+   
+   MLIR_CAPI_EXPORTED uint64_t mlirBitsAttrGetValue(MlirAttribute attr);
+   
+   //===---------------------------------------------------------------------===//
+   // DenseBitsAttr
+   //===---------------------------------------------------------------------===//
+   
+   MLIR_CAPI_EXPORTED bool mlirAttributeIsADenseBitsAttr(MlirAttribute attr);
+   
+   MLIR_CAPI_EXPORTED MlirAttribute
+   mlirDenseBitsAttrGet(MlirType type, MlirAttribute data);
+   
+   MLIR_CAPI_EXPORTED MlirAttribute mlirDenseBitsAttrGetData(MlirAttribute attr);
+   
+   //===---------------------------------------------------------------------===//
+   // BufferizableOpInterface registration
+   //===---------------------------------------------------------------------===//
+   
+   MLIR_CAPI_EXPORTED void
+   mlirBase2RegisterBufferizableOpInterfaceExternalModels(MlirContext context);
+   
+   #ifdef __cplusplus
+   }
+   #endif
+   
+   #endif
