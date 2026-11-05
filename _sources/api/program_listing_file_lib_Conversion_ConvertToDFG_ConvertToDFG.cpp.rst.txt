@@ -1,0 +1,49 @@
+
+.. _program_listing_file_lib_Conversion_ConvertToDFG_ConvertToDFG.cpp:
+
+Program Listing for File ConvertToDFG.cpp
+=========================================
+
+|exhale_lsh| :ref:`Return to documentation for file <file_lib_Conversion_ConvertToDFG_ConvertToDFG.cpp>` (``lib/Conversion/ConvertToDFG/ConvertToDFG.cpp``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. code-block:: cpp
+
+   
+   
+   #include "picea-mlir/Conversion/ConvertToDFG/ConvertToDFG.h"
+   
+   #include "mlir/Dialect/Linalg/Passes.h"
+   #include "mlir/Pass/PassManager.h"
+   #include "mlir/Pass/PassRegistry.h"
+   #include "picea-mlir/Conversion/Passes.h"
+   #include "picea-mlir/Dialect/DFG/Transforms/Passes.h"
+   #include "picea-mlir/Dialect/Func/Transforms/Passes.h"
+   #include "picea-mlir/Dialect/Linalg/Transforms/Passes.h"
+   
+   using namespace mlir;
+   
+   void mlir::picea::addComputationNodeOutliningPasses(OpPassManager &pm)
+   {
+       pm.addPass(linalg::createLinalgSoftTransposePass());
+       pm.addPass(createLinalgGeneralizeNamedOpsPass());
+       pm.addPass(linalg::createLinalgScalarizeSplatDensePass());
+       pm.addPass(createLinalgInlineScalarOperandsPass());
+       pm.nest("func.func").addPass(func::createFuncOutlineComputationLeafPass());
+   }
+   
+   void mlir::picea::addConvertToDFGPasses(OpPassManager &pm)
+   {
+       addComputationNodeOutliningPasses(pm);
+       pm.addPass(createConvertFuncToDFGPass());
+       pm.addPass(dfg::createDFGChannelFanoutExpansionPass());
+   }
+   
+   void mlir::picea::registerConvertToDFGPipeline()
+   {
+       PassPipelineRegistration<>(
+           "convert-to-dfg",
+           "Convert a program to normalized DFG IR",
+           [](OpPassManager &pm) { addConvertToDFGPasses(pm); });
+   }

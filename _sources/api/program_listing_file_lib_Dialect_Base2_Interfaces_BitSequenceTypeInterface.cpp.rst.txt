@@ -1,0 +1,57 @@
+
+.. _program_listing_file_lib_Dialect_Base2_Interfaces_BitSequenceTypeInterface.cpp:
+
+Program Listing for File BitSequenceTypeInterface.cpp
+=====================================================
+
+|exhale_lsh| :ref:`Return to documentation for file <file_lib_Dialect_Base2_Interfaces_BitSequenceTypeInterface.cpp>` (``lib/Dialect/Base2/Interfaces/BitSequenceTypeInterface.cpp``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. code-block:: cpp
+
+   
+   
+   #include "picea-mlir/Dialect/Base2/Interfaces/BitSequenceTypeInterface.h"
+   
+   #include "mlir/Dialect/Arith/IR/Arith.h"
+   #include "picea-mlir/Dialect/Base2/IR/Base2.h"
+   
+   using namespace mlir;
+   using namespace mlir::base2;
+   
+   //===- Generated implementation -------------------------------------------===//
+   
+   #include "picea-mlir/Dialect/Base2/Interfaces/BitSequenceTypeInterface.cpp.inc"
+   
+   //===----------------------------------------------------------------------===//
+   
+   namespace {
+   
+   template<class Float, std::size_t Bits>
+   struct FloatModel
+           : BitSequenceType::ExternalModel<FloatModel<Float, Bits>, Float> {
+       static std::size_t getBitWidth(Type) { return Bits; }
+   };
+   
+   struct IntModel : BitSequenceType::ExternalModel<IntModel, IntegerType> {
+       static std::size_t getBitWidth(Type type)
+       {
+           const auto intTy = cast<IntegerType>(type);
+           return intTy.getWidth();
+       }
+   };
+   
+   } // namespace
+   
+   void mlir::base2::registerBitSequenceTypeModels(MLIRContext &ctx)
+   {
+       BFloat16Type::attachInterface<FloatModel<BFloat16Type, 16>>(ctx);
+       Float16Type::attachInterface<FloatModel<Float16Type, 16>>(ctx);
+       Float32Type::attachInterface<FloatModel<Float32Type, 32>>(ctx);
+       Float64Type::attachInterface<FloatModel<Float64Type, 64>>(ctx);
+       Float80Type::attachInterface<FloatModel<Float80Type, 80>>(ctx);
+       Float128Type::attachInterface<FloatModel<Float128Type, 128>>(ctx);
+   
+       IntegerType::attachInterface<IntModel>(ctx);
+   }

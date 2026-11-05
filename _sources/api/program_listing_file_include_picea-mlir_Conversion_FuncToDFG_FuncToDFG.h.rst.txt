@@ -1,0 +1,38 @@
+
+.. _program_listing_file_include_picea-mlir_Conversion_FuncToDFG_FuncToDFG.h:
+
+Program Listing for File FuncToDFG.h
+====================================
+
+|exhale_lsh| :ref:`Return to documentation for file <file_include_picea-mlir_Conversion_FuncToDFG_FuncToDFG.h>` (``include/picea-mlir/Conversion/FuncToDFG/FuncToDFG.h``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. code-block:: cpp
+
+   
+   
+   #pragma once
+   
+   #include "mlir/IR/Value.h"
+   #include "mlir/Pass/Pass.h"
+   #include "mlir/Transforms/DialectConversion.h"
+   
+   namespace mlir {
+   
+   //===- Generated includes -------------------------------------------------===//
+   
+   #define GEN_PASS_DECL_CONVERTFUNCTODFG
+   #include "picea-mlir/Conversion/Passes.h.inc"
+   
+   //===----------------------------------------------------------------------===//
+   
+   void populateFuncToDFGConversionPatterns(
+       TypeConverter &typeConverter,
+       RewritePatternSet &patterns,
+       DenseMap<Value, Value> &returnValueToOutputPortMap,
+       DenseMap<Value, Value> &callResultChannelMap);
+   
+   std::unique_ptr<Pass> createConvertFuncToDFGPass();
+   
+   } // namespace mlir

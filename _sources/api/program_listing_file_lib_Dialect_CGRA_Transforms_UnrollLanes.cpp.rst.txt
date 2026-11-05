@@ -1,0 +1,483 @@
+
+.. _program_listing_file_lib_Dialect_CGRA_Transforms_UnrollLanes.cpp:
+
+Program Listing for File UnrollLanes.cpp
+========================================
+
+|exhale_lsh| :ref:`Return to documentation for file <file_lib_Dialect_CGRA_Transforms_UnrollLanes.cpp>` (``lib/Dialect/CGRA/Transforms/UnrollLanes.cpp``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. code-block:: cpp
+
+   
+   
+   #include "mlir/Dialect/Affine/IR/AffineOps.h"
+   #include "mlir/Dialect/Arith/IR/Arith.h"
+   #include "mlir/Dialect/Func/IR/FuncOps.h"
+   #include "mlir/Dialect/LLVMIR/LLVMDialect.h"
+   #include "mlir/IR/IRMapping.h"
+   #include "mlir/Pass/Pass.h"
+   #include "picea-mlir/Dialect/CGRA/Transforms/Passes.h"
+   
+   #include "llvm/ADT/StringSet.h"
+   
+   using namespace mlir;
+   
+   namespace {
+   
+   // The STRELA stream budget (strela_pkg.sv).
+   static constexpr unsigned kInputNodes = 4;
+   static constexpr unsigned kOutputNodes = 4;
+   // PEs in the deployed fabric (elastic-cgra configs/4x4_*): the lanes all have
+   // to be placed, so this bounds L just as tightly as the stream budget does.
+   static constexpr unsigned kPEs = 16;
+   
+   static int64_t tripOf(affine::AffineForOp f)
+   {
+       if (!f.hasConstantLowerBound() || !f.hasConstantUpperBound()
+           || f.getStepAsInt() != 1)
+           return -1;
+       return f.getConstantUpperBound() - f.getConstantLowerBound();
+   }
+   
+   // Does @p op's affine index use @p iv?
+   static bool usesIV(Operation* op, Value iv)
+   {
+       if (auto l = dyn_cast<affine::AffineLoadOp>(op))
+           return llvm::is_contained(l.getMapOperands(), iv);
+       if (auto s = dyn_cast<affine::AffineStoreOp>(op))
+           return llvm::is_contained(s.getMapOperands(), iv);
+       return false;
+   }
+   
+   // One CGRA configuration streams at most kInputNodes arrays in and kOutputNodes
+   // out. A kernel written the obvious way uses far fewer — `out[i] = f(in[i])`
+   // needs 1 and 1 — so the fabric sits mostly idle: the same dispatch could have
+   // carried four independent elements. This pass unroll-and-jams the outermost
+   // parallel loop by exactly as many LANES as the budget allows, which is what
+   // turns a plain kernel into the multi-lane form the STRELA kernels use:
+   //
+   //   relu   `out[i] = max(in[i],0)`             0 shared + 1 in/lane -> L = 4
+   //   matmul `C[i][j] = sum_k A[i][k]*B[k][j]`   1 shared (B) + 1/lane -> L = 3
+   //
+   // The lanes SHARE every stream that does not depend on the unrolled index (the
+   // B column above is read once and fed to all three multipliers), which is why
+   // the matmul gets three lanes out of a four-input budget rather than two.
+   //
+   // Self-limiting: L is computed from how much of the budget the nest ALREADY
+   // uses, so running it on an already-unrolled nest gives L = 1 and changes
+   // nothing. That keeps it inert on the kernels that were transformed by hand.
+   struct CGRAUnrollLanesPass
+           : public PassWrapper<CGRAUnrollLanesPass, OperationPass<func::FuncOp>> {
+   
+       MLIR_DEFINE_EXPLICIT_INTERNAL_INLINE_TYPE_ID(CGRAUnrollLanesPass)
+   
+       StringRef getArgument() const final { return "unroll-lanes"; }
+       StringRef getDescription() const final
+       {
+           return "Unroll-and-jam a compute nest by as many lanes as the fabric's "
+                  "input/output stream budget allows";
+       }
+   
+       void getDependentDialects(mlir::DialectRegistry &registry) const override
+       { registry.insert<affine::AffineDialect, arith::ArithDialect>(); }
+   
+       struct Plan {
+           // Loops ABOVE the lane axis: rebuilt once, outside the block loop. A
+           // network's elementwise nest is `for n,oh,ow,c` with n a batch of 1 —
+           // the lane axis has to be a loop with something to unroll, not simply
+           // the outermost one.
+           SmallVector<affine::AffineForOp> above;
+           affine::AffineForOp lane;      // loop to unroll
+           affine::AffineForOp reduction; // inner reduction loop, or null
+           // Loops BETWEEN the lane axis and the reduction. They are rebuilt once,
+           // not per lane: in a matmul the lane axis is `i` but the accumulators
+           // live in `k`, two levels down, and the jam has to happen there so the
+           // `j`-dependent operand (the B column) is loaded once and shared by
+           // every lane.
+           SmallVector<affine::AffineForOp> between;
+           SmallVector<affine::AffineStoreOp> stores;
+           int64_t L = 1;
+           int64_t trip = 0;
+       };
+   
+       // Decide the lane count for the nest rooted at @p top.
+       bool plan(affine::AffineForOp top, Plan &p)
+       {
+           // Skip anything with a call (printf loops) or nested control flow we do
+           // not model; require constant bounds throughout.
+           bool bad = false;
+           top.walk([&](Operation* op) {
+               if (isa<LLVM::CallOp, func::CallOp>(op)) bad = true;
+               if (auto f = dyn_cast<affine::AffineForOp>(op))
+                   if (tripOf(f) < 1) bad = true;
+           });
+           if (bad) return false;
+   
+           // The lane axis is the OUTERMOST loop whose IV indexes a store — i.e. a
+           // parallel dimension, never the reduction one.
+           SmallVector<affine::AffineStoreOp> stores;
+           top.walk([&](affine::AffineStoreOp s) { stores.push_back(s); });
+           if (stores.empty()) return false;
+           if (!llvm::any_of(stores, [&](affine::AffineStoreOp s) {
+                   return usesIV(s, top.getInductionVar());
+               }))
+               return false;
+           p.stores = stores;
+   
+           // Walk the perfect-nest chain once, classifying each loop:
+           //   above   — before the lane axis (rebuilt once, outside)
+           //   lane    — the first loop that indexes a store AND has >1 iteration
+           //   between — after the lane axis, above the reduction (rebuilt once,
+           //   inside) reduction — the accumulator loop, if any (jammed across
+           //   lanes)
+           SmallVector<affine::AffineForOp> chain{top};
+           while (true) {
+               affine::AffineForOp inner;
+               for (Operation &op : chain.back().getBody()->without_terminator())
+                   if (auto f = dyn_cast<affine::AffineForOp>(op)) {
+                       if (inner) return false; // two sibling loops: not handled
+                       inner = f;
+                   }
+               if (!inner) break;
+               if (inner.getNumIterOperands() > 0) {
+                   p.reduction = inner;
+                   break;
+               }
+               chain.push_back(inner);
+           }
+           for (affine::AffineForOp f : chain) {
+               if (!p.lane) {
+                   bool indexes =
+                       llvm::any_of(stores, [&](affine::AffineStoreOp s) {
+                           return usesIV(s, f.getInductionVar());
+                       });
+                   if (indexes && tripOf(f) > 1) {
+                       p.lane = f;
+                       continue;
+                   }
+                   p.above.push_back(f);
+               } else {
+                   p.between.push_back(f);
+               }
+           }
+           if (!p.lane) return false;
+           p.trip = tripOf(p.lane);
+   
+           // A loop above the lane axis is rebuilt with an empty body, so it must
+           // contain only the next loop of the chain.
+           for (affine::AffineForOp f : p.above) {
+               unsigned n = 0;
+               for (Operation &op : f.getBody()->without_terminator()) {
+                   (void)op;
+                   ++n;
+               }
+               if (n != 1) return false;
+           }
+           // Intermediate loops are rebuilt with an empty body, so any op in them
+           // other than the next loop of the chain would be dropped — require
+           // exactly one. The LAST one is the reduction's parent and is exempt:
+           // its body legitimately holds the reduction plus the stores that
+           // consume it, and jamReduction reproduces that body per lane.
+           for (size_t i = 0; i + 1 < p.between.size(); ++i) {
+               unsigned n = 0;
+               for (Operation &op : p.between[i].getBody()->without_terminator()) {
+                   (void)op;
+                   ++n;
+               }
+               if (n != 1) return false;
+           }
+           // When the body is rebuilt around a chain, the LANE loop must contain
+           // only that chain. Some nests compute values in the lane body and use
+           // them further in (`%t = index_cast %i; … inner uses %t`); rebuilding
+           // would drop those and leave the clones referring to erased values.
+           // Decline instead of mangling.
+           if (!p.between.empty() || p.reduction) {
+               unsigned n = 0;
+               for (Operation &op : p.lane.getBody()->without_terminator()) {
+                   (void)op;
+                   ++n;
+               }
+               if (n != 1) return false;
+           }
+   
+           // Budget accounting: a load whose index uses the lane IV costs one
+           // stream PER LANE; one that does not is read once and shared by all
+           // lanes.
+           //
+           // Count distinct STREAMS, not operations: relu's `if/else` stores to
+           // the SAME element on both arms, which is one output stream — counting
+           // the two ops would halve the lane count for no reason. Likewise two
+           // loads of the same element ride one input stream.
+           auto key = [](Value mem, AffineMap m, ValueRange ops) {
+               std::string k;
+               llvm::raw_string_ostream os(k);
+               os << mem.getAsOpaquePointer() << "|" << m << "|";
+               for (Value v : ops) os << v.getAsOpaquePointer() << ",";
+               return k;
+           };
+           llvm::StringSet<> inShared, inLane, outStreams;
+           p.lane.walk([&](affine::AffineLoadOp l) {
+               auto k = key(l.getMemRef(), l.getAffineMap(), l.getMapOperands());
+               if (usesIV(l, p.lane.getInductionVar()))
+                   inLane.insert(k);
+               else
+                   inShared.insert(k);
+           });
+           SmallVector<affine::AffineStoreOp> laneStores;
+           p.lane.walk([&](affine::AffineStoreOp s) { laneStores.push_back(s); });
+           for (affine::AffineStoreOp s : laneStores)
+               outStreams.insert(
+                   key(s.getMemRef(), s.getAffineMap(), s.getMapOperands()));
+           unsigned perLaneIn = inLane.size(), sharedIn = inShared.size();
+           unsigned perLaneOut = outStreams.size();
+           if (perLaneIn == 0 || perLaneOut == 0) return false;
+           if (sharedIn >= kInputNodes) return false;
+   
+           // Every lane is another copy of the body on the PE array, so the array
+           // bounds L exactly as the stream budget does. Without this the pass
+           // "optimises" a nest that is ALREADY too big — a quantized requant
+           // chain is 22-84 FUs against 16 PEs, and doubling it took residual from
+           // 11 streamable DFGs to 0. Such a nest needs PARTITIONING across
+           // configurations, which is the opposite of unrolling.
+           unsigned fus = 0;
+           p.lane.walk([&](Operation* op) {
+               if (isa<arith::MulIOp,
+                       arith::AddIOp,
+                       arith::SubIOp,
+                       arith::CmpIOp,
+                       arith::SelectOp,
+                       arith::AndIOp,
+                       arith::OrIOp,
+                       arith::XOrIOp,
+                       arith::ShLIOp,
+                       arith::ShRSIOp,
+                       arith::ShRUIOp>(op))
+                   ++fus;
+           });
+           // A nest with no arithmetic is a pure copy (notably the gather
+           // --conv-to-im2col emits). --export-loop-dfg refuses it and
+           // --annotate-to-cgra leaves it on the host, so it never becomes a
+           // configuration: unrolling it widens host code for no fabric gain. This
+           // is what the MYRTUS networks hit — the only nests unroll could touch
+           // there were gathers.
+           if (fus == 0) return false;
+           int64_t byPE = (int64_t)(kPEs / fus);
+   
+           int64_t byIn = (kInputNodes - sharedIn) / perLaneIn;
+           int64_t byOut = kOutputNodes / perLaneOut;
+           p.L = std::min({byIn, byOut, byPE});
+           if (p.L > p.trip) p.L = p.trip;
+           return p.L > 1;
+       }
+   
+       // Clone the lane body with the lane IV replaced by @p idx, into @p b.
+       // When the body holds a reduction loop, `accIn`/`accOut` carry the jammed
+       // accumulators so all lanes share one loop.
+       void cloneLane(OpBuilder &b, Plan &p, Value idx, IRMapping &outer)
+       {
+           IRMapping m(outer);
+           m.map(p.lane.getInductionVar(), idx);
+           for (Operation &op : p.lane.getBody()->without_terminator())
+               b.clone(op, m);
+       }
+   
+       void run(Plan &p)
+       {
+           // The whole nest is replaced: rebuild the loops ABOVE the lane axis
+           // once, then the block loop, then (inside) the loops between it and the
+           // reduction.
+           OpBuilder b(
+               p.above.empty() ? p.lane.getOperation()
+                               : p.above.front().getOperation());
+           Location loc = p.lane.getLoc();
+           MLIRContext* ctx = b.getContext();
+           int64_t blocks = p.trip / p.L, rem = p.trip % p.L;
+   
+           IRMapping up;
+           for (affine::AffineForOp f : p.above) {
+               auto nf = affine::AffineForOp::create(
+                   b,
+                   f.getLoc(),
+                   f.getLowerBoundOperands(),
+                   f.getLowerBoundMap(),
+                   f.getUpperBoundOperands(),
+                   f.getUpperBoundMap(),
+                   f.getStepAsInt());
+               up.map(f.getInductionVar(), nf.getInductionVar());
+               b = OpBuilder(nf.getBody(), nf.getBody()->begin());
+           }
+   
+           if (blocks > 0) {
+               auto blk = affine::AffineForOp::create(b, loc, 0, blocks);
+               OpBuilder bb(blk.getBody(), blk.getBody()->begin());
+               SmallVector<Value> idx;
+               for (int64_t l = 0; l < p.L; ++l) {
+                   auto map = AffineMap::get(
+                       1,
+                       0,
+                       getAffineDimExpr(0, ctx) * p.L + l,
+                       ctx);
+                   idx.push_back(
+                       affine::AffineApplyOp::create(
+                           bb,
+                           loc,
+                           map,
+                           ValueRange{blk.getInductionVar()}));
+               }
+               emitBody(bb, p, idx, up);
+           }
+           for (int64_t r = p.trip - rem; r < p.trip; ++r) {
+               Value c = arith::ConstantIndexOp::create(b, loc, r);
+               emitBody(b, p, {c}, up);
+           }
+           (p.above.empty() ? p.lane : p.above.front()).erase();
+       }
+   
+       // Rebuild the intermediate loops once and emit the lanes at the deepest
+       // level.
+       void emitBody(OpBuilder &b, Plan &p, ArrayRef<Value> idx, IRMapping &up)
+       {
+           IRMapping m(up);
+           OpBuilder cb = b;
+           for (auto f : p.between) {
+               auto nf = affine::AffineForOp::create(
+                   cb,
+                   f.getLoc(),
+                   f.getLowerBoundOperands(),
+                   f.getLowerBoundMap(),
+                   f.getUpperBoundOperands(),
+                   f.getUpperBoundMap(),
+                   f.getStepAsInt());
+               m.map(f.getInductionVar(), nf.getInductionVar());
+               cb = OpBuilder(nf.getBody(), nf.getBody()->begin());
+           }
+           if (!p.reduction) {
+               // The per-lane work lives in the INNERMOST body of the chain.
+               // Cloning the lane loop's body instead would re-emit the `between`
+               // loops that were just rebuilt, nesting them twice.
+               Block* innermost = p.between.empty() ? p.lane.getBody()
+                                                    : p.between.back().getBody();
+               for (Value id : idx) {
+                   IRMapping lm(m);
+                   lm.map(p.lane.getInductionVar(), id);
+                   for (Operation &op : innermost->without_terminator())
+                       cb.clone(op, lm);
+               }
+               return;
+           }
+           jamReduction(cb, p, idx, m);
+       }
+   
+       // Build ONE reduction loop carrying every lane's accumulators, so the
+       // operands that do not depend on the lane index are loaded once and feed
+       // all lanes.
+       void
+       jamReduction(OpBuilder &b, Plan &p, ArrayRef<Value> idx, IRMapping &outer)
+       {
+           Location loc = p.lane.getLoc();
+           affine::AffineForOp red = p.reduction;
+           unsigned nAcc = red.getNumIterOperands();
+   
+           // Ops in the reduction's parent BEFORE the reduction are a preamble the
+           // reduction body consumes — e.g. twomm loads its `alpha` scalar there.
+           // The parent is rebuilt empty, so they must be re-emitted or the clones
+           // would refer to erased values. One that does not depend on the lane
+           // index is emitted ONCE and shared (it is a shared input stream,
+           // exactly as the budget assumed); one that does is emitted per lane.
+           Block* hostBlk = red->getBlock();
+           SmallVector<Operation*> pre;
+           for (Operation &op : hostBlk->without_terminator()) {
+               if (&op == red.getOperation()) break;
+               pre.push_back(&op);
+           }
+           llvm::SmallPtrSet<Value, 8> laneDep{p.lane.getInductionVar()};
+           SmallVector<Operation*> preShared, preLane;
+           for (Operation* op : pre) {
+               bool dep = llvm::any_of(op->getOperands(), [&](Value v) {
+                   return laneDep.contains(v);
+               });
+               if (dep) {
+                   for (Value r : op->getResults()) laneDep.insert(r);
+                   preLane.push_back(op);
+               } else {
+                   preShared.push_back(op);
+               }
+           }
+           for (Operation* op : preShared) b.clone(*op, outer);
+   
+           SmallVector<Value> inits;
+           for (Value v : red.getInits())
+               for (unsigned l = 0; l < idx.size(); ++l)
+                   inits.push_back(outer.lookupOrDefault(v));
+   
+           auto nr = affine::AffineForOp::create(
+               b,
+               loc,
+               red.getLowerBoundOperands(),
+               red.getLowerBoundMap(),
+               red.getUpperBoundOperands(),
+               red.getUpperBoundMap(),
+               red.getStepAsInt(),
+               inits);
+           Block* nb = nr.getBody();
+           if (!nb->empty() && nb->back().hasTrait<OpTrait::IsTerminator>())
+               nb->back().erase();
+           OpBuilder rb(nb, nb->end());
+   
+           SmallVector<Value> yields(idx.size() * nAcc);
+           for (auto [l, id] : llvm::enumerate(idx)) {
+               IRMapping m(outer);
+               m.map(p.lane.getInductionVar(), id);
+               m.map(red.getInductionVar(), nr.getInductionVar());
+               for (Operation* op : preLane) rb.clone(*op, m);
+               for (unsigned a = 0; a < nAcc; ++a)
+                   m.map(
+                       red.getRegionIterArgs()[a],
+                       nr.getRegionIterArgs()[a * idx.size() + l]);
+               for (Operation &op : red.getBody()->without_terminator())
+                   rb.clone(op, m);
+               auto y =
+                   cast<affine::AffineYieldOp>(red.getBody()->getTerminator());
+               for (unsigned a = 0; a < nAcc; ++a)
+                   yields[a * idx.size() + l] = m.lookupOrDefault(y.getOperand(a));
+           }
+           affine::AffineYieldOp::create(rb, loc, yields);
+   
+           // The stores that followed the reduction, once per lane.
+           for (auto [l, id] : llvm::enumerate(idx)) {
+               IRMapping m(outer);
+               m.map(p.lane.getInductionVar(), id);
+               for (unsigned a = 0; a < nAcc; ++a)
+                   m.map(red.getResult(a), nr.getResult(a * idx.size() + l));
+               bool afterRed = false;
+               for (Operation &op : hostBlk->without_terminator()) {
+                   if (&op == red.getOperation()) {
+                       afterRed = true;
+                       continue;
+                   }
+                   if (!afterRed) continue; // preamble: already emitted above
+                   b.clone(op, m);
+               }
+           }
+       }
+   
+       void runOnOperation() override
+       {
+           func::FuncOp fn = getOperation();
+           SmallVector<affine::AffineForOp> tops;
+           for (Block &blk : fn.getBody())
+               for (Operation &op : blk)
+                   if (auto f = dyn_cast<affine::AffineForOp>(&op))
+                       tops.push_back(f);
+           for (affine::AffineForOp t : tops) {
+               Plan p;
+               if (plan(t, p)) run(p);
+           }
+       }
+   };
+   } // namespace
+   
+   std::unique_ptr<mlir::Pass> mlir::cgra::createCGRAUnrollLanesPass()
+   { return std::make_unique<CGRAUnrollLanesPass>(); }

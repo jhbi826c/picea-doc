@@ -1,0 +1,44 @@
+
+.. _program_listing_file_lib_Dialect_CGRA_IR_CGRAOps.cpp:
+
+Program Listing for File CGRAOps.cpp
+====================================
+
+|exhale_lsh| :ref:`Return to documentation for file <file_lib_Dialect_CGRA_IR_CGRAOps.cpp>` (``lib/Dialect/CGRA/IR/CGRAOps.cpp``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. code-block:: cpp
+
+   
+   
+   #include "picea-mlir/Dialect/CGRA/IR/CGRAOps.h"
+   
+   #include "mlir/IR/Builders.h"
+   #include "mlir/IR/OpImplementation.h"
+   #include "picea-mlir/Dialect/CGRA/IR/CGRA.h"
+   
+   #include "llvm/ADT/STLExtras.h"
+   
+   #define GET_OP_CLASSES
+   #include "picea-mlir/Dialect/CGRA/IR/CGRAOps.cpp.inc"
+   
+   using namespace mlir;
+   
+   // The region receives the stream operands as block arguments, so the two must
+   // agree in number and type — that is what makes the kernel's data flow
+   // explicit.
+   LogicalResult cgra::DeployOp::verify()
+   {
+       Block &body = getBody().front();
+       if (body.getNumArguments() != getStreams().size())
+           return emitOpError(
+                      "region must have one block argument per stream operand (")
+                  << body.getNumArguments() << " vs " << getStreams().size()
+                  << ")";
+       for (auto [arg, stream] : llvm::zip(body.getArguments(), getStreams()))
+           if (arg.getType() != stream.getType())
+               return emitOpError(
+                   "region argument type must match its stream operand");
+       return success();
+   }

@@ -1,0 +1,31 @@
+
+.. _program_listing_file_include_picea-mlir_Conversion_ConvertToEmitHLS_ConvertToEmitHLS.h:
+
+Program Listing for File ConvertToEmitHLS.h
+===========================================
+
+|exhale_lsh| :ref:`Return to documentation for file <file_include_picea-mlir_Conversion_ConvertToEmitHLS_ConvertToEmitHLS.h>` (``include/picea-mlir/Conversion/ConvertToEmitHLS/ConvertToEmitHLS.h``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. code-block:: cpp
+
+   
+   
+   #pragma once
+   
+   #include "mlir/Pass/PassManager.h"
+   
+   #include <cstdint>
+   
+   namespace mlir {
+   
+   namespace picea {
+   void registerConvertToEmitHLSPipelines();
+   void addConvertToEmitHLSPasses(
+       OpPassManager &pm,
+       int64_t availableBRAM,
+       int64_t availableDSP);
+   } // namespace picea
+   
+   } // namespace mlir

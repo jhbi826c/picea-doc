@@ -1,0 +1,100 @@
+
+.. _program_listing_file_lib_Conversion_ConvertToEmitHLS_ConvertToEmitHLS.cpp:
+
+Program Listing for File ConvertToEmitHLS.cpp
+=============================================
+
+|exhale_lsh| :ref:`Return to documentation for file <file_lib_Conversion_ConvertToEmitHLS_ConvertToEmitHLS.cpp>` (``lib/Conversion/ConvertToEmitHLS/ConvertToEmitHLS.cpp``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. code-block:: cpp
+
+   
+   
+   #include "picea-mlir/Conversion/ConvertToEmitHLS/ConvertToEmitHLS.h"
+   
+   #include "mlir/Conversion/ReconcileUnrealizedCasts/ReconcileUnrealizedCasts.h"
+   #include "mlir/Pass/PassManager.h"
+   #include "mlir/Pass/PassRegistry.h"
+   #include "picea-mlir/Conversion/ConvertToDFG/ConvertToDFG.h"
+   #include "picea-mlir/Conversion/Passes.h"
+   #include "picea-mlir/Dialect/DFG/Transforms/Passes.h"
+   #include "picea-mlir/Dialect/EmitHLS/Transforms/Passes.h"
+   #include "picea-mlir/Dialect/Linalg/Transforms/Passes.h"
+   
+   #include <mlir/Dialect/Bufferization/Transforms/Passes.h>
+   #include <mlir/Transforms/Passes.h>
+   
+   using namespace mlir;
+   
+   namespace {
+   struct ConvertToEmitHLSPipelineOptions
+           : public PassPipelineOptions<ConvertToEmitHLSPipelineOptions> {
+       Option<int64_t> availableBRAM{
+           *this,
+           "available-bram",
+           llvm::cl::desc("Total Number of BRAM on the hardware"),
+           llvm::cl::init(288)};
+       Option<int64_t> availableDSP{
+           *this,
+           "available-dsp",
+           llvm::cl::desc("Total Number of DSP on the hardware"),
+           llvm::cl::init(1248)};
+   };
+   } // namespace
+   
+   void mlir::picea::addConvertToEmitHLSPasses(
+       OpPassManager &pm,
+       int64_t availableBRAM,
+       int64_t availableDSP)
+   {
+       pm.addPass(createConvertFilterToLinalgPass());
+       addConvertToDFGPasses(pm);
+       pm.addPass(dfg::createDFGOperatorToProcessPass());
+       pm.addPass(bufferization::createOneShotBufferizePass());
+       pm.addPass(createCanonicalizerPass());
+       pm.addPass(createCSEPass());
+       pm.addPass(linalg::createLinalgMapToGenericPass());
+       pm.addPass(createConvertLinalgToPICEALoopsPass());
+       pm.addPass(createCanonicalizerPass());
+       pm.addPass(createCSEPass());
+       pm.addPass(dfg::createDFGIONormalizationPass());
+       pm.addPass(createConvertMemRefPadToPICEALoopsPass());
+       pm.addPass(createConvertAffineToEmitHLSPass());
+       pm.addPass(createConvertArithToEmitHLSPass());
+       pm.addPass(dfg::createDFGCollapseUnitDimsPass());
+       pm.addPass(createCanonicalizerPass());
+       pm.addPass(createCSEPass());
+       pm.addPass(createConvertBase2ToEmitHLSPass());
+       pm.addPass(createConvertDFGToEmitHLSPass());
+       pm.addPass(createReconcileUnrealizedCastsPass());
+       pm.addPass(createCanonicalizerPass());
+       pm.addPass(createCSEPass());
+       pm.addPass(emithls::createEmitHLSResolveHelpersPass());
+       pm.addPass(emithls::createEmitHLSLoopFusionPass());
+       pm.addPass(emithls::createEmitHLSFuseOperatorPass());
+       pm.addPass(emithls::createEmitHLSFoldExpressionPass());
+       pm.addPass(emithls::createEmitHLSAddIOFunctionsPass());
+       pm.addPass(createCanonicalizerPass());
+       pm.addPass(createCSEPass());
+       pm.addPass(
+           emithls::createEmitHLSPragmaDSEPass(availableBRAM, availableDSP));
+       pm.addPass(emithls::createEmitHLSPragmaInsertionPass());
+       pm.addPass(emithls::createEmitHLSInsertIncludesPass());
+       pm.addPass(createCanonicalizerPass());
+       pm.addPass(createCSEPass());
+   }
+   
+   void mlir::picea::registerConvertToEmitHLSPipelines()
+   {
+       PassPipelineRegistration<ConvertToEmitHLSPipelineOptions>(
+           "convert-to-emithls",
+           "Convert everything to emithls dialect",
+           [](OpPassManager &pm, const ConvertToEmitHLSPipelineOptions &options) {
+               addConvertToEmitHLSPasses(
+                   pm,
+                   options.availableBRAM,
+                   options.availableDSP);
+           });
+   }

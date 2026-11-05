@@ -1,0 +1,376 @@
+
+.. _program_listing_file_lib_Dialect_CGRA_Transforms_HoistReductionUnpack.cpp:
+
+Program Listing for File HoistReductionUnpack.cpp
+=================================================
+
+|exhale_lsh| :ref:`Return to documentation for file <file_lib_Dialect_CGRA_Transforms_HoistReductionUnpack.cpp>` (``lib/Dialect/CGRA/Transforms/HoistReductionUnpack.cpp``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. code-block:: cpp
+
+   
+   
+   #include "mlir/Dialect/Affine/IR/AffineOps.h"
+   #include "mlir/Dialect/Arith/IR/Arith.h"
+   #include "mlir/Dialect/Func/IR/FuncOps.h"
+   #include "mlir/Dialect/MemRef/IR/MemRef.h"
+   #include "mlir/IR/IRMapping.h"
+   #include "mlir/IR/Matchers.h"
+   #include "mlir/Pass/Pass.h"
+   #include "picea-mlir/Dialect/CGRA/IR/CGRA.h"
+   #include "picea-mlir/Dialect/CGRA/Transforms/Passes.h"
+   
+   using namespace mlir;
+   
+   namespace {
+   
+   // A quantized convolution reduces over `sext_i8(patch[k]) * sext_i8(w[k])`, so
+   // the i8 unpacking — `and 255; shl 24; shr 24` — sits INSIDE the reduction
+   // loop. On the fabric that is wrong: a reduction whose body contains SHIFT ops
+   // computes incorrect results, while the same chain in an elementwise nest is
+   // fine.
+   //
+   // Measured with src/models/qred, four otherwise identical dot products of
+   // length 18 differing only in the reduction body:
+   //     mul, add                        (2 FUs)  PASSES
+   //     and, mul, add                   (3 FUs)  PASSES
+   //     and, add, mul, mul, add         (depth 3, no shifts)  PASSES
+   //     and, shl, shr, mul, add         (depth 3, with shifts)  FAILS
+   // so it is the shift ops specifically, not the body size and not the chain
+   // depth. `MYRTUS_requant` runs the same shift chain elementwise and is
+   // byte-correct, and `conv_mc` is the same im2col dot product with a 2-FU body
+   // and is byte-correct.
+   //
+   // The preprocessing is per-element and depends only on the loaded value, so it
+   // does not have to be in the reduction at all: apply it once over the operand
+   // array and let the reduction read the prepared values. That is the same trade
+   // --conv-to-im2col already makes — do the awkward part on the host, hand the
+   // fabric a shape it streams well. It writes into a SEPARATE buffer rather than
+   // in place: an in-place nest streams one array through an input and an output
+   // memory node at once, and the two race on the same memory.
+   struct CGRAHoistReductionUnpackPass : public PassWrapper<
+                                             CGRAHoistReductionUnpackPass,
+                                             OperationPass<func::FuncOp>> {
+   
+       MLIR_DEFINE_EXPLICIT_INTERNAL_INLINE_TYPE_ID(CGRAHoistReductionUnpackPass)
+   
+       StringRef getArgument() const final { return "hoist-reduction-unpack"; }
+       StringRef getDescription() const final
+       {
+           return "Move per-element preprocessing of a reduction operand out of "
+                  "the "
+                  "reduction loop (fabric reductions miscompute with shifts "
+                  "inside)";
+       }
+   
+       void getDependentDialects(mlir::DialectRegistry &registry) const override
+       {
+           registry.insert<
+               affine::AffineDialect,
+               memref::MemRefDialect,
+               arith::ArithDialect>();
+       }
+   
+       // Ops that may form a per-element chain: exactly one non-constant operand,
+       // so the whole chain is a function of the single loaded value.
+       static bool isUnaryWithConst(Operation* op, Value &dataIn)
+       {
+           if (!isa<
+                   arith::AndIOp,
+                   arith::OrIOp,
+                   arith::XOrIOp,
+                   arith::ShLIOp,
+                   arith::ShRSIOp,
+                   arith::ShRUIOp,
+                   arith::AddIOp,
+                   arith::SubIOp,
+                   arith::MulIOp>(op))
+               return false;
+           unsigned nonConst = 0;
+           for (Value v : op->getOperands()) {
+               APInt c;
+               if (matchPattern(v, m_ConstantInt(&c))) continue;
+               ++nonConst;
+               dataIn = v;
+           }
+           return nonConst == 1;
+       }
+   
+       // Is this a compiler-created scratch buffer? Only those are safe to
+       // re-stage.
+       static memref::GlobalOp compilerTemp(Value memref, ModuleOp module)
+       {
+           auto get = memref.getDefiningOp<memref::GetGlobalOp>();
+           if (!get) return {};
+           auto g = dyn_cast_or_null<memref::GlobalOp>(
+               SymbolTable::lookupSymbolIn(module, get.getName()));
+           if (!g || g.getConstant()) return {};
+           if (!g.getSymVisibility() || *g.getSymVisibility() != "private")
+               return {};
+           StringRef n = g.getSymName();
+           if (!n.starts_with("im2col_") && !n.starts_with("__cgra_")) return {};
+           return g;
+       }
+   
+       void runOnOperation() override
+       {
+           func::FuncOp fn = getOperation();
+           ModuleOp module = fn->getParentOfType<ModuleOp>();
+   
+           // Reduction nests: an affine.for carrying an iter_arg accumulator.
+           SmallVector<affine::AffineForOp> reductions;
+           fn.walk([&](affine::AffineForOp f) {
+               if (f.getNumRegionIterArgs() == 1) reductions.push_back(f);
+           });
+   
+           for (affine::AffineForOp red : reductions) {
+               // Only act when the body actually contains a shift — that is the
+               // shape known to miscompute, and staying narrow keeps every kernel
+               // that works today bit-for-bit unchanged.
+               bool hasShift = false;
+               red.getBody()->walk([&](Operation* op) {
+                   if (isa<arith::ShLIOp, arith::ShRSIOp, arith::ShRUIOp>(op))
+                       hasShift = true;
+               });
+               if (!hasShift) continue;
+   
+               SmallVector<affine::AffineLoadOp> loads;
+               for (Operation &op : *red.getBody())
+                   if (auto ld = dyn_cast<affine::AffineLoadOp>(&op))
+                       loads.push_back(ld);
+   
+               for (affine::AffineLoadOp ld : loads) {
+                   // Walk the chain of single-input ops hanging off this load.
+                   SmallVector<Operation*> chain;
+                   Value cur = ld.getResult();
+                   while (cur.hasOneUse()) {
+                       Operation* user = *cur.getUsers().begin();
+                       Value dataIn;
+                       if (user->getBlock() != red.getBody()
+                           || !isUnaryWithConst(user, dataIn) || dataIn != cur)
+                           break;
+                       chain.push_back(user);
+                       cur = user->getResult(0);
+                   }
+                   if (chain.empty()) continue;
+                   bool chainHasShift = false;
+                   for (Operation* op : chain)
+                       if (isa<arith::ShLIOp, arith::ShRSIOp, arith::ShRUIOp>(op))
+                           chainHasShift = true;
+                   if (!chainHasShift) continue;
+   
+                   auto g = compilerTemp(ld.getMemRef(), module);
+                   if (!g) continue; // not a compiler scratch buffer
+                   auto ty = dyn_cast<MemRefType>(ld.getMemRef().getType());
+                   if (!ty || !ty.hasStaticShape()) continue;
+   
+                   // FIRST: if the array is produced by a single PURE-COPY nest
+                   // (the gather
+                   // `--conv-to-im2col` emits: `im2col[j] = in[...]`, no
+                   // arithmetic), apply the chain THERE instead of materialising a
+                   // second array. The copy is elementwise, so a shift in it is
+                   // harmless — the fabric only miscomputes shifts inside a
+                   // REDUCTION — and the reduction then reads the prepared values
+                   // straight out of the original buffer. This is pure memory: the
+                   // separate `_unpacked` copy of tiny_kws' 72 000-element im2col
+                   // buffer cost 281 KB on a machine with 928 KB, i.e. a quarter
+                   // of the budget for data that is already being written one
+                   // element at a time right there. EVERY writer must be a pure
+                   // copy — a network has one gather per convolution writing the
+                   // same scratch (tiny_kws: four), so requiring a single writer
+                   // never fires. Folding rewrites what the BUFFER holds, so EVERY
+                   // reader must be one that applies this same chain — otherwise
+                   // some reader would silently start seeing prepared values where
+                   // it expects raw ones. A network reads the same im2col scratch
+                   // from one reduction per convolution, each with an identical
+                   // unpack chain, so they all fold together and every chain is
+                   // dropped below.
+                   auto chainOf = [&](affine::AffineLoadOp l,
+                                      SmallVectorImpl<Operation*> &out) {
+                       Value c = l.getResult();
+                       while (c.hasOneUse()) {
+                           Operation* u = *c.getUsers().begin();
+                           Value din;
+                           if (!isUnaryWithConst(u, din) || din != c) break;
+                           out.push_back(u);
+                           c = u->getResult(0);
+                       }
+                   };
+                   auto sameChain = [&](ArrayRef<Operation*> a,
+                                        ArrayRef<Operation*> b) {
+                       if (a.size() != b.size()) return false;
+                       for (auto [x, y] : llvm::zip(a, b)) {
+                           if (x->getName() != y->getName()) return false;
+                           APInt cx, cy;
+                           bool hx =
+                               matchPattern(x->getOperand(1), m_ConstantInt(&cx));
+                           bool hy =
+                               matchPattern(y->getOperand(1), m_ConstantInt(&cy));
+                           if (hx != hy || (hx && cx != cy)) return false;
+                       }
+                       return true;
+                   };
+                   SmallVector<affine::AffineLoadOp> peers;
+                   bool readersUniform = true;
+                   fn.walk([&](affine::AffineLoadOp o) {
+                       auto og =
+                           o.getMemRef().getDefiningOp<memref::GetGlobalOp>();
+                       if (!og || og.getName() != g.getSymName() || o == ld)
+                           return;
+                       SmallVector<Operation*> oc;
+                       chainOf(o, oc);
+                       if (oc.empty() || !sameChain(chain, oc))
+                           readersUniform = false;
+                       else
+                           peers.push_back(o);
+                   });
+                   SmallVector<affine::AffineStoreOp> prodStores;
+                   bool allCopies = readersUniform;
+                   fn.walk([&](affine::AffineStoreOp st) {
+                       auto sg =
+                           st.getMemRef().getDefiningOp<memref::GetGlobalOp>();
+                       if (!sg || sg.getName() != g.getSymName()) return;
+                       // Any stored value works — the chain is applied to it, so
+                       // the buffer uniformly holds prepared values. That includes
+                       // the zero-FILL a stage does before the gather (`chain(0)`,
+                       // folded at compile time), which is why requiring a plain
+                       // load never fired: im2col scratch is zeroed first. The one
+                       // thing we cannot fold into is a store from the reduction
+                       // itself.
+                       if (red->isAncestor(st))
+                           allCopies = false;
+                       else
+                           prodStores.push_back(st);
+                   });
+                   if (allCopies && !prodStores.empty()) {
+                       for (affine::AffineStoreOp ps : prodStores) {
+                           OpBuilder pb(ps);
+                           IRMapping pm;
+                           pm.map(ld.getResult(), ps.getValueToStore());
+                           Value plast = ps.getValueToStore();
+                           for (Operation* op : chain) {
+                               Operation* c = pb.clone(*op, pm);
+                               pm.map(op->getResult(0), c->getResult(0));
+                               plast = c->getResult(0);
+                           }
+                           ps.getValueMutable().assign(plast);
+                       }
+                       chain.back()->getResult(0).replaceAllUsesWith(
+                           ld.getResult());
+                       for (Operation* op : llvm::reverse(chain)) op->erase();
+                       for (affine::AffineLoadOp pl : peers) {
+                           SmallVector<Operation*> pc;
+                           chainOf(pl, pc);
+                           if (pc.empty()) continue;
+                           pc.back()->getResult(0).replaceAllUsesWith(
+                               pl.getResult());
+                           for (Operation* op : llvm::reverse(pc)) op->erase();
+                       }
+                       continue;
+                   }
+   
+                   // Otherwise: emit, immediately before the enclosing nest, a
+                   // pass over the whole array applying the chain into a SEPARATE
+                   // buffer: dst[i] = chain(src[i]). NOT in place: an in-place
+                   // nest streams the same array through an input and an output
+                   // memory node at once, and the fabric's two nodes then race on
+                   // the same memory — the read side runs ahead of the write side
+                   // and the config returns corrupted data. (That is what an
+                   // earlier in-place version of this pass produced, and it looks
+                   // exactly like the bug it was meant to fix.)
+                   std::string dstName = (g.getSymName() + "_unpacked").str();
+                   auto module2 = fn->getParentOfType<ModuleOp>();
+                   memref::GlobalOp dst = dyn_cast_or_null<memref::GlobalOp>(
+                       SymbolTable::lookupSymbolIn(module2, dstName));
+                   if (!dst) {
+                       OpBuilder gb(module2.getBodyRegion());
+                       gb.setInsertionPointToStart(module2.getBody());
+                       auto zero = DenseElementsAttr::get(
+                           RankedTensorType::get(
+                               ty.getShape(),
+                               ty.getElementType()),
+                           gb.getZeroAttr(ty.getElementType()));
+                       dst = memref::GlobalOp::create(
+                           gb,
+                           g.getLoc(),
+                           StringRef(dstName),
+                           gb.getStringAttr("private"),
+                           ty,
+                           cast<Attribute>(zero),
+                           /*constant=*/false,
+                           IntegerAttr());
+                   }
+                   affine::AffineForOp root = red;
+                   while (auto p = root->getParentOfType<affine::AffineForOp>())
+                       root = p;
+                   OpBuilder b(root);
+                   Location loc = red.getLoc();
+   
+                   // The buffer reference has to be a value of the ENCLOSING
+                   // function, created before the nest — not inside the loop body.
+                   // --annotate-to-cgra takes a nest's streams from the memrefs it
+                   // uses that are defined outside it, so a memref.get_global
+                   // emitted in the innermost body ends up inside the cgra.deploy
+                   // region and is never recognised as a stream. The fabric then
+                   // runs the nest with no output memory node bound:
+                   // `im2col_buf_unpacked` came back all-zero on device (checksum
+                   // 0 against a non-zero reference), the reduction read zeros,
+                   // and every output of residual_small saturated to -128.
+                   Value dstRef =
+                       memref::GetGlobalOp::create(b, loc, ty, dst.getSymName());
+   
+                   SmallVector<affine::AffineForOp> loops;
+                   SmallVector<Value> ivs;
+                   for (int64_t d : ty.getShape()) {
+                       auto f = affine::AffineForOp::create(b, loc, 0, d);
+                       loops.push_back(f);
+                       ivs.push_back(f.getInductionVar());
+                       b = OpBuilder::atBlockBegin(f.getBody());
+                   }
+                   Value src = affine::AffineLoadOp::create(
+                       b,
+                       loc,
+                       ld.getMemRef(),
+                       b.getMultiDimIdentityMap(ty.getRank()),
+                       ivs);
+                   IRMapping m;
+                   m.map(ld.getResult(), src);
+                   Value last = src;
+                   for (Operation* op : chain) {
+                       Operation* c = b.clone(*op, m);
+                       m.map(op->getResult(0), c->getResult(0));
+                       last = c->getResult(0);
+                   }
+                   affine::AffineStoreOp::create(
+                       b,
+                       loc,
+                       last,
+                       dstRef,
+                       b.getMultiDimIdentityMap(ty.getRank()),
+                       ivs);
+   
+                   // …and point the reduction at the prepared buffer, dropping the
+                   // chain. Same rule as above: this reference is created before
+                   // the reduction's OUTERMOST loop, so it is a stream of that
+                   // nest rather than a value buried inside the deploy region.
+                   // Built at `root` (which now follows the unpack nest) it still
+                   // dominates every use.
+                   OpBuilder rb(root);
+                   Value newRef = memref::GetGlobalOp::create(
+                       rb,
+                       ld.getLoc(),
+                       ty,
+                       dst.getSymName());
+                   ld.getMemrefMutable().assign(newRef);
+                   chain.back()->getResult(0).replaceAllUsesWith(ld.getResult());
+                   for (Operation* op : llvm::reverse(chain)) op->erase();
+               }
+           }
+       }
+   };
+   } // namespace
+   
+   std::unique_ptr<mlir::Pass> mlir::cgra::createCGRAHoistReductionUnpackPass()
+   { return std::make_unique<CGRAHoistReductionUnpackPass>(); }

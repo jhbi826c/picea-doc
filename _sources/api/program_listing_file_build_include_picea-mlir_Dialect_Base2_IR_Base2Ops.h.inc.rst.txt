@@ -1,0 +1,3048 @@
+
+.. _program_listing_file_build_include_picea-mlir_Dialect_Base2_IR_Base2Ops.h.inc:
+
+Program Listing for File Base2Ops.h.inc
+=======================================
+
+|exhale_lsh| :ref:`Return to documentation for file <file_build_include_picea-mlir_Dialect_Base2_IR_Base2Ops.h.inc>` (``build/include/picea-mlir/Dialect/Base2/IR/Base2Ops.h.inc``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. code-block:: cpp
+
+   /*===- TableGen'erated file -------------------------------------*- C++ -*-===*\
+   |*                                                                            *|
+   |* Op Declarations                                                            *|
+   |*                                                                            *|
+   |* Automatically generated file, do not edit!                                 *|
+   |* From: Base2Ops.td                                                          *|
+   |*                                                                            *|
+   \*===----------------------------------------------------------------------===*/
+   
+   namespace mlir::base2 {
+   
+   class ArithAddOp;
+   
+   } // namespace mlir::base2
+   namespace mlir::base2 {
+   
+   class ArithAndOp;
+   
+   } // namespace mlir::base2
+   namespace mlir::base2 {
+   
+   class ArithCastOp;
+   
+   } // namespace mlir::base2
+   namespace mlir::base2 {
+   
+   class ArithCmpOp;
+   
+   } // namespace mlir::base2
+   namespace mlir::base2 {
+   
+   class ArithDivOp;
+   
+   } // namespace mlir::base2
+   namespace mlir::base2 {
+   
+   class ArithMaxOp;
+   
+   } // namespace mlir::base2
+   namespace mlir::base2 {
+   
+   class ArithMinOp;
+   
+   } // namespace mlir::base2
+   namespace mlir::base2 {
+   
+   class ArithMulOp;
+   
+   } // namespace mlir::base2
+   namespace mlir::base2 {
+   
+   class ArithOrOp;
+   
+   } // namespace mlir::base2
+   namespace mlir::base2 {
+   
+   class ArithRemOp;
+   
+   } // namespace mlir::base2
+   namespace mlir::base2 {
+   
+   class ArithSelectOp;
+   
+   } // namespace mlir::base2
+   namespace mlir::base2 {
+   
+   class ArithShlOp;
+   
+   } // namespace mlir::base2
+   namespace mlir::base2 {
+   
+   class ArithShrOp;
+   
+   } // namespace mlir::base2
+   namespace mlir::base2 {
+   
+   class ArithSubOp;
+   
+   } // namespace mlir::base2
+   namespace mlir::base2 {
+   
+   class ConstantOp;
+   
+   } // namespace mlir::base2
+   #ifdef GET_OP_CLASSES
+   #undef GET_OP_CLASSES
+   
+   namespace mlir::base2 {
+   
+   
+   //===----------------------------------------------------------------------===//
+   // ::mlir::base2::ArithAddOp declarations
+   //===----------------------------------------------------------------------===//
+   
+   namespace detail {
+   
+   class ArithAddOpGenericAdaptorBase {
+   public:
+     using Properties = ::mlir::EmptyProperties;
+   protected:
+     ::mlir::DictionaryAttr odsAttrs;
+     ::std::optional<::mlir::OperationName> odsOpName;
+     Properties properties;
+     ::mlir::RegionRange odsRegions;
+   public:
+     ArithAddOpGenericAdaptorBase(::mlir::DictionaryAttr attrs, const Properties &properties, ::mlir::RegionRange regions = {}) : odsAttrs(attrs), properties(properties), odsRegions(regions) {  if (odsAttrs)
+         odsOpName.emplace("base2.add", odsAttrs.getContext());
+     }
+   
+     ArithAddOpGenericAdaptorBase(ArithAddOp op);
+   
+     std::pair<unsigned, unsigned> getODSOperandIndexAndLength(unsigned index, unsigned odsOperandsSize) {
+       return {index, 1};
+     }
+   
+     const Properties &getProperties() {
+       return properties;
+     }
+   
+     ::mlir::DictionaryAttr getAttributes() {
+       return odsAttrs;
+     }
+   
+   };
+   
+   } // namespace detail
+   template <typename RangeT>
+   class ArithAddOpGenericAdaptor : public detail::ArithAddOpGenericAdaptorBase {
+     using ValueT = ::llvm::detail::ValueOfRange<RangeT>;
+     using Base = detail::ArithAddOpGenericAdaptorBase;
+     static constexpr int odsIndex_lhs = 0;
+     static constexpr int odsIndex_rhs = 1;
+   public:
+     ArithAddOpGenericAdaptor(RangeT values, ::mlir::DictionaryAttr attrs, const Properties &properties, ::mlir::RegionRange regions = {}) : Base(attrs, properties, regions), odsOperands(values) {}
+   
+     ArithAddOpGenericAdaptor(RangeT values, ::mlir::DictionaryAttr attrs, ::mlir::PropertyRef properties, ::mlir::RegionRange regions = {}) : ArithAddOpGenericAdaptor(values, attrs, (properties ? *properties.as<Properties *>() : Properties{}), regions) {}
+   
+     ArithAddOpGenericAdaptor(RangeT values, ::mlir::DictionaryAttr attrs = nullptr) : ArithAddOpGenericAdaptor(values, attrs, Properties{}, {}) {}
+   
+     ArithAddOpGenericAdaptor(RangeT values, const ArithAddOpGenericAdaptorBase &base) : Base(base), odsOperands(values) {}
+   
+     template <typename LateInst = ArithAddOp, typename = std::enable_if_t<std::is_same_v<LateInst, ArithAddOp>>>
+     ArithAddOpGenericAdaptor(RangeT values, LateInst op) : Base(op), odsOperands(values) {}
+   
+     std::pair<unsigned, unsigned> getODSOperandIndexAndLength(unsigned index) {
+       return Base::getODSOperandIndexAndLength(index, odsOperands.size());
+     }
+   
+     RangeT getODSOperands(unsigned index) {
+       auto valueRange = getODSOperandIndexAndLength(index);
+       return {std::next(odsOperands.begin(), valueRange.first),
+                std::next(odsOperands.begin(), valueRange.first + valueRange.second)};
+     }
+   
+     ValueT getLhs() {
+       return (*getODSOperands(0).begin());
+     }
+   
+     ValueT getRhs() {
+       return (*getODSOperands(1).begin());
+     }
+   
+     RangeT getOperands() {
+       return odsOperands;
+     }
+   
+   private:
+     RangeT odsOperands;
+   };
+   class ArithAddOpAdaptor : public ArithAddOpGenericAdaptor<::mlir::ValueRange> {
+   public:
+     using ArithAddOpGenericAdaptor::ArithAddOpGenericAdaptor;
+     ArithAddOpAdaptor(ArithAddOp op);
+   
+     ::llvm::LogicalResult verify(::mlir::Location loc);
+   };
+   class ArithAddOp : public ::mlir::Op<ArithAddOp, ::mlir::OpTrait::ZeroRegions, ::mlir::OpTrait::OneResult, ::mlir::OpTrait::OneTypedResult<::mlir::Type>::Impl, ::mlir::OpTrait::ZeroSuccessors, ::mlir::OpTrait::NOperands<2>::Impl, ::mlir::OpTrait::OpInvariants, ::mlir::ConditionallySpeculatable::Trait, ::mlir::OpTrait::AlwaysSpeculatableImplTrait, ::mlir::MemoryEffectOpInterface::Trait, ::mlir::OpTrait::SameOperandsAndResultType, ::mlir::InferTypeOpInterface::Trait> {
+   public:
+     using Op::Op;
+     using Op::print;
+     using Adaptor = ArithAddOpAdaptor;
+     template <typename RangeT>
+     using GenericAdaptor = ArithAddOpGenericAdaptor<RangeT>;
+     using FoldAdaptor = GenericAdaptor<::llvm::ArrayRef<::mlir::Attribute>>;
+     static constexpr int odsIndex_lhs = 0;
+     static constexpr int odsIndex_rhs = 1;
+     using Properties = FoldAdaptor::Properties;
+     static ::llvm::ArrayRef<::llvm::StringRef> getAttributeNames() {
+       return {};
+     }
+   
+     static constexpr ::llvm::StringLiteral getOperationName() {
+       return ::llvm::StringLiteral("base2.add");
+     }
+   
+     std::pair<unsigned, unsigned> getODSOperandIndexAndLength(unsigned index) {
+       return {index, 1};
+     }
+   
+     ::mlir::Operation::operand_range getODSOperands(unsigned index) {
+       auto valueRange = getODSOperandIndexAndLength(index);
+       return {std::next(getOperation()->operand_begin(), valueRange.first),
+                std::next(getOperation()->operand_begin(), valueRange.first + valueRange.second)};
+     }
+   
+     ::mlir::TypedValue<::mlir::Type> getLhs() {
+       return ::llvm::cast<::mlir::TypedValue<::mlir::Type>>(*getODSOperands(0).begin());
+     }
+   
+     ::mlir::TypedValue<::mlir::Type> getRhs() {
+       return ::llvm::cast<::mlir::TypedValue<::mlir::Type>>(*getODSOperands(1).begin());
+     }
+   
+     ::mlir::OpOperand &getLhsMutable() {
+       auto range = getODSOperandIndexAndLength(0);
+       return getOperation()->getOpOperand(range.first);
+     }
+   
+     ::mlir::OpOperand &getRhsMutable() {
+       auto range = getODSOperandIndexAndLength(1);
+       return getOperation()->getOpOperand(range.first);
+     }
+   
+     std::pair<unsigned, unsigned> getODSResultIndexAndLength(unsigned index) {
+       return {index, 1};
+     }
+   
+     ::mlir::Operation::result_range getODSResults(unsigned index) {
+       auto valueRange = getODSResultIndexAndLength(index);
+       return {std::next(getOperation()->result_begin(), valueRange.first),
+                std::next(getOperation()->result_begin(), valueRange.first + valueRange.second)};
+     }
+   
+     ::mlir::TypedValue<::mlir::Type> getResult() {
+       return ::llvm::cast<::mlir::TypedValue<::mlir::Type>>(*getODSResults(0).begin());
+     }
+   
+     static ::llvm::LogicalResult setPropertiesFromAttr(Properties &prop, ::mlir::Attribute attr, ::llvm::function_ref<::mlir::InFlightDiagnostic()> emitError);
+     static ::mlir::Attribute getPropertiesAsAttr(::mlir::MLIRContext *ctx, const Properties &prop);
+     static llvm::hash_code computePropertiesHash(const Properties &prop);
+     static std::optional<mlir::Attribute> getInherentAttr(::mlir::MLIRContext *ctx, const Properties &prop, llvm::StringRef name);
+     static void setInherentAttr(Properties &prop, llvm::StringRef name, mlir::Attribute value);
+     static void populateInherentAttrs(::mlir::MLIRContext *ctx, const Properties &prop, ::mlir::NamedAttrList &attrs);
+     static ::llvm::LogicalResult verifyInherentAttrs(::mlir::OperationName opName, ::mlir::NamedAttrList &attrs, llvm::function_ref<::mlir::InFlightDiagnostic()> emitError);
+     static void build(::mlir::OpBuilder &odsBuilder, ::mlir::OperationState &odsState, ::mlir::Type result, ::mlir::Value lhs, ::mlir::Value rhs);
+     static ArithAddOp create(::mlir::OpBuilder &builder, ::mlir::Location location, ::mlir::Type result, ::mlir::Value lhs, ::mlir::Value rhs);
+     static ArithAddOp create(::mlir::ImplicitLocOpBuilder &builder, ::mlir::Type result, ::mlir::Value lhs, ::mlir::Value rhs);
+     static void build(::mlir::OpBuilder &odsBuilder, ::mlir::OperationState &odsState, ::mlir::Value lhs, ::mlir::Value rhs);
+     static ArithAddOp create(::mlir::OpBuilder &builder, ::mlir::Location location, ::mlir::Value lhs, ::mlir::Value rhs);
+     static ArithAddOp create(::mlir::ImplicitLocOpBuilder &builder, ::mlir::Value lhs, ::mlir::Value rhs);
+     static void build(::mlir::OpBuilder &odsBuilder, ::mlir::OperationState &odsState, ::mlir::TypeRange resultTypes, ::mlir::Value lhs, ::mlir::Value rhs);
+     static ArithAddOp create(::mlir::OpBuilder &builder, ::mlir::Location location, ::mlir::TypeRange resultTypes, ::mlir::Value lhs, ::mlir::Value rhs);
+     static ArithAddOp create(::mlir::ImplicitLocOpBuilder &builder, ::mlir::TypeRange resultTypes, ::mlir::Value lhs, ::mlir::Value rhs);
+     static void build(::mlir::OpBuilder &, ::mlir::OperationState &odsState, ::mlir::TypeRange resultTypes, ::mlir::ValueRange operands, ::llvm::ArrayRef<::mlir::NamedAttribute> attributes = {});
+     static ArithAddOp create(::mlir::OpBuilder &builder, ::mlir::Location location, ::mlir::TypeRange resultTypes, ::mlir::ValueRange operands, ::llvm::ArrayRef<::mlir::NamedAttribute> attributes = {});
+     static ArithAddOp create(::mlir::ImplicitLocOpBuilder &builder, ::mlir::TypeRange resultTypes, ::mlir::ValueRange operands, ::llvm::ArrayRef<::mlir::NamedAttribute> attributes = {});
+     static void build(::mlir::OpBuilder &odsBuilder, ::mlir::OperationState &odsState, ::mlir::ValueRange operands, ::llvm::ArrayRef<::mlir::NamedAttribute> attributes = {});
+     static ArithAddOp create(::mlir::OpBuilder &builder, ::mlir::Location location, ::mlir::ValueRange operands, ::llvm::ArrayRef<::mlir::NamedAttribute> attributes = {});
+     static ArithAddOp create(::mlir::ImplicitLocOpBuilder &builder, ::mlir::ValueRange operands, ::llvm::ArrayRef<::mlir::NamedAttribute> attributes = {});
+     static void build(::mlir::OpBuilder &, ::mlir::OperationState &odsState, ::mlir::TypeRange resultTypes, ::mlir::ValueRange operands, const Properties &properties, ::llvm::ArrayRef<::mlir::NamedAttribute> discardableAttributes = {});
+     static ArithAddOp create(::mlir::OpBuilder &builder, ::mlir::Location location, ::mlir::TypeRange resultTypes, ::mlir::ValueRange operands, const Properties &properties, ::llvm::ArrayRef<::mlir::NamedAttribute> discardableAttributes = {});
+     static ArithAddOp create(::mlir::ImplicitLocOpBuilder &builder, ::mlir::TypeRange resultTypes, ::mlir::ValueRange operands, const Properties &properties, ::llvm::ArrayRef<::mlir::NamedAttribute> discardableAttributes = {});
+     static void build(::mlir::OpBuilder &odsBuilder, ::mlir::OperationState &odsState, ::mlir::ValueRange operands, const Properties &properties, ::llvm::ArrayRef<::mlir::NamedAttribute> discardableAttributes = {});
+     static ArithAddOp create(::mlir::OpBuilder &builder, ::mlir::Location location, ::mlir::ValueRange operands, const Properties &properties, ::llvm::ArrayRef<::mlir::NamedAttribute> discardableAttributes = {});
+     static ArithAddOp create(::mlir::ImplicitLocOpBuilder &builder, ::mlir::ValueRange operands, const Properties &properties, ::llvm::ArrayRef<::mlir::NamedAttribute> discardableAttributes = {});
+     ::llvm::LogicalResult verifyInvariantsImpl();
+     ::llvm::LogicalResult verifyInvariants();
+     static ::llvm::LogicalResult inferReturnTypes(::mlir::MLIRContext *context, ::std::optional<::mlir::Location> location, ::mlir::ValueRange operands, ::mlir::DictionaryAttr attributes, ::mlir::PropertyRef properties, ::mlir::RegionRange regions, ::llvm::SmallVectorImpl<::mlir::Type>&inferredReturnTypes);
+     static ::mlir::ParseResult parse(::mlir::OpAsmParser &parser, ::mlir::OperationState &result);
+     void print(::mlir::OpAsmPrinter &_odsPrinter);
+     void getEffects(::llvm::SmallVectorImpl<::mlir::SideEffects::EffectInstance<::mlir::MemoryEffects::Effect>> &effects);
+   public:
+   };
+   
+   } // namespace mlir::base2
+   MLIR_DECLARE_EXPLICIT_TYPE_ID(::mlir::base2::ArithAddOp)
+   
+   namespace mlir::base2 {
+   
+   
+   //===----------------------------------------------------------------------===//
+   // ::mlir::base2::ArithAndOp declarations
+   //===----------------------------------------------------------------------===//
+   
+   namespace detail {
+   
+   class ArithAndOpGenericAdaptorBase {
+   public:
+     using Properties = ::mlir::EmptyProperties;
+   protected:
+     ::mlir::DictionaryAttr odsAttrs;
+     ::std::optional<::mlir::OperationName> odsOpName;
+     Properties properties;
+     ::mlir::RegionRange odsRegions;
+   public:
+     ArithAndOpGenericAdaptorBase(::mlir::DictionaryAttr attrs, const Properties &properties, ::mlir::RegionRange regions = {}) : odsAttrs(attrs), properties(properties), odsRegions(regions) {  if (odsAttrs)
+         odsOpName.emplace("base2.and", odsAttrs.getContext());
+     }
+   
+     ArithAndOpGenericAdaptorBase(ArithAndOp op);
+   
+     std::pair<unsigned, unsigned> getODSOperandIndexAndLength(unsigned index, unsigned odsOperandsSize) {
+       return {index, 1};
+     }
+   
+     const Properties &getProperties() {
+       return properties;
+     }
+   
+     ::mlir::DictionaryAttr getAttributes() {
+       return odsAttrs;
+     }
+   
+   };
+   
+   } // namespace detail
+   template <typename RangeT>
+   class ArithAndOpGenericAdaptor : public detail::ArithAndOpGenericAdaptorBase {
+     using ValueT = ::llvm::detail::ValueOfRange<RangeT>;
+     using Base = detail::ArithAndOpGenericAdaptorBase;
+     static constexpr int odsIndex_lhs = 0;
+     static constexpr int odsIndex_rhs = 1;
+   public:
+     ArithAndOpGenericAdaptor(RangeT values, ::mlir::DictionaryAttr attrs, const Properties &properties, ::mlir::RegionRange regions = {}) : Base(attrs, properties, regions), odsOperands(values) {}
+   
+     ArithAndOpGenericAdaptor(RangeT values, ::mlir::DictionaryAttr attrs, ::mlir::PropertyRef properties, ::mlir::RegionRange regions = {}) : ArithAndOpGenericAdaptor(values, attrs, (properties ? *properties.as<Properties *>() : Properties{}), regions) {}
+   
+     ArithAndOpGenericAdaptor(RangeT values, ::mlir::DictionaryAttr attrs = nullptr) : ArithAndOpGenericAdaptor(values, attrs, Properties{}, {}) {}
+   
+     ArithAndOpGenericAdaptor(RangeT values, const ArithAndOpGenericAdaptorBase &base) : Base(base), odsOperands(values) {}
+   
+     template <typename LateInst = ArithAndOp, typename = std::enable_if_t<std::is_same_v<LateInst, ArithAndOp>>>
+     ArithAndOpGenericAdaptor(RangeT values, LateInst op) : Base(op), odsOperands(values) {}
+   
+     std::pair<unsigned, unsigned> getODSOperandIndexAndLength(unsigned index) {
+       return Base::getODSOperandIndexAndLength(index, odsOperands.size());
+     }
+   
+     RangeT getODSOperands(unsigned index) {
+       auto valueRange = getODSOperandIndexAndLength(index);
+       return {std::next(odsOperands.begin(), valueRange.first),
+                std::next(odsOperands.begin(), valueRange.first + valueRange.second)};
+     }
+   
+     ValueT getLhs() {
+       return (*getODSOperands(0).begin());
+     }
+   
+     ValueT getRhs() {
+       return (*getODSOperands(1).begin());
+     }
+   
+     RangeT getOperands() {
+       return odsOperands;
+     }
+   
+   private:
+     RangeT odsOperands;
+   };
+   class ArithAndOpAdaptor : public ArithAndOpGenericAdaptor<::mlir::ValueRange> {
+   public:
+     using ArithAndOpGenericAdaptor::ArithAndOpGenericAdaptor;
+     ArithAndOpAdaptor(ArithAndOp op);
+   
+     ::llvm::LogicalResult verify(::mlir::Location loc);
+   };
+   class ArithAndOp : public ::mlir::Op<ArithAndOp, ::mlir::OpTrait::ZeroRegions, ::mlir::OpTrait::OneResult, ::mlir::OpTrait::OneTypedResult<::mlir::Type>::Impl, ::mlir::OpTrait::ZeroSuccessors, ::mlir::OpTrait::NOperands<2>::Impl, ::mlir::OpTrait::OpInvariants, ::mlir::ConditionallySpeculatable::Trait, ::mlir::OpTrait::AlwaysSpeculatableImplTrait, ::mlir::MemoryEffectOpInterface::Trait, ::mlir::OpTrait::SameOperandsAndResultType, ::mlir::InferTypeOpInterface::Trait> {
+   public:
+     using Op::Op;
+     using Op::print;
+     using Adaptor = ArithAndOpAdaptor;
+     template <typename RangeT>
+     using GenericAdaptor = ArithAndOpGenericAdaptor<RangeT>;
+     using FoldAdaptor = GenericAdaptor<::llvm::ArrayRef<::mlir::Attribute>>;
+     static constexpr int odsIndex_lhs = 0;
+     static constexpr int odsIndex_rhs = 1;
+     using Properties = FoldAdaptor::Properties;
+     static ::llvm::ArrayRef<::llvm::StringRef> getAttributeNames() {
+       return {};
+     }
+   
+     static constexpr ::llvm::StringLiteral getOperationName() {
+       return ::llvm::StringLiteral("base2.and");
+     }
+   
+     std::pair<unsigned, unsigned> getODSOperandIndexAndLength(unsigned index) {
+       return {index, 1};
+     }
+   
+     ::mlir::Operation::operand_range getODSOperands(unsigned index) {
+       auto valueRange = getODSOperandIndexAndLength(index);
+       return {std::next(getOperation()->operand_begin(), valueRange.first),
+                std::next(getOperation()->operand_begin(), valueRange.first + valueRange.second)};
+     }
+   
+     ::mlir::TypedValue<::mlir::Type> getLhs() {
+       return ::llvm::cast<::mlir::TypedValue<::mlir::Type>>(*getODSOperands(0).begin());
+     }
+   
+     ::mlir::TypedValue<::mlir::Type> getRhs() {
+       return ::llvm::cast<::mlir::TypedValue<::mlir::Type>>(*getODSOperands(1).begin());
+     }
+   
+     ::mlir::OpOperand &getLhsMutable() {
+       auto range = getODSOperandIndexAndLength(0);
+       return getOperation()->getOpOperand(range.first);
+     }
+   
+     ::mlir::OpOperand &getRhsMutable() {
+       auto range = getODSOperandIndexAndLength(1);
+       return getOperation()->getOpOperand(range.first);
+     }
+   
+     std::pair<unsigned, unsigned> getODSResultIndexAndLength(unsigned index) {
+       return {index, 1};
+     }
+   
+     ::mlir::Operation::result_range getODSResults(unsigned index) {
+       auto valueRange = getODSResultIndexAndLength(index);
+       return {std::next(getOperation()->result_begin(), valueRange.first),
+                std::next(getOperation()->result_begin(), valueRange.first + valueRange.second)};
+     }
+   
+     ::mlir::TypedValue<::mlir::Type> getResult() {
+       return ::llvm::cast<::mlir::TypedValue<::mlir::Type>>(*getODSResults(0).begin());
+     }
+   
+     static ::llvm::LogicalResult setPropertiesFromAttr(Properties &prop, ::mlir::Attribute attr, ::llvm::function_ref<::mlir::InFlightDiagnostic()> emitError);
+     static ::mlir::Attribute getPropertiesAsAttr(::mlir::MLIRContext *ctx, const Properties &prop);
+     static llvm::hash_code computePropertiesHash(const Properties &prop);
+     static std::optional<mlir::Attribute> getInherentAttr(::mlir::MLIRContext *ctx, const Properties &prop, llvm::StringRef name);
+     static void setInherentAttr(Properties &prop, llvm::StringRef name, mlir::Attribute value);
+     static void populateInherentAttrs(::mlir::MLIRContext *ctx, const Properties &prop, ::mlir::NamedAttrList &attrs);
+     static ::llvm::LogicalResult verifyInherentAttrs(::mlir::OperationName opName, ::mlir::NamedAttrList &attrs, llvm::function_ref<::mlir::InFlightDiagnostic()> emitError);
+     static void build(::mlir::OpBuilder &odsBuilder, ::mlir::OperationState &odsState, ::mlir::Type result, ::mlir::Value lhs, ::mlir::Value rhs);
+     static ArithAndOp create(::mlir::OpBuilder &builder, ::mlir::Location location, ::mlir::Type result, ::mlir::Value lhs, ::mlir::Value rhs);
+     static ArithAndOp create(::mlir::ImplicitLocOpBuilder &builder, ::mlir::Type result, ::mlir::Value lhs, ::mlir::Value rhs);
+     static void build(::mlir::OpBuilder &odsBuilder, ::mlir::OperationState &odsState, ::mlir::Value lhs, ::mlir::Value rhs);
+     static ArithAndOp create(::mlir::OpBuilder &builder, ::mlir::Location location, ::mlir::Value lhs, ::mlir::Value rhs);
+     static ArithAndOp create(::mlir::ImplicitLocOpBuilder &builder, ::mlir::Value lhs, ::mlir::Value rhs);
+     static void build(::mlir::OpBuilder &odsBuilder, ::mlir::OperationState &odsState, ::mlir::TypeRange resultTypes, ::mlir::Value lhs, ::mlir::Value rhs);
+     static ArithAndOp create(::mlir::OpBuilder &builder, ::mlir::Location location, ::mlir::TypeRange resultTypes, ::mlir::Value lhs, ::mlir::Value rhs);
+     static ArithAndOp create(::mlir::ImplicitLocOpBuilder &builder, ::mlir::TypeRange resultTypes, ::mlir::Value lhs, ::mlir::Value rhs);
+     static void build(::mlir::OpBuilder &, ::mlir::OperationState &odsState, ::mlir::TypeRange resultTypes, ::mlir::ValueRange operands, ::llvm::ArrayRef<::mlir::NamedAttribute> attributes = {});
+     static ArithAndOp create(::mlir::OpBuilder &builder, ::mlir::Location location, ::mlir::TypeRange resultTypes, ::mlir::ValueRange operands, ::llvm::ArrayRef<::mlir::NamedAttribute> attributes = {});
+     static ArithAndOp create(::mlir::ImplicitLocOpBuilder &builder, ::mlir::TypeRange resultTypes, ::mlir::ValueRange operands, ::llvm::ArrayRef<::mlir::NamedAttribute> attributes = {});
+     static void build(::mlir::OpBuilder &odsBuilder, ::mlir::OperationState &odsState, ::mlir::ValueRange operands, ::llvm::ArrayRef<::mlir::NamedAttribute> attributes = {});
+     static ArithAndOp create(::mlir::OpBuilder &builder, ::mlir::Location location, ::mlir::ValueRange operands, ::llvm::ArrayRef<::mlir::NamedAttribute> attributes = {});
+     static ArithAndOp create(::mlir::ImplicitLocOpBuilder &builder, ::mlir::ValueRange operands, ::llvm::ArrayRef<::mlir::NamedAttribute> attributes = {});
+     static void build(::mlir::OpBuilder &, ::mlir::OperationState &odsState, ::mlir::TypeRange resultTypes, ::mlir::ValueRange operands, const Properties &properties, ::llvm::ArrayRef<::mlir::NamedAttribute> discardableAttributes = {});
+     static ArithAndOp create(::mlir::OpBuilder &builder, ::mlir::Location location, ::mlir::TypeRange resultTypes, ::mlir::ValueRange operands, const Properties &properties, ::llvm::ArrayRef<::mlir::NamedAttribute> discardableAttributes = {});
+     static ArithAndOp create(::mlir::ImplicitLocOpBuilder &builder, ::mlir::TypeRange resultTypes, ::mlir::ValueRange operands, const Properties &properties, ::llvm::ArrayRef<::mlir::NamedAttribute> discardableAttributes = {});
+     static void build(::mlir::OpBuilder &odsBuilder, ::mlir::OperationState &odsState, ::mlir::ValueRange operands, const Properties &properties, ::llvm::ArrayRef<::mlir::NamedAttribute> discardableAttributes = {});
+     static ArithAndOp create(::mlir::OpBuilder &builder, ::mlir::Location location, ::mlir::ValueRange operands, const Properties &properties, ::llvm::ArrayRef<::mlir::NamedAttribute> discardableAttributes = {});
+     static ArithAndOp create(::mlir::ImplicitLocOpBuilder &builder, ::mlir::ValueRange operands, const Properties &properties, ::llvm::ArrayRef<::mlir::NamedAttribute> discardableAttributes = {});
+     ::llvm::LogicalResult verifyInvariantsImpl();
+     ::llvm::LogicalResult verifyInvariants();
+     static ::llvm::LogicalResult inferReturnTypes(::mlir::MLIRContext *context, ::std::optional<::mlir::Location> location, ::mlir::ValueRange operands, ::mlir::DictionaryAttr attributes, ::mlir::PropertyRef properties, ::mlir::RegionRange regions, ::llvm::SmallVectorImpl<::mlir::Type>&inferredReturnTypes);
+     static ::mlir::ParseResult parse(::mlir::OpAsmParser &parser, ::mlir::OperationState &result);
+     void print(::mlir::OpAsmPrinter &_odsPrinter);
+     void getEffects(::llvm::SmallVectorImpl<::mlir::SideEffects::EffectInstance<::mlir::MemoryEffects::Effect>> &effects);
+   public:
+   };
+   
+   } // namespace mlir::base2
+   MLIR_DECLARE_EXPLICIT_TYPE_ID(::mlir::base2::ArithAndOp)
+   
+   namespace mlir::base2 {
+   
+   
+   //===----------------------------------------------------------------------===//
+   // ::mlir::base2::ArithCastOp declarations
+   //===----------------------------------------------------------------------===//
+   
+   namespace detail {
+   
+   class ArithCastOpGenericAdaptorBase {
+   public:
+     using Properties = ::mlir::EmptyProperties;
+   protected:
+     ::mlir::DictionaryAttr odsAttrs;
+     ::std::optional<::mlir::OperationName> odsOpName;
+     Properties properties;
+     ::mlir::RegionRange odsRegions;
+   public:
+     ArithCastOpGenericAdaptorBase(::mlir::DictionaryAttr attrs, const Properties &properties, ::mlir::RegionRange regions = {}) : odsAttrs(attrs), properties(properties), odsRegions(regions) {  if (odsAttrs)
+         odsOpName.emplace("base2.cast", odsAttrs.getContext());
+     }
+   
+     ArithCastOpGenericAdaptorBase(ArithCastOp op);
+   
+     std::pair<unsigned, unsigned> getODSOperandIndexAndLength(unsigned index, unsigned odsOperandsSize) {
+       return {index, 1};
+     }
+   
+     const Properties &getProperties() {
+       return properties;
+     }
+   
+     ::mlir::DictionaryAttr getAttributes() {
+       return odsAttrs;
+     }
+   
+   };
+   
+   } // namespace detail
+   template <typename RangeT>
+   class ArithCastOpGenericAdaptor : public detail::ArithCastOpGenericAdaptorBase {
+     using ValueT = ::llvm::detail::ValueOfRange<RangeT>;
+     using Base = detail::ArithCastOpGenericAdaptorBase;
+     static constexpr int odsIndex_from = 0;
+   public:
+     ArithCastOpGenericAdaptor(RangeT values, ::mlir::DictionaryAttr attrs, const Properties &properties, ::mlir::RegionRange regions = {}) : Base(attrs, properties, regions), odsOperands(values) {}
+   
+     ArithCastOpGenericAdaptor(RangeT values, ::mlir::DictionaryAttr attrs, ::mlir::PropertyRef properties, ::mlir::RegionRange regions = {}) : ArithCastOpGenericAdaptor(values, attrs, (properties ? *properties.as<Properties *>() : Properties{}), regions) {}
+   
+     ArithCastOpGenericAdaptor(RangeT values, ::mlir::DictionaryAttr attrs = nullptr) : ArithCastOpGenericAdaptor(values, attrs, Properties{}, {}) {}
+   
+     ArithCastOpGenericAdaptor(RangeT values, const ArithCastOpGenericAdaptorBase &base) : Base(base), odsOperands(values) {}
+   
+     template <typename LateInst = ArithCastOp, typename = std::enable_if_t<std::is_same_v<LateInst, ArithCastOp>>>
+     ArithCastOpGenericAdaptor(RangeT values, LateInst op) : Base(op), odsOperands(values) {}
+   
+     std::pair<unsigned, unsigned> getODSOperandIndexAndLength(unsigned index) {
+       return Base::getODSOperandIndexAndLength(index, odsOperands.size());
+     }
+   
+     RangeT getODSOperands(unsigned index) {
+       auto valueRange = getODSOperandIndexAndLength(index);
+       return {std::next(odsOperands.begin(), valueRange.first),
+                std::next(odsOperands.begin(), valueRange.first + valueRange.second)};
+     }
+   
+     ValueT getFrom() {
+       return (*getODSOperands(0).begin());
+     }
+   
+     RangeT getOperands() {
+       return odsOperands;
+     }
+   
+   private:
+     RangeT odsOperands;
+   };
+   class ArithCastOpAdaptor : public ArithCastOpGenericAdaptor<::mlir::ValueRange> {
+   public:
+     using ArithCastOpGenericAdaptor::ArithCastOpGenericAdaptor;
+     ArithCastOpAdaptor(ArithCastOp op);
+   
+     ::llvm::LogicalResult verify(::mlir::Location loc);
+   };
+   class ArithCastOp : public ::mlir::Op<ArithCastOp, ::mlir::OpTrait::ZeroRegions, ::mlir::OpTrait::OneResult, ::mlir::OpTrait::OneTypedResult<::mlir::Type>::Impl, ::mlir::OpTrait::ZeroSuccessors, ::mlir::OpTrait::OneOperand, ::mlir::OpTrait::OpInvariants, ::mlir::ConditionallySpeculatable::Trait, ::mlir::OpTrait::AlwaysSpeculatableImplTrait, ::mlir::MemoryEffectOpInterface::Trait, ::mlir::OpTrait::SameOperandsAndResultShape> {
+   public:
+     using Op::Op;
+     using Op::print;
+     using Adaptor = ArithCastOpAdaptor;
+     template <typename RangeT>
+     using GenericAdaptor = ArithCastOpGenericAdaptor<RangeT>;
+     using FoldAdaptor = GenericAdaptor<::llvm::ArrayRef<::mlir::Attribute>>;
+     static constexpr int odsIndex_from = 0;
+     using Properties = FoldAdaptor::Properties;
+     static ::llvm::ArrayRef<::llvm::StringRef> getAttributeNames() {
+       return {};
+     }
+   
+     static constexpr ::llvm::StringLiteral getOperationName() {
+       return ::llvm::StringLiteral("base2.cast");
+     }
+   
+     std::pair<unsigned, unsigned> getODSOperandIndexAndLength(unsigned index) {
+       return {index, 1};
+     }
+   
+     ::mlir::Operation::operand_range getODSOperands(unsigned index) {
+       auto valueRange = getODSOperandIndexAndLength(index);
+       return {std::next(getOperation()->operand_begin(), valueRange.first),
+                std::next(getOperation()->operand_begin(), valueRange.first + valueRange.second)};
+     }
+   
+     ::mlir::TypedValue<::mlir::Type> getFrom() {
+       return ::llvm::cast<::mlir::TypedValue<::mlir::Type>>(*getODSOperands(0).begin());
+     }
+   
+     ::mlir::OpOperand &getFromMutable() {
+       auto range = getODSOperandIndexAndLength(0);
+       return getOperation()->getOpOperand(range.first);
+     }
+   
+     std::pair<unsigned, unsigned> getODSResultIndexAndLength(unsigned index) {
+       return {index, 1};
+     }
+   
+     ::mlir::Operation::result_range getODSResults(unsigned index) {
+       auto valueRange = getODSResultIndexAndLength(index);
+       return {std::next(getOperation()->result_begin(), valueRange.first),
+                std::next(getOperation()->result_begin(), valueRange.first + valueRange.second)};
+     }
+   
+     ::mlir::TypedValue<::mlir::Type> getTo() {
+       return ::llvm::cast<::mlir::TypedValue<::mlir::Type>>(*getODSResults(0).begin());
+     }
+   
+     static ::llvm::LogicalResult setPropertiesFromAttr(Properties &prop, ::mlir::Attribute attr, ::llvm::function_ref<::mlir::InFlightDiagnostic()> emitError);
+     static ::mlir::Attribute getPropertiesAsAttr(::mlir::MLIRContext *ctx, const Properties &prop);
+     static llvm::hash_code computePropertiesHash(const Properties &prop);
+     static std::optional<mlir::Attribute> getInherentAttr(::mlir::MLIRContext *ctx, const Properties &prop, llvm::StringRef name);
+     static void setInherentAttr(Properties &prop, llvm::StringRef name, mlir::Attribute value);
+     static void populateInherentAttrs(::mlir::MLIRContext *ctx, const Properties &prop, ::mlir::NamedAttrList &attrs);
+     static ::llvm::LogicalResult verifyInherentAttrs(::mlir::OperationName opName, ::mlir::NamedAttrList &attrs, llvm::function_ref<::mlir::InFlightDiagnostic()> emitError);
+     static void build(::mlir::OpBuilder &odsBuilder, ::mlir::OperationState &odsState, ::mlir::Type to, ::mlir::Value from);
+     static ArithCastOp create(::mlir::OpBuilder &builder, ::mlir::Location location, ::mlir::Type to, ::mlir::Value from);
+     static ArithCastOp create(::mlir::ImplicitLocOpBuilder &builder, ::mlir::Type to, ::mlir::Value from);
+     static void build(::mlir::OpBuilder &odsBuilder, ::mlir::OperationState &odsState, ::mlir::TypeRange resultTypes, ::mlir::Value from);
+     static ArithCastOp create(::mlir::OpBuilder &builder, ::mlir::Location location, ::mlir::TypeRange resultTypes, ::mlir::Value from);
+     static ArithCastOp create(::mlir::ImplicitLocOpBuilder &builder, ::mlir::TypeRange resultTypes, ::mlir::Value from);
+     static void build(::mlir::OpBuilder &, ::mlir::OperationState &odsState, ::mlir::TypeRange resultTypes, ::mlir::ValueRange operands, ::llvm::ArrayRef<::mlir::NamedAttribute> attributes = {});
+     static ArithCastOp create(::mlir::OpBuilder &builder, ::mlir::Location location, ::mlir::TypeRange resultTypes, ::mlir::ValueRange operands, ::llvm::ArrayRef<::mlir::NamedAttribute> attributes = {});
+     static ArithCastOp create(::mlir::ImplicitLocOpBuilder &builder, ::mlir::TypeRange resultTypes, ::mlir::ValueRange operands, ::llvm::ArrayRef<::mlir::NamedAttribute> attributes = {});
+     static void build(::mlir::OpBuilder &, ::mlir::OperationState &odsState, ::mlir::TypeRange resultTypes, ::mlir::ValueRange operands, const Properties &properties, ::llvm::ArrayRef<::mlir::NamedAttribute> discardableAttributes = {});
+     static ArithCastOp create(::mlir::OpBuilder &builder, ::mlir::Location location, ::mlir::TypeRange resultTypes, ::mlir::ValueRange operands, const Properties &properties, ::llvm::ArrayRef<::mlir::NamedAttribute> discardableAttributes = {});
+     static ArithCastOp create(::mlir::ImplicitLocOpBuilder &builder, ::mlir::TypeRange resultTypes, ::mlir::ValueRange operands, const Properties &properties, ::llvm::ArrayRef<::mlir::NamedAttribute> discardableAttributes = {});
+     ::llvm::LogicalResult verifyInvariantsImpl();
+     ::llvm::LogicalResult verifyInvariants();
+     static ::mlir::ParseResult parse(::mlir::OpAsmParser &parser, ::mlir::OperationState &result);
+     void print(::mlir::OpAsmPrinter &_odsPrinter);
+     void getEffects(::llvm::SmallVectorImpl<::mlir::SideEffects::EffectInstance<::mlir::MemoryEffects::Effect>> &effects);
+   public:
+   };
+   
+   } // namespace mlir::base2
+   MLIR_DECLARE_EXPLICIT_TYPE_ID(::mlir::base2::ArithCastOp)
+   
+   namespace mlir::base2 {
+   
+   
+   //===----------------------------------------------------------------------===//
+   // ::mlir::base2::ArithCmpOp declarations
+   //===----------------------------------------------------------------------===//
+   
+   namespace detail {
+   
+   class ArithCmpOpGenericAdaptorBase {
+   public:
+     struct Properties {
+       using predicateTy = ::mlir::base2::OrderingPredicateAttr;
+       predicateTy predicate;
+   
+       auto getPredicate() const {
+         auto &propStorage = this->predicate;
+         return ::llvm::cast<::mlir::base2::OrderingPredicateAttr>(propStorage);
+       }
+       void setPredicate(const ::mlir::base2::OrderingPredicateAttr &propValue) {
+         this->predicate = propValue;
+       }
+       bool operator==(const Properties &rhs) const {
+         return 
+           rhs.predicate == this->predicate &&
+           true;
+       }
+       bool operator!=(const Properties &rhs) const {
+         return !(*this == rhs);
+       }
+     };
+   protected:
+     ::mlir::DictionaryAttr odsAttrs;
+     ::std::optional<::mlir::OperationName> odsOpName;
+     Properties properties;
+     ::mlir::RegionRange odsRegions;
+   public:
+     ArithCmpOpGenericAdaptorBase(::mlir::DictionaryAttr attrs, const Properties &properties, ::mlir::RegionRange regions = {}) : odsAttrs(attrs), properties(properties), odsRegions(regions) {  if (odsAttrs)
+         odsOpName.emplace("base2.cmp", odsAttrs.getContext());
+     }
+   
+     ArithCmpOpGenericAdaptorBase(ArithCmpOp op);
+   
+     std::pair<unsigned, unsigned> getODSOperandIndexAndLength(unsigned index, unsigned odsOperandsSize) {
+       return {index, 1};
+     }
+   
+     const Properties &getProperties() {
+       return properties;
+     }
+   
+     ::mlir::DictionaryAttr getAttributes() {
+       return odsAttrs;
+     }
+   
+     ::mlir::base2::OrderingPredicateAttr getPredicateAttr() {
+       auto attr = ::llvm::cast<::mlir::base2::OrderingPredicateAttr>(getProperties().predicate);
+       return attr;
+     }
+   
+     ::mlir::base2::OrderingPredicate getPredicate();
+   };
+   
+   } // namespace detail
+   template <typename RangeT>
+   class ArithCmpOpGenericAdaptor : public detail::ArithCmpOpGenericAdaptorBase {
+     using ValueT = ::llvm::detail::ValueOfRange<RangeT>;
+     using Base = detail::ArithCmpOpGenericAdaptorBase;
+     static constexpr int odsIndex_lhs = 0;
+     static constexpr int odsIndex_rhs = 1;
+   public:
+     ArithCmpOpGenericAdaptor(RangeT values, ::mlir::DictionaryAttr attrs, const Properties &properties, ::mlir::RegionRange regions = {}) : Base(attrs, properties, regions), odsOperands(values) {}
+   
+     ArithCmpOpGenericAdaptor(RangeT values, ::mlir::DictionaryAttr attrs, ::mlir::PropertyRef properties, ::mlir::RegionRange regions = {}) : ArithCmpOpGenericAdaptor(values, attrs, (properties ? *properties.as<Properties *>() : Properties{}), regions) {}
+   
+     ArithCmpOpGenericAdaptor(RangeT values, ::mlir::DictionaryAttr attrs = nullptr) : ArithCmpOpGenericAdaptor(values, attrs, Properties{}, {}) {}
+   
+     ArithCmpOpGenericAdaptor(RangeT values, const ArithCmpOpGenericAdaptorBase &base) : Base(base), odsOperands(values) {}
+   
+     template <typename LateInst = ArithCmpOp, typename = std::enable_if_t<std::is_same_v<LateInst, ArithCmpOp>>>
+     ArithCmpOpGenericAdaptor(RangeT values, LateInst op) : Base(op), odsOperands(values) {}
+   
+     std::pair<unsigned, unsigned> getODSOperandIndexAndLength(unsigned index) {
+       return Base::getODSOperandIndexAndLength(index, odsOperands.size());
+     }
+   
+     RangeT getODSOperands(unsigned index) {
+       auto valueRange = getODSOperandIndexAndLength(index);
+       return {std::next(odsOperands.begin(), valueRange.first),
+                std::next(odsOperands.begin(), valueRange.first + valueRange.second)};
+     }
+   
+     ValueT getLhs() {
+       return (*getODSOperands(0).begin());
+     }
+   
+     ValueT getRhs() {
+       return (*getODSOperands(1).begin());
+     }
+   
+     RangeT getOperands() {
+       return odsOperands;
+     }
+   
+   private:
+     RangeT odsOperands;
+   };
+   class ArithCmpOpAdaptor : public ArithCmpOpGenericAdaptor<::mlir::ValueRange> {
+   public:
+     using ArithCmpOpGenericAdaptor::ArithCmpOpGenericAdaptor;
+     ArithCmpOpAdaptor(ArithCmpOp op);
+   
+     ::llvm::LogicalResult verify(::mlir::Location loc);
+   };
+   class ArithCmpOp : public ::mlir::Op<ArithCmpOp, ::mlir::OpTrait::ZeroRegions, ::mlir::OpTrait::OneResult, ::mlir::OpTrait::OneTypedResult<::mlir::IntegerType>::Impl, ::mlir::OpTrait::ZeroSuccessors, ::mlir::OpTrait::NOperands<2>::Impl, ::mlir::OpTrait::OpInvariants, ::mlir::BytecodeOpInterface::Trait, ::mlir::ConditionallySpeculatable::Trait, ::mlir::OpTrait::AlwaysSpeculatableImplTrait, ::mlir::MemoryEffectOpInterface::Trait, ::mlir::OpTrait::SameTypeOperands, ::mlir::InferTypeOpInterface::Trait> {
+   public:
+     using Op::Op;
+     using Op::print;
+     using Adaptor = ArithCmpOpAdaptor;
+     template <typename RangeT>
+     using GenericAdaptor = ArithCmpOpGenericAdaptor<RangeT>;
+     using FoldAdaptor = GenericAdaptor<::llvm::ArrayRef<::mlir::Attribute>>;
+     static constexpr int odsIndex_lhs = 0;
+     static constexpr int odsIndex_rhs = 1;
+     using Properties = FoldAdaptor::Properties;
+     static ::llvm::ArrayRef<::llvm::StringRef> getAttributeNames() {
+       static ::llvm::StringRef attrNames[] = {::llvm::StringRef("predicate")};
+       return ::llvm::ArrayRef(attrNames);
+     }
+   
+     ::mlir::StringAttr getPredicateAttrName() {
+       return getAttributeNameForIndex(0);
+     }
+   
+     static ::mlir::StringAttr getPredicateAttrName(::mlir::OperationName name) {
+       return getAttributeNameForIndex(name, 0);
+     }
+   
+     static constexpr ::llvm::StringLiteral getOperationName() {
+       return ::llvm::StringLiteral("base2.cmp");
+     }
+   
+     std::pair<unsigned, unsigned> getODSOperandIndexAndLength(unsigned index) {
+       return {index, 1};
+     }
+   
+     ::mlir::Operation::operand_range getODSOperands(unsigned index) {
+       auto valueRange = getODSOperandIndexAndLength(index);
+       return {std::next(getOperation()->operand_begin(), valueRange.first),
+                std::next(getOperation()->operand_begin(), valueRange.first + valueRange.second)};
+     }
+   
+     ::mlir::TypedValue<::mlir::Type> getLhs() {
+       return ::llvm::cast<::mlir::TypedValue<::mlir::Type>>(*getODSOperands(0).begin());
+     }
+   
+     ::mlir::TypedValue<::mlir::Type> getRhs() {
+       return ::llvm::cast<::mlir::TypedValue<::mlir::Type>>(*getODSOperands(1).begin());
+     }
+   
+     ::mlir::OpOperand &getLhsMutable() {
+       auto range = getODSOperandIndexAndLength(0);
+       return getOperation()->getOpOperand(range.first);
+     }
+   
+     ::mlir::OpOperand &getRhsMutable() {
+       auto range = getODSOperandIndexAndLength(1);
+       return getOperation()->getOpOperand(range.first);
+     }
+   
+     std::pair<unsigned, unsigned> getODSResultIndexAndLength(unsigned index) {
+       return {index, 1};
+     }
+   
+     ::mlir::Operation::result_range getODSResults(unsigned index) {
+       auto valueRange = getODSResultIndexAndLength(index);
+       return {std::next(getOperation()->result_begin(), valueRange.first),
+                std::next(getOperation()->result_begin(), valueRange.first + valueRange.second)};
+     }
+   
+     ::mlir::TypedValue<::mlir::IntegerType> getResult() {
+       return ::llvm::cast<::mlir::TypedValue<::mlir::IntegerType>>(*getODSResults(0).begin());
+     }
+   
+     static ::llvm::LogicalResult setPropertiesFromAttr(Properties &prop, ::mlir::Attribute attr, ::llvm::function_ref<::mlir::InFlightDiagnostic()> emitError);
+     static ::mlir::Attribute getPropertiesAsAttr(::mlir::MLIRContext *ctx, const Properties &prop);
+     static llvm::hash_code computePropertiesHash(const Properties &prop);
+     static std::optional<mlir::Attribute> getInherentAttr(::mlir::MLIRContext *ctx, const Properties &prop, llvm::StringRef name);
+     static void setInherentAttr(Properties &prop, llvm::StringRef name, mlir::Attribute value);
+     static void populateInherentAttrs(::mlir::MLIRContext *ctx, const Properties &prop, ::mlir::NamedAttrList &attrs);
+     static ::llvm::LogicalResult verifyInherentAttrs(::mlir::OperationName opName, ::mlir::NamedAttrList &attrs, llvm::function_ref<::mlir::InFlightDiagnostic()> emitError);
+     static ::llvm::LogicalResult readProperties(::mlir::DialectBytecodeReader &reader, ::mlir::OperationState &state);
+     void writeProperties(::mlir::DialectBytecodeWriter &writer);
+     ::mlir::base2::OrderingPredicateAttr getPredicateAttr() {
+       return ::llvm::cast<::mlir::base2::OrderingPredicateAttr>(getProperties().predicate);
+     }
+   
+     ::mlir::base2::OrderingPredicate getPredicate();
+     void setPredicateAttr(::mlir::base2::OrderingPredicateAttr attr) {
+       getProperties().predicate = attr;
+     }
+   
+     void setPredicate(::mlir::base2::OrderingPredicate attrValue);
+     static void build(::mlir::OpBuilder &odsBuilder, ::mlir::OperationState &odsState, ::mlir::Type result, ::mlir::base2::OrderingPredicateAttr predicate, ::mlir::Value lhs, ::mlir::Value rhs);
+     static ArithCmpOp create(::mlir::OpBuilder &builder, ::mlir::Location location, ::mlir::Type result, ::mlir::base2::OrderingPredicateAttr predicate, ::mlir::Value lhs, ::mlir::Value rhs);
+     static ArithCmpOp create(::mlir::ImplicitLocOpBuilder &builder, ::mlir::Type result, ::mlir::base2::OrderingPredicateAttr predicate, ::mlir::Value lhs, ::mlir::Value rhs);
+     static void build(::mlir::OpBuilder &odsBuilder, ::mlir::OperationState &odsState, ::mlir::base2::OrderingPredicateAttr predicate, ::mlir::Value lhs, ::mlir::Value rhs);
+     static ArithCmpOp create(::mlir::OpBuilder &builder, ::mlir::Location location, ::mlir::base2::OrderingPredicateAttr predicate, ::mlir::Value lhs, ::mlir::Value rhs);
+     static ArithCmpOp create(::mlir::ImplicitLocOpBuilder &builder, ::mlir::base2::OrderingPredicateAttr predicate, ::mlir::Value lhs, ::mlir::Value rhs);
+     static void build(::mlir::OpBuilder &odsBuilder, ::mlir::OperationState &odsState, ::mlir::TypeRange resultTypes, ::mlir::base2::OrderingPredicateAttr predicate, ::mlir::Value lhs, ::mlir::Value rhs);
+     static ArithCmpOp create(::mlir::OpBuilder &builder, ::mlir::Location location, ::mlir::TypeRange resultTypes, ::mlir::base2::OrderingPredicateAttr predicate, ::mlir::Value lhs, ::mlir::Value rhs);
+     static ArithCmpOp create(::mlir::ImplicitLocOpBuilder &builder, ::mlir::TypeRange resultTypes, ::mlir::base2::OrderingPredicateAttr predicate, ::mlir::Value lhs, ::mlir::Value rhs);
+     static void build(::mlir::OpBuilder &odsBuilder, ::mlir::OperationState &odsState, ::mlir::Type result, ::mlir::base2::OrderingPredicate predicate, ::mlir::Value lhs, ::mlir::Value rhs);
+     static ArithCmpOp create(::mlir::OpBuilder &builder, ::mlir::Location location, ::mlir::Type result, ::mlir::base2::OrderingPredicate predicate, ::mlir::Value lhs, ::mlir::Value rhs);
+     static ArithCmpOp create(::mlir::ImplicitLocOpBuilder &builder, ::mlir::Type result, ::mlir::base2::OrderingPredicate predicate, ::mlir::Value lhs, ::mlir::Value rhs);
+     static void build(::mlir::OpBuilder &odsBuilder, ::mlir::OperationState &odsState, ::mlir::base2::OrderingPredicate predicate, ::mlir::Value lhs, ::mlir::Value rhs);
+     static ArithCmpOp create(::mlir::OpBuilder &builder, ::mlir::Location location, ::mlir::base2::OrderingPredicate predicate, ::mlir::Value lhs, ::mlir::Value rhs);
+     static ArithCmpOp create(::mlir::ImplicitLocOpBuilder &builder, ::mlir::base2::OrderingPredicate predicate, ::mlir::Value lhs, ::mlir::Value rhs);
+     static void build(::mlir::OpBuilder &odsBuilder, ::mlir::OperationState &odsState, ::mlir::TypeRange resultTypes, ::mlir::base2::OrderingPredicate predicate, ::mlir::Value lhs, ::mlir::Value rhs);
+     static ArithCmpOp create(::mlir::OpBuilder &builder, ::mlir::Location location, ::mlir::TypeRange resultTypes, ::mlir::base2::OrderingPredicate predicate, ::mlir::Value lhs, ::mlir::Value rhs);
+     static ArithCmpOp create(::mlir::ImplicitLocOpBuilder &builder, ::mlir::TypeRange resultTypes, ::mlir::base2::OrderingPredicate predicate, ::mlir::Value lhs, ::mlir::Value rhs);
+     static void build(::mlir::OpBuilder &, ::mlir::OperationState &odsState, ::mlir::TypeRange resultTypes, ::mlir::ValueRange operands, ::llvm::ArrayRef<::mlir::NamedAttribute> attributes = {});
+     static ArithCmpOp create(::mlir::OpBuilder &builder, ::mlir::Location location, ::mlir::TypeRange resultTypes, ::mlir::ValueRange operands, ::llvm::ArrayRef<::mlir::NamedAttribute> attributes = {});
+     static ArithCmpOp create(::mlir::ImplicitLocOpBuilder &builder, ::mlir::TypeRange resultTypes, ::mlir::ValueRange operands, ::llvm::ArrayRef<::mlir::NamedAttribute> attributes = {});
+     static void build(::mlir::OpBuilder &odsBuilder, ::mlir::OperationState &odsState, ::mlir::ValueRange operands, ::llvm::ArrayRef<::mlir::NamedAttribute> attributes = {});
+     static ArithCmpOp create(::mlir::OpBuilder &builder, ::mlir::Location location, ::mlir::ValueRange operands, ::llvm::ArrayRef<::mlir::NamedAttribute> attributes = {});
+     static ArithCmpOp create(::mlir::ImplicitLocOpBuilder &builder, ::mlir::ValueRange operands, ::llvm::ArrayRef<::mlir::NamedAttribute> attributes = {});
+     static void build(::mlir::OpBuilder &, ::mlir::OperationState &odsState, ::mlir::TypeRange resultTypes, ::mlir::ValueRange operands, const Properties &properties, ::llvm::ArrayRef<::mlir::NamedAttribute> discardableAttributes = {});
+     static ArithCmpOp create(::mlir::OpBuilder &builder, ::mlir::Location location, ::mlir::TypeRange resultTypes, ::mlir::ValueRange operands, const Properties &properties, ::llvm::ArrayRef<::mlir::NamedAttribute> discardableAttributes = {});
+     static ArithCmpOp create(::mlir::ImplicitLocOpBuilder &builder, ::mlir::TypeRange resultTypes, ::mlir::ValueRange operands, const Properties &properties, ::llvm::ArrayRef<::mlir::NamedAttribute> discardableAttributes = {});
+     static void build(::mlir::OpBuilder &odsBuilder, ::mlir::OperationState &odsState, ::mlir::ValueRange operands, const Properties &properties, ::llvm::ArrayRef<::mlir::NamedAttribute> discardableAttributes = {});
+     static ArithCmpOp create(::mlir::OpBuilder &builder, ::mlir::Location location, ::mlir::ValueRange operands, const Properties &properties, ::llvm::ArrayRef<::mlir::NamedAttribute> discardableAttributes = {});
+     static ArithCmpOp create(::mlir::ImplicitLocOpBuilder &builder, ::mlir::ValueRange operands, const Properties &properties, ::llvm::ArrayRef<::mlir::NamedAttribute> discardableAttributes = {});
+     ::llvm::LogicalResult verifyInvariantsImpl();
+     ::llvm::LogicalResult verifyInvariants();
+     static ::llvm::LogicalResult inferReturnTypes(::mlir::MLIRContext *context, ::std::optional<::mlir::Location> location, ::mlir::ValueRange operands, ::mlir::DictionaryAttr attributes, ::mlir::PropertyRef properties, ::mlir::RegionRange regions, ::llvm::SmallVectorImpl<::mlir::Type>&inferredReturnTypes);
+     static ::mlir::ParseResult parse(::mlir::OpAsmParser &parser, ::mlir::OperationState &result);
+     void print(::mlir::OpAsmPrinter &_odsPrinter);
+     void getEffects(::llvm::SmallVectorImpl<::mlir::SideEffects::EffectInstance<::mlir::MemoryEffects::Effect>> &effects);
+   private:
+     ::mlir::StringAttr getAttributeNameForIndex(unsigned index) {
+       return getAttributeNameForIndex((*this)->getName(), index);
+     }
+   
+     static ::mlir::StringAttr getAttributeNameForIndex(::mlir::OperationName name, unsigned index) {
+       assert(index < 1 && "invalid attribute index");
+       assert(name.getStringRef() == getOperationName() && "invalid operation name");
+       assert(name.isRegistered() && "Operation isn't registered, missing a "
+             "dependent dialect loading?");
+       return name.getAttributeNames()[index];
+     }
+   
+   public:
+   };
+   
+   } // namespace mlir::base2
+   MLIR_DECLARE_EXPLICIT_TYPE_ID(::mlir::base2::ArithCmpOp)
+   MLIR_DECLARE_EXPLICIT_TYPE_ID(::mlir::base2::detail::ArithCmpOpGenericAdaptorBase::Properties)
+   
+   namespace mlir::base2 {
+   
+   
+   //===----------------------------------------------------------------------===//
+   // ::mlir::base2::ArithDivOp declarations
+   //===----------------------------------------------------------------------===//
+   
+   namespace detail {
+   
+   class ArithDivOpGenericAdaptorBase {
+   public:
+     using Properties = ::mlir::EmptyProperties;
+   protected:
+     ::mlir::DictionaryAttr odsAttrs;
+     ::std::optional<::mlir::OperationName> odsOpName;
+     Properties properties;
+     ::mlir::RegionRange odsRegions;
+   public:
+     ArithDivOpGenericAdaptorBase(::mlir::DictionaryAttr attrs, const Properties &properties, ::mlir::RegionRange regions = {}) : odsAttrs(attrs), properties(properties), odsRegions(regions) {  if (odsAttrs)
+         odsOpName.emplace("base2.div", odsAttrs.getContext());
+     }
+   
+     ArithDivOpGenericAdaptorBase(ArithDivOp op);
+   
+     std::pair<unsigned, unsigned> getODSOperandIndexAndLength(unsigned index, unsigned odsOperandsSize) {
+       return {index, 1};
+     }
+   
+     const Properties &getProperties() {
+       return properties;
+     }
+   
+     ::mlir::DictionaryAttr getAttributes() {
+       return odsAttrs;
+     }
+   
+   };
+   
+   } // namespace detail
+   template <typename RangeT>
+   class ArithDivOpGenericAdaptor : public detail::ArithDivOpGenericAdaptorBase {
+     using ValueT = ::llvm::detail::ValueOfRange<RangeT>;
+     using Base = detail::ArithDivOpGenericAdaptorBase;
+     static constexpr int odsIndex_lhs = 0;
+     static constexpr int odsIndex_rhs = 1;
+   public:
+     ArithDivOpGenericAdaptor(RangeT values, ::mlir::DictionaryAttr attrs, const Properties &properties, ::mlir::RegionRange regions = {}) : Base(attrs, properties, regions), odsOperands(values) {}
+   
+     ArithDivOpGenericAdaptor(RangeT values, ::mlir::DictionaryAttr attrs, ::mlir::PropertyRef properties, ::mlir::RegionRange regions = {}) : ArithDivOpGenericAdaptor(values, attrs, (properties ? *properties.as<Properties *>() : Properties{}), regions) {}
+   
+     ArithDivOpGenericAdaptor(RangeT values, ::mlir::DictionaryAttr attrs = nullptr) : ArithDivOpGenericAdaptor(values, attrs, Properties{}, {}) {}
+   
+     ArithDivOpGenericAdaptor(RangeT values, const ArithDivOpGenericAdaptorBase &base) : Base(base), odsOperands(values) {}
+   
+     template <typename LateInst = ArithDivOp, typename = std::enable_if_t<std::is_same_v<LateInst, ArithDivOp>>>
+     ArithDivOpGenericAdaptor(RangeT values, LateInst op) : Base(op), odsOperands(values) {}
+   
+     std::pair<unsigned, unsigned> getODSOperandIndexAndLength(unsigned index) {
+       return Base::getODSOperandIndexAndLength(index, odsOperands.size());
+     }
+   
+     RangeT getODSOperands(unsigned index) {
+       auto valueRange = getODSOperandIndexAndLength(index);
+       return {std::next(odsOperands.begin(), valueRange.first),
+                std::next(odsOperands.begin(), valueRange.first + valueRange.second)};
+     }
+   
+     ValueT getLhs() {
+       return (*getODSOperands(0).begin());
+     }
+   
+     ValueT getRhs() {
+       return (*getODSOperands(1).begin());
+     }
+   
+     RangeT getOperands() {
+       return odsOperands;
+     }
+   
+   private:
+     RangeT odsOperands;
+   };
+   class ArithDivOpAdaptor : public ArithDivOpGenericAdaptor<::mlir::ValueRange> {
+   public:
+     using ArithDivOpGenericAdaptor::ArithDivOpGenericAdaptor;
+     ArithDivOpAdaptor(ArithDivOp op);
+   
+     ::llvm::LogicalResult verify(::mlir::Location loc);
+   };
+   class ArithDivOp : public ::mlir::Op<ArithDivOp, ::mlir::OpTrait::ZeroRegions, ::mlir::OpTrait::OneResult, ::mlir::OpTrait::OneTypedResult<::mlir::Type>::Impl, ::mlir::OpTrait::ZeroSuccessors, ::mlir::OpTrait::NOperands<2>::Impl, ::mlir::OpTrait::OpInvariants, ::mlir::ConditionallySpeculatable::Trait, ::mlir::OpTrait::AlwaysSpeculatableImplTrait, ::mlir::MemoryEffectOpInterface::Trait, ::mlir::OpTrait::SameOperandsAndResultType, ::mlir::InferTypeOpInterface::Trait> {
+   public:
+     using Op::Op;
+     using Op::print;
+     using Adaptor = ArithDivOpAdaptor;
+     template <typename RangeT>
+     using GenericAdaptor = ArithDivOpGenericAdaptor<RangeT>;
+     using FoldAdaptor = GenericAdaptor<::llvm::ArrayRef<::mlir::Attribute>>;
+     static constexpr int odsIndex_lhs = 0;
+     static constexpr int odsIndex_rhs = 1;
+     using Properties = FoldAdaptor::Properties;
+     static ::llvm::ArrayRef<::llvm::StringRef> getAttributeNames() {
+       return {};
+     }
+   
+     static constexpr ::llvm::StringLiteral getOperationName() {
+       return ::llvm::StringLiteral("base2.div");
+     }
+   
+     std::pair<unsigned, unsigned> getODSOperandIndexAndLength(unsigned index) {
+       return {index, 1};
+     }
+   
+     ::mlir::Operation::operand_range getODSOperands(unsigned index) {
+       auto valueRange = getODSOperandIndexAndLength(index);
+       return {std::next(getOperation()->operand_begin(), valueRange.first),
+                std::next(getOperation()->operand_begin(), valueRange.first + valueRange.second)};
+     }
+   
+     ::mlir::TypedValue<::mlir::Type> getLhs() {
+       return ::llvm::cast<::mlir::TypedValue<::mlir::Type>>(*getODSOperands(0).begin());
+     }
+   
+     ::mlir::TypedValue<::mlir::Type> getRhs() {
+       return ::llvm::cast<::mlir::TypedValue<::mlir::Type>>(*getODSOperands(1).begin());
+     }
+   
+     ::mlir::OpOperand &getLhsMutable() {
+       auto range = getODSOperandIndexAndLength(0);
+       return getOperation()->getOpOperand(range.first);
+     }
+   
+     ::mlir::OpOperand &getRhsMutable() {
+       auto range = getODSOperandIndexAndLength(1);
+       return getOperation()->getOpOperand(range.first);
+     }
+   
+     std::pair<unsigned, unsigned> getODSResultIndexAndLength(unsigned index) {
+       return {index, 1};
+     }
+   
+     ::mlir::Operation::result_range getODSResults(unsigned index) {
+       auto valueRange = getODSResultIndexAndLength(index);
+       return {std::next(getOperation()->result_begin(), valueRange.first),
+                std::next(getOperation()->result_begin(), valueRange.first + valueRange.second)};
+     }
+   
+     ::mlir::TypedValue<::mlir::Type> getResult() {
+       return ::llvm::cast<::mlir::TypedValue<::mlir::Type>>(*getODSResults(0).begin());
+     }
+   
+     static ::llvm::LogicalResult setPropertiesFromAttr(Properties &prop, ::mlir::Attribute attr, ::llvm::function_ref<::mlir::InFlightDiagnostic()> emitError);
+     static ::mlir::Attribute getPropertiesAsAttr(::mlir::MLIRContext *ctx, const Properties &prop);
+     static llvm::hash_code computePropertiesHash(const Properties &prop);
+     static std::optional<mlir::Attribute> getInherentAttr(::mlir::MLIRContext *ctx, const Properties &prop, llvm::StringRef name);
+     static void setInherentAttr(Properties &prop, llvm::StringRef name, mlir::Attribute value);
+     static void populateInherentAttrs(::mlir::MLIRContext *ctx, const Properties &prop, ::mlir::NamedAttrList &attrs);
+     static ::llvm::LogicalResult verifyInherentAttrs(::mlir::OperationName opName, ::mlir::NamedAttrList &attrs, llvm::function_ref<::mlir::InFlightDiagnostic()> emitError);
+     static void build(::mlir::OpBuilder &odsBuilder, ::mlir::OperationState &odsState, ::mlir::Type result, ::mlir::Value lhs, ::mlir::Value rhs);
+     static ArithDivOp create(::mlir::OpBuilder &builder, ::mlir::Location location, ::mlir::Type result, ::mlir::Value lhs, ::mlir::Value rhs);
+     static ArithDivOp create(::mlir::ImplicitLocOpBuilder &builder, ::mlir::Type result, ::mlir::Value lhs, ::mlir::Value rhs);
+     static void build(::mlir::OpBuilder &odsBuilder, ::mlir::OperationState &odsState, ::mlir::Value lhs, ::mlir::Value rhs);
+     static ArithDivOp create(::mlir::OpBuilder &builder, ::mlir::Location location, ::mlir::Value lhs, ::mlir::Value rhs);
+     static ArithDivOp create(::mlir::ImplicitLocOpBuilder &builder, ::mlir::Value lhs, ::mlir::Value rhs);
+     static void build(::mlir::OpBuilder &odsBuilder, ::mlir::OperationState &odsState, ::mlir::TypeRange resultTypes, ::mlir::Value lhs, ::mlir::Value rhs);
+     static ArithDivOp create(::mlir::OpBuilder &builder, ::mlir::Location location, ::mlir::TypeRange resultTypes, ::mlir::Value lhs, ::mlir::Value rhs);
+     static ArithDivOp create(::mlir::ImplicitLocOpBuilder &builder, ::mlir::TypeRange resultTypes, ::mlir::Value lhs, ::mlir::Value rhs);
+     static void build(::mlir::OpBuilder &, ::mlir::OperationState &odsState, ::mlir::TypeRange resultTypes, ::mlir::ValueRange operands, ::llvm::ArrayRef<::mlir::NamedAttribute> attributes = {});
+     static ArithDivOp create(::mlir::OpBuilder &builder, ::mlir::Location location, ::mlir::TypeRange resultTypes, ::mlir::ValueRange operands, ::llvm::ArrayRef<::mlir::NamedAttribute> attributes = {});
+     static ArithDivOp create(::mlir::ImplicitLocOpBuilder &builder, ::mlir::TypeRange resultTypes, ::mlir::ValueRange operands, ::llvm::ArrayRef<::mlir::NamedAttribute> attributes = {});
+     static void build(::mlir::OpBuilder &odsBuilder, ::mlir::OperationState &odsState, ::mlir::ValueRange operands, ::llvm::ArrayRef<::mlir::NamedAttribute> attributes = {});
+     static ArithDivOp create(::mlir::OpBuilder &builder, ::mlir::Location location, ::mlir::ValueRange operands, ::llvm::ArrayRef<::mlir::NamedAttribute> attributes = {});
+     static ArithDivOp create(::mlir::ImplicitLocOpBuilder &builder, ::mlir::ValueRange operands, ::llvm::ArrayRef<::mlir::NamedAttribute> attributes = {});
+     static void build(::mlir::OpBuilder &, ::mlir::OperationState &odsState, ::mlir::TypeRange resultTypes, ::mlir::ValueRange operands, const Properties &properties, ::llvm::ArrayRef<::mlir::NamedAttribute> discardableAttributes = {});
+     static ArithDivOp create(::mlir::OpBuilder &builder, ::mlir::Location location, ::mlir::TypeRange resultTypes, ::mlir::ValueRange operands, const Properties &properties, ::llvm::ArrayRef<::mlir::NamedAttribute> discardableAttributes = {});
+     static ArithDivOp create(::mlir::ImplicitLocOpBuilder &builder, ::mlir::TypeRange resultTypes, ::mlir::ValueRange operands, const Properties &properties, ::llvm::ArrayRef<::mlir::NamedAttribute> discardableAttributes = {});
+     static void build(::mlir::OpBuilder &odsBuilder, ::mlir::OperationState &odsState, ::mlir::ValueRange operands, const Properties &properties, ::llvm::ArrayRef<::mlir::NamedAttribute> discardableAttributes = {});
+     static ArithDivOp create(::mlir::OpBuilder &builder, ::mlir::Location location, ::mlir::ValueRange operands, const Properties &properties, ::llvm::ArrayRef<::mlir::NamedAttribute> discardableAttributes = {});
+     static ArithDivOp create(::mlir::ImplicitLocOpBuilder &builder, ::mlir::ValueRange operands, const Properties &properties, ::llvm::ArrayRef<::mlir::NamedAttribute> discardableAttributes = {});
+     ::llvm::LogicalResult verifyInvariantsImpl();
+     ::llvm::LogicalResult verifyInvariants();
+     static ::llvm::LogicalResult inferReturnTypes(::mlir::MLIRContext *context, ::std::optional<::mlir::Location> location, ::mlir::ValueRange operands, ::mlir::DictionaryAttr attributes, ::mlir::PropertyRef properties, ::mlir::RegionRange regions, ::llvm::SmallVectorImpl<::mlir::Type>&inferredReturnTypes);
+     static ::mlir::ParseResult parse(::mlir::OpAsmParser &parser, ::mlir::OperationState &result);
+     void print(::mlir::OpAsmPrinter &_odsPrinter);
+     void getEffects(::llvm::SmallVectorImpl<::mlir::SideEffects::EffectInstance<::mlir::MemoryEffects::Effect>> &effects);
+   public:
+   };
+   
+   } // namespace mlir::base2
+   MLIR_DECLARE_EXPLICIT_TYPE_ID(::mlir::base2::ArithDivOp)
+   
+   namespace mlir::base2 {
+   
+   
+   //===----------------------------------------------------------------------===//
+   // ::mlir::base2::ArithMaxOp declarations
+   //===----------------------------------------------------------------------===//
+   
+   namespace detail {
+   
+   class ArithMaxOpGenericAdaptorBase {
+   public:
+     using Properties = ::mlir::EmptyProperties;
+   protected:
+     ::mlir::DictionaryAttr odsAttrs;
+     ::std::optional<::mlir::OperationName> odsOpName;
+     Properties properties;
+     ::mlir::RegionRange odsRegions;
+   public:
+     ArithMaxOpGenericAdaptorBase(::mlir::DictionaryAttr attrs, const Properties &properties, ::mlir::RegionRange regions = {}) : odsAttrs(attrs), properties(properties), odsRegions(regions) {  if (odsAttrs)
+         odsOpName.emplace("base2.max", odsAttrs.getContext());
+     }
+   
+     ArithMaxOpGenericAdaptorBase(ArithMaxOp op);
+   
+     std::pair<unsigned, unsigned> getODSOperandIndexAndLength(unsigned index, unsigned odsOperandsSize) {
+       return {index, 1};
+     }
+   
+     const Properties &getProperties() {
+       return properties;
+     }
+   
+     ::mlir::DictionaryAttr getAttributes() {
+       return odsAttrs;
+     }
+   
+   };
+   
+   } // namespace detail
+   template <typename RangeT>
+   class ArithMaxOpGenericAdaptor : public detail::ArithMaxOpGenericAdaptorBase {
+     using ValueT = ::llvm::detail::ValueOfRange<RangeT>;
+     using Base = detail::ArithMaxOpGenericAdaptorBase;
+     static constexpr int odsIndex_lhs = 0;
+     static constexpr int odsIndex_rhs = 1;
+   public:
+     ArithMaxOpGenericAdaptor(RangeT values, ::mlir::DictionaryAttr attrs, const Properties &properties, ::mlir::RegionRange regions = {}) : Base(attrs, properties, regions), odsOperands(values) {}
+   
+     ArithMaxOpGenericAdaptor(RangeT values, ::mlir::DictionaryAttr attrs, ::mlir::PropertyRef properties, ::mlir::RegionRange regions = {}) : ArithMaxOpGenericAdaptor(values, attrs, (properties ? *properties.as<Properties *>() : Properties{}), regions) {}
+   
+     ArithMaxOpGenericAdaptor(RangeT values, ::mlir::DictionaryAttr attrs = nullptr) : ArithMaxOpGenericAdaptor(values, attrs, Properties{}, {}) {}
+   
+     ArithMaxOpGenericAdaptor(RangeT values, const ArithMaxOpGenericAdaptorBase &base) : Base(base), odsOperands(values) {}
+   
+     template <typename LateInst = ArithMaxOp, typename = std::enable_if_t<std::is_same_v<LateInst, ArithMaxOp>>>
+     ArithMaxOpGenericAdaptor(RangeT values, LateInst op) : Base(op), odsOperands(values) {}
+   
+     std::pair<unsigned, unsigned> getODSOperandIndexAndLength(unsigned index) {
+       return Base::getODSOperandIndexAndLength(index, odsOperands.size());
+     }
+   
+     RangeT getODSOperands(unsigned index) {
+       auto valueRange = getODSOperandIndexAndLength(index);
+       return {std::next(odsOperands.begin(), valueRange.first),
+                std::next(odsOperands.begin(), valueRange.first + valueRange.second)};
+     }
+   
+     ValueT getLhs() {
+       return (*getODSOperands(0).begin());
+     }
+   
+     ValueT getRhs() {
+       return (*getODSOperands(1).begin());
+     }
+   
+     RangeT getOperands() {
+       return odsOperands;
+     }
+   
+   private:
+     RangeT odsOperands;
+   };
+   class ArithMaxOpAdaptor : public ArithMaxOpGenericAdaptor<::mlir::ValueRange> {
+   public:
+     using ArithMaxOpGenericAdaptor::ArithMaxOpGenericAdaptor;
+     ArithMaxOpAdaptor(ArithMaxOp op);
+   
+     ::llvm::LogicalResult verify(::mlir::Location loc);
+   };
+   class ArithMaxOp : public ::mlir::Op<ArithMaxOp, ::mlir::OpTrait::ZeroRegions, ::mlir::OpTrait::OneResult, ::mlir::OpTrait::OneTypedResult<::mlir::Type>::Impl, ::mlir::OpTrait::ZeroSuccessors, ::mlir::OpTrait::NOperands<2>::Impl, ::mlir::OpTrait::OpInvariants, ::mlir::ConditionallySpeculatable::Trait, ::mlir::OpTrait::AlwaysSpeculatableImplTrait, ::mlir::MemoryEffectOpInterface::Trait, ::mlir::OpTrait::SameOperandsAndResultType, ::mlir::InferTypeOpInterface::Trait> {
+   public:
+     using Op::Op;
+     using Op::print;
+     using Adaptor = ArithMaxOpAdaptor;
+     template <typename RangeT>
+     using GenericAdaptor = ArithMaxOpGenericAdaptor<RangeT>;
+     using FoldAdaptor = GenericAdaptor<::llvm::ArrayRef<::mlir::Attribute>>;
+     static constexpr int odsIndex_lhs = 0;
+     static constexpr int odsIndex_rhs = 1;
+     using Properties = FoldAdaptor::Properties;
+     static ::llvm::ArrayRef<::llvm::StringRef> getAttributeNames() {
+       return {};
+     }
+   
+     static constexpr ::llvm::StringLiteral getOperationName() {
+       return ::llvm::StringLiteral("base2.max");
+     }
+   
+     std::pair<unsigned, unsigned> getODSOperandIndexAndLength(unsigned index) {
+       return {index, 1};
+     }
+   
+     ::mlir::Operation::operand_range getODSOperands(unsigned index) {
+       auto valueRange = getODSOperandIndexAndLength(index);
+       return {std::next(getOperation()->operand_begin(), valueRange.first),
+                std::next(getOperation()->operand_begin(), valueRange.first + valueRange.second)};
+     }
+   
+     ::mlir::TypedValue<::mlir::Type> getLhs() {
+       return ::llvm::cast<::mlir::TypedValue<::mlir::Type>>(*getODSOperands(0).begin());
+     }
+   
+     ::mlir::TypedValue<::mlir::Type> getRhs() {
+       return ::llvm::cast<::mlir::TypedValue<::mlir::Type>>(*getODSOperands(1).begin());
+     }
+   
+     ::mlir::OpOperand &getLhsMutable() {
+       auto range = getODSOperandIndexAndLength(0);
+       return getOperation()->getOpOperand(range.first);
+     }
+   
+     ::mlir::OpOperand &getRhsMutable() {
+       auto range = getODSOperandIndexAndLength(1);
+       return getOperation()->getOpOperand(range.first);
+     }
+   
+     std::pair<unsigned, unsigned> getODSResultIndexAndLength(unsigned index) {
+       return {index, 1};
+     }
+   
+     ::mlir::Operation::result_range getODSResults(unsigned index) {
+       auto valueRange = getODSResultIndexAndLength(index);
+       return {std::next(getOperation()->result_begin(), valueRange.first),
+                std::next(getOperation()->result_begin(), valueRange.first + valueRange.second)};
+     }
+   
+     ::mlir::TypedValue<::mlir::Type> getResult() {
+       return ::llvm::cast<::mlir::TypedValue<::mlir::Type>>(*getODSResults(0).begin());
+     }
+   
+     static ::llvm::LogicalResult setPropertiesFromAttr(Properties &prop, ::mlir::Attribute attr, ::llvm::function_ref<::mlir::InFlightDiagnostic()> emitError);
+     static ::mlir::Attribute getPropertiesAsAttr(::mlir::MLIRContext *ctx, const Properties &prop);
+     static llvm::hash_code computePropertiesHash(const Properties &prop);
+     static std::optional<mlir::Attribute> getInherentAttr(::mlir::MLIRContext *ctx, const Properties &prop, llvm::StringRef name);
+     static void setInherentAttr(Properties &prop, llvm::StringRef name, mlir::Attribute value);
+     static void populateInherentAttrs(::mlir::MLIRContext *ctx, const Properties &prop, ::mlir::NamedAttrList &attrs);
+     static ::llvm::LogicalResult verifyInherentAttrs(::mlir::OperationName opName, ::mlir::NamedAttrList &attrs, llvm::function_ref<::mlir::InFlightDiagnostic()> emitError);
+     static void build(::mlir::OpBuilder &odsBuilder, ::mlir::OperationState &odsState, ::mlir::Type result, ::mlir::Value lhs, ::mlir::Value rhs);
+     static ArithMaxOp create(::mlir::OpBuilder &builder, ::mlir::Location location, ::mlir::Type result, ::mlir::Value lhs, ::mlir::Value rhs);
+     static ArithMaxOp create(::mlir::ImplicitLocOpBuilder &builder, ::mlir::Type result, ::mlir::Value lhs, ::mlir::Value rhs);
+     static void build(::mlir::OpBuilder &odsBuilder, ::mlir::OperationState &odsState, ::mlir::Value lhs, ::mlir::Value rhs);
+     static ArithMaxOp create(::mlir::OpBuilder &builder, ::mlir::Location location, ::mlir::Value lhs, ::mlir::Value rhs);
+     static ArithMaxOp create(::mlir::ImplicitLocOpBuilder &builder, ::mlir::Value lhs, ::mlir::Value rhs);
+     static void build(::mlir::OpBuilder &odsBuilder, ::mlir::OperationState &odsState, ::mlir::TypeRange resultTypes, ::mlir::Value lhs, ::mlir::Value rhs);
+     static ArithMaxOp create(::mlir::OpBuilder &builder, ::mlir::Location location, ::mlir::TypeRange resultTypes, ::mlir::Value lhs, ::mlir::Value rhs);
+     static ArithMaxOp create(::mlir::ImplicitLocOpBuilder &builder, ::mlir::TypeRange resultTypes, ::mlir::Value lhs, ::mlir::Value rhs);
+     static void build(::mlir::OpBuilder &, ::mlir::OperationState &odsState, ::mlir::TypeRange resultTypes, ::mlir::ValueRange operands, ::llvm::ArrayRef<::mlir::NamedAttribute> attributes = {});
+     static ArithMaxOp create(::mlir::OpBuilder &builder, ::mlir::Location location, ::mlir::TypeRange resultTypes, ::mlir::ValueRange operands, ::llvm::ArrayRef<::mlir::NamedAttribute> attributes = {});
+     static ArithMaxOp create(::mlir::ImplicitLocOpBuilder &builder, ::mlir::TypeRange resultTypes, ::mlir::ValueRange operands, ::llvm::ArrayRef<::mlir::NamedAttribute> attributes = {});
+     static void build(::mlir::OpBuilder &odsBuilder, ::mlir::OperationState &odsState, ::mlir::ValueRange operands, ::llvm::ArrayRef<::mlir::NamedAttribute> attributes = {});
+     static ArithMaxOp create(::mlir::OpBuilder &builder, ::mlir::Location location, ::mlir::ValueRange operands, ::llvm::ArrayRef<::mlir::NamedAttribute> attributes = {});
+     static ArithMaxOp create(::mlir::ImplicitLocOpBuilder &builder, ::mlir::ValueRange operands, ::llvm::ArrayRef<::mlir::NamedAttribute> attributes = {});
+     static void build(::mlir::OpBuilder &, ::mlir::OperationState &odsState, ::mlir::TypeRange resultTypes, ::mlir::ValueRange operands, const Properties &properties, ::llvm::ArrayRef<::mlir::NamedAttribute> discardableAttributes = {});
+     static ArithMaxOp create(::mlir::OpBuilder &builder, ::mlir::Location location, ::mlir::TypeRange resultTypes, ::mlir::ValueRange operands, const Properties &properties, ::llvm::ArrayRef<::mlir::NamedAttribute> discardableAttributes = {});
+     static ArithMaxOp create(::mlir::ImplicitLocOpBuilder &builder, ::mlir::TypeRange resultTypes, ::mlir::ValueRange operands, const Properties &properties, ::llvm::ArrayRef<::mlir::NamedAttribute> discardableAttributes = {});
+     static void build(::mlir::OpBuilder &odsBuilder, ::mlir::OperationState &odsState, ::mlir::ValueRange operands, const Properties &properties, ::llvm::ArrayRef<::mlir::NamedAttribute> discardableAttributes = {});
+     static ArithMaxOp create(::mlir::OpBuilder &builder, ::mlir::Location location, ::mlir::ValueRange operands, const Properties &properties, ::llvm::ArrayRef<::mlir::NamedAttribute> discardableAttributes = {});
+     static ArithMaxOp create(::mlir::ImplicitLocOpBuilder &builder, ::mlir::ValueRange operands, const Properties &properties, ::llvm::ArrayRef<::mlir::NamedAttribute> discardableAttributes = {});
+     ::llvm::LogicalResult verifyInvariantsImpl();
+     ::llvm::LogicalResult verifyInvariants();
+     static ::llvm::LogicalResult inferReturnTypes(::mlir::MLIRContext *context, ::std::optional<::mlir::Location> location, ::mlir::ValueRange operands, ::mlir::DictionaryAttr attributes, ::mlir::PropertyRef properties, ::mlir::RegionRange regions, ::llvm::SmallVectorImpl<::mlir::Type>&inferredReturnTypes);
+     static ::mlir::ParseResult parse(::mlir::OpAsmParser &parser, ::mlir::OperationState &result);
+     void print(::mlir::OpAsmPrinter &_odsPrinter);
+     void getEffects(::llvm::SmallVectorImpl<::mlir::SideEffects::EffectInstance<::mlir::MemoryEffects::Effect>> &effects);
+   public:
+   };
+   
+   } // namespace mlir::base2
+   MLIR_DECLARE_EXPLICIT_TYPE_ID(::mlir::base2::ArithMaxOp)
+   
+   namespace mlir::base2 {
+   
+   
+   //===----------------------------------------------------------------------===//
+   // ::mlir::base2::ArithMinOp declarations
+   //===----------------------------------------------------------------------===//
+   
+   namespace detail {
+   
+   class ArithMinOpGenericAdaptorBase {
+   public:
+     using Properties = ::mlir::EmptyProperties;
+   protected:
+     ::mlir::DictionaryAttr odsAttrs;
+     ::std::optional<::mlir::OperationName> odsOpName;
+     Properties properties;
+     ::mlir::RegionRange odsRegions;
+   public:
+     ArithMinOpGenericAdaptorBase(::mlir::DictionaryAttr attrs, const Properties &properties, ::mlir::RegionRange regions = {}) : odsAttrs(attrs), properties(properties), odsRegions(regions) {  if (odsAttrs)
+         odsOpName.emplace("base2.min", odsAttrs.getContext());
+     }
+   
+     ArithMinOpGenericAdaptorBase(ArithMinOp op);
+   
+     std::pair<unsigned, unsigned> getODSOperandIndexAndLength(unsigned index, unsigned odsOperandsSize) {
+       return {index, 1};
+     }
+   
+     const Properties &getProperties() {
+       return properties;
+     }
+   
+     ::mlir::DictionaryAttr getAttributes() {
+       return odsAttrs;
+     }
+   
+   };
+   
+   } // namespace detail
+   template <typename RangeT>
+   class ArithMinOpGenericAdaptor : public detail::ArithMinOpGenericAdaptorBase {
+     using ValueT = ::llvm::detail::ValueOfRange<RangeT>;
+     using Base = detail::ArithMinOpGenericAdaptorBase;
+     static constexpr int odsIndex_lhs = 0;
+     static constexpr int odsIndex_rhs = 1;
+   public:
+     ArithMinOpGenericAdaptor(RangeT values, ::mlir::DictionaryAttr attrs, const Properties &properties, ::mlir::RegionRange regions = {}) : Base(attrs, properties, regions), odsOperands(values) {}
+   
+     ArithMinOpGenericAdaptor(RangeT values, ::mlir::DictionaryAttr attrs, ::mlir::PropertyRef properties, ::mlir::RegionRange regions = {}) : ArithMinOpGenericAdaptor(values, attrs, (properties ? *properties.as<Properties *>() : Properties{}), regions) {}
+   
+     ArithMinOpGenericAdaptor(RangeT values, ::mlir::DictionaryAttr attrs = nullptr) : ArithMinOpGenericAdaptor(values, attrs, Properties{}, {}) {}
+   
+     ArithMinOpGenericAdaptor(RangeT values, const ArithMinOpGenericAdaptorBase &base) : Base(base), odsOperands(values) {}
+   
+     template <typename LateInst = ArithMinOp, typename = std::enable_if_t<std::is_same_v<LateInst, ArithMinOp>>>
+     ArithMinOpGenericAdaptor(RangeT values, LateInst op) : Base(op), odsOperands(values) {}
+   
+     std::pair<unsigned, unsigned> getODSOperandIndexAndLength(unsigned index) {
+       return Base::getODSOperandIndexAndLength(index, odsOperands.size());
+     }
+   
+     RangeT getODSOperands(unsigned index) {
+       auto valueRange = getODSOperandIndexAndLength(index);
+       return {std::next(odsOperands.begin(), valueRange.first),
+                std::next(odsOperands.begin(), valueRange.first + valueRange.second)};
+     }
+   
+     ValueT getLhs() {
+       return (*getODSOperands(0).begin());
+     }
+   
+     ValueT getRhs() {
+       return (*getODSOperands(1).begin());
+     }
+   
+     RangeT getOperands() {
+       return odsOperands;
+     }
+   
+   private:
+     RangeT odsOperands;
+   };
+   class ArithMinOpAdaptor : public ArithMinOpGenericAdaptor<::mlir::ValueRange> {
+   public:
+     using ArithMinOpGenericAdaptor::ArithMinOpGenericAdaptor;
+     ArithMinOpAdaptor(ArithMinOp op);
+   
+     ::llvm::LogicalResult verify(::mlir::Location loc);
+   };
+   class ArithMinOp : public ::mlir::Op<ArithMinOp, ::mlir::OpTrait::ZeroRegions, ::mlir::OpTrait::OneResult, ::mlir::OpTrait::OneTypedResult<::mlir::Type>::Impl, ::mlir::OpTrait::ZeroSuccessors, ::mlir::OpTrait::NOperands<2>::Impl, ::mlir::OpTrait::OpInvariants, ::mlir::ConditionallySpeculatable::Trait, ::mlir::OpTrait::AlwaysSpeculatableImplTrait, ::mlir::MemoryEffectOpInterface::Trait, ::mlir::OpTrait::SameOperandsAndResultType, ::mlir::InferTypeOpInterface::Trait> {
+   public:
+     using Op::Op;
+     using Op::print;
+     using Adaptor = ArithMinOpAdaptor;
+     template <typename RangeT>
+     using GenericAdaptor = ArithMinOpGenericAdaptor<RangeT>;
+     using FoldAdaptor = GenericAdaptor<::llvm::ArrayRef<::mlir::Attribute>>;
+     static constexpr int odsIndex_lhs = 0;
+     static constexpr int odsIndex_rhs = 1;
+     using Properties = FoldAdaptor::Properties;
+     static ::llvm::ArrayRef<::llvm::StringRef> getAttributeNames() {
+       return {};
+     }
+   
+     static constexpr ::llvm::StringLiteral getOperationName() {
+       return ::llvm::StringLiteral("base2.min");
+     }
+   
+     std::pair<unsigned, unsigned> getODSOperandIndexAndLength(unsigned index) {
+       return {index, 1};
+     }
+   
+     ::mlir::Operation::operand_range getODSOperands(unsigned index) {
+       auto valueRange = getODSOperandIndexAndLength(index);
+       return {std::next(getOperation()->operand_begin(), valueRange.first),
+                std::next(getOperation()->operand_begin(), valueRange.first + valueRange.second)};
+     }
+   
+     ::mlir::TypedValue<::mlir::Type> getLhs() {
+       return ::llvm::cast<::mlir::TypedValue<::mlir::Type>>(*getODSOperands(0).begin());
+     }
+   
+     ::mlir::TypedValue<::mlir::Type> getRhs() {
+       return ::llvm::cast<::mlir::TypedValue<::mlir::Type>>(*getODSOperands(1).begin());
+     }
+   
+     ::mlir::OpOperand &getLhsMutable() {
+       auto range = getODSOperandIndexAndLength(0);
+       return getOperation()->getOpOperand(range.first);
+     }
+   
+     ::mlir::OpOperand &getRhsMutable() {
+       auto range = getODSOperandIndexAndLength(1);
+       return getOperation()->getOpOperand(range.first);
+     }
+   
+     std::pair<unsigned, unsigned> getODSResultIndexAndLength(unsigned index) {
+       return {index, 1};
+     }
+   
+     ::mlir::Operation::result_range getODSResults(unsigned index) {
+       auto valueRange = getODSResultIndexAndLength(index);
+       return {std::next(getOperation()->result_begin(), valueRange.first),
+                std::next(getOperation()->result_begin(), valueRange.first + valueRange.second)};
+     }
+   
+     ::mlir::TypedValue<::mlir::Type> getResult() {
+       return ::llvm::cast<::mlir::TypedValue<::mlir::Type>>(*getODSResults(0).begin());
+     }
+   
+     static ::llvm::LogicalResult setPropertiesFromAttr(Properties &prop, ::mlir::Attribute attr, ::llvm::function_ref<::mlir::InFlightDiagnostic()> emitError);
+     static ::mlir::Attribute getPropertiesAsAttr(::mlir::MLIRContext *ctx, const Properties &prop);
+     static llvm::hash_code computePropertiesHash(const Properties &prop);
+     static std::optional<mlir::Attribute> getInherentAttr(::mlir::MLIRContext *ctx, const Properties &prop, llvm::StringRef name);
+     static void setInherentAttr(Properties &prop, llvm::StringRef name, mlir::Attribute value);
+     static void populateInherentAttrs(::mlir::MLIRContext *ctx, const Properties &prop, ::mlir::NamedAttrList &attrs);
+     static ::llvm::LogicalResult verifyInherentAttrs(::mlir::OperationName opName, ::mlir::NamedAttrList &attrs, llvm::function_ref<::mlir::InFlightDiagnostic()> emitError);
+     static void build(::mlir::OpBuilder &odsBuilder, ::mlir::OperationState &odsState, ::mlir::Type result, ::mlir::Value lhs, ::mlir::Value rhs);
+     static ArithMinOp create(::mlir::OpBuilder &builder, ::mlir::Location location, ::mlir::Type result, ::mlir::Value lhs, ::mlir::Value rhs);
+     static ArithMinOp create(::mlir::ImplicitLocOpBuilder &builder, ::mlir::Type result, ::mlir::Value lhs, ::mlir::Value rhs);
+     static void build(::mlir::OpBuilder &odsBuilder, ::mlir::OperationState &odsState, ::mlir::Value lhs, ::mlir::Value rhs);
+     static ArithMinOp create(::mlir::OpBuilder &builder, ::mlir::Location location, ::mlir::Value lhs, ::mlir::Value rhs);
+     static ArithMinOp create(::mlir::ImplicitLocOpBuilder &builder, ::mlir::Value lhs, ::mlir::Value rhs);
+     static void build(::mlir::OpBuilder &odsBuilder, ::mlir::OperationState &odsState, ::mlir::TypeRange resultTypes, ::mlir::Value lhs, ::mlir::Value rhs);
+     static ArithMinOp create(::mlir::OpBuilder &builder, ::mlir::Location location, ::mlir::TypeRange resultTypes, ::mlir::Value lhs, ::mlir::Value rhs);
+     static ArithMinOp create(::mlir::ImplicitLocOpBuilder &builder, ::mlir::TypeRange resultTypes, ::mlir::Value lhs, ::mlir::Value rhs);
+     static void build(::mlir::OpBuilder &, ::mlir::OperationState &odsState, ::mlir::TypeRange resultTypes, ::mlir::ValueRange operands, ::llvm::ArrayRef<::mlir::NamedAttribute> attributes = {});
+     static ArithMinOp create(::mlir::OpBuilder &builder, ::mlir::Location location, ::mlir::TypeRange resultTypes, ::mlir::ValueRange operands, ::llvm::ArrayRef<::mlir::NamedAttribute> attributes = {});
+     static ArithMinOp create(::mlir::ImplicitLocOpBuilder &builder, ::mlir::TypeRange resultTypes, ::mlir::ValueRange operands, ::llvm::ArrayRef<::mlir::NamedAttribute> attributes = {});
+     static void build(::mlir::OpBuilder &odsBuilder, ::mlir::OperationState &odsState, ::mlir::ValueRange operands, ::llvm::ArrayRef<::mlir::NamedAttribute> attributes = {});
+     static ArithMinOp create(::mlir::OpBuilder &builder, ::mlir::Location location, ::mlir::ValueRange operands, ::llvm::ArrayRef<::mlir::NamedAttribute> attributes = {});
+     static ArithMinOp create(::mlir::ImplicitLocOpBuilder &builder, ::mlir::ValueRange operands, ::llvm::ArrayRef<::mlir::NamedAttribute> attributes = {});
+     static void build(::mlir::OpBuilder &, ::mlir::OperationState &odsState, ::mlir::TypeRange resultTypes, ::mlir::ValueRange operands, const Properties &properties, ::llvm::ArrayRef<::mlir::NamedAttribute> discardableAttributes = {});
+     static ArithMinOp create(::mlir::OpBuilder &builder, ::mlir::Location location, ::mlir::TypeRange resultTypes, ::mlir::ValueRange operands, const Properties &properties, ::llvm::ArrayRef<::mlir::NamedAttribute> discardableAttributes = {});
+     static ArithMinOp create(::mlir::ImplicitLocOpBuilder &builder, ::mlir::TypeRange resultTypes, ::mlir::ValueRange operands, const Properties &properties, ::llvm::ArrayRef<::mlir::NamedAttribute> discardableAttributes = {});
+     static void build(::mlir::OpBuilder &odsBuilder, ::mlir::OperationState &odsState, ::mlir::ValueRange operands, const Properties &properties, ::llvm::ArrayRef<::mlir::NamedAttribute> discardableAttributes = {});
+     static ArithMinOp create(::mlir::OpBuilder &builder, ::mlir::Location location, ::mlir::ValueRange operands, const Properties &properties, ::llvm::ArrayRef<::mlir::NamedAttribute> discardableAttributes = {});
+     static ArithMinOp create(::mlir::ImplicitLocOpBuilder &builder, ::mlir::ValueRange operands, const Properties &properties, ::llvm::ArrayRef<::mlir::NamedAttribute> discardableAttributes = {});
+     ::llvm::LogicalResult verifyInvariantsImpl();
+     ::llvm::LogicalResult verifyInvariants();
+     static ::llvm::LogicalResult inferReturnTypes(::mlir::MLIRContext *context, ::std::optional<::mlir::Location> location, ::mlir::ValueRange operands, ::mlir::DictionaryAttr attributes, ::mlir::PropertyRef properties, ::mlir::RegionRange regions, ::llvm::SmallVectorImpl<::mlir::Type>&inferredReturnTypes);
+     static ::mlir::ParseResult parse(::mlir::OpAsmParser &parser, ::mlir::OperationState &result);
+     void print(::mlir::OpAsmPrinter &_odsPrinter);
+     void getEffects(::llvm::SmallVectorImpl<::mlir::SideEffects::EffectInstance<::mlir::MemoryEffects::Effect>> &effects);
+   public:
+   };
+   
+   } // namespace mlir::base2
+   MLIR_DECLARE_EXPLICIT_TYPE_ID(::mlir::base2::ArithMinOp)
+   
+   namespace mlir::base2 {
+   
+   
+   //===----------------------------------------------------------------------===//
+   // ::mlir::base2::ArithMulOp declarations
+   //===----------------------------------------------------------------------===//
+   
+   namespace detail {
+   
+   class ArithMulOpGenericAdaptorBase {
+   public:
+     using Properties = ::mlir::EmptyProperties;
+   protected:
+     ::mlir::DictionaryAttr odsAttrs;
+     ::std::optional<::mlir::OperationName> odsOpName;
+     Properties properties;
+     ::mlir::RegionRange odsRegions;
+   public:
+     ArithMulOpGenericAdaptorBase(::mlir::DictionaryAttr attrs, const Properties &properties, ::mlir::RegionRange regions = {}) : odsAttrs(attrs), properties(properties), odsRegions(regions) {  if (odsAttrs)
+         odsOpName.emplace("base2.mul", odsAttrs.getContext());
+     }
+   
+     ArithMulOpGenericAdaptorBase(ArithMulOp op);
+   
+     std::pair<unsigned, unsigned> getODSOperandIndexAndLength(unsigned index, unsigned odsOperandsSize) {
+       return {index, 1};
+     }
+   
+     const Properties &getProperties() {
+       return properties;
+     }
+   
+     ::mlir::DictionaryAttr getAttributes() {
+       return odsAttrs;
+     }
+   
+   };
+   
+   } // namespace detail
+   template <typename RangeT>
+   class ArithMulOpGenericAdaptor : public detail::ArithMulOpGenericAdaptorBase {
+     using ValueT = ::llvm::detail::ValueOfRange<RangeT>;
+     using Base = detail::ArithMulOpGenericAdaptorBase;
+     static constexpr int odsIndex_lhs = 0;
+     static constexpr int odsIndex_rhs = 1;
+   public:
+     ArithMulOpGenericAdaptor(RangeT values, ::mlir::DictionaryAttr attrs, const Properties &properties, ::mlir::RegionRange regions = {}) : Base(attrs, properties, regions), odsOperands(values) {}
+   
+     ArithMulOpGenericAdaptor(RangeT values, ::mlir::DictionaryAttr attrs, ::mlir::PropertyRef properties, ::mlir::RegionRange regions = {}) : ArithMulOpGenericAdaptor(values, attrs, (properties ? *properties.as<Properties *>() : Properties{}), regions) {}
+   
+     ArithMulOpGenericAdaptor(RangeT values, ::mlir::DictionaryAttr attrs = nullptr) : ArithMulOpGenericAdaptor(values, attrs, Properties{}, {}) {}
+   
+     ArithMulOpGenericAdaptor(RangeT values, const ArithMulOpGenericAdaptorBase &base) : Base(base), odsOperands(values) {}
+   
+     template <typename LateInst = ArithMulOp, typename = std::enable_if_t<std::is_same_v<LateInst, ArithMulOp>>>
+     ArithMulOpGenericAdaptor(RangeT values, LateInst op) : Base(op), odsOperands(values) {}
+   
+     std::pair<unsigned, unsigned> getODSOperandIndexAndLength(unsigned index) {
+       return Base::getODSOperandIndexAndLength(index, odsOperands.size());
+     }
+   
+     RangeT getODSOperands(unsigned index) {
+       auto valueRange = getODSOperandIndexAndLength(index);
+       return {std::next(odsOperands.begin(), valueRange.first),
+                std::next(odsOperands.begin(), valueRange.first + valueRange.second)};
+     }
+   
+     ValueT getLhs() {
+       return (*getODSOperands(0).begin());
+     }
+   
+     ValueT getRhs() {
+       return (*getODSOperands(1).begin());
+     }
+   
+     RangeT getOperands() {
+       return odsOperands;
+     }
+   
+   private:
+     RangeT odsOperands;
+   };
+   class ArithMulOpAdaptor : public ArithMulOpGenericAdaptor<::mlir::ValueRange> {
+   public:
+     using ArithMulOpGenericAdaptor::ArithMulOpGenericAdaptor;
+     ArithMulOpAdaptor(ArithMulOp op);
+   
+     ::llvm::LogicalResult verify(::mlir::Location loc);
+   };
+   class ArithMulOp : public ::mlir::Op<ArithMulOp, ::mlir::OpTrait::ZeroRegions, ::mlir::OpTrait::OneResult, ::mlir::OpTrait::OneTypedResult<::mlir::Type>::Impl, ::mlir::OpTrait::ZeroSuccessors, ::mlir::OpTrait::NOperands<2>::Impl, ::mlir::OpTrait::OpInvariants, ::mlir::ConditionallySpeculatable::Trait, ::mlir::OpTrait::AlwaysSpeculatableImplTrait, ::mlir::MemoryEffectOpInterface::Trait, ::mlir::OpTrait::SameOperandsAndResultType, ::mlir::InferTypeOpInterface::Trait> {
+   public:
+     using Op::Op;
+     using Op::print;
+     using Adaptor = ArithMulOpAdaptor;
+     template <typename RangeT>
+     using GenericAdaptor = ArithMulOpGenericAdaptor<RangeT>;
+     using FoldAdaptor = GenericAdaptor<::llvm::ArrayRef<::mlir::Attribute>>;
+     static constexpr int odsIndex_lhs = 0;
+     static constexpr int odsIndex_rhs = 1;
+     using Properties = FoldAdaptor::Properties;
+     static ::llvm::ArrayRef<::llvm::StringRef> getAttributeNames() {
+       return {};
+     }
+   
+     static constexpr ::llvm::StringLiteral getOperationName() {
+       return ::llvm::StringLiteral("base2.mul");
+     }
+   
+     std::pair<unsigned, unsigned> getODSOperandIndexAndLength(unsigned index) {
+       return {index, 1};
+     }
+   
+     ::mlir::Operation::operand_range getODSOperands(unsigned index) {
+       auto valueRange = getODSOperandIndexAndLength(index);
+       return {std::next(getOperation()->operand_begin(), valueRange.first),
+                std::next(getOperation()->operand_begin(), valueRange.first + valueRange.second)};
+     }
+   
+     ::mlir::TypedValue<::mlir::Type> getLhs() {
+       return ::llvm::cast<::mlir::TypedValue<::mlir::Type>>(*getODSOperands(0).begin());
+     }
+   
+     ::mlir::TypedValue<::mlir::Type> getRhs() {
+       return ::llvm::cast<::mlir::TypedValue<::mlir::Type>>(*getODSOperands(1).begin());
+     }
+   
+     ::mlir::OpOperand &getLhsMutable() {
+       auto range = getODSOperandIndexAndLength(0);
+       return getOperation()->getOpOperand(range.first);
+     }
+   
+     ::mlir::OpOperand &getRhsMutable() {
+       auto range = getODSOperandIndexAndLength(1);
+       return getOperation()->getOpOperand(range.first);
+     }
+   
+     std::pair<unsigned, unsigned> getODSResultIndexAndLength(unsigned index) {
+       return {index, 1};
+     }
+   
+     ::mlir::Operation::result_range getODSResults(unsigned index) {
+       auto valueRange = getODSResultIndexAndLength(index);
+       return {std::next(getOperation()->result_begin(), valueRange.first),
+                std::next(getOperation()->result_begin(), valueRange.first + valueRange.second)};
+     }
+   
+     ::mlir::TypedValue<::mlir::Type> getResult() {
+       return ::llvm::cast<::mlir::TypedValue<::mlir::Type>>(*getODSResults(0).begin());
+     }
+   
+     static ::llvm::LogicalResult setPropertiesFromAttr(Properties &prop, ::mlir::Attribute attr, ::llvm::function_ref<::mlir::InFlightDiagnostic()> emitError);
+     static ::mlir::Attribute getPropertiesAsAttr(::mlir::MLIRContext *ctx, const Properties &prop);
+     static llvm::hash_code computePropertiesHash(const Properties &prop);
+     static std::optional<mlir::Attribute> getInherentAttr(::mlir::MLIRContext *ctx, const Properties &prop, llvm::StringRef name);
+     static void setInherentAttr(Properties &prop, llvm::StringRef name, mlir::Attribute value);
+     static void populateInherentAttrs(::mlir::MLIRContext *ctx, const Properties &prop, ::mlir::NamedAttrList &attrs);
+     static ::llvm::LogicalResult verifyInherentAttrs(::mlir::OperationName opName, ::mlir::NamedAttrList &attrs, llvm::function_ref<::mlir::InFlightDiagnostic()> emitError);
+     static void build(::mlir::OpBuilder &odsBuilder, ::mlir::OperationState &odsState, ::mlir::Type result, ::mlir::Value lhs, ::mlir::Value rhs);
+     static ArithMulOp create(::mlir::OpBuilder &builder, ::mlir::Location location, ::mlir::Type result, ::mlir::Value lhs, ::mlir::Value rhs);
+     static ArithMulOp create(::mlir::ImplicitLocOpBuilder &builder, ::mlir::Type result, ::mlir::Value lhs, ::mlir::Value rhs);
+     static void build(::mlir::OpBuilder &odsBuilder, ::mlir::OperationState &odsState, ::mlir::Value lhs, ::mlir::Value rhs);
+     static ArithMulOp create(::mlir::OpBuilder &builder, ::mlir::Location location, ::mlir::Value lhs, ::mlir::Value rhs);
+     static ArithMulOp create(::mlir::ImplicitLocOpBuilder &builder, ::mlir::Value lhs, ::mlir::Value rhs);
+     static void build(::mlir::OpBuilder &odsBuilder, ::mlir::OperationState &odsState, ::mlir::TypeRange resultTypes, ::mlir::Value lhs, ::mlir::Value rhs);
+     static ArithMulOp create(::mlir::OpBuilder &builder, ::mlir::Location location, ::mlir::TypeRange resultTypes, ::mlir::Value lhs, ::mlir::Value rhs);
+     static ArithMulOp create(::mlir::ImplicitLocOpBuilder &builder, ::mlir::TypeRange resultTypes, ::mlir::Value lhs, ::mlir::Value rhs);
+     static void build(::mlir::OpBuilder &, ::mlir::OperationState &odsState, ::mlir::TypeRange resultTypes, ::mlir::ValueRange operands, ::llvm::ArrayRef<::mlir::NamedAttribute> attributes = {});
+     static ArithMulOp create(::mlir::OpBuilder &builder, ::mlir::Location location, ::mlir::TypeRange resultTypes, ::mlir::ValueRange operands, ::llvm::ArrayRef<::mlir::NamedAttribute> attributes = {});
+     static ArithMulOp create(::mlir::ImplicitLocOpBuilder &builder, ::mlir::TypeRange resultTypes, ::mlir::ValueRange operands, ::llvm::ArrayRef<::mlir::NamedAttribute> attributes = {});
+     static void build(::mlir::OpBuilder &odsBuilder, ::mlir::OperationState &odsState, ::mlir::ValueRange operands, ::llvm::ArrayRef<::mlir::NamedAttribute> attributes = {});
+     static ArithMulOp create(::mlir::OpBuilder &builder, ::mlir::Location location, ::mlir::ValueRange operands, ::llvm::ArrayRef<::mlir::NamedAttribute> attributes = {});
+     static ArithMulOp create(::mlir::ImplicitLocOpBuilder &builder, ::mlir::ValueRange operands, ::llvm::ArrayRef<::mlir::NamedAttribute> attributes = {});
+     static void build(::mlir::OpBuilder &, ::mlir::OperationState &odsState, ::mlir::TypeRange resultTypes, ::mlir::ValueRange operands, const Properties &properties, ::llvm::ArrayRef<::mlir::NamedAttribute> discardableAttributes = {});
+     static ArithMulOp create(::mlir::OpBuilder &builder, ::mlir::Location location, ::mlir::TypeRange resultTypes, ::mlir::ValueRange operands, const Properties &properties, ::llvm::ArrayRef<::mlir::NamedAttribute> discardableAttributes = {});
+     static ArithMulOp create(::mlir::ImplicitLocOpBuilder &builder, ::mlir::TypeRange resultTypes, ::mlir::ValueRange operands, const Properties &properties, ::llvm::ArrayRef<::mlir::NamedAttribute> discardableAttributes = {});
+     static void build(::mlir::OpBuilder &odsBuilder, ::mlir::OperationState &odsState, ::mlir::ValueRange operands, const Properties &properties, ::llvm::ArrayRef<::mlir::NamedAttribute> discardableAttributes = {});
+     static ArithMulOp create(::mlir::OpBuilder &builder, ::mlir::Location location, ::mlir::ValueRange operands, const Properties &properties, ::llvm::ArrayRef<::mlir::NamedAttribute> discardableAttributes = {});
+     static ArithMulOp create(::mlir::ImplicitLocOpBuilder &builder, ::mlir::ValueRange operands, const Properties &properties, ::llvm::ArrayRef<::mlir::NamedAttribute> discardableAttributes = {});
+     ::llvm::LogicalResult verifyInvariantsImpl();
+     ::llvm::LogicalResult verifyInvariants();
+     static ::llvm::LogicalResult inferReturnTypes(::mlir::MLIRContext *context, ::std::optional<::mlir::Location> location, ::mlir::ValueRange operands, ::mlir::DictionaryAttr attributes, ::mlir::PropertyRef properties, ::mlir::RegionRange regions, ::llvm::SmallVectorImpl<::mlir::Type>&inferredReturnTypes);
+     static ::mlir::ParseResult parse(::mlir::OpAsmParser &parser, ::mlir::OperationState &result);
+     void print(::mlir::OpAsmPrinter &_odsPrinter);
+     void getEffects(::llvm::SmallVectorImpl<::mlir::SideEffects::EffectInstance<::mlir::MemoryEffects::Effect>> &effects);
+   public:
+   };
+   
+   } // namespace mlir::base2
+   MLIR_DECLARE_EXPLICIT_TYPE_ID(::mlir::base2::ArithMulOp)
+   
+   namespace mlir::base2 {
+   
+   
+   //===----------------------------------------------------------------------===//
+   // ::mlir::base2::ArithOrOp declarations
+   //===----------------------------------------------------------------------===//
+   
+   namespace detail {
+   
+   class ArithOrOpGenericAdaptorBase {
+   public:
+     using Properties = ::mlir::EmptyProperties;
+   protected:
+     ::mlir::DictionaryAttr odsAttrs;
+     ::std::optional<::mlir::OperationName> odsOpName;
+     Properties properties;
+     ::mlir::RegionRange odsRegions;
+   public:
+     ArithOrOpGenericAdaptorBase(::mlir::DictionaryAttr attrs, const Properties &properties, ::mlir::RegionRange regions = {}) : odsAttrs(attrs), properties(properties), odsRegions(regions) {  if (odsAttrs)
+         odsOpName.emplace("base2.or", odsAttrs.getContext());
+     }
+   
+     ArithOrOpGenericAdaptorBase(ArithOrOp op);
+   
+     std::pair<unsigned, unsigned> getODSOperandIndexAndLength(unsigned index, unsigned odsOperandsSize) {
+       return {index, 1};
+     }
+   
+     const Properties &getProperties() {
+       return properties;
+     }
+   
+     ::mlir::DictionaryAttr getAttributes() {
+       return odsAttrs;
+     }
+   
+   };
+   
+   } // namespace detail
+   template <typename RangeT>
+   class ArithOrOpGenericAdaptor : public detail::ArithOrOpGenericAdaptorBase {
+     using ValueT = ::llvm::detail::ValueOfRange<RangeT>;
+     using Base = detail::ArithOrOpGenericAdaptorBase;
+     static constexpr int odsIndex_lhs = 0;
+     static constexpr int odsIndex_rhs = 1;
+   public:
+     ArithOrOpGenericAdaptor(RangeT values, ::mlir::DictionaryAttr attrs, const Properties &properties, ::mlir::RegionRange regions = {}) : Base(attrs, properties, regions), odsOperands(values) {}
+   
+     ArithOrOpGenericAdaptor(RangeT values, ::mlir::DictionaryAttr attrs, ::mlir::PropertyRef properties, ::mlir::RegionRange regions = {}) : ArithOrOpGenericAdaptor(values, attrs, (properties ? *properties.as<Properties *>() : Properties{}), regions) {}
+   
+     ArithOrOpGenericAdaptor(RangeT values, ::mlir::DictionaryAttr attrs = nullptr) : ArithOrOpGenericAdaptor(values, attrs, Properties{}, {}) {}
+   
+     ArithOrOpGenericAdaptor(RangeT values, const ArithOrOpGenericAdaptorBase &base) : Base(base), odsOperands(values) {}
+   
+     template <typename LateInst = ArithOrOp, typename = std::enable_if_t<std::is_same_v<LateInst, ArithOrOp>>>
+     ArithOrOpGenericAdaptor(RangeT values, LateInst op) : Base(op), odsOperands(values) {}
+   
+     std::pair<unsigned, unsigned> getODSOperandIndexAndLength(unsigned index) {
+       return Base::getODSOperandIndexAndLength(index, odsOperands.size());
+     }
+   
+     RangeT getODSOperands(unsigned index) {
+       auto valueRange = getODSOperandIndexAndLength(index);
+       return {std::next(odsOperands.begin(), valueRange.first),
+                std::next(odsOperands.begin(), valueRange.first + valueRange.second)};
+     }
+   
+     ValueT getLhs() {
+       return (*getODSOperands(0).begin());
+     }
+   
+     ValueT getRhs() {
+       return (*getODSOperands(1).begin());
+     }
+   
+     RangeT getOperands() {
+       return odsOperands;
+     }
+   
+   private:
+     RangeT odsOperands;
+   };
+   class ArithOrOpAdaptor : public ArithOrOpGenericAdaptor<::mlir::ValueRange> {
+   public:
+     using ArithOrOpGenericAdaptor::ArithOrOpGenericAdaptor;
+     ArithOrOpAdaptor(ArithOrOp op);
+   
+     ::llvm::LogicalResult verify(::mlir::Location loc);
+   };
+   class ArithOrOp : public ::mlir::Op<ArithOrOp, ::mlir::OpTrait::ZeroRegions, ::mlir::OpTrait::OneResult, ::mlir::OpTrait::OneTypedResult<::mlir::Type>::Impl, ::mlir::OpTrait::ZeroSuccessors, ::mlir::OpTrait::NOperands<2>::Impl, ::mlir::OpTrait::OpInvariants, ::mlir::ConditionallySpeculatable::Trait, ::mlir::OpTrait::AlwaysSpeculatableImplTrait, ::mlir::MemoryEffectOpInterface::Trait, ::mlir::OpTrait::SameOperandsAndResultType, ::mlir::InferTypeOpInterface::Trait> {
+   public:
+     using Op::Op;
+     using Op::print;
+     using Adaptor = ArithOrOpAdaptor;
+     template <typename RangeT>
+     using GenericAdaptor = ArithOrOpGenericAdaptor<RangeT>;
+     using FoldAdaptor = GenericAdaptor<::llvm::ArrayRef<::mlir::Attribute>>;
+     static constexpr int odsIndex_lhs = 0;
+     static constexpr int odsIndex_rhs = 1;
+     using Properties = FoldAdaptor::Properties;
+     static ::llvm::ArrayRef<::llvm::StringRef> getAttributeNames() {
+       return {};
+     }
+   
+     static constexpr ::llvm::StringLiteral getOperationName() {
+       return ::llvm::StringLiteral("base2.or");
+     }
+   
+     std::pair<unsigned, unsigned> getODSOperandIndexAndLength(unsigned index) {
+       return {index, 1};
+     }
+   
+     ::mlir::Operation::operand_range getODSOperands(unsigned index) {
+       auto valueRange = getODSOperandIndexAndLength(index);
+       return {std::next(getOperation()->operand_begin(), valueRange.first),
+                std::next(getOperation()->operand_begin(), valueRange.first + valueRange.second)};
+     }
+   
+     ::mlir::TypedValue<::mlir::Type> getLhs() {
+       return ::llvm::cast<::mlir::TypedValue<::mlir::Type>>(*getODSOperands(0).begin());
+     }
+   
+     ::mlir::TypedValue<::mlir::Type> getRhs() {
+       return ::llvm::cast<::mlir::TypedValue<::mlir::Type>>(*getODSOperands(1).begin());
+     }
+   
+     ::mlir::OpOperand &getLhsMutable() {
+       auto range = getODSOperandIndexAndLength(0);
+       return getOperation()->getOpOperand(range.first);
+     }
+   
+     ::mlir::OpOperand &getRhsMutable() {
+       auto range = getODSOperandIndexAndLength(1);
+       return getOperation()->getOpOperand(range.first);
+     }
+   
+     std::pair<unsigned, unsigned> getODSResultIndexAndLength(unsigned index) {
+       return {index, 1};
+     }
+   
+     ::mlir::Operation::result_range getODSResults(unsigned index) {
+       auto valueRange = getODSResultIndexAndLength(index);
+       return {std::next(getOperation()->result_begin(), valueRange.first),
+                std::next(getOperation()->result_begin(), valueRange.first + valueRange.second)};
+     }
+   
+     ::mlir::TypedValue<::mlir::Type> getResult() {
+       return ::llvm::cast<::mlir::TypedValue<::mlir::Type>>(*getODSResults(0).begin());
+     }
+   
+     static ::llvm::LogicalResult setPropertiesFromAttr(Properties &prop, ::mlir::Attribute attr, ::llvm::function_ref<::mlir::InFlightDiagnostic()> emitError);
+     static ::mlir::Attribute getPropertiesAsAttr(::mlir::MLIRContext *ctx, const Properties &prop);
+     static llvm::hash_code computePropertiesHash(const Properties &prop);
+     static std::optional<mlir::Attribute> getInherentAttr(::mlir::MLIRContext *ctx, const Properties &prop, llvm::StringRef name);
+     static void setInherentAttr(Properties &prop, llvm::StringRef name, mlir::Attribute value);
+     static void populateInherentAttrs(::mlir::MLIRContext *ctx, const Properties &prop, ::mlir::NamedAttrList &attrs);
+     static ::llvm::LogicalResult verifyInherentAttrs(::mlir::OperationName opName, ::mlir::NamedAttrList &attrs, llvm::function_ref<::mlir::InFlightDiagnostic()> emitError);
+     static void build(::mlir::OpBuilder &odsBuilder, ::mlir::OperationState &odsState, ::mlir::Type result, ::mlir::Value lhs, ::mlir::Value rhs);
+     static ArithOrOp create(::mlir::OpBuilder &builder, ::mlir::Location location, ::mlir::Type result, ::mlir::Value lhs, ::mlir::Value rhs);
+     static ArithOrOp create(::mlir::ImplicitLocOpBuilder &builder, ::mlir::Type result, ::mlir::Value lhs, ::mlir::Value rhs);
+     static void build(::mlir::OpBuilder &odsBuilder, ::mlir::OperationState &odsState, ::mlir::Value lhs, ::mlir::Value rhs);
+     static ArithOrOp create(::mlir::OpBuilder &builder, ::mlir::Location location, ::mlir::Value lhs, ::mlir::Value rhs);
+     static ArithOrOp create(::mlir::ImplicitLocOpBuilder &builder, ::mlir::Value lhs, ::mlir::Value rhs);
+     static void build(::mlir::OpBuilder &odsBuilder, ::mlir::OperationState &odsState, ::mlir::TypeRange resultTypes, ::mlir::Value lhs, ::mlir::Value rhs);
+     static ArithOrOp create(::mlir::OpBuilder &builder, ::mlir::Location location, ::mlir::TypeRange resultTypes, ::mlir::Value lhs, ::mlir::Value rhs);
+     static ArithOrOp create(::mlir::ImplicitLocOpBuilder &builder, ::mlir::TypeRange resultTypes, ::mlir::Value lhs, ::mlir::Value rhs);
+     static void build(::mlir::OpBuilder &, ::mlir::OperationState &odsState, ::mlir::TypeRange resultTypes, ::mlir::ValueRange operands, ::llvm::ArrayRef<::mlir::NamedAttribute> attributes = {});
+     static ArithOrOp create(::mlir::OpBuilder &builder, ::mlir::Location location, ::mlir::TypeRange resultTypes, ::mlir::ValueRange operands, ::llvm::ArrayRef<::mlir::NamedAttribute> attributes = {});
+     static ArithOrOp create(::mlir::ImplicitLocOpBuilder &builder, ::mlir::TypeRange resultTypes, ::mlir::ValueRange operands, ::llvm::ArrayRef<::mlir::NamedAttribute> attributes = {});
+     static void build(::mlir::OpBuilder &odsBuilder, ::mlir::OperationState &odsState, ::mlir::ValueRange operands, ::llvm::ArrayRef<::mlir::NamedAttribute> attributes = {});
+     static ArithOrOp create(::mlir::OpBuilder &builder, ::mlir::Location location, ::mlir::ValueRange operands, ::llvm::ArrayRef<::mlir::NamedAttribute> attributes = {});
+     static ArithOrOp create(::mlir::ImplicitLocOpBuilder &builder, ::mlir::ValueRange operands, ::llvm::ArrayRef<::mlir::NamedAttribute> attributes = {});
+     static void build(::mlir::OpBuilder &, ::mlir::OperationState &odsState, ::mlir::TypeRange resultTypes, ::mlir::ValueRange operands, const Properties &properties, ::llvm::ArrayRef<::mlir::NamedAttribute> discardableAttributes = {});
+     static ArithOrOp create(::mlir::OpBuilder &builder, ::mlir::Location location, ::mlir::TypeRange resultTypes, ::mlir::ValueRange operands, const Properties &properties, ::llvm::ArrayRef<::mlir::NamedAttribute> discardableAttributes = {});
+     static ArithOrOp create(::mlir::ImplicitLocOpBuilder &builder, ::mlir::TypeRange resultTypes, ::mlir::ValueRange operands, const Properties &properties, ::llvm::ArrayRef<::mlir::NamedAttribute> discardableAttributes = {});
+     static void build(::mlir::OpBuilder &odsBuilder, ::mlir::OperationState &odsState, ::mlir::ValueRange operands, const Properties &properties, ::llvm::ArrayRef<::mlir::NamedAttribute> discardableAttributes = {});
+     static ArithOrOp create(::mlir::OpBuilder &builder, ::mlir::Location location, ::mlir::ValueRange operands, const Properties &properties, ::llvm::ArrayRef<::mlir::NamedAttribute> discardableAttributes = {});
+     static ArithOrOp create(::mlir::ImplicitLocOpBuilder &builder, ::mlir::ValueRange operands, const Properties &properties, ::llvm::ArrayRef<::mlir::NamedAttribute> discardableAttributes = {});
+     ::llvm::LogicalResult verifyInvariantsImpl();
+     ::llvm::LogicalResult verifyInvariants();
+     static ::llvm::LogicalResult inferReturnTypes(::mlir::MLIRContext *context, ::std::optional<::mlir::Location> location, ::mlir::ValueRange operands, ::mlir::DictionaryAttr attributes, ::mlir::PropertyRef properties, ::mlir::RegionRange regions, ::llvm::SmallVectorImpl<::mlir::Type>&inferredReturnTypes);
+     static ::mlir::ParseResult parse(::mlir::OpAsmParser &parser, ::mlir::OperationState &result);
+     void print(::mlir::OpAsmPrinter &_odsPrinter);
+     void getEffects(::llvm::SmallVectorImpl<::mlir::SideEffects::EffectInstance<::mlir::MemoryEffects::Effect>> &effects);
+   public:
+   };
+   
+   } // namespace mlir::base2
+   MLIR_DECLARE_EXPLICIT_TYPE_ID(::mlir::base2::ArithOrOp)
+   
+   namespace mlir::base2 {
+   
+   
+   //===----------------------------------------------------------------------===//
+   // ::mlir::base2::ArithRemOp declarations
+   //===----------------------------------------------------------------------===//
+   
+   namespace detail {
+   
+   class ArithRemOpGenericAdaptorBase {
+   public:
+     using Properties = ::mlir::EmptyProperties;
+   protected:
+     ::mlir::DictionaryAttr odsAttrs;
+     ::std::optional<::mlir::OperationName> odsOpName;
+     Properties properties;
+     ::mlir::RegionRange odsRegions;
+   public:
+     ArithRemOpGenericAdaptorBase(::mlir::DictionaryAttr attrs, const Properties &properties, ::mlir::RegionRange regions = {}) : odsAttrs(attrs), properties(properties), odsRegions(regions) {  if (odsAttrs)
+         odsOpName.emplace("base2.rem", odsAttrs.getContext());
+     }
+   
+     ArithRemOpGenericAdaptorBase(ArithRemOp op);
+   
+     std::pair<unsigned, unsigned> getODSOperandIndexAndLength(unsigned index, unsigned odsOperandsSize) {
+       return {index, 1};
+     }
+   
+     const Properties &getProperties() {
+       return properties;
+     }
+   
+     ::mlir::DictionaryAttr getAttributes() {
+       return odsAttrs;
+     }
+   
+   };
+   
+   } // namespace detail
+   template <typename RangeT>
+   class ArithRemOpGenericAdaptor : public detail::ArithRemOpGenericAdaptorBase {
+     using ValueT = ::llvm::detail::ValueOfRange<RangeT>;
+     using Base = detail::ArithRemOpGenericAdaptorBase;
+     static constexpr int odsIndex_lhs = 0;
+     static constexpr int odsIndex_rhs = 1;
+   public:
+     ArithRemOpGenericAdaptor(RangeT values, ::mlir::DictionaryAttr attrs, const Properties &properties, ::mlir::RegionRange regions = {}) : Base(attrs, properties, regions), odsOperands(values) {}
+   
+     ArithRemOpGenericAdaptor(RangeT values, ::mlir::DictionaryAttr attrs, ::mlir::PropertyRef properties, ::mlir::RegionRange regions = {}) : ArithRemOpGenericAdaptor(values, attrs, (properties ? *properties.as<Properties *>() : Properties{}), regions) {}
+   
+     ArithRemOpGenericAdaptor(RangeT values, ::mlir::DictionaryAttr attrs = nullptr) : ArithRemOpGenericAdaptor(values, attrs, Properties{}, {}) {}
+   
+     ArithRemOpGenericAdaptor(RangeT values, const ArithRemOpGenericAdaptorBase &base) : Base(base), odsOperands(values) {}
+   
+     template <typename LateInst = ArithRemOp, typename = std::enable_if_t<std::is_same_v<LateInst, ArithRemOp>>>
+     ArithRemOpGenericAdaptor(RangeT values, LateInst op) : Base(op), odsOperands(values) {}
+   
+     std::pair<unsigned, unsigned> getODSOperandIndexAndLength(unsigned index) {
+       return Base::getODSOperandIndexAndLength(index, odsOperands.size());
+     }
+   
+     RangeT getODSOperands(unsigned index) {
+       auto valueRange = getODSOperandIndexAndLength(index);
+       return {std::next(odsOperands.begin(), valueRange.first),
+                std::next(odsOperands.begin(), valueRange.first + valueRange.second)};
+     }
+   
+     ValueT getLhs() {
+       return (*getODSOperands(0).begin());
+     }
+   
+     ValueT getRhs() {
+       return (*getODSOperands(1).begin());
+     }
+   
+     RangeT getOperands() {
+       return odsOperands;
+     }
+   
+   private:
+     RangeT odsOperands;
+   };
+   class ArithRemOpAdaptor : public ArithRemOpGenericAdaptor<::mlir::ValueRange> {
+   public:
+     using ArithRemOpGenericAdaptor::ArithRemOpGenericAdaptor;
+     ArithRemOpAdaptor(ArithRemOp op);
+   
+     ::llvm::LogicalResult verify(::mlir::Location loc);
+   };
+   class ArithRemOp : public ::mlir::Op<ArithRemOp, ::mlir::OpTrait::ZeroRegions, ::mlir::OpTrait::OneResult, ::mlir::OpTrait::OneTypedResult<::mlir::Type>::Impl, ::mlir::OpTrait::ZeroSuccessors, ::mlir::OpTrait::NOperands<2>::Impl, ::mlir::OpTrait::OpInvariants, ::mlir::ConditionallySpeculatable::Trait, ::mlir::OpTrait::AlwaysSpeculatableImplTrait, ::mlir::MemoryEffectOpInterface::Trait, ::mlir::OpTrait::SameOperandsAndResultType, ::mlir::InferTypeOpInterface::Trait> {
+   public:
+     using Op::Op;
+     using Op::print;
+     using Adaptor = ArithRemOpAdaptor;
+     template <typename RangeT>
+     using GenericAdaptor = ArithRemOpGenericAdaptor<RangeT>;
+     using FoldAdaptor = GenericAdaptor<::llvm::ArrayRef<::mlir::Attribute>>;
+     static constexpr int odsIndex_lhs = 0;
+     static constexpr int odsIndex_rhs = 1;
+     using Properties = FoldAdaptor::Properties;
+     static ::llvm::ArrayRef<::llvm::StringRef> getAttributeNames() {
+       return {};
+     }
+   
+     static constexpr ::llvm::StringLiteral getOperationName() {
+       return ::llvm::StringLiteral("base2.rem");
+     }
+   
+     std::pair<unsigned, unsigned> getODSOperandIndexAndLength(unsigned index) {
+       return {index, 1};
+     }
+   
+     ::mlir::Operation::operand_range getODSOperands(unsigned index) {
+       auto valueRange = getODSOperandIndexAndLength(index);
+       return {std::next(getOperation()->operand_begin(), valueRange.first),
+                std::next(getOperation()->operand_begin(), valueRange.first + valueRange.second)};
+     }
+   
+     ::mlir::TypedValue<::mlir::Type> getLhs() {
+       return ::llvm::cast<::mlir::TypedValue<::mlir::Type>>(*getODSOperands(0).begin());
+     }
+   
+     ::mlir::TypedValue<::mlir::Type> getRhs() {
+       return ::llvm::cast<::mlir::TypedValue<::mlir::Type>>(*getODSOperands(1).begin());
+     }
+   
+     ::mlir::OpOperand &getLhsMutable() {
+       auto range = getODSOperandIndexAndLength(0);
+       return getOperation()->getOpOperand(range.first);
+     }
+   
+     ::mlir::OpOperand &getRhsMutable() {
+       auto range = getODSOperandIndexAndLength(1);
+       return getOperation()->getOpOperand(range.first);
+     }
+   
+     std::pair<unsigned, unsigned> getODSResultIndexAndLength(unsigned index) {
+       return {index, 1};
+     }
+   
+     ::mlir::Operation::result_range getODSResults(unsigned index) {
+       auto valueRange = getODSResultIndexAndLength(index);
+       return {std::next(getOperation()->result_begin(), valueRange.first),
+                std::next(getOperation()->result_begin(), valueRange.first + valueRange.second)};
+     }
+   
+     ::mlir::TypedValue<::mlir::Type> getResult() {
+       return ::llvm::cast<::mlir::TypedValue<::mlir::Type>>(*getODSResults(0).begin());
+     }
+   
+     static ::llvm::LogicalResult setPropertiesFromAttr(Properties &prop, ::mlir::Attribute attr, ::llvm::function_ref<::mlir::InFlightDiagnostic()> emitError);
+     static ::mlir::Attribute getPropertiesAsAttr(::mlir::MLIRContext *ctx, const Properties &prop);
+     static llvm::hash_code computePropertiesHash(const Properties &prop);
+     static std::optional<mlir::Attribute> getInherentAttr(::mlir::MLIRContext *ctx, const Properties &prop, llvm::StringRef name);
+     static void setInherentAttr(Properties &prop, llvm::StringRef name, mlir::Attribute value);
+     static void populateInherentAttrs(::mlir::MLIRContext *ctx, const Properties &prop, ::mlir::NamedAttrList &attrs);
+     static ::llvm::LogicalResult verifyInherentAttrs(::mlir::OperationName opName, ::mlir::NamedAttrList &attrs, llvm::function_ref<::mlir::InFlightDiagnostic()> emitError);
+     static void build(::mlir::OpBuilder &odsBuilder, ::mlir::OperationState &odsState, ::mlir::Type result, ::mlir::Value lhs, ::mlir::Value rhs);
+     static ArithRemOp create(::mlir::OpBuilder &builder, ::mlir::Location location, ::mlir::Type result, ::mlir::Value lhs, ::mlir::Value rhs);
+     static ArithRemOp create(::mlir::ImplicitLocOpBuilder &builder, ::mlir::Type result, ::mlir::Value lhs, ::mlir::Value rhs);
+     static void build(::mlir::OpBuilder &odsBuilder, ::mlir::OperationState &odsState, ::mlir::Value lhs, ::mlir::Value rhs);
+     static ArithRemOp create(::mlir::OpBuilder &builder, ::mlir::Location location, ::mlir::Value lhs, ::mlir::Value rhs);
+     static ArithRemOp create(::mlir::ImplicitLocOpBuilder &builder, ::mlir::Value lhs, ::mlir::Value rhs);
+     static void build(::mlir::OpBuilder &odsBuilder, ::mlir::OperationState &odsState, ::mlir::TypeRange resultTypes, ::mlir::Value lhs, ::mlir::Value rhs);
+     static ArithRemOp create(::mlir::OpBuilder &builder, ::mlir::Location location, ::mlir::TypeRange resultTypes, ::mlir::Value lhs, ::mlir::Value rhs);
+     static ArithRemOp create(::mlir::ImplicitLocOpBuilder &builder, ::mlir::TypeRange resultTypes, ::mlir::Value lhs, ::mlir::Value rhs);
+     static void build(::mlir::OpBuilder &, ::mlir::OperationState &odsState, ::mlir::TypeRange resultTypes, ::mlir::ValueRange operands, ::llvm::ArrayRef<::mlir::NamedAttribute> attributes = {});
+     static ArithRemOp create(::mlir::OpBuilder &builder, ::mlir::Location location, ::mlir::TypeRange resultTypes, ::mlir::ValueRange operands, ::llvm::ArrayRef<::mlir::NamedAttribute> attributes = {});
+     static ArithRemOp create(::mlir::ImplicitLocOpBuilder &builder, ::mlir::TypeRange resultTypes, ::mlir::ValueRange operands, ::llvm::ArrayRef<::mlir::NamedAttribute> attributes = {});
+     static void build(::mlir::OpBuilder &odsBuilder, ::mlir::OperationState &odsState, ::mlir::ValueRange operands, ::llvm::ArrayRef<::mlir::NamedAttribute> attributes = {});
+     static ArithRemOp create(::mlir::OpBuilder &builder, ::mlir::Location location, ::mlir::ValueRange operands, ::llvm::ArrayRef<::mlir::NamedAttribute> attributes = {});
+     static ArithRemOp create(::mlir::ImplicitLocOpBuilder &builder, ::mlir::ValueRange operands, ::llvm::ArrayRef<::mlir::NamedAttribute> attributes = {});
+     static void build(::mlir::OpBuilder &, ::mlir::OperationState &odsState, ::mlir::TypeRange resultTypes, ::mlir::ValueRange operands, const Properties &properties, ::llvm::ArrayRef<::mlir::NamedAttribute> discardableAttributes = {});
+     static ArithRemOp create(::mlir::OpBuilder &builder, ::mlir::Location location, ::mlir::TypeRange resultTypes, ::mlir::ValueRange operands, const Properties &properties, ::llvm::ArrayRef<::mlir::NamedAttribute> discardableAttributes = {});
+     static ArithRemOp create(::mlir::ImplicitLocOpBuilder &builder, ::mlir::TypeRange resultTypes, ::mlir::ValueRange operands, const Properties &properties, ::llvm::ArrayRef<::mlir::NamedAttribute> discardableAttributes = {});
+     static void build(::mlir::OpBuilder &odsBuilder, ::mlir::OperationState &odsState, ::mlir::ValueRange operands, const Properties &properties, ::llvm::ArrayRef<::mlir::NamedAttribute> discardableAttributes = {});
+     static ArithRemOp create(::mlir::OpBuilder &builder, ::mlir::Location location, ::mlir::ValueRange operands, const Properties &properties, ::llvm::ArrayRef<::mlir::NamedAttribute> discardableAttributes = {});
+     static ArithRemOp create(::mlir::ImplicitLocOpBuilder &builder, ::mlir::ValueRange operands, const Properties &properties, ::llvm::ArrayRef<::mlir::NamedAttribute> discardableAttributes = {});
+     ::llvm::LogicalResult verifyInvariantsImpl();
+     ::llvm::LogicalResult verifyInvariants();
+     static ::llvm::LogicalResult inferReturnTypes(::mlir::MLIRContext *context, ::std::optional<::mlir::Location> location, ::mlir::ValueRange operands, ::mlir::DictionaryAttr attributes, ::mlir::PropertyRef properties, ::mlir::RegionRange regions, ::llvm::SmallVectorImpl<::mlir::Type>&inferredReturnTypes);
+     static ::mlir::ParseResult parse(::mlir::OpAsmParser &parser, ::mlir::OperationState &result);
+     void print(::mlir::OpAsmPrinter &_odsPrinter);
+     void getEffects(::llvm::SmallVectorImpl<::mlir::SideEffects::EffectInstance<::mlir::MemoryEffects::Effect>> &effects);
+   public:
+   };
+   
+   } // namespace mlir::base2
+   MLIR_DECLARE_EXPLICIT_TYPE_ID(::mlir::base2::ArithRemOp)
+   
+   namespace mlir::base2 {
+   
+   
+   //===----------------------------------------------------------------------===//
+   // ::mlir::base2::ArithSelectOp declarations
+   //===----------------------------------------------------------------------===//
+   
+   namespace detail {
+   
+   class ArithSelectOpGenericAdaptorBase {
+   public:
+     using Properties = ::mlir::EmptyProperties;
+   protected:
+     ::mlir::DictionaryAttr odsAttrs;
+     ::std::optional<::mlir::OperationName> odsOpName;
+     Properties properties;
+     ::mlir::RegionRange odsRegions;
+   public:
+     ArithSelectOpGenericAdaptorBase(::mlir::DictionaryAttr attrs, const Properties &properties, ::mlir::RegionRange regions = {}) : odsAttrs(attrs), properties(properties), odsRegions(regions) {  if (odsAttrs)
+         odsOpName.emplace("base2.select", odsAttrs.getContext());
+     }
+   
+     ArithSelectOpGenericAdaptorBase(ArithSelectOp op);
+   
+     std::pair<unsigned, unsigned> getODSOperandIndexAndLength(unsigned index, unsigned odsOperandsSize) {
+       return {index, 1};
+     }
+   
+     const Properties &getProperties() {
+       return properties;
+     }
+   
+     ::mlir::DictionaryAttr getAttributes() {
+       return odsAttrs;
+     }
+   
+   };
+   
+   } // namespace detail
+   template <typename RangeT>
+   class ArithSelectOpGenericAdaptor : public detail::ArithSelectOpGenericAdaptorBase {
+     using ValueT = ::llvm::detail::ValueOfRange<RangeT>;
+     using Base = detail::ArithSelectOpGenericAdaptorBase;
+     static constexpr int odsIndex_condition = 0;
+     static constexpr int odsIndex_true_value = 1;
+     static constexpr int odsIndex_false_value = 2;
+   public:
+     ArithSelectOpGenericAdaptor(RangeT values, ::mlir::DictionaryAttr attrs, const Properties &properties, ::mlir::RegionRange regions = {}) : Base(attrs, properties, regions), odsOperands(values) {}
+   
+     ArithSelectOpGenericAdaptor(RangeT values, ::mlir::DictionaryAttr attrs, ::mlir::PropertyRef properties, ::mlir::RegionRange regions = {}) : ArithSelectOpGenericAdaptor(values, attrs, (properties ? *properties.as<Properties *>() : Properties{}), regions) {}
+   
+     ArithSelectOpGenericAdaptor(RangeT values, ::mlir::DictionaryAttr attrs = nullptr) : ArithSelectOpGenericAdaptor(values, attrs, Properties{}, {}) {}
+   
+     ArithSelectOpGenericAdaptor(RangeT values, const ArithSelectOpGenericAdaptorBase &base) : Base(base), odsOperands(values) {}
+   
+     template <typename LateInst = ArithSelectOp, typename = std::enable_if_t<std::is_same_v<LateInst, ArithSelectOp>>>
+     ArithSelectOpGenericAdaptor(RangeT values, LateInst op) : Base(op), odsOperands(values) {}
+   
+     std::pair<unsigned, unsigned> getODSOperandIndexAndLength(unsigned index) {
+       return Base::getODSOperandIndexAndLength(index, odsOperands.size());
+     }
+   
+     RangeT getODSOperands(unsigned index) {
+       auto valueRange = getODSOperandIndexAndLength(index);
+       return {std::next(odsOperands.begin(), valueRange.first),
+                std::next(odsOperands.begin(), valueRange.first + valueRange.second)};
+     }
+   
+     ValueT getCondition() {
+       return (*getODSOperands(0).begin());
+     }
+   
+     ValueT getTrueValue() {
+       return (*getODSOperands(1).begin());
+     }
+   
+     ValueT getFalseValue() {
+       return (*getODSOperands(2).begin());
+     }
+   
+     RangeT getOperands() {
+       return odsOperands;
+     }
+   
+   private:
+     RangeT odsOperands;
+   };
+   class ArithSelectOpAdaptor : public ArithSelectOpGenericAdaptor<::mlir::ValueRange> {
+   public:
+     using ArithSelectOpGenericAdaptor::ArithSelectOpGenericAdaptor;
+     ArithSelectOpAdaptor(ArithSelectOp op);
+   
+     ::llvm::LogicalResult verify(::mlir::Location loc);
+   };
+   class ArithSelectOp : public ::mlir::Op<ArithSelectOp, ::mlir::OpTrait::ZeroRegions, ::mlir::OpTrait::OneResult, ::mlir::OpTrait::OneTypedResult<::mlir::Type>::Impl, ::mlir::OpTrait::ZeroSuccessors, ::mlir::OpTrait::NOperands<3>::Impl, ::mlir::OpTrait::OpInvariants, ::mlir::ConditionallySpeculatable::Trait, ::mlir::OpTrait::AlwaysSpeculatableImplTrait, ::mlir::MemoryEffectOpInterface::Trait, ::mlir::InferTypeOpInterface::Trait> {
+   public:
+     using Op::Op;
+     using Op::print;
+     using Adaptor = ArithSelectOpAdaptor;
+     template <typename RangeT>
+     using GenericAdaptor = ArithSelectOpGenericAdaptor<RangeT>;
+     using FoldAdaptor = GenericAdaptor<::llvm::ArrayRef<::mlir::Attribute>>;
+     static constexpr int odsIndex_condition = 0;
+     static constexpr int odsIndex_true_value = 1;
+     static constexpr int odsIndex_false_value = 2;
+     using Properties = FoldAdaptor::Properties;
+     static ::llvm::ArrayRef<::llvm::StringRef> getAttributeNames() {
+       return {};
+     }
+   
+     static constexpr ::llvm::StringLiteral getOperationName() {
+       return ::llvm::StringLiteral("base2.select");
+     }
+   
+     std::pair<unsigned, unsigned> getODSOperandIndexAndLength(unsigned index) {
+       return {index, 1};
+     }
+   
+     ::mlir::Operation::operand_range getODSOperands(unsigned index) {
+       auto valueRange = getODSOperandIndexAndLength(index);
+       return {std::next(getOperation()->operand_begin(), valueRange.first),
+                std::next(getOperation()->operand_begin(), valueRange.first + valueRange.second)};
+     }
+   
+     ::mlir::TypedValue<::mlir::IntegerType> getCondition() {
+       return ::llvm::cast<::mlir::TypedValue<::mlir::IntegerType>>(*getODSOperands(0).begin());
+     }
+   
+     ::mlir::TypedValue<::mlir::Type> getTrueValue() {
+       return ::llvm::cast<::mlir::TypedValue<::mlir::Type>>(*getODSOperands(1).begin());
+     }
+   
+     ::mlir::TypedValue<::mlir::Type> getFalseValue() {
+       return ::llvm::cast<::mlir::TypedValue<::mlir::Type>>(*getODSOperands(2).begin());
+     }
+   
+     ::mlir::OpOperand &getConditionMutable() {
+       auto range = getODSOperandIndexAndLength(0);
+       return getOperation()->getOpOperand(range.first);
+     }
+   
+     ::mlir::OpOperand &getTrueValueMutable() {
+       auto range = getODSOperandIndexAndLength(1);
+       return getOperation()->getOpOperand(range.first);
+     }
+   
+     ::mlir::OpOperand &getFalseValueMutable() {
+       auto range = getODSOperandIndexAndLength(2);
+       return getOperation()->getOpOperand(range.first);
+     }
+   
+     std::pair<unsigned, unsigned> getODSResultIndexAndLength(unsigned index) {
+       return {index, 1};
+     }
+   
+     ::mlir::Operation::result_range getODSResults(unsigned index) {
+       auto valueRange = getODSResultIndexAndLength(index);
+       return {std::next(getOperation()->result_begin(), valueRange.first),
+                std::next(getOperation()->result_begin(), valueRange.first + valueRange.second)};
+     }
+   
+     ::mlir::TypedValue<::mlir::Type> getResult() {
+       return ::llvm::cast<::mlir::TypedValue<::mlir::Type>>(*getODSResults(0).begin());
+     }
+   
+     static ::llvm::LogicalResult setPropertiesFromAttr(Properties &prop, ::mlir::Attribute attr, ::llvm::function_ref<::mlir::InFlightDiagnostic()> emitError);
+     static ::mlir::Attribute getPropertiesAsAttr(::mlir::MLIRContext *ctx, const Properties &prop);
+     static llvm::hash_code computePropertiesHash(const Properties &prop);
+     static std::optional<mlir::Attribute> getInherentAttr(::mlir::MLIRContext *ctx, const Properties &prop, llvm::StringRef name);
+     static void setInherentAttr(Properties &prop, llvm::StringRef name, mlir::Attribute value);
+     static void populateInherentAttrs(::mlir::MLIRContext *ctx, const Properties &prop, ::mlir::NamedAttrList &attrs);
+     static ::llvm::LogicalResult verifyInherentAttrs(::mlir::OperationName opName, ::mlir::NamedAttrList &attrs, llvm::function_ref<::mlir::InFlightDiagnostic()> emitError);
+     static void build(::mlir::OpBuilder &odsBuilder, ::mlir::OperationState &odsState, ::mlir::Type result, ::mlir::Value condition, ::mlir::Value true_value, ::mlir::Value false_value);
+     static ArithSelectOp create(::mlir::OpBuilder &builder, ::mlir::Location location, ::mlir::Type result, ::mlir::Value condition, ::mlir::Value true_value, ::mlir::Value false_value);
+     static ArithSelectOp create(::mlir::ImplicitLocOpBuilder &builder, ::mlir::Type result, ::mlir::Value condition, ::mlir::Value true_value, ::mlir::Value false_value);
+     static void build(::mlir::OpBuilder &odsBuilder, ::mlir::OperationState &odsState, ::mlir::Value condition, ::mlir::Value true_value, ::mlir::Value false_value);
+     static ArithSelectOp create(::mlir::OpBuilder &builder, ::mlir::Location location, ::mlir::Value condition, ::mlir::Value true_value, ::mlir::Value false_value);
+     static ArithSelectOp create(::mlir::ImplicitLocOpBuilder &builder, ::mlir::Value condition, ::mlir::Value true_value, ::mlir::Value false_value);
+     static void build(::mlir::OpBuilder &odsBuilder, ::mlir::OperationState &odsState, ::mlir::TypeRange resultTypes, ::mlir::Value condition, ::mlir::Value true_value, ::mlir::Value false_value);
+     static ArithSelectOp create(::mlir::OpBuilder &builder, ::mlir::Location location, ::mlir::TypeRange resultTypes, ::mlir::Value condition, ::mlir::Value true_value, ::mlir::Value false_value);
+     static ArithSelectOp create(::mlir::ImplicitLocOpBuilder &builder, ::mlir::TypeRange resultTypes, ::mlir::Value condition, ::mlir::Value true_value, ::mlir::Value false_value);
+     static void build(::mlir::OpBuilder &, ::mlir::OperationState &odsState, ::mlir::TypeRange resultTypes, ::mlir::ValueRange operands, ::llvm::ArrayRef<::mlir::NamedAttribute> attributes = {});
+     static ArithSelectOp create(::mlir::OpBuilder &builder, ::mlir::Location location, ::mlir::TypeRange resultTypes, ::mlir::ValueRange operands, ::llvm::ArrayRef<::mlir::NamedAttribute> attributes = {});
+     static ArithSelectOp create(::mlir::ImplicitLocOpBuilder &builder, ::mlir::TypeRange resultTypes, ::mlir::ValueRange operands, ::llvm::ArrayRef<::mlir::NamedAttribute> attributes = {});
+     static void build(::mlir::OpBuilder &odsBuilder, ::mlir::OperationState &odsState, ::mlir::ValueRange operands, ::llvm::ArrayRef<::mlir::NamedAttribute> attributes = {});
+     static ArithSelectOp create(::mlir::OpBuilder &builder, ::mlir::Location location, ::mlir::ValueRange operands, ::llvm::ArrayRef<::mlir::NamedAttribute> attributes = {});
+     static ArithSelectOp create(::mlir::ImplicitLocOpBuilder &builder, ::mlir::ValueRange operands, ::llvm::ArrayRef<::mlir::NamedAttribute> attributes = {});
+     static void build(::mlir::OpBuilder &, ::mlir::OperationState &odsState, ::mlir::TypeRange resultTypes, ::mlir::ValueRange operands, const Properties &properties, ::llvm::ArrayRef<::mlir::NamedAttribute> discardableAttributes = {});
+     static ArithSelectOp create(::mlir::OpBuilder &builder, ::mlir::Location location, ::mlir::TypeRange resultTypes, ::mlir::ValueRange operands, const Properties &properties, ::llvm::ArrayRef<::mlir::NamedAttribute> discardableAttributes = {});
+     static ArithSelectOp create(::mlir::ImplicitLocOpBuilder &builder, ::mlir::TypeRange resultTypes, ::mlir::ValueRange operands, const Properties &properties, ::llvm::ArrayRef<::mlir::NamedAttribute> discardableAttributes = {});
+     static void build(::mlir::OpBuilder &odsBuilder, ::mlir::OperationState &odsState, ::mlir::ValueRange operands, const Properties &properties, ::llvm::ArrayRef<::mlir::NamedAttribute> discardableAttributes = {});
+     static ArithSelectOp create(::mlir::OpBuilder &builder, ::mlir::Location location, ::mlir::ValueRange operands, const Properties &properties, ::llvm::ArrayRef<::mlir::NamedAttribute> discardableAttributes = {});
+     static ArithSelectOp create(::mlir::ImplicitLocOpBuilder &builder, ::mlir::ValueRange operands, const Properties &properties, ::llvm::ArrayRef<::mlir::NamedAttribute> discardableAttributes = {});
+     ::llvm::LogicalResult verifyInvariantsImpl();
+     ::llvm::LogicalResult verifyInvariants();
+     static ::llvm::LogicalResult inferReturnTypes(::mlir::MLIRContext *context, ::std::optional<::mlir::Location> location, ::mlir::ValueRange operands, ::mlir::DictionaryAttr attributes, ::mlir::PropertyRef properties, ::mlir::RegionRange regions, ::llvm::SmallVectorImpl<::mlir::Type>&inferredReturnTypes);
+     static ::mlir::ParseResult parse(::mlir::OpAsmParser &parser, ::mlir::OperationState &result);
+     void print(::mlir::OpAsmPrinter &_odsPrinter);
+     void getEffects(::llvm::SmallVectorImpl<::mlir::SideEffects::EffectInstance<::mlir::MemoryEffects::Effect>> &effects);
+   public:
+   };
+   
+   } // namespace mlir::base2
+   MLIR_DECLARE_EXPLICIT_TYPE_ID(::mlir::base2::ArithSelectOp)
+   
+   namespace mlir::base2 {
+   
+   
+   //===----------------------------------------------------------------------===//
+   // ::mlir::base2::ArithShlOp declarations
+   //===----------------------------------------------------------------------===//
+   
+   namespace detail {
+   
+   class ArithShlOpGenericAdaptorBase {
+   public:
+     using Properties = ::mlir::EmptyProperties;
+   protected:
+     ::mlir::DictionaryAttr odsAttrs;
+     ::std::optional<::mlir::OperationName> odsOpName;
+     Properties properties;
+     ::mlir::RegionRange odsRegions;
+   public:
+     ArithShlOpGenericAdaptorBase(::mlir::DictionaryAttr attrs, const Properties &properties, ::mlir::RegionRange regions = {}) : odsAttrs(attrs), properties(properties), odsRegions(regions) {  if (odsAttrs)
+         odsOpName.emplace("base2.shl", odsAttrs.getContext());
+     }
+   
+     ArithShlOpGenericAdaptorBase(ArithShlOp op);
+   
+     std::pair<unsigned, unsigned> getODSOperandIndexAndLength(unsigned index, unsigned odsOperandsSize) {
+       return {index, 1};
+     }
+   
+     const Properties &getProperties() {
+       return properties;
+     }
+   
+     ::mlir::DictionaryAttr getAttributes() {
+       return odsAttrs;
+     }
+   
+   };
+   
+   } // namespace detail
+   template <typename RangeT>
+   class ArithShlOpGenericAdaptor : public detail::ArithShlOpGenericAdaptorBase {
+     using ValueT = ::llvm::detail::ValueOfRange<RangeT>;
+     using Base = detail::ArithShlOpGenericAdaptorBase;
+     static constexpr int odsIndex_lhs = 0;
+     static constexpr int odsIndex_rhs = 1;
+   public:
+     ArithShlOpGenericAdaptor(RangeT values, ::mlir::DictionaryAttr attrs, const Properties &properties, ::mlir::RegionRange regions = {}) : Base(attrs, properties, regions), odsOperands(values) {}
+   
+     ArithShlOpGenericAdaptor(RangeT values, ::mlir::DictionaryAttr attrs, ::mlir::PropertyRef properties, ::mlir::RegionRange regions = {}) : ArithShlOpGenericAdaptor(values, attrs, (properties ? *properties.as<Properties *>() : Properties{}), regions) {}
+   
+     ArithShlOpGenericAdaptor(RangeT values, ::mlir::DictionaryAttr attrs = nullptr) : ArithShlOpGenericAdaptor(values, attrs, Properties{}, {}) {}
+   
+     ArithShlOpGenericAdaptor(RangeT values, const ArithShlOpGenericAdaptorBase &base) : Base(base), odsOperands(values) {}
+   
+     template <typename LateInst = ArithShlOp, typename = std::enable_if_t<std::is_same_v<LateInst, ArithShlOp>>>
+     ArithShlOpGenericAdaptor(RangeT values, LateInst op) : Base(op), odsOperands(values) {}
+   
+     std::pair<unsigned, unsigned> getODSOperandIndexAndLength(unsigned index) {
+       return Base::getODSOperandIndexAndLength(index, odsOperands.size());
+     }
+   
+     RangeT getODSOperands(unsigned index) {
+       auto valueRange = getODSOperandIndexAndLength(index);
+       return {std::next(odsOperands.begin(), valueRange.first),
+                std::next(odsOperands.begin(), valueRange.first + valueRange.second)};
+     }
+   
+     ValueT getLhs() {
+       return (*getODSOperands(0).begin());
+     }
+   
+     ValueT getRhs() {
+       return (*getODSOperands(1).begin());
+     }
+   
+     RangeT getOperands() {
+       return odsOperands;
+     }
+   
+   private:
+     RangeT odsOperands;
+   };
+   class ArithShlOpAdaptor : public ArithShlOpGenericAdaptor<::mlir::ValueRange> {
+   public:
+     using ArithShlOpGenericAdaptor::ArithShlOpGenericAdaptor;
+     ArithShlOpAdaptor(ArithShlOp op);
+   
+     ::llvm::LogicalResult verify(::mlir::Location loc);
+   };
+   class ArithShlOp : public ::mlir::Op<ArithShlOp, ::mlir::OpTrait::ZeroRegions, ::mlir::OpTrait::OneResult, ::mlir::OpTrait::OneTypedResult<::mlir::Type>::Impl, ::mlir::OpTrait::ZeroSuccessors, ::mlir::OpTrait::NOperands<2>::Impl, ::mlir::OpTrait::OpInvariants, ::mlir::ConditionallySpeculatable::Trait, ::mlir::OpTrait::AlwaysSpeculatableImplTrait, ::mlir::MemoryEffectOpInterface::Trait, ::mlir::OpTrait::SameOperandsAndResultType, ::mlir::InferTypeOpInterface::Trait> {
+   public:
+     using Op::Op;
+     using Op::print;
+     using Adaptor = ArithShlOpAdaptor;
+     template <typename RangeT>
+     using GenericAdaptor = ArithShlOpGenericAdaptor<RangeT>;
+     using FoldAdaptor = GenericAdaptor<::llvm::ArrayRef<::mlir::Attribute>>;
+     static constexpr int odsIndex_lhs = 0;
+     static constexpr int odsIndex_rhs = 1;
+     using Properties = FoldAdaptor::Properties;
+     static ::llvm::ArrayRef<::llvm::StringRef> getAttributeNames() {
+       return {};
+     }
+   
+     static constexpr ::llvm::StringLiteral getOperationName() {
+       return ::llvm::StringLiteral("base2.shl");
+     }
+   
+     std::pair<unsigned, unsigned> getODSOperandIndexAndLength(unsigned index) {
+       return {index, 1};
+     }
+   
+     ::mlir::Operation::operand_range getODSOperands(unsigned index) {
+       auto valueRange = getODSOperandIndexAndLength(index);
+       return {std::next(getOperation()->operand_begin(), valueRange.first),
+                std::next(getOperation()->operand_begin(), valueRange.first + valueRange.second)};
+     }
+   
+     ::mlir::TypedValue<::mlir::Type> getLhs() {
+       return ::llvm::cast<::mlir::TypedValue<::mlir::Type>>(*getODSOperands(0).begin());
+     }
+   
+     ::mlir::TypedValue<::mlir::Type> getRhs() {
+       return ::llvm::cast<::mlir::TypedValue<::mlir::Type>>(*getODSOperands(1).begin());
+     }
+   
+     ::mlir::OpOperand &getLhsMutable() {
+       auto range = getODSOperandIndexAndLength(0);
+       return getOperation()->getOpOperand(range.first);
+     }
+   
+     ::mlir::OpOperand &getRhsMutable() {
+       auto range = getODSOperandIndexAndLength(1);
+       return getOperation()->getOpOperand(range.first);
+     }
+   
+     std::pair<unsigned, unsigned> getODSResultIndexAndLength(unsigned index) {
+       return {index, 1};
+     }
+   
+     ::mlir::Operation::result_range getODSResults(unsigned index) {
+       auto valueRange = getODSResultIndexAndLength(index);
+       return {std::next(getOperation()->result_begin(), valueRange.first),
+                std::next(getOperation()->result_begin(), valueRange.first + valueRange.second)};
+     }
+   
+     ::mlir::TypedValue<::mlir::Type> getResult() {
+       return ::llvm::cast<::mlir::TypedValue<::mlir::Type>>(*getODSResults(0).begin());
+     }
+   
+     static ::llvm::LogicalResult setPropertiesFromAttr(Properties &prop, ::mlir::Attribute attr, ::llvm::function_ref<::mlir::InFlightDiagnostic()> emitError);
+     static ::mlir::Attribute getPropertiesAsAttr(::mlir::MLIRContext *ctx, const Properties &prop);
+     static llvm::hash_code computePropertiesHash(const Properties &prop);
+     static std::optional<mlir::Attribute> getInherentAttr(::mlir::MLIRContext *ctx, const Properties &prop, llvm::StringRef name);
+     static void setInherentAttr(Properties &prop, llvm::StringRef name, mlir::Attribute value);
+     static void populateInherentAttrs(::mlir::MLIRContext *ctx, const Properties &prop, ::mlir::NamedAttrList &attrs);
+     static ::llvm::LogicalResult verifyInherentAttrs(::mlir::OperationName opName, ::mlir::NamedAttrList &attrs, llvm::function_ref<::mlir::InFlightDiagnostic()> emitError);
+     static void build(::mlir::OpBuilder &odsBuilder, ::mlir::OperationState &odsState, ::mlir::Type result, ::mlir::Value lhs, ::mlir::Value rhs);
+     static ArithShlOp create(::mlir::OpBuilder &builder, ::mlir::Location location, ::mlir::Type result, ::mlir::Value lhs, ::mlir::Value rhs);
+     static ArithShlOp create(::mlir::ImplicitLocOpBuilder &builder, ::mlir::Type result, ::mlir::Value lhs, ::mlir::Value rhs);
+     static void build(::mlir::OpBuilder &odsBuilder, ::mlir::OperationState &odsState, ::mlir::Value lhs, ::mlir::Value rhs);
+     static ArithShlOp create(::mlir::OpBuilder &builder, ::mlir::Location location, ::mlir::Value lhs, ::mlir::Value rhs);
+     static ArithShlOp create(::mlir::ImplicitLocOpBuilder &builder, ::mlir::Value lhs, ::mlir::Value rhs);
+     static void build(::mlir::OpBuilder &odsBuilder, ::mlir::OperationState &odsState, ::mlir::TypeRange resultTypes, ::mlir::Value lhs, ::mlir::Value rhs);
+     static ArithShlOp create(::mlir::OpBuilder &builder, ::mlir::Location location, ::mlir::TypeRange resultTypes, ::mlir::Value lhs, ::mlir::Value rhs);
+     static ArithShlOp create(::mlir::ImplicitLocOpBuilder &builder, ::mlir::TypeRange resultTypes, ::mlir::Value lhs, ::mlir::Value rhs);
+     static void build(::mlir::OpBuilder &, ::mlir::OperationState &odsState, ::mlir::TypeRange resultTypes, ::mlir::ValueRange operands, ::llvm::ArrayRef<::mlir::NamedAttribute> attributes = {});
+     static ArithShlOp create(::mlir::OpBuilder &builder, ::mlir::Location location, ::mlir::TypeRange resultTypes, ::mlir::ValueRange operands, ::llvm::ArrayRef<::mlir::NamedAttribute> attributes = {});
+     static ArithShlOp create(::mlir::ImplicitLocOpBuilder &builder, ::mlir::TypeRange resultTypes, ::mlir::ValueRange operands, ::llvm::ArrayRef<::mlir::NamedAttribute> attributes = {});
+     static void build(::mlir::OpBuilder &odsBuilder, ::mlir::OperationState &odsState, ::mlir::ValueRange operands, ::llvm::ArrayRef<::mlir::NamedAttribute> attributes = {});
+     static ArithShlOp create(::mlir::OpBuilder &builder, ::mlir::Location location, ::mlir::ValueRange operands, ::llvm::ArrayRef<::mlir::NamedAttribute> attributes = {});
+     static ArithShlOp create(::mlir::ImplicitLocOpBuilder &builder, ::mlir::ValueRange operands, ::llvm::ArrayRef<::mlir::NamedAttribute> attributes = {});
+     static void build(::mlir::OpBuilder &, ::mlir::OperationState &odsState, ::mlir::TypeRange resultTypes, ::mlir::ValueRange operands, const Properties &properties, ::llvm::ArrayRef<::mlir::NamedAttribute> discardableAttributes = {});
+     static ArithShlOp create(::mlir::OpBuilder &builder, ::mlir::Location location, ::mlir::TypeRange resultTypes, ::mlir::ValueRange operands, const Properties &properties, ::llvm::ArrayRef<::mlir::NamedAttribute> discardableAttributes = {});
+     static ArithShlOp create(::mlir::ImplicitLocOpBuilder &builder, ::mlir::TypeRange resultTypes, ::mlir::ValueRange operands, const Properties &properties, ::llvm::ArrayRef<::mlir::NamedAttribute> discardableAttributes = {});
+     static void build(::mlir::OpBuilder &odsBuilder, ::mlir::OperationState &odsState, ::mlir::ValueRange operands, const Properties &properties, ::llvm::ArrayRef<::mlir::NamedAttribute> discardableAttributes = {});
+     static ArithShlOp create(::mlir::OpBuilder &builder, ::mlir::Location location, ::mlir::ValueRange operands, const Properties &properties, ::llvm::ArrayRef<::mlir::NamedAttribute> discardableAttributes = {});
+     static ArithShlOp create(::mlir::ImplicitLocOpBuilder &builder, ::mlir::ValueRange operands, const Properties &properties, ::llvm::ArrayRef<::mlir::NamedAttribute> discardableAttributes = {});
+     ::llvm::LogicalResult verifyInvariantsImpl();
+     ::llvm::LogicalResult verifyInvariants();
+     static ::llvm::LogicalResult inferReturnTypes(::mlir::MLIRContext *context, ::std::optional<::mlir::Location> location, ::mlir::ValueRange operands, ::mlir::DictionaryAttr attributes, ::mlir::PropertyRef properties, ::mlir::RegionRange regions, ::llvm::SmallVectorImpl<::mlir::Type>&inferredReturnTypes);
+     static ::mlir::ParseResult parse(::mlir::OpAsmParser &parser, ::mlir::OperationState &result);
+     void print(::mlir::OpAsmPrinter &_odsPrinter);
+     void getEffects(::llvm::SmallVectorImpl<::mlir::SideEffects::EffectInstance<::mlir::MemoryEffects::Effect>> &effects);
+   public:
+   };
+   
+   } // namespace mlir::base2
+   MLIR_DECLARE_EXPLICIT_TYPE_ID(::mlir::base2::ArithShlOp)
+   
+   namespace mlir::base2 {
+   
+   
+   //===----------------------------------------------------------------------===//
+   // ::mlir::base2::ArithShrOp declarations
+   //===----------------------------------------------------------------------===//
+   
+   namespace detail {
+   
+   class ArithShrOpGenericAdaptorBase {
+   public:
+     using Properties = ::mlir::EmptyProperties;
+   protected:
+     ::mlir::DictionaryAttr odsAttrs;
+     ::std::optional<::mlir::OperationName> odsOpName;
+     Properties properties;
+     ::mlir::RegionRange odsRegions;
+   public:
+     ArithShrOpGenericAdaptorBase(::mlir::DictionaryAttr attrs, const Properties &properties, ::mlir::RegionRange regions = {}) : odsAttrs(attrs), properties(properties), odsRegions(regions) {  if (odsAttrs)
+         odsOpName.emplace("base2.shr", odsAttrs.getContext());
+     }
+   
+     ArithShrOpGenericAdaptorBase(ArithShrOp op);
+   
+     std::pair<unsigned, unsigned> getODSOperandIndexAndLength(unsigned index, unsigned odsOperandsSize) {
+       return {index, 1};
+     }
+   
+     const Properties &getProperties() {
+       return properties;
+     }
+   
+     ::mlir::DictionaryAttr getAttributes() {
+       return odsAttrs;
+     }
+   
+   };
+   
+   } // namespace detail
+   template <typename RangeT>
+   class ArithShrOpGenericAdaptor : public detail::ArithShrOpGenericAdaptorBase {
+     using ValueT = ::llvm::detail::ValueOfRange<RangeT>;
+     using Base = detail::ArithShrOpGenericAdaptorBase;
+     static constexpr int odsIndex_lhs = 0;
+     static constexpr int odsIndex_rhs = 1;
+   public:
+     ArithShrOpGenericAdaptor(RangeT values, ::mlir::DictionaryAttr attrs, const Properties &properties, ::mlir::RegionRange regions = {}) : Base(attrs, properties, regions), odsOperands(values) {}
+   
+     ArithShrOpGenericAdaptor(RangeT values, ::mlir::DictionaryAttr attrs, ::mlir::PropertyRef properties, ::mlir::RegionRange regions = {}) : ArithShrOpGenericAdaptor(values, attrs, (properties ? *properties.as<Properties *>() : Properties{}), regions) {}
+   
+     ArithShrOpGenericAdaptor(RangeT values, ::mlir::DictionaryAttr attrs = nullptr) : ArithShrOpGenericAdaptor(values, attrs, Properties{}, {}) {}
+   
+     ArithShrOpGenericAdaptor(RangeT values, const ArithShrOpGenericAdaptorBase &base) : Base(base), odsOperands(values) {}
+   
+     template <typename LateInst = ArithShrOp, typename = std::enable_if_t<std::is_same_v<LateInst, ArithShrOp>>>
+     ArithShrOpGenericAdaptor(RangeT values, LateInst op) : Base(op), odsOperands(values) {}
+   
+     std::pair<unsigned, unsigned> getODSOperandIndexAndLength(unsigned index) {
+       return Base::getODSOperandIndexAndLength(index, odsOperands.size());
+     }
+   
+     RangeT getODSOperands(unsigned index) {
+       auto valueRange = getODSOperandIndexAndLength(index);
+       return {std::next(odsOperands.begin(), valueRange.first),
+                std::next(odsOperands.begin(), valueRange.first + valueRange.second)};
+     }
+   
+     ValueT getLhs() {
+       return (*getODSOperands(0).begin());
+     }
+   
+     ValueT getRhs() {
+       return (*getODSOperands(1).begin());
+     }
+   
+     RangeT getOperands() {
+       return odsOperands;
+     }
+   
+   private:
+     RangeT odsOperands;
+   };
+   class ArithShrOpAdaptor : public ArithShrOpGenericAdaptor<::mlir::ValueRange> {
+   public:
+     using ArithShrOpGenericAdaptor::ArithShrOpGenericAdaptor;
+     ArithShrOpAdaptor(ArithShrOp op);
+   
+     ::llvm::LogicalResult verify(::mlir::Location loc);
+   };
+   class ArithShrOp : public ::mlir::Op<ArithShrOp, ::mlir::OpTrait::ZeroRegions, ::mlir::OpTrait::OneResult, ::mlir::OpTrait::OneTypedResult<::mlir::Type>::Impl, ::mlir::OpTrait::ZeroSuccessors, ::mlir::OpTrait::NOperands<2>::Impl, ::mlir::OpTrait::OpInvariants, ::mlir::ConditionallySpeculatable::Trait, ::mlir::OpTrait::AlwaysSpeculatableImplTrait, ::mlir::MemoryEffectOpInterface::Trait, ::mlir::OpTrait::SameOperandsAndResultType, ::mlir::InferTypeOpInterface::Trait> {
+   public:
+     using Op::Op;
+     using Op::print;
+     using Adaptor = ArithShrOpAdaptor;
+     template <typename RangeT>
+     using GenericAdaptor = ArithShrOpGenericAdaptor<RangeT>;
+     using FoldAdaptor = GenericAdaptor<::llvm::ArrayRef<::mlir::Attribute>>;
+     static constexpr int odsIndex_lhs = 0;
+     static constexpr int odsIndex_rhs = 1;
+     using Properties = FoldAdaptor::Properties;
+     static ::llvm::ArrayRef<::llvm::StringRef> getAttributeNames() {
+       return {};
+     }
+   
+     static constexpr ::llvm::StringLiteral getOperationName() {
+       return ::llvm::StringLiteral("base2.shr");
+     }
+   
+     std::pair<unsigned, unsigned> getODSOperandIndexAndLength(unsigned index) {
+       return {index, 1};
+     }
+   
+     ::mlir::Operation::operand_range getODSOperands(unsigned index) {
+       auto valueRange = getODSOperandIndexAndLength(index);
+       return {std::next(getOperation()->operand_begin(), valueRange.first),
+                std::next(getOperation()->operand_begin(), valueRange.first + valueRange.second)};
+     }
+   
+     ::mlir::TypedValue<::mlir::Type> getLhs() {
+       return ::llvm::cast<::mlir::TypedValue<::mlir::Type>>(*getODSOperands(0).begin());
+     }
+   
+     ::mlir::TypedValue<::mlir::Type> getRhs() {
+       return ::llvm::cast<::mlir::TypedValue<::mlir::Type>>(*getODSOperands(1).begin());
+     }
+   
+     ::mlir::OpOperand &getLhsMutable() {
+       auto range = getODSOperandIndexAndLength(0);
+       return getOperation()->getOpOperand(range.first);
+     }
+   
+     ::mlir::OpOperand &getRhsMutable() {
+       auto range = getODSOperandIndexAndLength(1);
+       return getOperation()->getOpOperand(range.first);
+     }
+   
+     std::pair<unsigned, unsigned> getODSResultIndexAndLength(unsigned index) {
+       return {index, 1};
+     }
+   
+     ::mlir::Operation::result_range getODSResults(unsigned index) {
+       auto valueRange = getODSResultIndexAndLength(index);
+       return {std::next(getOperation()->result_begin(), valueRange.first),
+                std::next(getOperation()->result_begin(), valueRange.first + valueRange.second)};
+     }
+   
+     ::mlir::TypedValue<::mlir::Type> getResult() {
+       return ::llvm::cast<::mlir::TypedValue<::mlir::Type>>(*getODSResults(0).begin());
+     }
+   
+     static ::llvm::LogicalResult setPropertiesFromAttr(Properties &prop, ::mlir::Attribute attr, ::llvm::function_ref<::mlir::InFlightDiagnostic()> emitError);
+     static ::mlir::Attribute getPropertiesAsAttr(::mlir::MLIRContext *ctx, const Properties &prop);
+     static llvm::hash_code computePropertiesHash(const Properties &prop);
+     static std::optional<mlir::Attribute> getInherentAttr(::mlir::MLIRContext *ctx, const Properties &prop, llvm::StringRef name);
+     static void setInherentAttr(Properties &prop, llvm::StringRef name, mlir::Attribute value);
+     static void populateInherentAttrs(::mlir::MLIRContext *ctx, const Properties &prop, ::mlir::NamedAttrList &attrs);
+     static ::llvm::LogicalResult verifyInherentAttrs(::mlir::OperationName opName, ::mlir::NamedAttrList &attrs, llvm::function_ref<::mlir::InFlightDiagnostic()> emitError);
+     static void build(::mlir::OpBuilder &odsBuilder, ::mlir::OperationState &odsState, ::mlir::Type result, ::mlir::Value lhs, ::mlir::Value rhs);
+     static ArithShrOp create(::mlir::OpBuilder &builder, ::mlir::Location location, ::mlir::Type result, ::mlir::Value lhs, ::mlir::Value rhs);
+     static ArithShrOp create(::mlir::ImplicitLocOpBuilder &builder, ::mlir::Type result, ::mlir::Value lhs, ::mlir::Value rhs);
+     static void build(::mlir::OpBuilder &odsBuilder, ::mlir::OperationState &odsState, ::mlir::Value lhs, ::mlir::Value rhs);
+     static ArithShrOp create(::mlir::OpBuilder &builder, ::mlir::Location location, ::mlir::Value lhs, ::mlir::Value rhs);
+     static ArithShrOp create(::mlir::ImplicitLocOpBuilder &builder, ::mlir::Value lhs, ::mlir::Value rhs);
+     static void build(::mlir::OpBuilder &odsBuilder, ::mlir::OperationState &odsState, ::mlir::TypeRange resultTypes, ::mlir::Value lhs, ::mlir::Value rhs);
+     static ArithShrOp create(::mlir::OpBuilder &builder, ::mlir::Location location, ::mlir::TypeRange resultTypes, ::mlir::Value lhs, ::mlir::Value rhs);
+     static ArithShrOp create(::mlir::ImplicitLocOpBuilder &builder, ::mlir::TypeRange resultTypes, ::mlir::Value lhs, ::mlir::Value rhs);
+     static void build(::mlir::OpBuilder &, ::mlir::OperationState &odsState, ::mlir::TypeRange resultTypes, ::mlir::ValueRange operands, ::llvm::ArrayRef<::mlir::NamedAttribute> attributes = {});
+     static ArithShrOp create(::mlir::OpBuilder &builder, ::mlir::Location location, ::mlir::TypeRange resultTypes, ::mlir::ValueRange operands, ::llvm::ArrayRef<::mlir::NamedAttribute> attributes = {});
+     static ArithShrOp create(::mlir::ImplicitLocOpBuilder &builder, ::mlir::TypeRange resultTypes, ::mlir::ValueRange operands, ::llvm::ArrayRef<::mlir::NamedAttribute> attributes = {});
+     static void build(::mlir::OpBuilder &odsBuilder, ::mlir::OperationState &odsState, ::mlir::ValueRange operands, ::llvm::ArrayRef<::mlir::NamedAttribute> attributes = {});
+     static ArithShrOp create(::mlir::OpBuilder &builder, ::mlir::Location location, ::mlir::ValueRange operands, ::llvm::ArrayRef<::mlir::NamedAttribute> attributes = {});
+     static ArithShrOp create(::mlir::ImplicitLocOpBuilder &builder, ::mlir::ValueRange operands, ::llvm::ArrayRef<::mlir::NamedAttribute> attributes = {});
+     static void build(::mlir::OpBuilder &, ::mlir::OperationState &odsState, ::mlir::TypeRange resultTypes, ::mlir::ValueRange operands, const Properties &properties, ::llvm::ArrayRef<::mlir::NamedAttribute> discardableAttributes = {});
+     static ArithShrOp create(::mlir::OpBuilder &builder, ::mlir::Location location, ::mlir::TypeRange resultTypes, ::mlir::ValueRange operands, const Properties &properties, ::llvm::ArrayRef<::mlir::NamedAttribute> discardableAttributes = {});
+     static ArithShrOp create(::mlir::ImplicitLocOpBuilder &builder, ::mlir::TypeRange resultTypes, ::mlir::ValueRange operands, const Properties &properties, ::llvm::ArrayRef<::mlir::NamedAttribute> discardableAttributes = {});
+     static void build(::mlir::OpBuilder &odsBuilder, ::mlir::OperationState &odsState, ::mlir::ValueRange operands, const Properties &properties, ::llvm::ArrayRef<::mlir::NamedAttribute> discardableAttributes = {});
+     static ArithShrOp create(::mlir::OpBuilder &builder, ::mlir::Location location, ::mlir::ValueRange operands, const Properties &properties, ::llvm::ArrayRef<::mlir::NamedAttribute> discardableAttributes = {});
+     static ArithShrOp create(::mlir::ImplicitLocOpBuilder &builder, ::mlir::ValueRange operands, const Properties &properties, ::llvm::ArrayRef<::mlir::NamedAttribute> discardableAttributes = {});
+     ::llvm::LogicalResult verifyInvariantsImpl();
+     ::llvm::LogicalResult verifyInvariants();
+     static ::llvm::LogicalResult inferReturnTypes(::mlir::MLIRContext *context, ::std::optional<::mlir::Location> location, ::mlir::ValueRange operands, ::mlir::DictionaryAttr attributes, ::mlir::PropertyRef properties, ::mlir::RegionRange regions, ::llvm::SmallVectorImpl<::mlir::Type>&inferredReturnTypes);
+     static ::mlir::ParseResult parse(::mlir::OpAsmParser &parser, ::mlir::OperationState &result);
+     void print(::mlir::OpAsmPrinter &_odsPrinter);
+     void getEffects(::llvm::SmallVectorImpl<::mlir::SideEffects::EffectInstance<::mlir::MemoryEffects::Effect>> &effects);
+   public:
+   };
+   
+   } // namespace mlir::base2
+   MLIR_DECLARE_EXPLICIT_TYPE_ID(::mlir::base2::ArithShrOp)
+   
+   namespace mlir::base2 {
+   
+   
+   //===----------------------------------------------------------------------===//
+   // ::mlir::base2::ArithSubOp declarations
+   //===----------------------------------------------------------------------===//
+   
+   namespace detail {
+   
+   class ArithSubOpGenericAdaptorBase {
+   public:
+     using Properties = ::mlir::EmptyProperties;
+   protected:
+     ::mlir::DictionaryAttr odsAttrs;
+     ::std::optional<::mlir::OperationName> odsOpName;
+     Properties properties;
+     ::mlir::RegionRange odsRegions;
+   public:
+     ArithSubOpGenericAdaptorBase(::mlir::DictionaryAttr attrs, const Properties &properties, ::mlir::RegionRange regions = {}) : odsAttrs(attrs), properties(properties), odsRegions(regions) {  if (odsAttrs)
+         odsOpName.emplace("base2.sub", odsAttrs.getContext());
+     }
+   
+     ArithSubOpGenericAdaptorBase(ArithSubOp op);
+   
+     std::pair<unsigned, unsigned> getODSOperandIndexAndLength(unsigned index, unsigned odsOperandsSize) {
+       return {index, 1};
+     }
+   
+     const Properties &getProperties() {
+       return properties;
+     }
+   
+     ::mlir::DictionaryAttr getAttributes() {
+       return odsAttrs;
+     }
+   
+   };
+   
+   } // namespace detail
+   template <typename RangeT>
+   class ArithSubOpGenericAdaptor : public detail::ArithSubOpGenericAdaptorBase {
+     using ValueT = ::llvm::detail::ValueOfRange<RangeT>;
+     using Base = detail::ArithSubOpGenericAdaptorBase;
+     static constexpr int odsIndex_lhs = 0;
+     static constexpr int odsIndex_rhs = 1;
+   public:
+     ArithSubOpGenericAdaptor(RangeT values, ::mlir::DictionaryAttr attrs, const Properties &properties, ::mlir::RegionRange regions = {}) : Base(attrs, properties, regions), odsOperands(values) {}
+   
+     ArithSubOpGenericAdaptor(RangeT values, ::mlir::DictionaryAttr attrs, ::mlir::PropertyRef properties, ::mlir::RegionRange regions = {}) : ArithSubOpGenericAdaptor(values, attrs, (properties ? *properties.as<Properties *>() : Properties{}), regions) {}
+   
+     ArithSubOpGenericAdaptor(RangeT values, ::mlir::DictionaryAttr attrs = nullptr) : ArithSubOpGenericAdaptor(values, attrs, Properties{}, {}) {}
+   
+     ArithSubOpGenericAdaptor(RangeT values, const ArithSubOpGenericAdaptorBase &base) : Base(base), odsOperands(values) {}
+   
+     template <typename LateInst = ArithSubOp, typename = std::enable_if_t<std::is_same_v<LateInst, ArithSubOp>>>
+     ArithSubOpGenericAdaptor(RangeT values, LateInst op) : Base(op), odsOperands(values) {}
+   
+     std::pair<unsigned, unsigned> getODSOperandIndexAndLength(unsigned index) {
+       return Base::getODSOperandIndexAndLength(index, odsOperands.size());
+     }
+   
+     RangeT getODSOperands(unsigned index) {
+       auto valueRange = getODSOperandIndexAndLength(index);
+       return {std::next(odsOperands.begin(), valueRange.first),
+                std::next(odsOperands.begin(), valueRange.first + valueRange.second)};
+     }
+   
+     ValueT getLhs() {
+       return (*getODSOperands(0).begin());
+     }
+   
+     ValueT getRhs() {
+       return (*getODSOperands(1).begin());
+     }
+   
+     RangeT getOperands() {
+       return odsOperands;
+     }
+   
+   private:
+     RangeT odsOperands;
+   };
+   class ArithSubOpAdaptor : public ArithSubOpGenericAdaptor<::mlir::ValueRange> {
+   public:
+     using ArithSubOpGenericAdaptor::ArithSubOpGenericAdaptor;
+     ArithSubOpAdaptor(ArithSubOp op);
+   
+     ::llvm::LogicalResult verify(::mlir::Location loc);
+   };
+   class ArithSubOp : public ::mlir::Op<ArithSubOp, ::mlir::OpTrait::ZeroRegions, ::mlir::OpTrait::OneResult, ::mlir::OpTrait::OneTypedResult<::mlir::Type>::Impl, ::mlir::OpTrait::ZeroSuccessors, ::mlir::OpTrait::NOperands<2>::Impl, ::mlir::OpTrait::OpInvariants, ::mlir::ConditionallySpeculatable::Trait, ::mlir::OpTrait::AlwaysSpeculatableImplTrait, ::mlir::MemoryEffectOpInterface::Trait, ::mlir::OpTrait::SameOperandsAndResultType, ::mlir::InferTypeOpInterface::Trait> {
+   public:
+     using Op::Op;
+     using Op::print;
+     using Adaptor = ArithSubOpAdaptor;
+     template <typename RangeT>
+     using GenericAdaptor = ArithSubOpGenericAdaptor<RangeT>;
+     using FoldAdaptor = GenericAdaptor<::llvm::ArrayRef<::mlir::Attribute>>;
+     static constexpr int odsIndex_lhs = 0;
+     static constexpr int odsIndex_rhs = 1;
+     using Properties = FoldAdaptor::Properties;
+     static ::llvm::ArrayRef<::llvm::StringRef> getAttributeNames() {
+       return {};
+     }
+   
+     static constexpr ::llvm::StringLiteral getOperationName() {
+       return ::llvm::StringLiteral("base2.sub");
+     }
+   
+     std::pair<unsigned, unsigned> getODSOperandIndexAndLength(unsigned index) {
+       return {index, 1};
+     }
+   
+     ::mlir::Operation::operand_range getODSOperands(unsigned index) {
+       auto valueRange = getODSOperandIndexAndLength(index);
+       return {std::next(getOperation()->operand_begin(), valueRange.first),
+                std::next(getOperation()->operand_begin(), valueRange.first + valueRange.second)};
+     }
+   
+     ::mlir::TypedValue<::mlir::Type> getLhs() {
+       return ::llvm::cast<::mlir::TypedValue<::mlir::Type>>(*getODSOperands(0).begin());
+     }
+   
+     ::mlir::TypedValue<::mlir::Type> getRhs() {
+       return ::llvm::cast<::mlir::TypedValue<::mlir::Type>>(*getODSOperands(1).begin());
+     }
+   
+     ::mlir::OpOperand &getLhsMutable() {
+       auto range = getODSOperandIndexAndLength(0);
+       return getOperation()->getOpOperand(range.first);
+     }
+   
+     ::mlir::OpOperand &getRhsMutable() {
+       auto range = getODSOperandIndexAndLength(1);
+       return getOperation()->getOpOperand(range.first);
+     }
+   
+     std::pair<unsigned, unsigned> getODSResultIndexAndLength(unsigned index) {
+       return {index, 1};
+     }
+   
+     ::mlir::Operation::result_range getODSResults(unsigned index) {
+       auto valueRange = getODSResultIndexAndLength(index);
+       return {std::next(getOperation()->result_begin(), valueRange.first),
+                std::next(getOperation()->result_begin(), valueRange.first + valueRange.second)};
+     }
+   
+     ::mlir::TypedValue<::mlir::Type> getResult() {
+       return ::llvm::cast<::mlir::TypedValue<::mlir::Type>>(*getODSResults(0).begin());
+     }
+   
+     static ::llvm::LogicalResult setPropertiesFromAttr(Properties &prop, ::mlir::Attribute attr, ::llvm::function_ref<::mlir::InFlightDiagnostic()> emitError);
+     static ::mlir::Attribute getPropertiesAsAttr(::mlir::MLIRContext *ctx, const Properties &prop);
+     static llvm::hash_code computePropertiesHash(const Properties &prop);
+     static std::optional<mlir::Attribute> getInherentAttr(::mlir::MLIRContext *ctx, const Properties &prop, llvm::StringRef name);
+     static void setInherentAttr(Properties &prop, llvm::StringRef name, mlir::Attribute value);
+     static void populateInherentAttrs(::mlir::MLIRContext *ctx, const Properties &prop, ::mlir::NamedAttrList &attrs);
+     static ::llvm::LogicalResult verifyInherentAttrs(::mlir::OperationName opName, ::mlir::NamedAttrList &attrs, llvm::function_ref<::mlir::InFlightDiagnostic()> emitError);
+     static void build(::mlir::OpBuilder &odsBuilder, ::mlir::OperationState &odsState, ::mlir::Type result, ::mlir::Value lhs, ::mlir::Value rhs);
+     static ArithSubOp create(::mlir::OpBuilder &builder, ::mlir::Location location, ::mlir::Type result, ::mlir::Value lhs, ::mlir::Value rhs);
+     static ArithSubOp create(::mlir::ImplicitLocOpBuilder &builder, ::mlir::Type result, ::mlir::Value lhs, ::mlir::Value rhs);
+     static void build(::mlir::OpBuilder &odsBuilder, ::mlir::OperationState &odsState, ::mlir::Value lhs, ::mlir::Value rhs);
+     static ArithSubOp create(::mlir::OpBuilder &builder, ::mlir::Location location, ::mlir::Value lhs, ::mlir::Value rhs);
+     static ArithSubOp create(::mlir::ImplicitLocOpBuilder &builder, ::mlir::Value lhs, ::mlir::Value rhs);
+     static void build(::mlir::OpBuilder &odsBuilder, ::mlir::OperationState &odsState, ::mlir::TypeRange resultTypes, ::mlir::Value lhs, ::mlir::Value rhs);
+     static ArithSubOp create(::mlir::OpBuilder &builder, ::mlir::Location location, ::mlir::TypeRange resultTypes, ::mlir::Value lhs, ::mlir::Value rhs);
+     static ArithSubOp create(::mlir::ImplicitLocOpBuilder &builder, ::mlir::TypeRange resultTypes, ::mlir::Value lhs, ::mlir::Value rhs);
+     static void build(::mlir::OpBuilder &, ::mlir::OperationState &odsState, ::mlir::TypeRange resultTypes, ::mlir::ValueRange operands, ::llvm::ArrayRef<::mlir::NamedAttribute> attributes = {});
+     static ArithSubOp create(::mlir::OpBuilder &builder, ::mlir::Location location, ::mlir::TypeRange resultTypes, ::mlir::ValueRange operands, ::llvm::ArrayRef<::mlir::NamedAttribute> attributes = {});
+     static ArithSubOp create(::mlir::ImplicitLocOpBuilder &builder, ::mlir::TypeRange resultTypes, ::mlir::ValueRange operands, ::llvm::ArrayRef<::mlir::NamedAttribute> attributes = {});
+     static void build(::mlir::OpBuilder &odsBuilder, ::mlir::OperationState &odsState, ::mlir::ValueRange operands, ::llvm::ArrayRef<::mlir::NamedAttribute> attributes = {});
+     static ArithSubOp create(::mlir::OpBuilder &builder, ::mlir::Location location, ::mlir::ValueRange operands, ::llvm::ArrayRef<::mlir::NamedAttribute> attributes = {});
+     static ArithSubOp create(::mlir::ImplicitLocOpBuilder &builder, ::mlir::ValueRange operands, ::llvm::ArrayRef<::mlir::NamedAttribute> attributes = {});
+     static void build(::mlir::OpBuilder &, ::mlir::OperationState &odsState, ::mlir::TypeRange resultTypes, ::mlir::ValueRange operands, const Properties &properties, ::llvm::ArrayRef<::mlir::NamedAttribute> discardableAttributes = {});
+     static ArithSubOp create(::mlir::OpBuilder &builder, ::mlir::Location location, ::mlir::TypeRange resultTypes, ::mlir::ValueRange operands, const Properties &properties, ::llvm::ArrayRef<::mlir::NamedAttribute> discardableAttributes = {});
+     static ArithSubOp create(::mlir::ImplicitLocOpBuilder &builder, ::mlir::TypeRange resultTypes, ::mlir::ValueRange operands, const Properties &properties, ::llvm::ArrayRef<::mlir::NamedAttribute> discardableAttributes = {});
+     static void build(::mlir::OpBuilder &odsBuilder, ::mlir::OperationState &odsState, ::mlir::ValueRange operands, const Properties &properties, ::llvm::ArrayRef<::mlir::NamedAttribute> discardableAttributes = {});
+     static ArithSubOp create(::mlir::OpBuilder &builder, ::mlir::Location location, ::mlir::ValueRange operands, const Properties &properties, ::llvm::ArrayRef<::mlir::NamedAttribute> discardableAttributes = {});
+     static ArithSubOp create(::mlir::ImplicitLocOpBuilder &builder, ::mlir::ValueRange operands, const Properties &properties, ::llvm::ArrayRef<::mlir::NamedAttribute> discardableAttributes = {});
+     ::llvm::LogicalResult verifyInvariantsImpl();
+     ::llvm::LogicalResult verifyInvariants();
+     static ::llvm::LogicalResult inferReturnTypes(::mlir::MLIRContext *context, ::std::optional<::mlir::Location> location, ::mlir::ValueRange operands, ::mlir::DictionaryAttr attributes, ::mlir::PropertyRef properties, ::mlir::RegionRange regions, ::llvm::SmallVectorImpl<::mlir::Type>&inferredReturnTypes);
+     static ::mlir::ParseResult parse(::mlir::OpAsmParser &parser, ::mlir::OperationState &result);
+     void print(::mlir::OpAsmPrinter &_odsPrinter);
+     void getEffects(::llvm::SmallVectorImpl<::mlir::SideEffects::EffectInstance<::mlir::MemoryEffects::Effect>> &effects);
+   public:
+   };
+   
+   } // namespace mlir::base2
+   MLIR_DECLARE_EXPLICIT_TYPE_ID(::mlir::base2::ArithSubOp)
+   
+   namespace mlir::base2 {
+   
+   
+   //===----------------------------------------------------------------------===//
+   // ::mlir::base2::ConstantOp declarations
+   //===----------------------------------------------------------------------===//
+   
+   namespace detail {
+   
+   class ConstantOpGenericAdaptorBase {
+   public:
+     struct Properties {
+       using valueTy = ::mlir::TypedAttr;
+       valueTy value;
+   
+       auto getValue() const {
+         auto &propStorage = this->value;
+         return ::llvm::cast<::mlir::TypedAttr>(propStorage);
+       }
+       void setValue(const ::mlir::TypedAttr &propValue) {
+         this->value = propValue;
+       }
+       bool operator==(const Properties &rhs) const {
+         return 
+           rhs.value == this->value &&
+           true;
+       }
+       bool operator!=(const Properties &rhs) const {
+         return !(*this == rhs);
+       }
+     };
+   protected:
+     ::mlir::DictionaryAttr odsAttrs;
+     ::std::optional<::mlir::OperationName> odsOpName;
+     Properties properties;
+     ::mlir::RegionRange odsRegions;
+   public:
+     ConstantOpGenericAdaptorBase(::mlir::DictionaryAttr attrs, const Properties &properties, ::mlir::RegionRange regions = {}) : odsAttrs(attrs), properties(properties), odsRegions(regions) {  if (odsAttrs)
+         odsOpName.emplace("base2.constant", odsAttrs.getContext());
+     }
+   
+     ConstantOpGenericAdaptorBase(ConstantOp op);
+   
+     std::pair<unsigned, unsigned> getODSOperandIndexAndLength(unsigned index, unsigned odsOperandsSize) {
+       return {index, 1};
+     }
+   
+     const Properties &getProperties() {
+       return properties;
+     }
+   
+     ::mlir::DictionaryAttr getAttributes() {
+       return odsAttrs;
+     }
+   
+     ::mlir::TypedAttr getValueAttr() {
+       auto attr = ::llvm::cast<::mlir::TypedAttr>(getProperties().value);
+       return attr;
+     }
+   
+     ::mlir::TypedAttr getValue();
+   };
+   
+   } // namespace detail
+   template <typename RangeT>
+   class ConstantOpGenericAdaptor : public detail::ConstantOpGenericAdaptorBase {
+     using ValueT = ::llvm::detail::ValueOfRange<RangeT>;
+     using Base = detail::ConstantOpGenericAdaptorBase;
+   public:
+     ConstantOpGenericAdaptor(RangeT values, ::mlir::DictionaryAttr attrs, const Properties &properties, ::mlir::RegionRange regions = {}) : Base(attrs, properties, regions), odsOperands(values) {}
+   
+     ConstantOpGenericAdaptor(RangeT values, ::mlir::DictionaryAttr attrs, ::mlir::PropertyRef properties, ::mlir::RegionRange regions = {}) : ConstantOpGenericAdaptor(values, attrs, (properties ? *properties.as<Properties *>() : Properties{}), regions) {}
+   
+     ConstantOpGenericAdaptor(RangeT values, ::mlir::DictionaryAttr attrs = nullptr) : ConstantOpGenericAdaptor(values, attrs, Properties{}, {}) {}
+   
+     ConstantOpGenericAdaptor(RangeT values, const ConstantOpGenericAdaptorBase &base) : Base(base), odsOperands(values) {}
+   
+     template <typename LateInst = ConstantOp, typename = std::enable_if_t<std::is_same_v<LateInst, ConstantOp>>>
+     ConstantOpGenericAdaptor(RangeT values, LateInst op) : Base(op), odsOperands(values) {}
+   
+     std::pair<unsigned, unsigned> getODSOperandIndexAndLength(unsigned index) {
+       return Base::getODSOperandIndexAndLength(index, odsOperands.size());
+     }
+   
+     RangeT getODSOperands(unsigned index) {
+       auto valueRange = getODSOperandIndexAndLength(index);
+       return {std::next(odsOperands.begin(), valueRange.first),
+                std::next(odsOperands.begin(), valueRange.first + valueRange.second)};
+     }
+   
+     RangeT getOperands() {
+       return odsOperands;
+     }
+   
+   private:
+     RangeT odsOperands;
+   };
+   class ConstantOpAdaptor : public ConstantOpGenericAdaptor<::mlir::ValueRange> {
+   public:
+     using ConstantOpGenericAdaptor::ConstantOpGenericAdaptor;
+     ConstantOpAdaptor(ConstantOp op);
+   
+     ::llvm::LogicalResult verify(::mlir::Location loc);
+   };
+   class ConstantOp : public ::mlir::Op<ConstantOp, ::mlir::OpTrait::ZeroRegions, ::mlir::OpTrait::OneResult, ::mlir::OpTrait::OneTypedResult<::mlir::Type>::Impl, ::mlir::OpTrait::ZeroSuccessors, ::mlir::OpTrait::ZeroOperands, ::mlir::OpTrait::OpInvariants, ::mlir::BytecodeOpInterface::Trait, ::mlir::OpTrait::ConstantLike, ::mlir::ConditionallySpeculatable::Trait, ::mlir::OpTrait::AlwaysSpeculatableImplTrait, ::mlir::MemoryEffectOpInterface::Trait, ::mlir::InferTypeOpInterface::Trait, ::mlir::OpAsmOpInterface::Trait> {
+   public:
+     using Op::Op;
+     using Op::print;
+     using Adaptor = ConstantOpAdaptor;
+     template <typename RangeT>
+     using GenericAdaptor = ConstantOpGenericAdaptor<RangeT>;
+     using FoldAdaptor = GenericAdaptor<::llvm::ArrayRef<::mlir::Attribute>>;
+     using Properties = FoldAdaptor::Properties;
+     using ::mlir::InferTypeOpInterface::Trait<ConstantOp>::refineReturnTypes;
+     using ::mlir::OpAsmOpInterface::Trait<ConstantOp>::getAsmBlockArgumentNames;
+     using ::mlir::OpAsmOpInterface::Trait<ConstantOp>::getAsmBlockNames;
+     using ::mlir::OpAsmOpInterface::Trait<ConstantOp>::getDefaultDialect;
+     static ::llvm::ArrayRef<::llvm::StringRef> getAttributeNames() {
+       static ::llvm::StringRef attrNames[] = {::llvm::StringRef("value")};
+       return ::llvm::ArrayRef(attrNames);
+     }
+   
+     ::mlir::StringAttr getValueAttrName() {
+       return getAttributeNameForIndex(0);
+     }
+   
+     static ::mlir::StringAttr getValueAttrName(::mlir::OperationName name) {
+       return getAttributeNameForIndex(name, 0);
+     }
+   
+     static constexpr ::llvm::StringLiteral getOperationName() {
+       return ::llvm::StringLiteral("base2.constant");
+     }
+   
+     std::pair<unsigned, unsigned> getODSOperandIndexAndLength(unsigned index) {
+       return {index, 1};
+     }
+   
+     ::mlir::Operation::operand_range getODSOperands(unsigned index) {
+       auto valueRange = getODSOperandIndexAndLength(index);
+       return {std::next(getOperation()->operand_begin(), valueRange.first),
+                std::next(getOperation()->operand_begin(), valueRange.first + valueRange.second)};
+     }
+   
+     std::pair<unsigned, unsigned> getODSResultIndexAndLength(unsigned index) {
+       return {index, 1};
+     }
+   
+     ::mlir::Operation::result_range getODSResults(unsigned index) {
+       auto valueRange = getODSResultIndexAndLength(index);
+       return {std::next(getOperation()->result_begin(), valueRange.first),
+                std::next(getOperation()->result_begin(), valueRange.first + valueRange.second)};
+     }
+   
+     ::mlir::TypedValue<::mlir::Type> getResult() {
+       return ::llvm::cast<::mlir::TypedValue<::mlir::Type>>(*getODSResults(0).begin());
+     }
+   
+     static ::llvm::LogicalResult setPropertiesFromAttr(Properties &prop, ::mlir::Attribute attr, ::llvm::function_ref<::mlir::InFlightDiagnostic()> emitError);
+     static ::mlir::Attribute getPropertiesAsAttr(::mlir::MLIRContext *ctx, const Properties &prop);
+     static llvm::hash_code computePropertiesHash(const Properties &prop);
+     static std::optional<mlir::Attribute> getInherentAttr(::mlir::MLIRContext *ctx, const Properties &prop, llvm::StringRef name);
+     static void setInherentAttr(Properties &prop, llvm::StringRef name, mlir::Attribute value);
+     static void populateInherentAttrs(::mlir::MLIRContext *ctx, const Properties &prop, ::mlir::NamedAttrList &attrs);
+     static ::llvm::LogicalResult verifyInherentAttrs(::mlir::OperationName opName, ::mlir::NamedAttrList &attrs, llvm::function_ref<::mlir::InFlightDiagnostic()> emitError);
+     static ::llvm::LogicalResult readProperties(::mlir::DialectBytecodeReader &reader, ::mlir::OperationState &state);
+     void writeProperties(::mlir::DialectBytecodeWriter &writer);
+     ::mlir::TypedAttr getValueAttr() {
+       return ::llvm::cast<::mlir::TypedAttr>(getProperties().value);
+     }
+   
+     ::mlir::TypedAttr getValue();
+     void setValueAttr(::mlir::TypedAttr attr) {
+       getProperties().value = attr;
+     }
+   
+     static void build(::mlir::OpBuilder &odsBuilder, ::mlir::OperationState &odsState, ::mlir::TypedAttr value);
+     static ConstantOp create(::mlir::OpBuilder &builder, ::mlir::Location location, ::mlir::TypedAttr value);
+     static ConstantOp create(::mlir::ImplicitLocOpBuilder &builder, ::mlir::TypedAttr value);
+     static void build(::mlir::OpBuilder &odsBuilder, ::mlir::OperationState &odsState, ::mlir::Type result, ::mlir::TypedAttr value);
+     static ConstantOp create(::mlir::OpBuilder &builder, ::mlir::Location location, ::mlir::Type result, ::mlir::TypedAttr value);
+     static ConstantOp create(::mlir::ImplicitLocOpBuilder &builder, ::mlir::Type result, ::mlir::TypedAttr value);
+     static void build(::mlir::OpBuilder &odsBuilder, ::mlir::OperationState &odsState, ::mlir::TypeRange resultTypes, ::mlir::TypedAttr value);
+     static ConstantOp create(::mlir::OpBuilder &builder, ::mlir::Location location, ::mlir::TypeRange resultTypes, ::mlir::TypedAttr value);
+     static ConstantOp create(::mlir::ImplicitLocOpBuilder &builder, ::mlir::TypeRange resultTypes, ::mlir::TypedAttr value);
+     static void build(::mlir::OpBuilder &, ::mlir::OperationState &odsState, ::mlir::TypeRange resultTypes, ::mlir::ValueRange operands, ::llvm::ArrayRef<::mlir::NamedAttribute> attributes = {});
+     static ConstantOp create(::mlir::OpBuilder &builder, ::mlir::Location location, ::mlir::TypeRange resultTypes, ::mlir::ValueRange operands, ::llvm::ArrayRef<::mlir::NamedAttribute> attributes = {});
+     static ConstantOp create(::mlir::ImplicitLocOpBuilder &builder, ::mlir::TypeRange resultTypes, ::mlir::ValueRange operands, ::llvm::ArrayRef<::mlir::NamedAttribute> attributes = {});
+     static void build(::mlir::OpBuilder &odsBuilder, ::mlir::OperationState &odsState, ::mlir::ValueRange operands, ::llvm::ArrayRef<::mlir::NamedAttribute> attributes = {});
+     static ConstantOp create(::mlir::OpBuilder &builder, ::mlir::Location location, ::mlir::ValueRange operands, ::llvm::ArrayRef<::mlir::NamedAttribute> attributes = {});
+     static ConstantOp create(::mlir::ImplicitLocOpBuilder &builder, ::mlir::ValueRange operands, ::llvm::ArrayRef<::mlir::NamedAttribute> attributes = {});
+     static void build(::mlir::OpBuilder &, ::mlir::OperationState &odsState, ::mlir::TypeRange resultTypes, ::mlir::ValueRange operands, const Properties &properties, ::llvm::ArrayRef<::mlir::NamedAttribute> discardableAttributes = {});
+     static ConstantOp create(::mlir::OpBuilder &builder, ::mlir::Location location, ::mlir::TypeRange resultTypes, ::mlir::ValueRange operands, const Properties &properties, ::llvm::ArrayRef<::mlir::NamedAttribute> discardableAttributes = {});
+     static ConstantOp create(::mlir::ImplicitLocOpBuilder &builder, ::mlir::TypeRange resultTypes, ::mlir::ValueRange operands, const Properties &properties, ::llvm::ArrayRef<::mlir::NamedAttribute> discardableAttributes = {});
+     static void build(::mlir::OpBuilder &odsBuilder, ::mlir::OperationState &odsState, ::mlir::ValueRange operands, const Properties &properties, ::llvm::ArrayRef<::mlir::NamedAttribute> discardableAttributes = {});
+     static ConstantOp create(::mlir::OpBuilder &builder, ::mlir::Location location, ::mlir::ValueRange operands, const Properties &properties, ::llvm::ArrayRef<::mlir::NamedAttribute> discardableAttributes = {});
+     static ConstantOp create(::mlir::ImplicitLocOpBuilder &builder, ::mlir::ValueRange operands, const Properties &properties, ::llvm::ArrayRef<::mlir::NamedAttribute> discardableAttributes = {});
+     ::llvm::LogicalResult verifyInvariantsImpl();
+     ::llvm::LogicalResult verifyInvariants();
+     ::llvm::LogicalResult verify();
+     static void getCanonicalizationPatterns(::mlir::RewritePatternSet &results, ::mlir::MLIRContext *context);
+     ::mlir::OpFoldResult fold(FoldAdaptor adaptor);
+     static ::llvm::LogicalResult inferReturnTypes(::mlir::MLIRContext *context, ::std::optional<::mlir::Location> location, ::mlir::ValueRange operands, ::mlir::DictionaryAttr attributes, ::mlir::PropertyRef properties, ::mlir::RegionRange regions, ::llvm::SmallVectorImpl<::mlir::Type>&inferredReturnTypes);
+     void getAsmResultNames(::mlir::OpAsmSetValueNameFn setNameFn);
+     static ::mlir::ParseResult parse(::mlir::OpAsmParser &parser, ::mlir::OperationState &result);
+     void print(::mlir::OpAsmPrinter &_odsPrinter);
+     void getEffects(::llvm::SmallVectorImpl<::mlir::SideEffects::EffectInstance<::mlir::MemoryEffects::Effect>> &effects);
+   private:
+     ::mlir::StringAttr getAttributeNameForIndex(unsigned index) {
+       return getAttributeNameForIndex((*this)->getName(), index);
+     }
+   
+     static ::mlir::StringAttr getAttributeNameForIndex(::mlir::OperationName name, unsigned index) {
+       assert(index < 1 && "invalid attribute index");
+       assert(name.getStringRef() == getOperationName() && "invalid operation name");
+       assert(name.isRegistered() && "Operation isn't registered, missing a "
+             "dependent dialect loading?");
+       return name.getAttributeNames()[index];
+     }
+   
+   public:
+   };
+   
+   } // namespace mlir::base2
+   MLIR_DECLARE_EXPLICIT_TYPE_ID(::mlir::base2::ConstantOp)
+   MLIR_DECLARE_EXPLICIT_TYPE_ID(::mlir::base2::detail::ConstantOpGenericAdaptorBase::Properties)
+   
+   
+   #endif // GET_OP_CLASSES
+   

@@ -1,0 +1,283 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>About the project &mdash; picea 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="_static/collapsible-lists/css/tree_view.css?v=a885cde7" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=01f34227"></script>
+      <script src="_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="_static/collapsible-lists/js/CollapsibleLists.compressed.js?v=73120307"></script>
+      <script src="_static/collapsible-lists/js/apply-collapsible-lists.js?v=660e4f45"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="The FPGA Variant using LAKSA backend" href="guides/laksa.html" />
+    <link rel="prev" title="picea" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            picea
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Installation</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">About the project</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#why-name-picea">Why name <code class="docutils literal notranslate"><span class="pre">PICEA</span></code>?</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="#guides">Guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#related-projects">Related projects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#development-environment-nix">Development Environment (Nix)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#build-on-ubuntu-24-04-no-nix">Build on Ubuntu 24.04 (no Nix)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#gurobi-license">Gurobi license</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#installing">Installing</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#the-python-package">The Python package</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="#run-the-tests">Run the tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#build-the-documentation">Build the documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#compiling-a-design">Compiling a design</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Guides</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="guides/laksa.html">The FPGA Variant using LAKSA backend</a></li>
+<li class="toctree-l1"><a class="reference internal" href="guides/cgra.html">The CGRA Variant</a></li>
+<li class="toctree-l1"><a class="reference internal" href="guides/mocasin.html">Exporting a Profiled Application to Mocasin</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">MLIR Dialects</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Dialects/Base2Ops.html">‘base2’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Dialects/CGRAOps.html">‘cgra’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Dialects/DFGOps.html">‘dfg’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Dialects/EmitHLSOps.html">‘emithls’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Dialects/FilterOps.html">‘filter’ Dialect</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Passes</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Passes/PICEAConversionPasses.html">PICEA Conversion Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Passes/CGRAPasses.html">CGRA Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Passes/DFGPasses.html">DFG Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Passes/EmitHLSPasses.html">Emit HLS Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Passes/FuncExtPasses.html">Func Ext Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Passes/LinalgExtPasses.html">Linalg Ext Passes</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">C++ API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="api/library_root.html">C++ API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">picea</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">About the project</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/README.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>
+  <picture>
+    <img alt="PICEA" src="docs/PICEA.png" width=96 valign="middle">
+  </picture>
+  PICEA
+</h1>
+<section id="about-the-project">
+<h1>About the project<a class="headerlink" href="#about-the-project" title="Link to this heading"></a></h1>
+<p>PICEA (<strong>P</strong>rogramm<strong>I</strong>ng and <strong>C</strong>ompiler <strong>E</strong>nvironment of MYRTUS <strong>A</strong>ccelerators) is a subproject of <a class="reference external" href="https://myrtus-project.eu">MYRTUS</a>, and forms the central compiler infrastructure for the Design and Programming Environment (DPE).
+All analysis, optimization, and backend code generation for DPE targets flow through the dialects and passes defined here.</p>
+<p>The compiler is built on top of <a class="reference external" href="https://mlir.llvm.org/">MLIR</a>, which allows each stage of the pipeline to be expressed as a dialect lowering — from high-level dataflow graph descriptions down to target-specific output.
+Each dialect in this project represents one layer of that pipeline.</p>
+<p>This project is based on <a class="reference external" href="https://github.com/tud-ccc/laksa">LAKSA</a>, the compiler infrastructure developed for the MYRTUS project, and extends it with the DPE-specific dialects and passes.</p>
+<blockquote>
+<div><p>The <code class="docutils literal notranslate"><span class="pre">Base2</span></code> dialect is a reimplementation of <a class="reference external" href="https://github.com/KFAFSP/base2-mlir.git">KFAFSP/base2-mlir</a>.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">DFG</span></code> dialect is a reimplementation of <a class="reference external" href="https://github.com/Feliix42/dfg-mlir">Feliix42/dfg-mlir</a>.</p>
+</div></blockquote>
+<section id="why-name-picea">
+<h2>Why name <code class="docutils literal notranslate"><span class="pre">PICEA</span></code>?<a class="headerlink" href="#why-name-picea" title="Link to this heading"></a></h2>
+<p><em>Picea</em> is the Latin genus name for spruce.
+It’s a fitting namesake for this project rooted at TU Dresden’s Chair for Compiler Construction: the Norway spruce (<em>Picea abies</em>, German <em>Fichte</em>) is the tree that has defined Saxony’s forests since large-scale reforestation swept the Ore Mountains (Erzgebirge) and Saxon Switzerland in the 18th and 19th centuries, and it remains the region’s most common conifer today.</p>
+</section>
+</section>
+<section id="guides">
+<h1>Guides<a class="headerlink" href="#guides" title="Link to this heading"></a></h1>
+<p>In-depth walkthroughs of individual targets live under <a class="reference external" href="https://gitlab.abinsula.com/myrtus/dpe/picea/-/tree/main/docs/guides"><code class="docutils literal notranslate"><span class="pre">docs/guides/</span></code></a>.
+They carry the rationale behind a lowering path that does not fit in a tablegen summary, such as why the passes are ordered the way they are and which invariants they rely on.
+They are built into the Sphinx documentation alongside the generated per-dialect and per-pass reference.</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="guides/laksa.html"><span class="std std-doc">LAKSA</span></a> covers lowering a <code class="docutils literal notranslate"><span class="pre">linalg</span></code> graph to HLS C++ for resource-constrained edge FPGAs: kernel classification and line buffering, the <code class="docutils literal notranslate"><span class="pre">convert-to-emithls</span></code> pipeline, the BRAM/DSP ILP, the generated artifacts and running a design on the board.</p></li>
+<li><p><a class="reference internal" href="guides/cgra.html"><span class="std std-doc">CGRA</span></a> covers lowering a loop nest onto the <a class="reference external" href="https://arxiv.org/abs/2404.12503">STRELA CGRA</a> attached to an <a class="reference external" href="https://dl.acm.org/doi/10.1145/3587135.3591431">X-HEEP RISC-V</a> core: the <code class="docutils literal notranslate"><span class="pre">cgra</span></code> dialect, fabric legalization, driver generation and DFG export for the mapper.</p></li>
+<li><p><a class="reference internal" href="guides/mocasin.html"><span class="std std-doc">Mocasin</span></a> covers exporting a profiled application to <a class="reference external" href="https://github.com/tud-ccc/mocasin">Mocasin</a>: the application template, FPGA and CPU profiles, and merging them.</p></li>
+</ul>
+</section>
+<section id="related-projects">
+<h1>Related projects<a class="headerlink" href="#related-projects" title="Link to this heading"></a></h1>
+<p><a class="reference external" href="https://github.com/tud-ccc/laksa-hls-kria-dirver"><code class="docutils literal notranslate"><span class="pre">laksa-hls-kria-driver</span></code></a> is a companion Linux kernel driver for deploying HLS kernels generated by this compiler onto Xilinx Kria boards (tested on the KV260, ZynqMP).
+It exposes <code class="docutils literal notranslate"><span class="pre">/dev/laksa</span></code>, a character device through which userspace programs manage the DMA buffer lifecycle and drive kernel execution over AXI Lite via <code class="docutils literal notranslate"><span class="pre">ioctl</span></code> calls, with no kernel recompilation needed when switching between HLS designs.
+The <code class="docutils literal notranslate"><span class="pre">EmitHLSToKriaDtsi</span></code> and <code class="docutils literal notranslate"><span class="pre">EmitHLSToLaksaHeader</span></code> translations in this repo generate the matching device tree overlay and userspace C header, respectively.</p>
+</section>
+<section id="development-environment-nix">
+<h1>Development Environment (Nix)<a class="headerlink" href="#development-environment-nix" title="Link to this heading"></a></h1>
+<p>This repo ships a <a class="reference external" href="https://gitlab.abinsula.com/myrtus/dpe/picea/-/blob/main/flake.nix">Nix flake</a> that provides a complete dev shell with LLVM/MLIR, <code class="docutils literal notranslate"><span class="pre">cmake</span></code>, <code class="docutils literal notranslate"><span class="pre">ninja</span></code>, <code class="docutils literal notranslate"><span class="pre">mold</span></code>, <code class="docutils literal notranslate"><span class="pre">doxygen</span></code>, <code class="docutils literal notranslate"><span class="pre">gurobi</span></code>, and the Python toolchain already on <code class="docutils literal notranslate"><span class="pre">PATH</span></code>, with <code class="docutils literal notranslate"><span class="pre">LLVM_DIR</span></code>, <code class="docutils literal notranslate"><span class="pre">MLIR_DIR</span></code>, <code class="docutils literal notranslate"><span class="pre">LLVM_EXTERNAL_LIT</span></code>, <code class="docutils literal notranslate"><span class="pre">PYTHONPATH</span></code>, <code class="docutils literal notranslate"><span class="pre">GUROBI_HOME</span></code>, and <code class="docutils literal notranslate"><span class="pre">GRB_LICENSE_FILE</span></code> set automatically:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>nix<span class="w"> </span>develop
+</pre></div>
+</div>
+<p>If you use <a class="reference external" href="https://direnv.net/">direnv</a>, <code class="docutils literal notranslate"><span class="pre">direnv</span> <span class="pre">allow</span></code> will load the shell automatically via the included <code class="docutils literal notranslate"><span class="pre">.envrc</span></code>.
+With the shell active, <a class="reference external" href="https://gitlab.abinsula.com/myrtus/dpe/picea/-/blob/main/build.sh"><code class="docutils literal notranslate"><span class="pre">build.sh</span></code></a> detects the toolchain env vars and configures/builds directly, no arguments needed:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>bash<span class="w"> </span>build.sh
+</pre></div>
+</div>
+</section>
+<section id="build-on-ubuntu-24-04-no-nix">
+<h1>Build on Ubuntu 24.04 (no Nix)<a class="headerlink" href="#build-on-ubuntu-24-04-no-nix" title="Link to this heading"></a></h1>
+<p>Built and tested against <a class="reference external" href="https://github.com/llvm/llvm-project/tree/llvmorg-23.1.2"><code class="docutils literal notranslate"><span class="pre">llvm-23.1.2</span></code></a>.
+Both <code class="docutils literal notranslate"><span class="pre">x86_64</span></code> and <code class="docutils literal notranslate"><span class="pre">aarch64</span></code> are supported; <a class="reference external" href="https://gitlab.abinsula.com/myrtus/dpe/picea/-/blob/main/build.sh"><code class="docutils literal notranslate"><span class="pre">build.sh</span></code></a> reads <code class="docutils literal notranslate"><span class="pre">uname</span> <span class="pre">-m</span></code> and picks the matching Gurobi build (<code class="docutils literal notranslate"><span class="pre">linux64</span></code> / <code class="docutils literal notranslate"><span class="pre">armlinux64</span></code>) itself.</p>
+<p>Outside the Nix shell, <a class="reference external" href="https://gitlab.abinsula.com/myrtus/dpe/picea/-/blob/main/build.sh"><code class="docutils literal notranslate"><span class="pre">build.sh</span></code></a> installs the system packages, fetches LLVM/MLIR and Gurobi, and sets up the Python venv, so it needs no arguments here either:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>bash<span class="w"> </span>build.sh
+</pre></div>
+</div>
+<p>The prebuilt LLVM/MLIR tarball is about 700 MB and lands in <code class="docutils literal notranslate"><span class="pre">build/</span></code>, so the first run takes a while.</p>
+</section>
+<section id="gurobi-license">
+<h1>Gurobi license<a class="headerlink" href="#gurobi-license" title="Link to this heading"></a></h1>
+<p>A license is required however you build, and nothing here creates one for you.
+<code class="docutils literal notranslate"><span class="pre">build.sh</span></code> only checks that the license file exists and warns if it does not; the build still succeeds without it, but anything using Gurobi fails at runtime.</p>
+<p>Put your license at <code class="docutils literal notranslate"><span class="pre">$HOME/.gurobi/gurobi.lic</span></code>, which is where both the Nix shell and <code class="docutils literal notranslate"><span class="pre">build.sh</span></code> look by default.
+To keep it somewhere else, point <code class="docutils literal notranslate"><span class="pre">GRB_LICENSE_FILE</span></code> at it before building:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">export</span><span class="w"> </span><span class="nv">GRB_LICENSE_FILE</span><span class="o">=</span>/path/to/gurobi.lic
+</pre></div>
+</div>
+</section>
+<section id="installing">
+<h1>Installing<a class="headerlink" href="#installing" title="Link to this heading"></a></h1>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>cmake<span class="w"> </span>--install<span class="w"> </span>build<span class="w"> </span>--prefix<span class="w"> </span>/where/you/want
+</pre></div>
+</div>
+<p>This gives you <code class="docutils literal notranslate"><span class="pre">bin/</span></code> with the four tools, <code class="docutils literal notranslate"><span class="pre">include/</span></code> with the headers and the TableGen output merged into one tree, <code class="docutils literal notranslate"><span class="pre">lib/</span></code> with the static libraries, and <code class="docutils literal notranslate"><span class="pre">lib/cmake/picea/</span></code> so that a downstream CMake project can do:</p>
+<div class="highlight-cmake notranslate"><div class="highlight"><pre><span></span><span class="nb">find_package</span><span class="p">(</span><span class="s">PICEA</span><span class="w"> </span><span class="s">REQUIRED</span><span class="p">)</span>
+<span class="nb">target_link_libraries</span><span class="p">(</span><span class="s">my-tool</span><span class="w"> </span><span class="s">PRIVATE</span><span class="w"> </span><span class="s">PICEA::DFGIR</span><span class="p">)</span>
+<span class="nb">target_include_directories</span><span class="p">(</span><span class="s">my-tool</span><span class="w"> </span><span class="s">PRIVATE</span><span class="w"> </span><span class="o">${</span><span class="nv">PICEA_INCLUDE_DIRS</span><span class="o">}</span><span class="w"> </span><span class="o">${</span><span class="nv">MLIR_INCLUDE_DIRS</span><span class="o">}</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Pass <code class="docutils literal notranslate"><span class="pre">--component</span></code> to install one piece on its own: <code class="docutils literal notranslate"><span class="pre">PICEATools</span></code>, <code class="docutils literal notranslate"><span class="pre">PICEAHeaders</span></code>, <code class="docutils literal notranslate"><span class="pre">PICEALibraries</span></code>, <code class="docutils literal notranslate"><span class="pre">PICEADevelopment</span></code>, or <code class="docutils literal notranslate"><span class="pre">PICEAPythonModules</span></code>.</p>
+<section id="the-python-package">
+<h2>The Python package<a class="headerlink" href="#the-python-package" title="Link to this heading"></a></h2>
+<p>The bindings are a <code class="docutils literal notranslate"><span class="pre">pip</span></code> package, built from <strong>this repository</strong>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>/path/to/picea
+</pre></div>
+</div>
+<p>While working on the bindings themselves, <code class="docutils literal notranslate"><span class="pre">cmake</span> <span class="pre">--build</span> <span class="pre">build</span> <span class="pre">--target</span> <span class="pre">install-python-package</span></code> does an editable install instead, so edits to the <code class="docutils literal notranslate"><span class="pre">.py</span></code> sources under <a class="reference external" href="https://gitlab.abinsula.com/myrtus/dpe/picea/-/tree/main/python/mlir_picea"><code class="docutils literal notranslate"><span class="pre">python/mlir_picea/</span></code></a> take effect without reinstalling.</p>
+<p><code class="docutils literal notranslate"><span class="pre">cmake</span> <span class="pre">--install</span></code> is not a third way to do this, and nothing it writes is a <code class="docutils literal notranslate"><span class="pre">pip</span></code> source directory.
+It copies the package to <code class="docutils literal notranslate"><span class="pre">&lt;prefix&gt;/mlir_picea</span></code>, which no interpreter looks in, as a staging copy for packagers to relocate.
+That path is what it is because <code class="docutils literal notranslate"><span class="pre">pip</span></code> sets the install prefix to the wheel’s <code class="docutils literal notranslate"><span class="pre">platlib</span></code> directory, so the package has to sit at the root of the prefix.</p>
+</section>
+</section>
+<section id="run-the-tests">
+<h1>Run the tests<a class="headerlink" href="#run-the-tests" title="Link to this heading"></a></h1>
+<p>The <code class="docutils literal notranslate"><span class="pre">.mlir</span></code> FileCheck test suite under <a class="reference external" href="https://gitlab.abinsula.com/myrtus/dpe/picea/-/tree/main/test"><code class="docutils literal notranslate"><span class="pre">test/</span></code></a> is run with:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>cmake<span class="w"> </span>--build<span class="w"> </span>build<span class="w"> </span>--target<span class="w"> </span>check-picea-mlir
+</pre></div>
+</div>
+<p><strong>Using the Python bindings</strong></p>
+<p>See <a class="reference external" href="https://gitlab.abinsula.com/myrtus/dpe/picea/-/tree/main/python/examples"><code class="docutils literal notranslate"><span class="pre">python/examples/</span></code></a> — it mirrors <a class="reference external" href="https://gitlab.abinsula.com/myrtus/dpe/picea/-/tree/main/test"><code class="docutils literal notranslate"><span class="pre">test/</span></code></a>’s layout, with one <code class="docutils literal notranslate"><span class="pre">.py</span></code> file per <code class="docutils literal notranslate"><span class="pre">.mlir</span></code> test rebuilding the same IR via the Python bindings and running the same pass(es).
+Start there for runnable references on constructing ops and invoking passes.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>cmake<span class="w"> </span>--build<span class="w"> </span>build<span class="w"> </span>--target<span class="w"> </span>check-picea-python
+</pre></div>
+</div>
+<p>This target verifies every example still matches its <code class="docutils literal notranslate"><span class="pre">.mlir</span></code> counterpart, depending on <code class="docutils literal notranslate"><span class="pre">install-python-package</span></code> to rebuild and reinstall first.</p>
+</section>
+<section id="build-the-documentation">
+<h1>Build the documentation<a class="headerlink" href="#build-the-documentation" title="Link to this heading"></a></h1>
+<p>The <code class="docutils literal notranslate"><span class="pre">Doxygen</span></code> and <code class="docutils literal notranslate"><span class="pre">Sphinx</span></code> documentation is found under <code class="docutils literal notranslate"><span class="pre">build/docs/sphinx/index.html</span></code>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>cmake<span class="w"> </span>--build<span class="w"> </span>build<span class="w"> </span>--target<span class="w"> </span>build-picea-doc
+</pre></div>
+</div>
+<p>The target installs <code class="docutils literal notranslate"><span class="pre">docs/requirements.txt</span></code> into the configured Python first.</p>
+</section>
+<section id="compiling-a-design">
+<h1>Compiling a design<a class="headerlink" href="#compiling-a-design" title="Link to this heading"></a></h1>
+<p><code class="docutils literal notranslate"><span class="pre">resin</span></code> is the driver.
+It dispatches to <code class="docutils literal notranslate"><span class="pre">picea-opt</span></code> and <code class="docutils literal notranslate"><span class="pre">picea-translate</span></code>, so everything it does can also be done by hand with those two.</p>
+<p>Run one pipeline and one translation:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>resin<span class="w"> </span>input.mlir<span class="w"> </span>-p<span class="w"> </span>convert-to-emithls<span class="w"> </span>-t<span class="w"> </span>emithls-to-cpp<span class="w"> </span>-o<span class="w"> </span>main.cpp
+</pre></div>
+</div>
+<p>The end-to-end flows are covered in the guides:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">--hls</span></code>, which writes every artifact a board deployment needs, and running the result on the board: <a class="reference internal" href="guides/laksa.html"><span class="std std-doc">LAKSA</span></a>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--mocasin</span></code> and <code class="docutils literal notranslate"><span class="pre">--cpu-profile</span></code>, which produce a profiled application for Mocasin: <a class="reference internal" href="guides/mocasin.html"><span class="std std-doc">Mocasin</span></a>.</p></li>
+</ul>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="picea" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="guides/laksa.html" class="btn btn-neutral float-right" title="The FPGA Variant using LAKSA backend" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

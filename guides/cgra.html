@@ -1,0 +1,396 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The CGRA Variant &mdash; picea 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/collapsible-lists/css/tree_view.css?v=a885cde7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js?v=73120307"></script>
+      <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js?v=660e4f45"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Exporting a Profiled Application to Mocasin" href="mocasin.html" />
+    <link rel="prev" title="The FPGA Variant using LAKSA backend" href="laksa.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            picea
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Installation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../README.html">About the project</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#guides">Guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#related-projects">Related projects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#development-environment-nix">Development Environment (Nix)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#build-on-ubuntu-24-04-no-nix">Build on Ubuntu 24.04 (no Nix)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#gurobi-license">Gurobi license</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#installing">Installing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#run-the-tests">Run the tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#build-the-documentation">Build the documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#compiling-a-design">Compiling a design</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Guides</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="laksa.html">The FPGA Variant using LAKSA backend</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">The CGRA Variant</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#overview">1. Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#dialect-operations">2. Dialect operations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#front-end-legalization">3. Front-end legalization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#marking-outlining-and-dispatch">4. Marking, outlining and dispatch</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#buffer-placement">5. Buffer placement</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#driver-generation-software-branch">6. Driver generation (software branch)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#dfg-export-hardware-branch">7. DFG export (hardware branch)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#pipelines">8. Pipelines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#driving-it-with-resin">9. Driving it with <code class="docutils literal notranslate"><span class="pre">resin</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="mocasin.html">Exporting a Profiled Application to Mocasin</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">MLIR Dialects</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/Base2Ops.html">‘base2’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/CGRAOps.html">‘cgra’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/DFGOps.html">‘dfg’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/EmitHLSOps.html">‘emithls’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/FilterOps.html">‘filter’ Dialect</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Passes</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/PICEAConversionPasses.html">PICEA Conversion Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/CGRAPasses.html">CGRA Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/DFGPasses.html">DFG Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/EmitHLSPasses.html">Emit HLS Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/FuncExtPasses.html">Func Ext Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/LinalgExtPasses.html">Linalg Ext Passes</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">C++ API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../api/library_root.html">C++ API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">picea</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">The CGRA Variant</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/guides/cgra.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="the-cgra-variant">
+<h1>The CGRA Variant<a class="headerlink" href="#the-cgra-variant" title="Link to this heading"></a></h1>
+<p><code class="docutils literal notranslate"><span class="pre">picea</span></code> lowers a marked loop nest onto a <strong>STRELA CGRA</strong> attached to an <strong>X-HEEP RISC-V</strong> core, emitting a C driver that programs the fabric over MMIO and runs on Verilator.
+The custom work lives in the <code class="docutils literal notranslate"><span class="pre">cgra</span></code> dialect and its transformation passes.</p>
+<p>This page is the narrative reference: what each stage is for and why it is shaped the way it is.
+The exhaustive per-pass option lists are generated from the tablegen sources and live under <a class="reference internal" href="../Passes/CGRAPasses.html"><span class="doc">CGRA Passes</span></a>; the operation definitions under <a class="reference internal" href="../Dialects/CGRAOps.html"><span class="doc">‘cgra’ Dialect</span></a>.</p>
+<section id="overview">
+<h2>1. Overview<a class="headerlink" href="#overview" title="Link to this heading"></a></h2>
+<p>The input is a C program (lowered to affine MLIR by Polygeist’s <code class="docutils literal notranslate"><span class="pre">cgeist</span></code>), a quantized <code class="docutils literal notranslate"><span class="pre">linalg</span></code>-on-tensors model, or a <code class="docutils literal notranslate"><span class="pre">dfg.operator</span></code> written directly in the DFG dialect (§4).
+From there:</p>
+<ol class="arabic simple">
+<li><p>The front end legalizes the datapath to 32-bit and rewrites the loop body into the operations the fabric ALU actually has (§3).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--annotate-to-cgra</span></code> marks each offloadable loop nest with <code class="docutils literal notranslate"><span class="pre">cgra.deploy</span></code>, and <code class="docutils literal notranslate"><span class="pre">--outline-cgra-deploy</span></code> splits it from the host code (§4).</p></li>
+<li><p>Buffers that cross a deploy boundary are given symbols and packed (§5).</p></li>
+<li><p>Two branches then meet in the generated driver:</p>
+<ul class="simple">
+<li><p>the <strong>software</strong> branch (§6) emits the STRELA MMIO application;</p></li>
+<li><p>the <strong>hardware</strong> branch (§7) exports a data-flow graph for the elastic-cgra Gurobi mapper, which returns placement, bitstream and the IMN/OMN channel map.</p></li>
+</ul>
+</li>
+</ol>
+<p>Because both branches must agree on which loops went to the fabric and in what order, the passes they share are grouped into named pipelines (§8) rather than being spelled out per call site.</p>
+</section>
+<section id="dialect-operations">
+<h2>2. Dialect operations<a class="headerlink" href="#dialect-operations" title="Link to this heading"></a></h2>
+<p>Defined in <code class="docutils literal notranslate"><span class="pre">include/picea-mlir/Dialect/CGRA/IR/</span></code>:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Operation</p></th>
+<th class="head"><p>Purpose</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">cgra.deploy</span></code></p></td>
+<td><p>Marks a loop nest for offload. Its <code class="docutils literal notranslate"><span class="pre">ins(streams)</span></code> operands make the offloaded data flow explicit.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">cgra.yield</span></code></p></td>
+<td><p>Terminator of a <code class="docutils literal notranslate"><span class="pre">cgra.deploy</span></code> region.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">cgra.strela_write</span></code></p></td>
+<td><p>A single 32-bit volatile MMIO write to a symbolically-named STRELA control register.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">cgra.strela_read</span></code></p></td>
+<td><p>The same, for a read.</p></td>
+</tr>
+</tbody>
+</table>
+<p>The STRELA registers are named symbolically on the ops; the concrete MMIO addresses are resolved only at <code class="docutils literal notranslate"><span class="pre">--strela-to-llvm</span></code>, so the register map lives in exactly one place.</p>
+</section>
+<section id="front-end-legalization">
+<h2>3. Front-end legalization<a class="headerlink" href="#front-end-legalization" title="Link to this heading"></a></h2>
+<p>The fabric has a narrow, straight-line, 32-bit datapath.
+Four passes bring an arbitrary loop body into that form:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">--widen-storage-to-i32</span></code> retypes i4/i8/i16 memref <strong>storage</strong> to i32 with load/store boundary casts.
+It runs before legalization.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--legalize-to-i32</span></code> rewrites narrow and i64 <strong>arithmetic</strong> into i32 sequences, preserving results exactly.
+<code class="docutils literal notranslate"><span class="pre">--legalize-to-i32-func</span></code> is the single-function variant.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--predicated-store-to-select</span></code> turns a predicated <code class="docutils literal notranslate"><span class="pre">affine.store</span></code> into an <code class="docutils literal notranslate"><span class="pre">arith.select</span></code>, removing control flow from the body.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--normalize-cgra-compare</span></code> folds every predicate into an expression on the operand, because the compare FU tests against zero and realizes only <code class="docutils literal notranslate"><span class="pre">&gt;0</span></code> and <code class="docutils literal notranslate"><span class="pre">==0</span></code>.</p>
+<p>The sign-bit-flip identity used for unsigned compares, and the <code class="docutils literal notranslate"><span class="pre">+1</span></code> used for <code class="docutils literal notranslate"><span class="pre">&lt;=</span></code>/<code class="docutils literal notranslate"><span class="pre">&gt;=</span></code>, both assume no wraparound at the integer extremes.</p>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--expand-fabric-ops</span></code> expands div/rem by a power of two and the integer <code class="docutils literal notranslate"><span class="pre">math</span></code> intrinsics into fabric ALU sequences.</p></li>
+</ul>
+<p><code class="docutils literal notranslate"><span class="pre">--annotate-to-cgra</span></code> treats a loop containing an operation that no CGRA transform can lower to a fabric operation (float, integer divide/remainder, <code class="docutils literal notranslate"><span class="pre">math</span></code>, <code class="docutils literal notranslate"><span class="pre">call</span></code>) as a hard error rather than silently keeping it on the host.
+The classification lives in <code class="docutils literal notranslate"><span class="pre">cgra::classifyFabricOp</span></code> (<code class="docutils literal notranslate"><span class="pre">Transforms/CGRAAnalysisUtils.h</span></code>).</p>
+</section>
+<section id="marking-outlining-and-dispatch">
+<h2>4. Marking, outlining and dispatch<a class="headerlink" href="#marking-outlining-and-dispatch" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">--annotate-to-cgra</span></code> wraps each offloadable outermost loop in <code class="docutils literal notranslate"><span class="pre">cgra.deploy</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--outline-cgra-deploy</span></code> splits the kernel from the host code into <code class="docutils literal notranslate"><span class="pre">&lt;H&gt;_init</span></code> / <code class="docutils literal notranslate"><span class="pre">&lt;H&gt;_kernel</span></code> / <code class="docutils literal notranslate"><span class="pre">&lt;H&gt;_post</span></code>.
+A bare kernel is outlined too under <code class="docutils literal notranslate"><span class="pre">drop-host</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--annotate-dispatch-io</span></code> classifies each stream as input, output or inout and stamps <code class="docutils literal notranslate"><span class="pre">dispatch_size</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--prune-to-entry=entry=&lt;H&gt;</span></code> privatizes everything outside <code class="docutils literal notranslate"><span class="pre">&lt;H&gt;</span></code>’s outlined family so <code class="docutils literal notranslate"><span class="pre">symbol-dce</span></code> drops it — chiefly a hand-written CPU reference, which <code class="docutils literal notranslate"><span class="pre">--annotate-to-cgra</span></code> would otherwise have offloaded too. It reads the <code class="docutils literal notranslate"><span class="pre">cgra.outlined_from</span></code> stamp the outliner leaves, so one name replaces the thousand-entry exclude list this used to need.</p></li>
+</ul>
+<p>Supporting rewrites that reshape a nest into something offloadable at all: <code class="docutils literal notranslate"><span class="pre">--promote-accumulator</span></code>, <code class="docutils literal notranslate"><span class="pre">--split-reduction-bias</span></code>, <code class="docutils literal notranslate"><span class="pre">--promote-scalar-reduction</span></code> (§8), <code class="docutils literal notranslate"><span class="pre">--fuse-cgra-nests</span></code>, <code class="docutils literal notranslate"><span class="pre">--unroll-lanes</span></code>, <code class="docutils literal notranslate"><span class="pre">--partition-cgra-dfg</span></code>, <code class="docutils literal notranslate"><span class="pre">--conv-to-im2col</span></code>, <code class="docutils literal notranslate"><span class="pre">--expand-memref-copy</span></code>, <code class="docutils literal notranslate"><span class="pre">--hoist-reduction-unpack</span></code>, <code class="docutils literal notranslate"><span class="pre">--strip-stage-prints</span></code>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">--dfg-operator-to-cgra</span></code> bridges the DFG dialect to this path.
+A self-contained <code class="docutils literal notranslate"><span class="pre">dfg.operator</span></code> is an SDF actor whose body is ordinary compute, which is exactly a function: its <strong>input ports become the arguments</strong> and the values handed to <code class="docutils literal notranslate"><span class="pre">dfg.output</span></code> become the <strong>results</strong>, so the actor is handed back to <code class="docutils literal notranslate"><span class="pre">func.func</span></code> and the rest of the pipeline compiles it unchanged.
+A multi-actor graph wired with <code class="docutils literal notranslate"><span class="pre">dfg.channel</span></code>/<code class="docutils literal notranslate"><span class="pre">push</span></code>/<code class="docutils literal notranslate"><span class="pre">pull</span></code> is out of scope and left alone.</p>
+<p>A <strong>wired graph</strong> — a <code class="docutils literal notranslate"><span class="pre">dfg.region</span></code> of <code class="docutils literal notranslate"><span class="pre">dfg.channel</span></code> edges and <code class="docutils literal notranslate"><span class="pre">dfg.instantiate</span></code> nodes, which is what the MYRTUS DPE emits for a quantized network — is flattened the same way: the region becomes a <code class="docutils literal notranslate"><span class="pre">func.func</span></code> calling its actors in topological order with each channel threaded as an SSA value, and <code class="docutils literal notranslate"><span class="pre">--inline</span></code> then folds it into one function.
+A multi-actor graph wired with <code class="docutils literal notranslate"><span class="pre">dfg.push</span></code>/<code class="docutils literal notranslate"><span class="pre">dfg.pull</span></code> (a KPN process firing on a stream) is out of scope and left alone.</p>
+<p>There are three ways in.
+The MYRTUS networks reach it as a <em>round trip</em> — <code class="docutils literal notranslate"><span class="pre">--convert-func-to-dfg</span></code> wraps their <code class="docutils literal notranslate"><span class="pre">&#64;main</span></code> in an actor and this pass immediately unwraps it, leaving the lowered and annotated IR byte-identical, which is what proves the bridge is lossless.
+Two models instead <strong>start</strong> there, their source file being the DFG IR itself:
+<code class="docutils literal notranslate"><span class="pre">src/models/dfg_blend</span></code> (one self-contained actor; whole chain to a Verilator <code class="docutils literal notranslate"><span class="pre">SUCCESS</span></code> in about two minutes) and <code class="docutils literal notranslate"><span class="pre">src/models/myrtus_dfg</span></code> (a real MYRTUS SDF graph — 4 actors across 2 conv layers, 20 fabric configurations, 5.32x, <code class="docutils literal notranslate"><span class="pre">SUCCESS</span></code> with the x86 golden matching).
+Both are written up under <code class="docutils literal notranslate"><span class="pre">docs/DFG/</span></code>, with every intermediate artifact and the device logs.</p>
+</section>
+<section id="buffer-placement">
+<h2>5. Buffer placement<a class="headerlink" href="#buffer-placement" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">--promote-alloca-to-global</span></code> gives a stack-allocated buffer static storage.
+It belongs to the <strong>pre</strong>-annotate phase: it must run before the nests are wrapped.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--promote-shared-buffers</span></code> gives every cross-deploy buffer a symbol.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--pack-cgra-buffers</span></code> shares storage between intermediates whose live ranges do not overlap.</p></li>
+</ul>
+</section>
+<section id="driver-generation-software-branch">
+<h2>6. Driver generation (software branch)<a class="headerlink" href="#driver-generation-software-branch" title="Link to this heading"></a></h2>
+<p>The driver and its dataset are <strong>translations</strong>, not passes: they generate an
+artifact out of the IR instead of rewriting it, so they live in <code class="docutils literal notranslate"><span class="pre">lib/Target/</span></code>
+and run under <code class="docutils literal notranslate"><span class="pre">picea-translate</span></code>, not <code class="docutils literal notranslate"><span class="pre">picea-opt</span></code>.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">picea</span><span class="o">-</span><span class="n">translate</span> <span class="o">--</span><span class="n">cgra</span><span class="o">-</span><span class="n">to</span><span class="o">-</span><span class="n">driver</span>  <span class="o">&lt;</span><span class="n">opts</span><span class="o">&gt;</span> <span class="n">kernel</span><span class="o">.</span><span class="n">mlir</span> <span class="o">-</span><span class="n">o</span> <span class="n">main</span><span class="o">.</span><span class="n">c</span>
+<span class="n">picea</span><span class="o">-</span><span class="n">translate</span> <span class="o">--</span><span class="n">cgra</span><span class="o">-</span><span class="n">to</span><span class="o">-</span><span class="n">dataset</span> <span class="o">&lt;</span><span class="n">opts</span><span class="o">&gt;</span> <span class="n">kernel</span><span class="o">.</span><span class="n">mlir</span> <span class="o">-</span><span class="n">o</span> <span class="n">dataset</span><span class="o">.</span><span class="n">h</span>
+</pre></div>
+</div>
+<p>A GR-HEEP / X-HEEP STRELA application is two files, and <code class="docutils literal notranslate"><span class="pre">mlir-translate</span></code> gives
+a translation exactly one output stream, so each artifact is its own
+translation over one shared analysis. Both take the <strong>same</strong> options; run both
+over the same input to get a complete application.</p>
+<p>Which of two emitters runs is a property of the IR, not an option:</p>
+<ul class="simple">
+<li><p><strong>single-deploy</strong>, chosen when the streams are function arguments.
+It declares the arrays, calls the outlined <code class="docutils literal notranslate"><span class="pre">&lt;base&gt;_init</span></code> and <code class="docutils literal notranslate"><span class="pre">_post</span></code>, programs and starts the fabric, then waits on the interrupt.</p></li>
+<li><p><strong>multi-config</strong>, chosen when the streams are module-level <code class="docutils literal notranslate"><span class="pre">memref.global</span></code>.
+It emits one configuration per deploy, run consecutively and in place.</p></li>
+</ul>
+<p>Either way the streams and dispatch metadata come from the IR, and the result is checked against a reference transliterated from the deploy loops.</p>
+<p>A <strong>heterogeneous</strong> whole-model driver is also supported: fabric configurations for the streamable nests, CPU code for the convolutions and reductions that stay on the host, and a buffer registry threading arrays between them.</p>
+<p>Options, all carrying a <code class="docutils literal notranslate"><span class="pre">cgra-</span></code> prefix because a translation’s options are
+global flags on <code class="docutils literal notranslate"><span class="pre">picea-translate</span></code> rather than scoped to a pass:
+<code class="docutils literal notranslate"><span class="pre">--cgra-iomap</span></code>, <code class="docutils literal notranslate"><span class="pre">--cgra-iomap-prefix</span></code>, <code class="docutils literal notranslate"><span class="pre">--cgra-bitstream-sym</span></code>,
+<code class="docutils literal notranslate"><span class="pre">--cgra-bitstream-header</span></code>, <code class="docutils literal notranslate"><span class="pre">--cgra-name</span></code>, <code class="docutils literal notranslate"><span class="pre">--cgra-sim</span></code>,
+<code class="docutils literal notranslate"><span class="pre">--cgra-hoist-descriptors</span></code>, <code class="docutils literal notranslate"><span class="pre">--cgra-watch-buffers</span></code>, <code class="docutils literal notranslate"><span class="pre">--cgra-ck-only</span></code>,
+<code class="docutils literal notranslate"><span class="pre">--cgra-no-deployed-metric</span></code>, <code class="docutils literal notranslate"><span class="pre">--cgra-x86-golden</span></code>, <code class="docutils literal notranslate"><span class="pre">--cgra-max-dispatch</span></code>,
+<code class="docutils literal notranslate"><span class="pre">--cgra-interleaved-kb</span></code>, <code class="docutils literal notranslate"><span class="pre">--cgra-progress-every</span></code>, <code class="docutils literal notranslate"><span class="pre">--cgra-no-reference</span></code>.
+The old <code class="docutils literal notranslate"><span class="pre">output=</span></code> option is gone: the output path is <code class="docutils literal notranslate"><span class="pre">picea-translate</span></code>’s own
+<code class="docutils literal notranslate"><span class="pre">-o</span></code>.</p>
+<p>Lowering to the actual MMIO sequence is two further passes, which <em>do</em> rewrite the IR and so remain in <code class="docutils literal notranslate"><span class="pre">picea-opt</span></code>:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">--cgra-deploy-to-strela</span></code> turns each <code class="docutils literal notranslate"><span class="pre">cgra.deploy</span></code> into the <code class="docutils literal notranslate"><span class="pre">strela_write</span></code> and <code class="docutils literal notranslate"><span class="pre">strela_read</span></code> programming sequence, optionally permuted by the mapper’s <code class="docutils literal notranslate"><span class="pre">io_map.json</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--strela-to-llvm</span></code> turns the <code class="docutils literal notranslate"><span class="pre">strela_*</span></code> ops into volatile <code class="docutils literal notranslate"><span class="pre">llvm.load</span></code> and <code class="docutils literal notranslate"><span class="pre">llvm.store</span></code> at the resolved MMIO addresses.</p></li>
+</ul>
+</section>
+<section id="dfg-export-hardware-branch">
+<h2>7. DFG export (hardware branch)<a class="headerlink" href="#dfg-export-hardware-branch" title="Link to this heading"></a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">picea-translate</span> <span class="pre">--cgra-to-dot</span></code> writes one GraphViz <code class="docutils literal notranslate"><span class="pre">.dot</span></code> per fabric-streamable loop for the elastic-cgra ILP mapper: FU nodes for arith, shift, logical, select and compare; width casts are pass-through; <code class="docutils literal notranslate"><span class="pre">shrui</span></code> is corrected for the fabric’s arithmetic-only right shift.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">picea</span><span class="o">-</span><span class="n">opt</span> <span class="o">--</span><span class="n">legalize</span><span class="o">-</span><span class="n">fabric</span><span class="o">-</span><span class="n">body</span> <span class="n">kernel</span><span class="o">.</span><span class="n">mlir</span> \
+  <span class="o">|</span> <span class="n">picea</span><span class="o">-</span><span class="n">translate</span> <span class="o">--</span><span class="n">cgra</span><span class="o">-</span><span class="n">to</span><span class="o">-</span><span class="n">dot</span> <span class="o">--</span><span class="n">output</span><span class="o">-</span><span class="nb">dir</span><span class="o">=</span><span class="n">dfg</span> <span class="o">-</span><span class="n">o</span> <span class="o">/</span><span class="n">dev</span><span class="o">/</span><span class="n">null</span>
+</pre></div>
+</div>
+<p>This is the one translation that does <strong>not</strong> put its payload on <code class="docutils literal notranslate"><span class="pre">-o</span></code>. It emits
+a numbered <em>set</em> of files, <code class="docutils literal notranslate"><span class="pre">loop_&lt;NN&gt;_iter&lt;lb&gt;to&lt;ub&gt;.dot</span></code>, whose names are
+load-bearing — the mapper pairs bitstream <em>k</em> with the driver’s configuration
+<em>k</em>. So the graphs go to <code class="docutils literal notranslate"><span class="pre">--output-dir</span></code> and <code class="docutils literal notranslate"><span class="pre">-o</span></code> receives the manifest, one
+filename per line. Nothing is written unless every exported loop verifies, so a
+failure can never leave a partial — and therefore misnumbered — set behind.</p>
+<p>An unexpanded operation reaching this translation is a <strong>hard error</strong>, not a warning: the shipped DFG-export rules discard its output, so a warning would be thrown away and the mapper would silently receive an incomplete graph.</p>
+</section>
+<section id="pipelines">
+<h2>8. Pipelines<a class="headerlink" href="#pipelines" title="Link to this heading"></a></h2>
+<p>Declared in <code class="docutils literal notranslate"><span class="pre">include/picea-mlir/Conversion/ConvertToCGRA/ConvertToCGRA.h</span></code> and registered by <code class="docutils literal notranslate"><span class="pre">picea::registerConvertToCGRAPipelines()</span></code>.</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Flag</p></th>
+<th class="head"><p>Passes</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">--convert-to-cgra</span></code></p></td>
+<td><p>the whole uniform front end (below)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">--legalize-fabric-body</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">predicated-store-to-select</span></code> → <code class="docutils literal notranslate"><span class="pre">normalize-cgra-compare</span></code> → <code class="docutils literal notranslate"><span class="pre">expand-fabric-ops</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">--shape-cgra-reductions</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">promote-accumulator</span></code> → <code class="docutils literal notranslate"><span class="pre">split-reduction-bias</span></code> → <code class="docutils literal notranslate"><span class="pre">promote-scalar-reduction</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">--place-cgra-buffers</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">promote-shared-buffers</span></code> → <code class="docutils literal notranslate"><span class="pre">pack-cgra-buffers</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">--cgra-deploy-to-llvm</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">cgra-deploy-to-strela</span></code> → <code class="docutils literal notranslate"><span class="pre">strela-to-llvm</span></code></p></td>
+</tr>
+</tbody>
+</table>
+<p><code class="docutils literal notranslate"><span class="pre">--legalize-fabric-body</span></code> is a <strong>correctness</strong> device, not tidiness.
+Those three passes must run before <code class="docutils literal notranslate"><span class="pre">--annotate-to-cgra</span></code> (which decides fabric-vs-CPU) <em>and</em> before <code class="docutils literal notranslate"><span class="pre">--export-loop-dfg</span></code> (which emits the <code class="docutils literal notranslate"><span class="pre">.dot</span></code> for the loops annotate chose).
+If the two sites ever diverge, the driver’s configuration indices and the mapper’s bitstream indices silently stop matching.
+One flag makes them identical by construction.</p>
+<p><code class="docutils literal notranslate"><span class="pre">--shape-cgra-reductions</span></code> has a real <strong>order</strong> dependency.
+The fabric accumulator is an FU that starts from zero and is fed by a load-accumulate-store nest, and the three passes converge on that single invariant from different directions: <code class="docutils literal notranslate"><span class="pre">promote-accumulator</span></code> may leave a <code class="docutils literal notranslate"><span class="pre">C</span> <span class="pre">=</span> <span class="pre">1*C</span> <span class="pre">+</span> <span class="pre">reduce</span></code> seed that only <code class="docutils literal notranslate"><span class="pre">split-reduction-bias</span></code> can make zero-seeded (<code class="docutils literal notranslate"><span class="pre">isFabricStreamable</span></code> then keeps any survivor on the CPU), while <code class="docutils literal notranslate"><span class="pre">promote-scalar-reduction</span></code> handles the opposite shape, a top-level scalar <code class="docutils literal notranslate"><span class="pre">iter_args</span></code> nest that stores nothing.</p>
+<p><code class="docutils literal notranslate"><span class="pre">--place-cgra-buffers</span></code> is deliberately only the two post-annotation passes; <code class="docutils literal notranslate"><span class="pre">--promote-alloca-to-global</span></code> cannot join the group because it has to run before the nests are wrapped.</p>
+<p><code class="docutils literal notranslate"><span class="pre">--convert-to-cgra</span></code> is the <strong>uniform front end</strong>: everything a kernel runs, in the one order that works, assembled from the groupings above rather than respelling them.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>--inline → --conv-to-im2col → [--hoist-reduction-unpack] → --promote-alloca-to-global
+  → --shape-cgra-reductions → --fuse-cgra-nests → --legalize-fabric-body
+  → --partition-cgra-dfg → --annotate-to-cgra → --place-cgra-buffers
+  → --outline-cgra-deploy=drop-host → --annotate-dispatch-io
+</pre></div>
+</div>
+<p>Options: <code class="docutils literal notranslate"><span class="pre">max-fus</span></code> (default 14), <code class="docutils literal notranslate"><span class="pre">max-outs</span></code> (3), <code class="docutils literal notranslate"><span class="pre">hoist-reduction-unpack</span></code> (on), <code class="docutils literal notranslate"><span class="pre">entry</span></code> (none).</p>
+<p>Pass <code class="docutils literal notranslate"><span class="pre">entry=&lt;host</span> <span class="pre">function&gt;</span></code> whenever the source carries a CPU reference implementation: without it the export emits a <code class="docutils literal notranslate"><span class="pre">.dot</span></code> for the reference’s loops too, and the mapper then numbers bitstreams over a larger set than the driver numbers configurations — <code class="docutils literal notranslate"><span class="pre">tfm_gemver</span></code> gives 4 graphs instead of 1. See <code class="docutils literal notranslate"><span class="pre">--prune-to-entry</span></code> (§4).</p>
+<p><code class="docutils literal notranslate"><span class="pre">promote-shared-buffers</span></code> runs <strong>once</strong>, inside <code class="docutils literal notranslate"><span class="pre">--place-cgra-buffers</span></code>. <code class="docutils literal notranslate"><span class="pre">src/Makefile</span></code> used to run it a second time immediately before that grouping; the duplicate was accidental and provably inert, and is not reproduced here.</p>
+<p><code class="docutils literal notranslate"><span class="pre">--symbol-privatize</span></code> / <code class="docutils literal notranslate"><span class="pre">--symbol-dce</span></code> stay outside the pipeline: their exclude list is per-kernel.</p>
+<p>The equivalence between this flag and the explicit sequence is what
+<code class="docutils literal notranslate"><span class="pre">test/Conversion/convert-to-cgra.mlir</span></code> checks, by diffing the two. That matters
+because the DFG export feeds the mapper while the driver numbers its
+configurations from the same front end — if the two spellings ever diverge, the
+bitstream and configuration indices stop matching, silently.</p>
+</section>
+<section id="driving-it-with-resin">
+<h2>9. Driving it with <code class="docutils literal notranslate"><span class="pre">resin</span></code><a class="headerlink" href="#driving-it-with-resin" title="Link to this heading"></a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">resin</span></code> is the compiler driver: it dispatches to <code class="docutils literal notranslate"><span class="pre">picea-opt</span></code> and
+<code class="docutils literal notranslate"><span class="pre">picea-translate</span></code> so a whole artifact set comes out of one command. The CGRA
+path is <strong>two</strong> sub-flows, not one, because the place-and-route step between
+them is a Gurobi ILP living in <code class="docutils literal notranslate"><span class="pre">src/elastic-cgra</span></code> — outside the compiler, and
+outside <code class="docutils literal notranslate"><span class="pre">resin</span></code>.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>                      resin --cgra-dfg
+kernel.mlir ──────────────────────────────&gt; out/cgra.mlir
+                                            out/dfg/loop_&lt;NN&gt;_*.dot
+                                            out/dfg/manifest.txt
+                                                    │
+                                   [ elastic-cgra mapper, Gurobi ]
+                                                    │
+                                            &lt;K&gt;_&lt;N&gt;_io_map.json
+                                            &lt;K&gt;_&lt;N&gt;_kernel.h
+                                                    │
+                      resin --cgra-driver           ▼
+out/cgra.mlir ─────────────────────────────&gt; out/app/main.c
+                                             out/app/dataset.h
+</pre></div>
+</div>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>resin<span class="w"> </span>--cgra-dfg<span class="w"> </span>-p<span class="w"> </span><span class="s1">'convert-to-cgra=max-fus=11 entry=main'</span><span class="w"> </span>-o<span class="w"> </span>out<span class="w"> </span>kernel.mlir
+<span class="c1"># ... run the mapper over out/dfg ...</span>
+resin<span class="w"> </span>--cgra-driver<span class="w"> </span>-o<span class="w"> </span>out<span class="w"> </span>out/cgra.mlir<span class="w"> </span>--<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--cgra-name<span class="o">=</span>k<span class="w"> </span>--cgra-iomap-prefix<span class="o">=</span>out/k_<span class="w"> </span>--cgra-interleaved-kb<span class="o">=</span><span class="m">496</span>
+</pre></div>
+</div>
+<p>Everything after a bare <code class="docutils literal notranslate"><span class="pre">--</span></code> is forwarded verbatim to <code class="docutils literal notranslate"><span class="pre">picea-translate</span></code>, so
+<code class="docutils literal notranslate"><span class="pre">resin</span></code> does not have to mirror the driver’s fifteen options.</p>
+<p><code class="docutils literal notranslate"><span class="pre">--cgra-dfg</span></code> re-runs <code class="docutils literal notranslate"><span class="pre">--legalize-fabric-body</span></code> on the pipeline’s output before
+exporting. That is belt-and-braces — it was measured to be a no-op on all six
+reference kernels — and is kept so a pass added later between <code class="docutils literal notranslate"><span class="pre">annotate</span></code> and
+the export cannot quietly break the “same legalization at both sites”
+guarantee that keeps configuration and bitstream indices in step.</p>
+<p>Note <code class="docutils literal notranslate"><span class="pre">resin</span></code> is not what <code class="docutils literal notranslate"><span class="pre">src/Makefile</span></code> uses; the Makefile drives the same
+tools directly because it also owns the mapper, the RISC-V build and Verilator.
+<code class="docutils literal notranslate"><span class="pre">resin</span></code> is the single-command path for one kernel.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="laksa.html" class="btn btn-neutral float-left" title="The FPGA Variant using LAKSA backend" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="mocasin.html" class="btn btn-neutral float-right" title="Exporting a Profiled Application to Mocasin" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

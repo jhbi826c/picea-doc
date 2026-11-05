@@ -1,0 +1,53 @@
+
+.. _program_listing_file_build_include_picea-mlir_Dialect_Base2_IR_Base2Base.h.inc:
+
+Program Listing for File Base2Base.h.inc
+========================================
+
+|exhale_lsh| :ref:`Return to documentation for file <file_build_include_picea-mlir_Dialect_Base2_IR_Base2Base.h.inc>` (``build/include/picea-mlir/Dialect/Base2/IR/Base2Base.h.inc``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. code-block:: cpp
+
+   /*===- TableGen'erated file -------------------------------------*- C++ -*-===*\
+   |*                                                                            *|
+   |* Dialect Declarations                                                       *|
+   |*                                                                            *|
+   |* Automatically generated file, do not edit!                                 *|
+   |* From: Base2Ops.td                                                          *|
+   |*                                                                            *|
+   \*===----------------------------------------------------------------------===*/
+   
+   namespace mlir::base2 {
+   
+   class Base2Dialect : public ::mlir::Dialect {
+     explicit Base2Dialect(::mlir::MLIRContext *context);
+   
+     void initialize();
+     friend class ::mlir::MLIRContext;
+   public:
+     ~Base2Dialect() override;
+     static constexpr ::llvm::StringLiteral getDialectNamespace() {
+       return ::llvm::StringLiteral("base2");
+     }
+   
+     ::mlir::Attribute parseAttribute(::mlir::DialectAsmParser &parser,
+                                      ::mlir::Type type) const override;
+   
+     void printAttribute(::mlir::Attribute attr,
+                         ::mlir::DialectAsmPrinter &os) const override;
+   
+     ::mlir::Type parseType(::mlir::DialectAsmParser &parser) const override;
+   
+     void printType(::mlir::Type type,
+                    ::mlir::DialectAsmPrinter &os) const override;
+   
+       private:
+           void registerOps();
+           void registerTypes();
+           void registerAttributes();
+       };
+   
+   } // namespace mlir::base2
+   MLIR_DECLARE_EXPLICIT_TYPE_ID(::mlir::base2::Base2Dialect)

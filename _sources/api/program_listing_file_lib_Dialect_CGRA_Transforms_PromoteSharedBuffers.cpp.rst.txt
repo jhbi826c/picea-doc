@@ -1,0 +1,167 @@
+
+.. _program_listing_file_lib_Dialect_CGRA_Transforms_PromoteSharedBuffers.cpp:
+
+Program Listing for File PromoteSharedBuffers.cpp
+=================================================
+
+|exhale_lsh| :ref:`Return to documentation for file <file_lib_Dialect_CGRA_Transforms_PromoteSharedBuffers.cpp>` (``lib/Dialect/CGRA/Transforms/PromoteSharedBuffers.cpp``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. code-block:: cpp
+
+   
+   
+   #include "mlir/Dialect/Affine/IR/AffineOps.h"
+   #include "mlir/Dialect/Func/IR/FuncOps.h"
+   #include "mlir/Dialect/MemRef/IR/MemRef.h"
+   #include "mlir/IR/BuiltinOps.h"
+   #include "mlir/Pass/Pass.h"
+   #include "picea-mlir/Dialect/CGRA/IR/CGRA.h"
+   #include "picea-mlir/Dialect/CGRA/Transforms/Passes.h"
+   
+   #include "llvm/ADT/SmallPtrSet.h"
+   
+   using namespace mlir;
+   
+   namespace {
+   
+   // --outline-cgra-deploy turns each cgra.deploy into its own function, and the
+   // buffers it streams become that function's block arguments. The multi-config
+   // driver emitter then has to decide which of those arguments, across ~40
+   // separate functions, are actually THE SAME array — and the only identity that
+   // survives the outlining is a symbol name. A memref.global has one; a
+   // memref.alloc does not, so every use of it becomes a distinct block argument
+   // and the emitter declares a fresh buffer per (configuration, stream). For a
+   // partitioned network that turned 34 real arrays into 292, i.e. 9.6 MB of
+   // buffers against ~512 KB of RAM — and the configurations would have been
+   // reading and writing different copies.
+   //
+   // This pass gives a symbol to exactly the buffers that need one: those touched
+   // by more than one deploy, or by a deploy and the host. A buffer used by a
+   // single deploy stays local, and a module with fewer than two deploys is left
+   // alone, so nothing that already works through the single-config route is
+   // disturbed.
+   //
+   // Runs AFTER --annotate-to-cgra (it needs to see the deploys) and BEFORE
+   // --outline-cgra-deploy (after outlining the sharing is no longer visible).
+   
+   // Does @p v, or anything derived from it through a view, reach a terminator?
+   static bool escapesFunction(Value v, unsigned depth = 0)
+   {
+       if (depth > 4) return true; // give up conservatively
+       for (Operation* user : v.getUsers()) {
+           if (user->hasTrait<OpTrait::IsTerminator>()) return true;
+           if (isa<memref::CollapseShapeOp,
+                   memref::ExpandShapeOp,
+                   memref::SubViewOp,
+                   memref::CastOp,
+                   memref::ReinterpretCastOp>(user))
+               for (Value r : user->getResults())
+                   if (escapesFunction(r, depth + 1)) return true;
+       }
+       return false;
+   }
+   
+   struct CGRAPromoteSharedBuffersPass : public PassWrapper<
+                                             CGRAPromoteSharedBuffersPass,
+                                             OperationPass<ModuleOp>> {
+   
+       MLIR_DEFINE_EXPLICIT_INTERNAL_INLINE_TYPE_ID(CGRAPromoteSharedBuffersPass)
+   
+       StringRef getArgument() const final { return "promote-shared-buffers"; }
+       StringRef getDescription() const final
+       {
+           return "Promote buffers streamed by more than one cgra.deploy to "
+                  "memref.global, so their identity survives outlining";
+       }
+   
+       void getDependentDialects(mlir::DialectRegistry &registry) const override
+       { registry.insert<memref::MemRefDialect>(); }
+   
+       void runOnOperation() override
+       {
+           ModuleOp module = getOperation();
+   
+           unsigned deploys = 0;
+           module.walk([&](cgra::DeployOp) { ++deploys; });
+           // Any kernel with a deploy: with one merged driver route, even a
+           // single-config kernel has its host segments outlined, and a buffer
+           // crossing into one of those needs a symbol or the driver has nothing
+           // to pass. The old ">= 2" gate belonged to the single-config route,
+           // which no longer exists.
+           if (deploys < 1) return;
+   
+           SmallVector<Operation*> targets;
+           module.walk([&](Operation* op) {
+               if (!isa<memref::AllocOp, memref::AllocaOp>(op)) return;
+               auto ty = dyn_cast<MemRefType>(op->getResult(0).getType());
+               if (!ty || !ty.hasStaticShape() || op->getNumOperands() != 0)
+                   return;
+   
+               llvm::SmallPtrSet<Operation*, 4> deployUsers;
+               bool hostUser = false, viewUser = false;
+               for (Operation* user : op->getResult(0).getUsers())
+                   if (auto d = user->getParentOfType<cgra::DeployOp>())
+                       deployUsers.insert(d);
+                   else if (auto d = dyn_cast<cgra::DeployOp>(user))
+                       deployUsers.insert(d);
+                   else if (isa<affine::AffineLoadOp, affine::AffineStoreOp>(user))
+                       hostUser = true;
+                   else
+                       viewUser = true; // a reshape/view, or the terminator
+               // A buffer that ESCAPES the function — lenet returns its result
+               // through a memref.collapse_shape — must keep its alloc:
+               // --outline-cgra-deploy drops the host, and a view left behind
+               // referring to a promoted global is an operation destroyed while
+               // the return still uses it. But a view used INTERNALLY is not a
+               // reason to skip: residual's pad reads and writes its buffers
+               // through a memref.subview, and leaving those unpromoted means the
+               // outlined host segment takes them as arguments that no longer have
+               // any storage behind them once the host is dropped — the segment
+               // then cannot be called at all.
+               (void)viewUser;
+               if (escapesFunction(op->getResult(0))) return;
+               if (deployUsers.size() >= 2
+                   || (deployUsers.size() == 1 && hostUser))
+                   targets.push_back(op);
+           });
+           if (targets.empty()) return;
+   
+           OpBuilder gb(module.getBodyRegion());
+           gb.setInsertionPointToStart(module.getBody());
+           unsigned n = 0;
+           for (Operation* alloc : targets) {
+               auto ty = cast<MemRefType>(alloc->getResult(0).getType());
+               std::string name = "__cgra_shared" + std::to_string(n++);
+               // Zero-initialised static storage, exactly how a globals-based
+               // kernel declares its streams; the host init code fills them at run
+               // time.
+               auto zero = DenseElementsAttr::get(
+                   RankedTensorType::get(ty.getShape(), ty.getElementType()),
+                   gb.getZeroAttr(ty.getElementType()));
+               memref::GlobalOp::create(
+                   gb,
+                   alloc->getLoc(),
+                   StringRef(name),
+                   gb.getStringAttr("private"),
+                   ty,
+                   /*initial_value=*/cast<Attribute>(zero),
+                   /*constant=*/false,
+                   /*alignment=*/IntegerAttr());
+   
+               OpBuilder b(alloc);
+               auto get = memref::GetGlobalOp::create(
+                   b,
+                   alloc->getLoc(),
+                   ty,
+                   StringRef(name));
+               alloc->getResult(0).replaceAllUsesWith(get.getResult());
+               alloc->erase();
+           }
+       }
+   };
+   } // namespace
+   
+   std::unique_ptr<mlir::Pass> mlir::cgra::createCGRAPromoteSharedBuffersPass()
+   { return std::make_unique<CGRAPromoteSharedBuffersPass>(); }

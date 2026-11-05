@@ -1,0 +1,298 @@
+
+.. _program_listing_file_lib_Dialect_CGRA_Transforms_SplitReductionBias.cpp:
+
+Program Listing for File SplitReductionBias.cpp
+===============================================
+
+|exhale_lsh| :ref:`Return to documentation for file <file_lib_Dialect_CGRA_Transforms_SplitReductionBias.cpp>` (``lib/Dialect/CGRA/Transforms/SplitReductionBias.cpp``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. code-block:: cpp
+
+   
+   
+   //===- SplitReductionBias.cpp - C = beta*C + A*B  ->  temp + elementwise --===//
+   //
+   // The STRELA accumulator can only start from a compile-time constant, so a
+   // reduction seeded with `beta*C_old` cannot run as-is. This pass splits such a
+   // nest into two that can:
+   //
+   //   (1) temp[idx] = sum_k alpha*A*B     zero-seeded reduction
+   //   (2) C[idx]    = beta*C[idx] + temp[idx]     elementwise
+   //
+   // Both then flow through the normal pipeline unchanged.
+   //
+   // Runs on raw affine IR, before annotate-to-cgra. Only rewrites a reduction
+   // whose EVERY iter_args init is `beta*load(out[idx])` with `out[idx]` the
+   // location result #k is stored to; anything else is left untouched.
+   //
+   //===----------------------------------------------------------------------===//
+   
+   #include "mlir/Dialect/Affine/IR/AffineOps.h"
+   #include "mlir/Dialect/Arith/IR/Arith.h"
+   #include "mlir/Dialect/Func/IR/FuncOps.h"
+   #include "mlir/Dialect/MemRef/IR/MemRef.h"
+   #include "mlir/IR/Builders.h"
+   #include "mlir/IR/BuiltinOps.h"
+   #include "mlir/IR/IRMapping.h"
+   #include "mlir/IR/Matchers.h"
+   #include "mlir/Pass/Pass.h"
+   #include "picea-mlir/Dialect/CGRA/Transforms/Passes.h"
+   
+   #include "llvm/ADT/MapVector.h"
+   #include "llvm/ADT/SmallVector.h"
+   
+   using namespace mlir;
+   
+   namespace {
+   
+   // A per-lane `beta * load(out[idx])` accumulator seed.
+   struct BiasSeed {
+       affine::AffineLoadOp load; // load out[idx]
+       Value beta; // the scale (compile-time constant Value); null == 1
+   };
+   
+   // Match `iterInit == mul(load(mem[map]), const)`. Returns the load + the const.
+   // A bare `load(mem[map])` also matches, with beta = 1: that is the seed
+   // --promote-accumulator leaves behind for an accumulator it could not prove
+   // zero (a quantized layer's bias-seeded dense/conv output), and it needs
+   // exactly the same split — the fabric accumulator still cannot start from a
+   // per-element value.
+   static bool matchBetaLoad(Value iterInit, BiasSeed &out, bool allowBareLoad)
+   {
+       if (auto ld = iterInit.getDefiningOp<affine::AffineLoadOp>()) {
+           if (!allowBareLoad) return false;
+           out.load = ld;
+           out.beta =
+               nullptr; // beta == 1, materialised (as nothing) at rewrite time
+           return true;
+       }
+       auto mul = iterInit.getDefiningOp<arith::MulIOp>();
+       if (!mul) return false;
+       Value a = mul.getLhs(), b = mul.getRhs();
+       APInt c;
+       affine::AffineLoadOp ld;
+       Value beta;
+       if (matchPattern(b, m_ConstantInt(&c))) {
+           ld = a.getDefiningOp<affine::AffineLoadOp>();
+           beta = b;
+       } else if (matchPattern(a, m_ConstantInt(&c))) {
+           ld = b.getDefiningOp<affine::AffineLoadOp>();
+           beta = a;
+       } else
+           return false;
+       if (!ld) return false;
+       out.load = ld;
+       out.beta = beta;
+       return true;
+   }
+   
+   // Create a private zero-initialised `memref.global` of @p ty, unique in @p
+   // module.
+   static memref::GlobalOp
+   makeTempGlobal(ModuleOp module, MemRefType ty, StringRef hint)
+   {
+       OpBuilder b(module.getBodyRegion());
+       std::string name = hint.str();
+       unsigned n = 0;
+       auto exists = [&](StringRef s) {
+           return module.lookupSymbol(s) != nullptr;
+       };
+       while (exists(name)) name = hint.str() + "_" + std::to_string(n++);
+       auto zero = DenseElementsAttr::get(
+           RankedTensorType::get(ty.getShape(), ty.getElementType()),
+           b.getIntegerAttr(ty.getElementType(), 0));
+       return memref::GlobalOp::create(
+           b,
+           module.getLoc(),
+           StringRef(name),
+           b.getStringAttr("private"),
+           ty,
+           /*initial_value=*/cast<Attribute>(zero),
+           /*constant=*/false,
+           /*alignment=*/IntegerAttr());
+   }
+   
+   // One matched beta*C reduction: the loop, its output memref, per-lane seeds and
+   // result stores, the constant beta, and how many output elements it writes.
+   struct RedInfo {
+       affine::AffineForOp loop;
+       Value outMem;
+       Value beta;
+       SmallVector<affine::AffineStoreOp> stores;
+       int64_t coverage; // output elements this reduction produces
+   };
+   
+   // Analyse @p redFor: is it a `beta*load(out[idx])`-seeded reduction whose
+   // results are stored back to those same out[idx]? Fills @p info and returns
+   // true.
+   static bool analyze(affine::AffineForOp redFor, RedInfo &info)
+   {
+       unsigned nLane = redFor.getNumRegionIterArgs();
+       if (nLane == 0) return false;
+       ValueRange inits = redFor.getInits();
+       SmallVector<BiasSeed> seeds(nLane);
+       // The bare-load (beta = 1) seed is accepted ONLY on a loop
+       // --promote-accumulator marked: that pass produces the `C = 1*C + reduce`
+       // form knowing this pass will finish the job. An unmarked load-seeded
+       // reduction is somebody else's IR.
+       bool bare = redFor->hasAttr("cgra.load_seeded");
+       for (unsigned k = 0; k < nLane; ++k)
+           if (!matchBetaLoad(inits[k], seeds[k], bare)) return false;
+       // All lanes must scale by the SAME beta (one bias pass covers the output).
+       for (unsigned k = 1; k < nLane; ++k)
+           if (seeds[k].beta != seeds[0].beta) return false;
+   
+       SmallVector<affine::AffineStoreOp> stores(nLane, nullptr);
+       for (Operation* user : redFor->getUsers())
+           if (auto st = dyn_cast<affine::AffineStoreOp>(user))
+               for (unsigned k = 0; k < nLane; ++k)
+                   if (st.getValueToStore() == redFor.getResult(k)) stores[k] = st;
+       for (unsigned k = 0; k < nLane; ++k) {
+           if (!stores[k]) return false;
+           if (stores[k].getMemRef() != seeds[k].load.getMemRef()
+               || stores[k].getAffineMap() != seeds[k].load.getAffineMap()
+               || stores[k].getMapOperands() != seeds[k].load.getMapOperands())
+               return false;
+       }
+       // Coverage = (product of surrounding constant loop trips) * lanes.
+       int64_t trips = 1;
+       for (Operation* p = redFor->getParentOp(); p; p = p->getParentOp()) {
+           auto pf = dyn_cast<affine::AffineForOp>(p);
+           if (!pf) break;
+           if (!pf.hasConstantLowerBound() || !pf.hasConstantUpperBound())
+               return false;
+           trips *= pf.getConstantUpperBound() - pf.getConstantLowerBound();
+       }
+       info.loop = redFor;
+       info.outMem = stores[0].getMemRef();
+       info.beta = seeds[0].beta;
+       info.stores = stores;
+       info.coverage = trips * (int64_t)nLane;
+       return true;
+   }
+   
+   // The top-level op (direct child of the function body) that contains @p op.
+   static Operation* topLevelOf(Operation* op)
+   {
+       while (op->getParentOp() && !isa<func::FuncOp>(op->getParentOp()))
+           op = op->getParentOp();
+       return op;
+   }
+   
+   // Rewrite a group of reductions that all write the SAME output: zero-seed each,
+   // redirect every result store to one shared temp, and emit ONE flat elementwise
+   // bias `out[i] = beta*out[i] + temp[i]` over the whole output. Only valid when
+   // the group's reductions together cover every output element (the matmul case),
+   // so temp[i] is always a genuine `sum` — checked by the caller.
+   static void rewriteGroup(MutableArrayRef<RedInfo> group, ModuleOp module)
+   {
+       Value outMem = group.front().outMem;
+       Value beta = group.front().beta;
+       auto outTy = cast<MemRefType>(outMem.getType());
+   
+       memref::GlobalOp tmpG = makeTempGlobal(module, outTy, "biastmp");
+   
+       // Zero every seed and redirect every store to the shared temp. The temp
+       // get_global (and the zero seed) are materialised at the FUNCTION ENTRY so
+       // they dominate every use — including outline-inserted host-segment calls
+       // that pass the temp as a shared argument from a point before the reduction
+       // itself.
+       affine::AffineForOp firstLoop = group.front().loop;
+       auto fn = firstLoop->getParentOfType<func::FuncOp>();
+       OpBuilder tb(&fn.getBody().front(), fn.getBody().front().begin());
+       Value tmp = memref::GetGlobalOp::create(
+           tb,
+           firstLoop.getLoc(),
+           outTy,
+           tmpG.getSymName());
+       Value zero = arith::ConstantOp::create(
+           tb,
+           firstLoop.getLoc(),
+           tb.getIntegerAttr(outTy.getElementType(), 0));
+   
+       Operation* lastTop = nullptr;
+       for (RedInfo &r : group) {
+           unsigned nLane = r.loop.getNumRegionIterArgs();
+           for (unsigned k = 0; k < nLane; ++k)
+               r.loop.setOperand(r.loop.getNumControlOperands() + k, zero);
+           for (affine::AffineStoreOp st : r.stores)
+               st.getMemrefMutable().assign(tmp);
+           Operation* top = topLevelOf(r.loop);
+           if (!lastTop || lastTop->isBeforeInBlock(top)) lastTop = top;
+       }
+   
+       // One bias nest after the last reduction, one loop per output dimension:
+       //   for i0..iN: out[i0..iN] = beta*out[i0..iN] + temp[i0..iN]
+       // (rank-generic: a dense layer's output is 1xN, a conv's is NxHxWxC — a
+       // flat 1-D nest would index them with the wrong number of subscripts.)
+       OpBuilder nb(lastTop);
+       nb.setInsertionPointAfter(lastTop);
+       Location loc = outMem.getLoc();
+       SmallVector<Value> ivs;
+       for (int64_t d : outTy.getShape()) {
+           auto loop = affine::AffineForOp::create(nb, loc, 0, d, 1);
+           nb.setInsertionPointToStart(loop.getBody());
+           ivs.push_back(loop.getInductionVar());
+       }
+       AffineMap id =
+           AffineMap::getMultiDimIdentityMap(outTy.getRank(), nb.getContext());
+       Value oldC = affine::AffineLoadOp::create(nb, loc, outMem, id, ivs);
+       Value scaled =
+           beta ? arith::MulIOp::create(nb, loc, oldC, beta).getResult() : oldC;
+       Value t = affine::AffineLoadOp::create(nb, loc, tmp, id, ivs);
+       Value sum = arith::AddIOp::create(nb, loc, scaled, t);
+       affine::AffineStoreOp::create(nb, loc, sum, outMem, id, ivs);
+   }
+   
+   class CGRASplitReductionBiasPass : public PassWrapper<
+                                          CGRASplitReductionBiasPass,
+                                          OperationPass<ModuleOp>> {
+   public:
+       MLIR_DEFINE_EXPLICIT_INTERNAL_INLINE_TYPE_ID(CGRASplitReductionBiasPass)
+   
+       StringRef getArgument() const final { return "split-reduction-bias"; }
+       StringRef getDescription() const final
+       {
+           return "Split `C = beta*C + reduce` into a zero-seeded reduction + an "
+                  "elementwise bias so beta*C_old runs on the fabric";
+       }
+   
+       void runOnOperation() override
+       {
+           ModuleOp module = getOperation();
+           // Match every beta*C reduction, grouped by output memref.
+           llvm::MapVector<Value, SmallVector<RedInfo>> byOutput;
+           module.walk([&](affine::AffineForOp f) {
+               bool inner = true; // innermost (leaf) reduction loops only
+               f.getBody()->walk([&](affine::AffineForOp) { inner = false; });
+               if (!inner || f.getNumRegionIterArgs() == 0) return;
+               RedInfo info;
+               if (analyze(f, info)) byOutput[info.outMem].push_back(info);
+           });
+           // Rewrite a group only when its reductions COVER every output element
+           // (so the shared temp is fully written and the flat `beta*out + temp`
+           // bias is exact), and all lanes share one beta. Otherwise leave it
+           // (correctness over cleverness).
+           for (auto &kv : byOutput) {
+               SmallVector<RedInfo> &group = kv.second;
+               auto outTy = dyn_cast<MemRefType>(kv.first.getType());
+               if (!outTy || !outTy.hasStaticShape()) continue;
+               int64_t elems = 1;
+               for (int64_t d : outTy.getShape()) elems *= d;
+               int64_t covered = 0;
+               bool sameBeta = true;
+               for (const RedInfo &r : group) {
+                   covered += r.coverage;
+                   if (r.beta != group.front().beta) sameBeta = false;
+               }
+               if (sameBeta && covered == elems) rewriteGroup(group, module);
+           }
+       }
+   };
+   
+   } // namespace
+   
+   std::unique_ptr<Pass> mlir::cgra::createCGRASplitReductionBiasPass()
+   { return std::make_unique<CGRASplitReductionBiasPass>(); }

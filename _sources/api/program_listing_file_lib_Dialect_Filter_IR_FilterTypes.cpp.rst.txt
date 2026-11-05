@@ -1,0 +1,45 @@
+
+.. _program_listing_file_lib_Dialect_Filter_IR_FilterTypes.cpp:
+
+Program Listing for File FilterTypes.cpp
+========================================
+
+|exhale_lsh| :ref:`Return to documentation for file <file_lib_Dialect_Filter_IR_FilterTypes.cpp>` (``lib/Dialect/Filter/IR/FilterTypes.cpp``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. code-block:: cpp
+
+   
+   
+   #include "picea-mlir/Dialect/Filter/IR/FilterTypes.h"
+   
+   #include "mlir/IR/Builders.h"
+   #include "mlir/IR/DialectImplementation.h"
+   #include "mlir/IR/OpImplementation.h"
+   #include "mlir/IR/TypeUtilities.h"
+   
+   #include "llvm/ADT/TypeSwitch.h"
+   #include "llvm/Support/ErrorHandling.h"
+   
+   using namespace mlir;
+   using namespace mlir::filter;
+   
+   //===- Generated implementation -------------------------------------------===//
+   
+   #define GET_TYPEDEF_CLASSES
+   #include "picea-mlir/Dialect/Filter/IR/FilterTypes.cpp.inc"
+   
+   //===----------------------------------------------------------------------===//
+   
+   //===----------------------------------------------------------------------===//
+   // FilterDialect
+   //===----------------------------------------------------------------------===//
+   
+   void FilterDialect::registerTypes()
+   {
+       addTypes<
+   #define GET_TYPEDEF_LIST
+   #include "picea-mlir/Dialect/Filter/IR/FilterTypes.cpp.inc"
+           >();
+   }

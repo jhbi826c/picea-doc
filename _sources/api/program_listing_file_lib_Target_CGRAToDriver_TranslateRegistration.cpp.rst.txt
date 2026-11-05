@@ -1,0 +1,57 @@
+
+.. _program_listing_file_lib_Target_CGRAToDriver_TranslateRegistration.cpp:
+
+Program Listing for File TranslateRegistration.cpp
+==================================================
+
+|exhale_lsh| :ref:`Return to documentation for file <file_lib_Target_CGRAToDriver_TranslateRegistration.cpp>` (``lib/Target/CGRAToDriver/TranslateRegistration.cpp``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. code-block:: cpp
+
+   
+   
+   #include "mlir/InitAllDialects.h"
+   #include "mlir/Tools/mlir-translate/Translation.h"
+   #include "picea-mlir/Dialect/CGRA/IR/CGRA.h"
+   #include "picea-mlir/Target/CGRAToDriver/DriverEmitter.h"
+   
+   using namespace mlir;
+   
+   namespace {
+   
+   void registerCGRADialects(DialectRegistry &registry)
+   {
+       registerAllDialects(registry);
+       registry.insert<cgra::CGRADialect>();
+   }
+   
+   } // namespace
+   
+   namespace mlir {
+   
+   //===----------------------------------------------------------------------===//
+   // Translation registration
+   //===----------------------------------------------------------------------===//
+   
+   void registerCGRAToDriverTranslation()
+   {
+       TranslateFromMLIRRegistration driver(
+           "cgra-to-driver",
+           "generate the GR-HEEP STRELA C driver for an outlined CGRA kernel",
+           [](Operation* op, raw_ostream &output) {
+               return cgra::translateCGRAToDriver(op, output);
+           },
+           registerCGRADialects);
+   
+       TranslateFromMLIRRegistration dataset(
+           "cgra-to-dataset",
+           "generate the dataset.h accompanying the CGRA C driver",
+           [](Operation* op, raw_ostream &output) {
+               return cgra::translateCGRAToDataset(op, output);
+           },
+           registerCGRADialects);
+   }
+   
+   } // namespace mlir

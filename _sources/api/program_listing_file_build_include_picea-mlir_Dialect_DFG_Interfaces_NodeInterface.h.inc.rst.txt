@@ -1,0 +1,217 @@
+
+.. _program_listing_file_build_include_picea-mlir_Dialect_DFG_Interfaces_NodeInterface.h.inc:
+
+Program Listing for File NodeInterface.h.inc
+============================================
+
+|exhale_lsh| :ref:`Return to documentation for file <file_build_include_picea-mlir_Dialect_DFG_Interfaces_NodeInterface.h.inc>` (``build/include/picea-mlir/Dialect/DFG/Interfaces/NodeInterface.h.inc``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. code-block:: cpp
+
+   /*===- TableGen'erated file -------------------------------------*- C++ -*-===*\
+   |*                                                                            *|
+   |* Interface Declarations                                                     *|
+   |*                                                                            *|
+   |* Automatically generated file, do not edit!                                 *|
+   |*                                                                            *|
+   \*===----------------------------------------------------------------------===*/
+   
+   namespace mlir::dfg {
+   
+   class NodeInterface;
+   
+   } // namespace mlir::dfg
+   namespace mlir::dfg {
+   
+   namespace detail {
+   struct NodeInterfaceInterfaceTraits {
+     struct Concept {
+       std::string (*getNodeName)(const Concept *impl, ::mlir::Operation *);
+       unsigned (*getNumInputPorts)(const Concept *impl, ::mlir::Operation *);
+       ::mlir::Value (*getInputPort)(const Concept *impl, ::mlir::Operation *, unsigned);
+       ::llvm::SmallVector<::mlir::Type> (*getInputPortTypes)(const Concept *impl, ::mlir::Operation *);
+       ::llvm::SmallVector<::mlir::Value> (*getInputPorts)(const Concept *impl, ::mlir::Operation *);
+       unsigned (*getNumOutputPorts)(const Concept *impl, ::mlir::Operation *);
+       ::mlir::Value (*getOutputPort)(const Concept *impl, ::mlir::Operation *, unsigned);
+       ::llvm::SmallVector<::mlir::Type> (*getOutputPortTypes)(const Concept *impl, ::mlir::Operation *);
+       ::llvm::SmallVector<::mlir::Value> (*getOutputPorts)(const Concept *impl, ::mlir::Operation *);
+       ::mlir::FunctionType (*getBaseFunctionType)(const Concept *impl, ::mlir::Operation *);
+     };
+     template<typename ConcreteOp>
+     class Model : public Concept {
+     public:
+       using Interface = ::mlir::dfg::NodeInterface;
+       Model() : Concept{getNodeName, getNumInputPorts, getInputPort, getInputPortTypes, getInputPorts, getNumOutputPorts, getOutputPort, getOutputPortTypes, getOutputPorts, getBaseFunctionType} {}
+   
+       static inline std::string getNodeName(const Concept *impl, ::mlir::Operation *tablegen_opaque_val);
+       static inline unsigned getNumInputPorts(const Concept *impl, ::mlir::Operation *tablegen_opaque_val);
+       static inline ::mlir::Value getInputPort(const Concept *impl, ::mlir::Operation *tablegen_opaque_val, unsigned index);
+       static inline ::llvm::SmallVector<::mlir::Type> getInputPortTypes(const Concept *impl, ::mlir::Operation *tablegen_opaque_val);
+       static inline ::llvm::SmallVector<::mlir::Value> getInputPorts(const Concept *impl, ::mlir::Operation *tablegen_opaque_val);
+       static inline unsigned getNumOutputPorts(const Concept *impl, ::mlir::Operation *tablegen_opaque_val);
+       static inline ::mlir::Value getOutputPort(const Concept *impl, ::mlir::Operation *tablegen_opaque_val, unsigned index);
+       static inline ::llvm::SmallVector<::mlir::Type> getOutputPortTypes(const Concept *impl, ::mlir::Operation *tablegen_opaque_val);
+       static inline ::llvm::SmallVector<::mlir::Value> getOutputPorts(const Concept *impl, ::mlir::Operation *tablegen_opaque_val);
+       static inline ::mlir::FunctionType getBaseFunctionType(const Concept *impl, ::mlir::Operation *tablegen_opaque_val);
+     };
+     template<typename ConcreteOp>
+     class FallbackModel : public Concept {
+     public:
+       using Interface = ::mlir::dfg::NodeInterface;
+       FallbackModel() : Concept{getNodeName, getNumInputPorts, getInputPort, getInputPortTypes, getInputPorts, getNumOutputPorts, getOutputPort, getOutputPortTypes, getOutputPorts, getBaseFunctionType} {}
+   
+       static inline std::string getNodeName(const Concept *impl, ::mlir::Operation *tablegen_opaque_val);
+       static inline unsigned getNumInputPorts(const Concept *impl, ::mlir::Operation *tablegen_opaque_val);
+       static inline ::mlir::Value getInputPort(const Concept *impl, ::mlir::Operation *tablegen_opaque_val, unsigned index);
+       static inline ::llvm::SmallVector<::mlir::Type> getInputPortTypes(const Concept *impl, ::mlir::Operation *tablegen_opaque_val);
+       static inline ::llvm::SmallVector<::mlir::Value> getInputPorts(const Concept *impl, ::mlir::Operation *tablegen_opaque_val);
+       static inline unsigned getNumOutputPorts(const Concept *impl, ::mlir::Operation *tablegen_opaque_val);
+       static inline ::mlir::Value getOutputPort(const Concept *impl, ::mlir::Operation *tablegen_opaque_val, unsigned index);
+       static inline ::llvm::SmallVector<::mlir::Type> getOutputPortTypes(const Concept *impl, ::mlir::Operation *tablegen_opaque_val);
+       static inline ::llvm::SmallVector<::mlir::Value> getOutputPorts(const Concept *impl, ::mlir::Operation *tablegen_opaque_val);
+       static inline ::mlir::FunctionType getBaseFunctionType(const Concept *impl, ::mlir::Operation *tablegen_opaque_val);
+     };
+     template<typename ConcreteModel, typename ConcreteOp>
+     class ExternalModel : public FallbackModel<ConcreteModel> {
+     public:
+       using ConcreteEntity = ConcreteOp;
+       ::mlir::FunctionType getBaseFunctionType(::mlir::Operation *tablegen_opaque_val) const;
+     };
+   };
+   template <typename ConcreteOp>
+   struct NodeInterfaceTrait;
+   
+   } // namespace detail
+   class NodeInterface : public ::mlir::OpInterface<NodeInterface, detail::NodeInterfaceInterfaceTraits> {
+   public:
+     using ::mlir::OpInterface<NodeInterface, detail::NodeInterfaceInterfaceTraits>::OpInterface;
+     template <typename ConcreteOp>
+     struct Trait : public detail::NodeInterfaceTrait<ConcreteOp> {};
+   
+     std::string getNodeName();
+   
+     unsigned getNumInputPorts();
+   
+     ::mlir::Value getInputPort(unsigned index);
+   
+     ::llvm::SmallVector<::mlir::Type> getInputPortTypes();
+   
+     ::llvm::SmallVector<::mlir::Value> getInputPorts();
+   
+     unsigned getNumOutputPorts();
+   
+     ::mlir::Value getOutputPort(unsigned index);
+   
+     ::llvm::SmallVector<::mlir::Type> getOutputPortTypes();
+   
+     ::llvm::SmallVector<::mlir::Value> getOutputPorts();
+   
+     ::mlir::FunctionType getBaseFunctionType();
+   };
+   
+   } // namespace mlir::dfg
+   namespace mlir::dfg::detail {
+   
+     template <typename ConcreteOp>
+     struct NodeInterfaceTrait : public ::mlir::OpInterface<NodeInterface, detail::NodeInterfaceInterfaceTraits>::Trait<ConcreteOp> {
+   
+       ::mlir::FunctionType getBaseFunctionType() {
+         return ::mlir::FunctionType::get((*static_cast<ConcreteOp *>(this)).getContext(),
+                                                    (*static_cast<ConcreteOp *>(this)).getInputPortTypes(),
+                                                    (*static_cast<ConcreteOp *>(this)).getOutputPortTypes());
+       }
+     };
+   
+   } // namespace mlir::dfg::detail
+   namespace mlir::dfg {
+   
+   template<typename ConcreteOp>
+   std::string detail::NodeInterfaceInterfaceTraits::Model<ConcreteOp>::getNodeName(const Concept *impl, ::mlir::Operation *tablegen_opaque_val) {
+     return (llvm::cast<ConcreteOp>(tablegen_opaque_val)).getNodeName();
+   }
+   template<typename ConcreteOp>
+   unsigned detail::NodeInterfaceInterfaceTraits::Model<ConcreteOp>::getNumInputPorts(const Concept *impl, ::mlir::Operation *tablegen_opaque_val) {
+     return (llvm::cast<ConcreteOp>(tablegen_opaque_val)).getNumInputPorts();
+   }
+   template<typename ConcreteOp>
+   ::mlir::Value detail::NodeInterfaceInterfaceTraits::Model<ConcreteOp>::getInputPort(const Concept *impl, ::mlir::Operation *tablegen_opaque_val, unsigned index) {
+     return (llvm::cast<ConcreteOp>(tablegen_opaque_val)).getInputPort(index);
+   }
+   template<typename ConcreteOp>
+   ::llvm::SmallVector<::mlir::Type> detail::NodeInterfaceInterfaceTraits::Model<ConcreteOp>::getInputPortTypes(const Concept *impl, ::mlir::Operation *tablegen_opaque_val) {
+     return (llvm::cast<ConcreteOp>(tablegen_opaque_val)).getInputPortTypes();
+   }
+   template<typename ConcreteOp>
+   ::llvm::SmallVector<::mlir::Value> detail::NodeInterfaceInterfaceTraits::Model<ConcreteOp>::getInputPorts(const Concept *impl, ::mlir::Operation *tablegen_opaque_val) {
+     return (llvm::cast<ConcreteOp>(tablegen_opaque_val)).getInputPorts();
+   }
+   template<typename ConcreteOp>
+   unsigned detail::NodeInterfaceInterfaceTraits::Model<ConcreteOp>::getNumOutputPorts(const Concept *impl, ::mlir::Operation *tablegen_opaque_val) {
+     return (llvm::cast<ConcreteOp>(tablegen_opaque_val)).getNumOutputPorts();
+   }
+   template<typename ConcreteOp>
+   ::mlir::Value detail::NodeInterfaceInterfaceTraits::Model<ConcreteOp>::getOutputPort(const Concept *impl, ::mlir::Operation *tablegen_opaque_val, unsigned index) {
+     return (llvm::cast<ConcreteOp>(tablegen_opaque_val)).getOutputPort(index);
+   }
+   template<typename ConcreteOp>
+   ::llvm::SmallVector<::mlir::Type> detail::NodeInterfaceInterfaceTraits::Model<ConcreteOp>::getOutputPortTypes(const Concept *impl, ::mlir::Operation *tablegen_opaque_val) {
+     return (llvm::cast<ConcreteOp>(tablegen_opaque_val)).getOutputPortTypes();
+   }
+   template<typename ConcreteOp>
+   ::llvm::SmallVector<::mlir::Value> detail::NodeInterfaceInterfaceTraits::Model<ConcreteOp>::getOutputPorts(const Concept *impl, ::mlir::Operation *tablegen_opaque_val) {
+     return (llvm::cast<ConcreteOp>(tablegen_opaque_val)).getOutputPorts();
+   }
+   template<typename ConcreteOp>
+   ::mlir::FunctionType detail::NodeInterfaceInterfaceTraits::Model<ConcreteOp>::getBaseFunctionType(const Concept *impl, ::mlir::Operation *tablegen_opaque_val) {
+     return (llvm::cast<ConcreteOp>(tablegen_opaque_val)).getBaseFunctionType();
+   }
+   template<typename ConcreteOp>
+   std::string detail::NodeInterfaceInterfaceTraits::FallbackModel<ConcreteOp>::getNodeName(const Concept *impl, ::mlir::Operation *tablegen_opaque_val) {
+     return static_cast<const ConcreteOp *>(impl)->getNodeName(tablegen_opaque_val);
+   }
+   template<typename ConcreteOp>
+   unsigned detail::NodeInterfaceInterfaceTraits::FallbackModel<ConcreteOp>::getNumInputPorts(const Concept *impl, ::mlir::Operation *tablegen_opaque_val) {
+     return static_cast<const ConcreteOp *>(impl)->getNumInputPorts(tablegen_opaque_val);
+   }
+   template<typename ConcreteOp>
+   ::mlir::Value detail::NodeInterfaceInterfaceTraits::FallbackModel<ConcreteOp>::getInputPort(const Concept *impl, ::mlir::Operation *tablegen_opaque_val, unsigned index) {
+     return static_cast<const ConcreteOp *>(impl)->getInputPort(tablegen_opaque_val, index);
+   }
+   template<typename ConcreteOp>
+   ::llvm::SmallVector<::mlir::Type> detail::NodeInterfaceInterfaceTraits::FallbackModel<ConcreteOp>::getInputPortTypes(const Concept *impl, ::mlir::Operation *tablegen_opaque_val) {
+     return static_cast<const ConcreteOp *>(impl)->getInputPortTypes(tablegen_opaque_val);
+   }
+   template<typename ConcreteOp>
+   ::llvm::SmallVector<::mlir::Value> detail::NodeInterfaceInterfaceTraits::FallbackModel<ConcreteOp>::getInputPorts(const Concept *impl, ::mlir::Operation *tablegen_opaque_val) {
+     return static_cast<const ConcreteOp *>(impl)->getInputPorts(tablegen_opaque_val);
+   }
+   template<typename ConcreteOp>
+   unsigned detail::NodeInterfaceInterfaceTraits::FallbackModel<ConcreteOp>::getNumOutputPorts(const Concept *impl, ::mlir::Operation *tablegen_opaque_val) {
+     return static_cast<const ConcreteOp *>(impl)->getNumOutputPorts(tablegen_opaque_val);
+   }
+   template<typename ConcreteOp>
+   ::mlir::Value detail::NodeInterfaceInterfaceTraits::FallbackModel<ConcreteOp>::getOutputPort(const Concept *impl, ::mlir::Operation *tablegen_opaque_val, unsigned index) {
+     return static_cast<const ConcreteOp *>(impl)->getOutputPort(tablegen_opaque_val, index);
+   }
+   template<typename ConcreteOp>
+   ::llvm::SmallVector<::mlir::Type> detail::NodeInterfaceInterfaceTraits::FallbackModel<ConcreteOp>::getOutputPortTypes(const Concept *impl, ::mlir::Operation *tablegen_opaque_val) {
+     return static_cast<const ConcreteOp *>(impl)->getOutputPortTypes(tablegen_opaque_val);
+   }
+   template<typename ConcreteOp>
+   ::llvm::SmallVector<::mlir::Value> detail::NodeInterfaceInterfaceTraits::FallbackModel<ConcreteOp>::getOutputPorts(const Concept *impl, ::mlir::Operation *tablegen_opaque_val) {
+     return static_cast<const ConcreteOp *>(impl)->getOutputPorts(tablegen_opaque_val);
+   }
+   template<typename ConcreteOp>
+   ::mlir::FunctionType detail::NodeInterfaceInterfaceTraits::FallbackModel<ConcreteOp>::getBaseFunctionType(const Concept *impl, ::mlir::Operation *tablegen_opaque_val) {
+     return static_cast<const ConcreteOp *>(impl)->getBaseFunctionType(tablegen_opaque_val);
+   }
+   template<typename ConcreteModel, typename ConcreteOp>
+   ::mlir::FunctionType detail::NodeInterfaceInterfaceTraits::ExternalModel<ConcreteModel, ConcreteOp>::getBaseFunctionType(::mlir::Operation *tablegen_opaque_val) const {
+   return ::mlir::FunctionType::get((llvm::cast<ConcreteOp>(tablegen_opaque_val)).getContext(),
+                                                    (llvm::cast<ConcreteOp>(tablegen_opaque_val)).getInputPortTypes(),
+                                                    (llvm::cast<ConcreteOp>(tablegen_opaque_val)).getOutputPortTypes());
+   }
+   
+   } // namespace mlir::dfg

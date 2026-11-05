@@ -1,0 +1,41 @@
+
+.. _program_listing_file_include_picea-mlir_Target_LaksaCommon_BufferInfo.h:
+
+Program Listing for File BufferInfo.h
+=====================================
+
+|exhale_lsh| :ref:`Return to documentation for file <file_include_picea-mlir_Target_LaksaCommon_BufferInfo.h>` (``include/picea-mlir/Target/LaksaCommon/BufferInfo.h``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. code-block:: cpp
+
+   
+   
+   #pragma once
+   
+   #include "picea-mlir/Dialect/EmitHLS/IR/EmitHLS.h"
+   
+   #include "llvm/ADT/SmallVector.h"
+   
+   namespace mlir::emithls {
+   
+   struct LaksaBufferInfo {
+       bool isReadByKernel = false;
+       bool isWrittenByKernel = false;
+       int64_t numElements = 0;
+       unsigned elementBits = 0;
+   
+       int64_t getSizeInBytes() const
+       { return numElements * ((elementBits + 7) / 8); }
+   };
+   
+   FailureOr<FuncOp> findLaksaTopFunc(ModuleOp moduleOp);
+   
+   LogicalResult collectLaksaBufferInfos(
+       FuncOp topFunc,
+       SmallVectorImpl<LaksaBufferInfo> &buffers);
+   
+   std::string getLaksaMacroPrefix(StringRef designName);
+   
+   } // namespace mlir::emithls

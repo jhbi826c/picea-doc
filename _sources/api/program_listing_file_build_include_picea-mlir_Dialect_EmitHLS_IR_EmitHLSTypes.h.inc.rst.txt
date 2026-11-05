@@ -1,0 +1,149 @@
+
+.. _program_listing_file_build_include_picea-mlir_Dialect_EmitHLS_IR_EmitHLSTypes.h.inc:
+
+Program Listing for File EmitHLSTypes.h.inc
+===========================================
+
+|exhale_lsh| :ref:`Return to documentation for file <file_build_include_picea-mlir_Dialect_EmitHLS_IR_EmitHLSTypes.h.inc>` (``build/include/picea-mlir/Dialect/EmitHLS/IR/EmitHLSTypes.h.inc``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. code-block:: cpp
+
+   /*===- TableGen'erated file -------------------------------------*- C++ -*-===*\
+   |*                                                                            *|
+   |* TypeDef Declarations                                                       *|
+   |*                                                                            *|
+   |* Automatically generated file, do not edit!                                 *|
+   |*                                                                            *|
+   \*===----------------------------------------------------------------------===*/
+   
+   #ifdef GET_TYPEDEF_CLASSES
+   #undef GET_TYPEDEF_CLASSES
+   
+   
+   namespace mlir {
+   class AsmParser;
+   class AsmPrinter;
+   } // namespace mlir
+   namespace mlir::emithls {
+   
+   class FixedType;
+   class StreamType;
+   class PointerType;
+   class ArrayType;
+   namespace detail {
+   
+   struct FixedTypeStorage;
+   
+   } // namespace detail
+   class FixedType : public ::mlir::Type::TypeBase<FixedType, ::mlir::Type, detail::FixedTypeStorage, ::mlir::MemRefElementTypeInterface::Trait> {
+   public:
+     using Base::Base;
+     int64_t getFracBits() const;
+     static constexpr ::llvm::StringLiteral name = "emithls.fixed";
+     static constexpr ::llvm::StringLiteral dialectName = "emithls";
+     using Base::getChecked;
+     static FixedType get(::mlir::MLIRContext *context, int64_t totalBits, int64_t intBits);
+     static FixedType getChecked(::llvm::function_ref<::mlir::InFlightDiagnostic()> emitError, ::mlir::MLIRContext *context, int64_t totalBits, int64_t intBits);
+     static ::llvm::LogicalResult verify(::llvm::function_ref<::mlir::InFlightDiagnostic()> emitError, int64_t totalBits, int64_t intBits);
+     static ::llvm::LogicalResult verifyInvariants(::llvm::function_ref<::mlir::InFlightDiagnostic()> emitError, int64_t totalBits, int64_t intBits);
+     static constexpr ::llvm::StringLiteral getMnemonic() {
+       return {"fixed"};
+     }
+   
+     static ::mlir::Type parse(::mlir::AsmParser &odsParser);
+     void print(::mlir::AsmPrinter &odsPrinter) const;
+     int64_t getTotalBits() const;
+     int64_t getIntBits() const;
+   };
+   namespace detail {
+   
+   struct StreamTypeStorage;
+   
+   } // namespace detail
+   class StreamType : public ::mlir::Type::TypeBase<StreamType, ::mlir::Type, detail::StreamTypeStorage> {
+   public:
+     using Base::Base;
+     static constexpr ::llvm::StringLiteral name = "emithls.stream";
+     static constexpr ::llvm::StringLiteral dialectName = "emithls";
+     using Base::getChecked;
+     static StreamType get(::mlir::MLIRContext *context, Type elementType);
+     static StreamType getChecked(::llvm::function_ref<::mlir::InFlightDiagnostic()> emitError, ::mlir::MLIRContext *context, Type elementType);
+     static ::llvm::LogicalResult verify(::llvm::function_ref<::mlir::InFlightDiagnostic()> emitError, Type elementType);
+     static ::llvm::LogicalResult verifyInvariants(::llvm::function_ref<::mlir::InFlightDiagnostic()> emitError, Type elementType);
+     static constexpr ::llvm::StringLiteral getMnemonic() {
+       return {"stream"};
+     }
+   
+     static ::mlir::Type parse(::mlir::AsmParser &odsParser);
+     void print(::mlir::AsmPrinter &odsPrinter) const;
+     Type getElementType() const;
+   };
+   namespace detail {
+   
+   struct PointerTypeStorage;
+   
+   } // namespace detail
+   class PointerType : public ::mlir::Type::TypeBase<PointerType, ::mlir::Type, detail::PointerTypeStorage> {
+   public:
+     using Base::Base;
+     static constexpr ::llvm::StringLiteral name = "emithls.ptr";
+     static constexpr ::llvm::StringLiteral dialectName = "emithls";
+     using Base::getChecked;
+     static PointerType get(::mlir::MLIRContext *context, Type elementType);
+     static PointerType getChecked(::llvm::function_ref<::mlir::InFlightDiagnostic()> emitError, ::mlir::MLIRContext *context, Type elementType);
+     static ::llvm::LogicalResult verify(::llvm::function_ref<::mlir::InFlightDiagnostic()> emitError, Type elementType);
+     static ::llvm::LogicalResult verifyInvariants(::llvm::function_ref<::mlir::InFlightDiagnostic()> emitError, Type elementType);
+     static constexpr ::llvm::StringLiteral getMnemonic() {
+       return {"ptr"};
+     }
+   
+     static ::mlir::Type parse(::mlir::AsmParser &odsParser);
+     void print(::mlir::AsmPrinter &odsPrinter) const;
+     Type getElementType() const;
+   };
+   namespace detail {
+   
+   struct ArrayTypeStorage;
+   
+   } // namespace detail
+   class ArrayType : public ::mlir::Type::TypeBase<ArrayType, ::mlir::Type, detail::ArrayTypeStorage, ::mlir::ShapedType::Trait> {
+   public:
+     using Base::Base;
+     //===------------------------------------------------------------------===//
+     // ShapedTypeInterface Methods
+     //===------------------------------------------------------------------===//
+   
+     // For HLS, an array should always have rank
+     bool hasRank() const;
+   
+     ArrayType cloneWith(std::optional<ArrayRef<int64_t>> shape,
+                           Type elementType) const;
+     static constexpr ::llvm::StringLiteral name = "emithls.array";
+     static constexpr ::llvm::StringLiteral dialectName = "emithls";
+     using Base::getChecked;
+     static ArrayType get(::mlir::MLIRContext *context, ::llvm::ArrayRef<int64_t> shape, Type elementType);
+     static ArrayType getChecked(::llvm::function_ref<::mlir::InFlightDiagnostic()> emitError, ::mlir::MLIRContext *context, ::llvm::ArrayRef<int64_t> shape, Type elementType);
+     static ArrayType get(ArrayRef<int64_t> shape, Type elementType);
+     static ArrayType getChecked(::llvm::function_ref<::mlir::InFlightDiagnostic()> emitError, ArrayRef<int64_t> shape, Type elementType);
+     static ::llvm::LogicalResult verify(::llvm::function_ref<::mlir::InFlightDiagnostic()> emitError, ::llvm::ArrayRef<int64_t> shape, Type elementType);
+     static ::llvm::LogicalResult verifyInvariants(::llvm::function_ref<::mlir::InFlightDiagnostic()> emitError, ::llvm::ArrayRef<int64_t> shape, Type elementType);
+     static constexpr ::llvm::StringLiteral getMnemonic() {
+       return {"array"};
+     }
+   
+     static ::mlir::Type parse(::mlir::AsmParser &odsParser);
+     void print(::mlir::AsmPrinter &odsPrinter) const;
+     ::llvm::ArrayRef<int64_t> getShape() const;
+     Type getElementType() const;
+   };
+   
+   } // namespace mlir::emithls
+   MLIR_DECLARE_EXPLICIT_TYPE_ID(::mlir::emithls::FixedType)
+   MLIR_DECLARE_EXPLICIT_TYPE_ID(::mlir::emithls::StreamType)
+   MLIR_DECLARE_EXPLICIT_TYPE_ID(::mlir::emithls::PointerType)
+   MLIR_DECLARE_EXPLICIT_TYPE_ID(::mlir::emithls::ArrayType)
+   
+   #endif // GET_TYPEDEF_CLASSES
+   

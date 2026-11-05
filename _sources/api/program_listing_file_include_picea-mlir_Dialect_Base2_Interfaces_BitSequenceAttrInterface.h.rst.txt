@@ -1,0 +1,262 @@
+
+.. _program_listing_file_include_picea-mlir_Dialect_Base2_Interfaces_BitSequenceAttrInterface.h:
+
+Program Listing for File BitSequenceAttrInterface.h
+===================================================
+
+|exhale_lsh| :ref:`Return to documentation for file <file_include_picea-mlir_Dialect_Base2_Interfaces_BitSequenceAttrInterface.h>` (``include/picea-mlir/Dialect/Base2/Interfaces/BitSequenceAttrInterface.h``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. code-block:: cpp
+
+   
+   
+   #pragma once
+   
+   #include "mlir/IR/BuiltinAttributeInterfaces.h"
+   #include "mlir/IR/OpDefinition.h"
+   #include "picea-mlir/Dialect/Base2/Analysis/BitSequence.h"
+   #include "picea-mlir/Dialect/Base2/Interfaces/BitSequenceTypeInterface.h"
+   
+   namespace mlir::base2 {
+   
+   using UnaryBitSequenceFn = function_ref<BitSequence(const BitSequence &)>;
+   
+   using BinaryBitSequenceFn =
+       function_ref<BitSequence(const BitSequence &, const BitSequence &)>;
+   
+   using TernaryBitSequenceFn = function_ref<
+       BitSequence(const BitSequence &, const BitSequence &, const BitSequence &)>;
+   
+   } // namespace mlir::base2
+   
+   //===- Generated includes -------------------------------------------------===//
+   
+   #include "picea-mlir/Dialect/Base2/Interfaces/BitSequenceAttrInterface.h.inc"
+   
+   //===----------------------------------------------------------------------===//
+   
+   namespace mlir::base2 {
+   
+   //===----------------------------------------------------------------------===//
+   // DenseBitSequencesAttr
+   //===----------------------------------------------------------------------===//
+   
+   class DenseBitSequencesAttr : public ElementsAttr {
+   public:
+       using ValueType = BitSequence;
+       using iterator = mlir::detail::ElementsAttrIterator<ValueType>;
+       using range = mlir::detail::ElementsAttrRange<iterator>;
+   
+       using ElementsAttr::ElementsAttr;
+   
+       [[nodiscard]] static bool classof(ElementsAttr attr);
+       [[nodiscard]] static bool classof(Attribute attr)
+       {
+           if (const auto elements = dyn_cast<ElementsAttr>(attr))
+               return classof(elements);
+   
+           return false;
+       }
+   
+       [[nodiscard]] static DenseTypedElementsAttr
+       getData(ShapedType type, ArrayRef<BitSequence> values);
+   
+       [[nodiscard]] static DenseBitSequencesAttr
+       get(ShapedType type, DenseTypedElementsAttr data);
+       [[nodiscard]] static DenseBitSequencesAttr
+       get(ShapedType type, ArrayRef<BitSequence> values)
+       { return get(type, getData(type, values)); }
+       [[nodiscard]] static DenseBitSequencesAttr
+       get(ShapedType type, const BitSequence &splatValue)
+       { return get(type, getData(type, splatValue)); }
+       [[nodiscard]] static DenseBitSequencesAttr get(DenseBitSequencesAttr attr)
+       {
+           assert(attr);
+   
+           if (isa<FloatType, IntegerType>(attr.getElementType())) {
+               if (isa<DenseTypedElementsAttr>(attr)) return attr;
+           }
+   
+           return get(
+               cast<ShapedType>(attr.getType()),
+               llvm::to_vector(attr.getValues()));
+       }
+   
+       [[nodiscard]] DenseBitSequencesAttr
+       bitCastElements(BitSequenceType elementTy) const;
+   
+       [[nodiscard]] DenseBitSequencesAttr
+       map(UnaryBitSequenceFn fn,
+           BitSequenceType elementTy = {},
+           bool allowSplat = true) const;
+       [[nodiscard]] DenseBitSequencesAttr
+       zip(BinaryBitSequenceFn fn,
+           DenseBitSequencesAttr rhs,
+           BitSequenceType elementTy = {},
+           bool allowSplat = true) const;
+       [[nodiscard]] DenseBitSequencesAttr
+       zip(TernaryBitSequenceFn fn,
+           DenseBitSequencesAttr arg1,
+           DenseBitSequencesAttr arg2,
+           BitSequenceType elementTy = {},
+           bool allowSplat = true) const;
+   
+       //===------------------------------------------------------------------===//
+       // ElementsAttr
+       //===------------------------------------------------------------------===//
+   
+       [[nodiscard]] BitSequenceType getElementType() const
+       { return cast<BitSequenceType>(ElementsAttr::getElementType()); }
+   
+       [[nodiscard]] range getValues() const
+       { return range(cast<ShapedType>(getType()), value_begin(), value_end()); }
+   
+       BitSequence getSplatValue() const { return *value_begin(); }
+   
+       [[nodiscard]] iterator value_begin() const;
+       [[nodiscard]] iterator value_end() const { return iterator({}, size()); }
+   };
+   
+   //===----------------------------------------------------------------------===//
+   // BitSequenceLikeAttr
+   //===----------------------------------------------------------------------===//
+   
+   class BitSequenceLikeAttr : public Attribute {
+   public:
+       using Attribute::Attribute;
+   
+       [[nodiscard]] static bool classof(BitSequenceAttr) { return true; }
+       [[nodiscard]] static bool classof(DenseBitSequencesAttr) { return true; }
+       [[nodiscard]] static bool classof(Attribute attr)
+       {
+           if (isa<BitSequenceAttr>(attr)) return true;
+           if (isa<DenseBitSequencesAttr>(attr)) return true;
+   
+           return false;
+       }
+   
+       [[nodiscard]] static BitSequenceLikeAttr
+       get(BitSequenceType type, const BitSequence &bits)
+       { return BitSequenceAttr::get(type, bits); }
+       [[nodiscard]] static BitSequenceLikeAttr
+       get(ShapedType type, ArrayRef<BitSequence> values)
+       {
+           return cast<BitSequenceLikeAttr>(
+               DenseBitSequencesAttr::get(type, values));
+       }
+       [[nodiscard]] static BitSequenceLikeAttr get(BitSequenceLikeAttr attr)
+       {
+           if (const auto bits = dyn_cast<BitSequenceAttr>(attr))
+               return BitSequenceAttr::get(bits);
+   
+           return DenseBitSequencesAttr::get(cast<DenseBitSequencesAttr>(attr));
+       }
+   
+       [[nodiscard]] static BitSequenceLikeAttr
+       getSplat(BitSequenceLikeType type, const BitSequence &bits)
+       {
+           if (auto elementTy = dyn_cast<BitSequenceType>(type))
+               return get(elementTy, bits);
+   
+           return DenseBitSequencesAttr::get(cast<ShapedType>(type), bits);
+       }
+   
+       /*implicit*/ BitSequenceLikeAttr(BitSequenceAttr attr)
+               : Attribute(static_cast<mlir::Attribute>(attr))
+       {}
+       /*implicit*/ BitSequenceLikeAttr(DenseBitSequencesAttr attr)
+               : Attribute(static_cast<mlir::Attribute>(attr))
+       {}
+   
+       [[nodiscard]] BitSequenceLikeType getType() const
+       {
+           if (const auto bits = dyn_cast<BitSequenceAttr>(*this))
+               return bits.getType();
+   
+           return cast<BitSequenceLikeType>(
+               cast<DenseBitSequencesAttr>(*this).getType());
+       }
+       [[nodiscard]] BitSequenceType getElementType() const
+       {
+           if (const auto bits = dyn_cast<BitSequenceAttr>(*this))
+               return bits.getType();
+   
+           return cast<DenseBitSequencesAttr>(*this).getElementType();
+       }
+   
+       [[nodiscard]] BitSequenceLikeAttr
+       bitCastElements(BitSequenceType elementTy) const
+       {
+           assert(elementTy);
+   
+           if (const auto bits = dyn_cast<BitSequenceAttr>(*this))
+               return bits.bitCast(elementTy);
+   
+           return cast<BitSequenceLikeAttr>(
+               cast<DenseBitSequencesAttr>(*this).bitCastElements(elementTy));
+       }
+   
+       [[nodiscard]] BitSequenceLikeAttr
+       map(UnaryBitSequenceFn fn,
+           BitSequenceType elementTy = {},
+           bool allowSplat = true) const
+       {
+           // Handle single element case.
+           if (const auto single = dyn_cast<BitSequenceAttr>(*this))
+               return single.map(fn, elementTy);
+   
+           // Handle dense case.
+           return cast<DenseBitSequencesAttr>(*this).map(
+               fn,
+               elementTy,
+               allowSplat);
+       }
+       [[nodiscard]] BitSequenceLikeAttr
+       zip(BinaryBitSequenceFn fn,
+           BitSequenceLikeAttr rhs,
+           BitSequenceType elementTy = {},
+           bool allowSplat = true) const
+       {
+           assert(rhs);
+   
+           // Handle single element case.
+           const auto singleLhs = dyn_cast<BitSequenceAttr>(*this);
+           const auto singleRhs = dyn_cast<BitSequenceAttr>(rhs);
+           assert(static_cast<bool>(singleLhs) == static_cast<bool>(singleRhs));
+           if (singleLhs) return singleLhs.zip(fn, singleRhs, elementTy);
+   
+           // Handle dense case.
+           const auto denseLhs = cast<DenseBitSequencesAttr>(*this);
+           const auto denseRhs = cast<DenseBitSequencesAttr>(rhs);
+           return denseLhs.zip(fn, denseRhs, elementTy, allowSplat);
+       }
+       [[nodiscard]] BitSequenceLikeAttr
+       zip(TernaryBitSequenceFn fn,
+           BitSequenceLikeAttr arg1,
+           BitSequenceLikeAttr arg2,
+           BitSequenceType elementTy = {},
+           bool allowSplat = true) const
+       {
+           assert(arg1 && arg2);
+   
+           // Handle single element case.
+           const auto single0 = dyn_cast<BitSequenceAttr>(*this);
+           const auto single1 = dyn_cast<BitSequenceAttr>(arg1);
+           const auto single2 = dyn_cast<BitSequenceAttr>(arg2);
+           assert(static_cast<bool>(single0) == static_cast<bool>(single1));
+           assert(static_cast<bool>(single0) == static_cast<bool>(single2));
+           if (single0) return single0.zip(fn, single1, single2, elementTy);
+   
+           // Handle dense case.
+           const auto dense0 = cast<DenseBitSequencesAttr>(*this);
+           const auto dense1 = cast<DenseBitSequencesAttr>(arg1);
+           const auto dense2 = cast<DenseBitSequencesAttr>(arg2);
+           return dense0.zip(fn, dense1, dense2, elementTy, allowSplat);
+       }
+   };
+   
+   void registerBitSequenceAttrModels(MLIRContext &ctx);
+   
+   } // namespace mlir::base2

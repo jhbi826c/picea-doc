@@ -1,0 +1,89 @@
+
+.. _program_listing_file_lib_Dialect_CGRA_Transforms_ExpandMemRefCopy.cpp:
+
+Program Listing for File ExpandMemRefCopy.cpp
+=============================================
+
+|exhale_lsh| :ref:`Return to documentation for file <file_lib_Dialect_CGRA_Transforms_ExpandMemRefCopy.cpp>` (``lib/Dialect/CGRA/Transforms/ExpandMemRefCopy.cpp``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. code-block:: cpp
+
+   
+   
+   //===- ExpandMemRefCopy.cpp - memref.copy -> affine loops ----------------===//
+   //
+   // A memref.copy whose operands do not share an identity layout lowers to the
+   // runner-utils helper `memrefCopy`, which nothing here links — it appears as an
+   // undefined symbol. tosa-to-linalg emits exactly that shape for every
+   // SAME-padded convolution (a strided subview of the padded buffer).
+   //
+   // Rewritten to one affine.for per dimension around a load/store pair, which
+   // lowers through the normal affine path and can appear in the driver's software
+   // reference. Static shapes only. See docs/guides/cgra.md.
+   //
+   //===----------------------------------------------------------------------===//
+   
+   #include "mlir/Dialect/Affine/IR/AffineOps.h"
+   #include "mlir/Dialect/Func/IR/FuncOps.h"
+   #include "mlir/Dialect/MemRef/IR/MemRef.h"
+   #include "mlir/IR/Builders.h"
+   #include "mlir/Pass/Pass.h"
+   #include "picea-mlir/Dialect/CGRA/Transforms/Passes.h"
+   
+   using namespace mlir;
+   
+   namespace {
+   
+   struct CGRAExpandMemRefCopyPass : public PassWrapper<
+                                         CGRAExpandMemRefCopyPass,
+                                         OperationPass<func::FuncOp>> {
+   
+       MLIR_DEFINE_EXPLICIT_INTERNAL_INLINE_TYPE_ID(CGRAExpandMemRefCopyPass)
+   
+       StringRef getArgument() const final { return "expand-memref-copy"; }
+       StringRef getDescription() const final
+       {
+           return "Rewrite memref.copy into an explicit affine loop nest so it "
+                  "needs no "
+                  "memrefCopy runtime helper";
+       }
+   
+       void getDependentDialects(mlir::DialectRegistry &registry) const override
+       { registry.insert<affine::AffineDialect, memref::MemRefDialect>(); }
+   
+       void runOnOperation() override
+       {
+           SmallVector<memref::CopyOp> copies;
+           getOperation().walk([&](memref::CopyOp c) { copies.push_back(c); });
+   
+           for (memref::CopyOp copy : copies) {
+               auto srcTy = dyn_cast<MemRefType>(copy.getSource().getType());
+               auto dstTy = dyn_cast<MemRefType>(copy.getTarget().getType());
+               if (!srcTy || !dstTy || !srcTy.hasStaticShape()
+                   || srcTy.getShape() != dstTy.getShape())
+                   continue;
+   
+               OpBuilder b(copy);
+               Location loc = copy.getLoc();
+               SmallVector<Value> ivs;
+               for (int64_t d : srcTy.getShape()) {
+                   auto loop = affine::AffineForOp::create(b, loc, 0, d, 1);
+                   b.setInsertionPointToStart(loop.getBody());
+                   ivs.push_back(loop.getInductionVar());
+               }
+               AffineMap id = AffineMap::getMultiDimIdentityMap(
+                   srcTy.getRank(),
+                   b.getContext());
+               Value v =
+                   affine::AffineLoadOp::create(b, loc, copy.getSource(), id, ivs);
+               affine::AffineStoreOp::create(b, loc, v, copy.getTarget(), id, ivs);
+               copy.erase();
+           }
+       }
+   };
+   } // namespace
+   
+   std::unique_ptr<mlir::Pass> mlir::cgra::createCGRAExpandMemRefCopyPass()
+   { return std::make_unique<CGRAExpandMemRefCopyPass>(); }

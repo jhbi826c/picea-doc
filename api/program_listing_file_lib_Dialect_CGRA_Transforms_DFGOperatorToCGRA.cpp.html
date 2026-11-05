@@ -1,0 +1,368 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Program Listing for File DFGOperatorToCGRA.cpp &mdash; picea 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/collapsible-lists/css/tree_view.css?v=a885cde7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js?v=73120307"></script>
+      <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js?v=660e4f45"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            picea
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Installation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../README.html">About the project</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#guides">Guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#related-projects">Related projects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#development-environment-nix">Development Environment (Nix)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#build-on-ubuntu-24-04-no-nix">Build on Ubuntu 24.04 (no Nix)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#gurobi-license">Gurobi license</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#installing">Installing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#run-the-tests">Run the tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#build-the-documentation">Build the documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#compiling-a-design">Compiling a design</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Guides</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../guides/laksa.html">The FPGA Variant using LAKSA backend</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/cgra.html">The CGRA Variant</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/mocasin.html">Exporting a Profiled Application to Mocasin</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">MLIR Dialects</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/Base2Ops.html">‘base2’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/CGRAOps.html">‘cgra’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/DFGOps.html">‘dfg’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/EmitHLSOps.html">‘emithls’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/FilterOps.html">‘filter’ Dialect</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Passes</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/PICEAConversionPasses.html">PICEA Conversion Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/CGRAPasses.html">CGRA Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/DFGPasses.html">DFG Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/EmitHLSPasses.html">Emit HLS Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/FuncExtPasses.html">Func Ext Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/LinalgExtPasses.html">Linalg Ext Passes</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">C++ API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="library_root.html">C++ API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">picea</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Program Listing for File DFGOperatorToCGRA.cpp</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/program_listing_file_lib_Dialect_CGRA_Transforms_DFGOperatorToCGRA.cpp.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="program-listing-for-file-dfgoperatortocgra-cpp">
+<span id="program-listing-file-lib-dialect-cgra-transforms-dfgoperatortocgra-cpp"></span><h1>Program Listing for File DFGOperatorToCGRA.cpp<a class="headerlink" href="#program-listing-for-file-dfgoperatortocgra-cpp" title="Link to this heading"></a></h1>
+<p>↰ <a class="reference internal" href="file_lib_Dialect_CGRA_Transforms_DFGOperatorToCGRA.cpp.html#file-lib-dialect-cgra-transforms-dfgoperatortocgra-cpp"><span class="std std-ref">Return to documentation for file</span></a> (<code class="docutils literal notranslate"><span class="pre">lib/Dialect/CGRA/Transforms/DFGOperatorToCGRA.cpp</span></code>)</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">"mlir/Dialect/Func/IR/FuncOps.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"mlir/IR/BuiltinOps.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"mlir/IR/IRMapping.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"mlir/Pass/Pass.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"picea-mlir/Dialect/CGRA/Transforms/Passes.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"picea-mlir/Dialect/DFG/IR/DFG.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"picea-mlir/Dialect/DFG/IR/DFGOps.h"</span>
+
+<span class="k">using</span><span class="w"> </span><span class="k">namespace</span><span class="w"> </span><span class="nn">mlir</span><span class="p">;</span>
+<span class="k">using</span><span class="w"> </span><span class="k">namespace</span><span class="w"> </span><span class="nn">mlir</span><span class="o">::</span><span class="nn">dfg</span><span class="p">;</span>
+
+<span class="k">namespace</span><span class="w"> </span><span class="p">{</span>
+
+<span class="c1">// An SDF actor whose body is ordinary compute is exactly a function: input</span>
+<span class="c1">// ports are the arguments, the values handed to `dfg.output` are the results.</span>
+<span class="c1">// Converting it back to `func.func` hands the kernel to the pipeline that</span>
+<span class="c1">// already works, instead of duplicating that pipeline on the DFG side. Inverse</span>
+<span class="c1">// of --convert-func-to-dfg, so a kernel round-trips func -&gt; dfg.operator -&gt;</span>
+<span class="c1">// func; inserting the round trip in the production chain leaves the lowered and</span>
+<span class="c1">// annotated IR byte-identical.</span>
+<span class="c1">//</span>
+<span class="c1">// A WIRED SDF GRAPH — `dfg.region` holding `dfg.channel` edges and</span>
+<span class="c1">// `dfg.instantiate` nodes, which is what the MYRTUS DPE emits for a quantized</span>
+<span class="c1">// network (models/myrtus_dfg) — is flattened the same way. Every channel in an</span>
+<span class="c1">// SDF region carries exactly one token per firing between exactly one producer</span>
+<span class="c1">// and one consumer, so the graph is a dataflow expression: the region becomes a</span>
+<span class="c1">// `func.func` that calls its actors in topological order and threads each</span>
+<span class="c1">// channel as an SSA value. The CGRA back end has no notion of concurrent</span>
+<span class="c1">// actors, and does not need one — `--inline` then folds the calls into a single</span>
+<span class="c1">// function and the ordinary loop-nest offload takes over from there.</span>
+<span class="c1">//</span>
+<span class="c1">// SCOPE: `dfg.push`/`dfg.pull` (a KPN process firing repeatedly on a stream)</span>
+<span class="c1">// stay out — that needs the driver to understand channel liveness, not just</span>
+<span class="c1">// dataflow order. Such a module is left completely untouched.</span>
+<span class="k">struct</span><span class="w"> </span><span class="nc">CGRADFGOperatorToCGRAPass</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">PassWrapper</span><span class="o">&lt;</span>
+<span class="w">                                       </span><span class="n">CGRADFGOperatorToCGRAPass</span><span class="p">,</span>
+<span class="w">                                       </span><span class="n">OperationPass</span><span class="o">&lt;</span><span class="n">ModuleOp</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">    </span><span class="n">MLIR_DEFINE_EXPLICIT_INTERNAL_INLINE_TYPE_ID</span><span class="p">(</span><span class="n">CGRADFGOperatorToCGRAPass</span><span class="p">)</span>
+
+<span class="w">    </span><span class="n">StringRef</span><span class="w"> </span><span class="n">getArgument</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">final</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="s">"dfg-operator-to-cgra"</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="n">StringRef</span><span class="w"> </span><span class="nf">getDescription</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">final</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="s">"Lower a dfg.operator, and a dfg.region wiring operators into "</span>
+<span class="w">               </span><span class="s">"an SDF graph, to the func.func form the CGRA pipeline "</span>
+<span class="w">               </span><span class="s">"compiles (inverse of --convert-func-to-dfg)"</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="nf">getDependentDialects</span><span class="p">(</span><span class="n">mlir</span><span class="o">::</span><span class="n">DialectRegistry</span><span class="w"> </span><span class="o">&amp;</span><span class="n">registry</span><span class="p">)</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">override</span>
+<span class="w">    </span><span class="p">{</span><span class="w"> </span><span class="n">registry</span><span class="p">.</span><span class="n">insert</span><span class="o">&lt;</span><span class="n">func</span><span class="o">::</span><span class="n">FuncDialect</span><span class="o">&gt;</span><span class="p">();</span><span class="w"> </span><span class="p">}</span>
+
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="nf">runOnOperation</span><span class="p">()</span><span class="w"> </span><span class="k">override</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="n">ModuleOp</span><span class="w"> </span><span class="k">module</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">getOperation</span><span class="p">();</span>
+
+<span class="w">        </span><span class="c1">// A KPN process streaming through push/pull is out of scope (see the</span>
+<span class="w">        </span><span class="c1">// note above); leave the whole module untouched rather than convert</span>
+<span class="w">        </span><span class="c1">// half of it.</span>
+<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">streaming</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="w">        </span><span class="k">module</span><span class="p">.</span><span class="n">walk</span><span class="p">([</span><span class="o">&amp;</span><span class="p">](</span><span class="n">Operation</span><span class="o">*</span><span class="w"> </span><span class="n">op</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">isa</span><span class="o">&lt;</span><span class="n">PushOp</span><span class="p">,</span><span class="w"> </span><span class="n">PullOp</span><span class="o">&gt;</span><span class="p">(</span><span class="n">op</span><span class="p">))</span><span class="w"> </span><span class="n">streaming</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="w">        </span><span class="p">});</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">streaming</span><span class="p">)</span><span class="w"> </span><span class="k">return</span><span class="p">;</span>
+
+<span class="w">        </span><span class="n">SmallVector</span><span class="o">&lt;</span><span class="n">OperatorOp</span><span class="o">&gt;</span><span class="w"> </span><span class="n">actors</span><span class="p">(</span><span class="k">module</span><span class="p">.</span><span class="n">getOps</span><span class="o">&lt;</span><span class="n">OperatorOp</span><span class="o">&gt;</span><span class="p">());</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">OperatorOp</span><span class="w"> </span><span class="n">actor</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">actors</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">auto</span><span class="w"> </span><span class="n">ft</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">actor</span><span class="p">.</span><span class="n">getFunctionType</span><span class="p">();</span>
+<span class="w">            </span><span class="n">OpBuilder</span><span class="w"> </span><span class="n">b</span><span class="p">(</span><span class="n">actor</span><span class="p">);</span>
+<span class="w">            </span><span class="k">auto</span><span class="w"> </span><span class="n">fn</span><span class="w"> </span><span class="o">=</span>
+<span class="w">                </span><span class="n">func</span><span class="o">::</span><span class="n">FuncOp</span><span class="o">::</span><span class="n">create</span><span class="p">(</span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="n">actor</span><span class="p">.</span><span class="n">getLoc</span><span class="p">(),</span><span class="w"> </span><span class="n">actor</span><span class="p">.</span><span class="n">getSymName</span><span class="p">(),</span><span class="w"> </span><span class="n">ft</span><span class="p">);</span>
+<span class="w">            </span><span class="c1">// Keep whatever the actor carried (notably llvm.linkage): the CGRA</span>
+<span class="w">            </span><span class="c1">// pipeline runs --symbol-privatize/--symbol-dce, which would drop a</span>
+<span class="w">            </span><span class="c1">// kernel that is no longer externally visible.</span>
+<span class="w">            </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">NamedAttribute</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">actor</span><span class="o">-&gt;</span><span class="n">getDiscardableAttrs</span><span class="p">())</span>
+<span class="w">                </span><span class="n">fn</span><span class="o">-&gt;</span><span class="n">setAttr</span><span class="p">(</span><span class="n">a</span><span class="p">.</span><span class="n">getName</span><span class="p">(),</span><span class="w"> </span><span class="n">a</span><span class="p">.</span><span class="n">getValue</span><span class="p">());</span>
+<span class="w">            </span><span class="n">Block</span><span class="o">*</span><span class="w"> </span><span class="n">entry</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">fn</span><span class="p">.</span><span class="n">addEntryBlock</span><span class="p">();</span>
+<span class="w">            </span><span class="n">OpBuilder</span><span class="w"> </span><span class="n">fb</span><span class="p">(</span><span class="n">entry</span><span class="p">,</span><span class="w"> </span><span class="n">entry</span><span class="o">-&gt;</span><span class="n">begin</span><span class="p">());</span>
+
+<span class="w">            </span><span class="c1">// The actor's block arguments are its INPUT ports followed by its</span>
+<span class="w">            </span><span class="c1">// OUTPUT ports; only the inputs carry values into the body (the</span>
+<span class="w">            </span><span class="c1">// outputs are delivered by dfg.output), so map just those onto the</span>
+<span class="w">            </span><span class="c1">// function arguments.</span>
+<span class="w">            </span><span class="n">Block</span><span class="w"> </span><span class="o">&amp;</span><span class="n">ab</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">actor</span><span class="p">.</span><span class="n">getBody</span><span class="p">().</span><span class="n">front</span><span class="p">();</span>
+<span class="w">            </span><span class="n">IRMapping</span><span class="w"> </span><span class="n">map</span><span class="p">;</span>
+<span class="w">            </span><span class="kt">unsigned</span><span class="w"> </span><span class="n">nIn</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ft</span><span class="p">.</span><span class="n">getNumInputs</span><span class="p">();</span>
+<span class="w">            </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">unsigned</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">nIn</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">ab</span><span class="p">.</span><span class="n">getNumArguments</span><span class="p">();</span><span class="w"> </span><span class="o">++</span><span class="n">i</span><span class="p">)</span>
+<span class="w">                </span><span class="n">map</span><span class="p">.</span><span class="n">map</span><span class="p">(</span><span class="n">ab</span><span class="p">.</span><span class="n">getArgument</span><span class="p">(</span><span class="n">i</span><span class="p">),</span><span class="w"> </span><span class="n">entry</span><span class="o">-&gt;</span><span class="n">getArgument</span><span class="p">(</span><span class="n">i</span><span class="p">));</span>
+
+<span class="w">            </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">Operation</span><span class="w"> </span><span class="o">&amp;</span><span class="n">op</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">ab</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="n">out</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dyn_cast</span><span class="o">&lt;</span><span class="n">OutputOp</span><span class="o">&gt;</span><span class="p">(</span><span class="o">&amp;</span><span class="n">op</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                    </span><span class="n">SmallVector</span><span class="o">&lt;</span><span class="n">Value</span><span class="o">&gt;</span><span class="w"> </span><span class="n">rets</span><span class="p">;</span>
+<span class="w">                    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">Value</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">out</span><span class="p">.</span><span class="n">getOperands</span><span class="p">())</span>
+<span class="w">                        </span><span class="n">rets</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">map</span><span class="p">.</span><span class="n">lookupOrDefault</span><span class="p">(</span><span class="n">v</span><span class="p">));</span>
+<span class="w">                    </span><span class="n">func</span><span class="o">::</span><span class="n">ReturnOp</span><span class="o">::</span><span class="n">create</span><span class="p">(</span><span class="n">fb</span><span class="p">,</span><span class="w"> </span><span class="n">out</span><span class="p">.</span><span class="n">getLoc</span><span class="p">(),</span><span class="w"> </span><span class="n">rets</span><span class="p">);</span>
+<span class="w">                    </span><span class="k">continue</span><span class="p">;</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">                </span><span class="n">fb</span><span class="p">.</span><span class="n">clone</span><span class="p">(</span><span class="n">op</span><span class="p">,</span><span class="w"> </span><span class="n">map</span><span class="p">);</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="c1">// An actor with no dfg.output still needs a terminator.</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">entry</span><span class="o">-&gt;</span><span class="n">empty</span><span class="p">()</span>
+<span class="w">                </span><span class="o">||</span><span class="w"> </span><span class="o">!</span><span class="n">entry</span><span class="o">-&gt;</span><span class="n">back</span><span class="p">().</span><span class="n">hasTrait</span><span class="o">&lt;</span><span class="n">OpTrait</span><span class="o">::</span><span class="n">IsTerminator</span><span class="o">&gt;</span><span class="p">())</span>
+<span class="w">                </span><span class="n">func</span><span class="o">::</span><span class="n">ReturnOp</span><span class="o">::</span><span class="n">create</span><span class="p">(</span><span class="n">fb</span><span class="p">,</span><span class="w"> </span><span class="n">actor</span><span class="p">.</span><span class="n">getLoc</span><span class="p">());</span>
+
+<span class="w">            </span><span class="n">actor</span><span class="p">.</span><span class="n">erase</span><span class="p">();</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="c1">// Every actor is now a func.func, so a region can be flattened into</span>
+<span class="w">        </span><span class="c1">// calls to them.</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">RegionOp</span><span class="w"> </span><span class="n">region</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">SmallVector</span><span class="o">&lt;</span><span class="n">RegionOp</span><span class="o">&gt;</span><span class="p">(</span><span class="k">module</span><span class="p">.</span><span class="n">getOps</span><span class="o">&lt;</span><span class="n">RegionOp</span><span class="o">&gt;</span><span class="p">()))</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">failed</span><span class="p">(</span><span class="n">flattenRegion</span><span class="p">(</span><span class="k">module</span><span class="p">,</span><span class="w"> </span><span class="n">region</span><span class="p">)))</span>
+<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="n">signalPassFailure</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="k">static</span><span class="w"> </span><span class="n">LogicalResult</span><span class="w"> </span><span class="nf">flattenRegion</span><span class="p">(</span><span class="n">ModuleOp</span><span class="w"> </span><span class="k">module</span><span class="p">,</span><span class="w"> </span><span class="n">RegionOp</span><span class="w"> </span><span class="n">region</span><span class="p">)</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="n">Block</span><span class="w"> </span><span class="o">&amp;</span><span class="n">rb</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">region</span><span class="p">.</span><span class="n">getBody</span><span class="p">().</span><span class="n">front</span><span class="p">();</span>
+<span class="w">        </span><span class="kt">unsigned</span><span class="w"> </span><span class="n">nIn</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">region</span><span class="p">.</span><span class="n">getFunctionType</span><span class="p">().</span><span class="n">getNumInputs</span><span class="p">();</span>
+<span class="w">        </span><span class="kt">unsigned</span><span class="w"> </span><span class="n">nPorts</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">rb</span><span class="p">.</span><span class="n">getNumArguments</span><span class="p">();</span>
+
+<span class="w">        </span><span class="n">SmallVector</span><span class="o">&lt;</span><span class="n">InstantiateOp</span><span class="o">&gt;</span><span class="w"> </span><span class="n">nodes</span><span class="p">(</span><span class="n">rb</span><span class="p">.</span><span class="n">getOps</span><span class="o">&lt;</span><span class="n">InstantiateOp</span><span class="o">&gt;</span><span class="p">());</span>
+
+<span class="w">        </span><span class="c1">// Resolve each node's callee once; its signature types every value.</span>
+<span class="w">        </span><span class="n">DenseMap</span><span class="o">&lt;</span><span class="n">Operation</span><span class="o">*</span><span class="p">,</span><span class="w"> </span><span class="n">func</span><span class="o">::</span><span class="n">FuncOp</span><span class="o">&gt;</span><span class="w"> </span><span class="n">callee</span><span class="p">;</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">InstantiateOp</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">nodes</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">auto</span><span class="w"> </span><span class="n">fn</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">module</span><span class="p">.</span><span class="n">lookupSymbol</span><span class="o">&lt;</span><span class="n">func</span><span class="o">::</span><span class="n">FuncOp</span><span class="o">&gt;</span><span class="p">(</span><span class="n">n</span><span class="p">.</span><span class="n">getActor</span><span class="p">());</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">fn</span><span class="p">)</span>
+<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="n">n</span><span class="p">.</span><span class="n">emitError</span><span class="p">(</span><span class="s">"dfg-operator-to-cgra: instantiated actor '"</span><span class="p">)</span>
+<span class="w">                       </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">n</span><span class="p">.</span><span class="n">getActor</span><span class="p">()</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">"' is not a converted dfg.operator"</span><span class="p">;</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">fn</span><span class="p">.</span><span class="n">getNumArguments</span><span class="p">()</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">n</span><span class="p">.</span><span class="n">getInputs</span><span class="p">().</span><span class="n">size</span><span class="p">()</span>
+<span class="w">                </span><span class="o">||</span><span class="w"> </span><span class="n">fn</span><span class="p">.</span><span class="n">getNumResults</span><span class="p">()</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">n</span><span class="p">.</span><span class="n">getOutputs</span><span class="p">().</span><span class="n">size</span><span class="p">())</span>
+<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="n">n</span><span class="p">.</span><span class="n">emitError</span><span class="p">(</span>
+<span class="w">                    </span><span class="s">"dfg-operator-to-cgra: instantiate arity does not match "</span>
+<span class="w">                    </span><span class="s">"the actor signature"</span><span class="p">);</span>
+<span class="w">            </span><span class="n">callee</span><span class="p">[</span><span class="n">n</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">fn</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="c1">// A port's type is the type the actor on the other end of it uses.</span>
+<span class="w">        </span><span class="n">SmallVector</span><span class="o">&lt;</span><span class="n">Type</span><span class="o">&gt;</span><span class="w"> </span><span class="n">portTy</span><span class="p">(</span><span class="n">nPorts</span><span class="p">,</span><span class="w"> </span><span class="n">Type</span><span class="p">());</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">InstantiateOp</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">nodes</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">func</span><span class="o">::</span><span class="n">FuncOp</span><span class="w"> </span><span class="n">fn</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">callee</span><span class="p">[</span><span class="n">n</span><span class="p">];</span>
+<span class="w">            </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="n">v</span><span class="p">]</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">llvm</span><span class="o">::</span><span class="n">enumerate</span><span class="p">(</span><span class="n">n</span><span class="p">.</span><span class="n">getInputs</span><span class="p">()))</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="n">ba</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dyn_cast</span><span class="o">&lt;</span><span class="n">BlockArgument</span><span class="o">&gt;</span><span class="p">(</span><span class="n">v</span><span class="p">))</span>
+<span class="w">                    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">ba</span><span class="p">.</span><span class="n">getOwner</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="o">&amp;</span><span class="n">rb</span><span class="p">)</span>
+<span class="w">                        </span><span class="n">portTy</span><span class="p">[</span><span class="n">ba</span><span class="p">.</span><span class="n">getArgNumber</span><span class="p">()]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">fn</span><span class="p">.</span><span class="n">getArgumentTypes</span><span class="p">()[</span><span class="n">i</span><span class="p">];</span>
+<span class="w">            </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="n">v</span><span class="p">]</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">llvm</span><span class="o">::</span><span class="n">enumerate</span><span class="p">(</span><span class="n">n</span><span class="p">.</span><span class="n">getOutputs</span><span class="p">()))</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="n">ba</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dyn_cast</span><span class="o">&lt;</span><span class="n">BlockArgument</span><span class="o">&gt;</span><span class="p">(</span><span class="n">v</span><span class="p">))</span>
+<span class="w">                    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">ba</span><span class="p">.</span><span class="n">getOwner</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="o">&amp;</span><span class="n">rb</span><span class="p">)</span>
+<span class="w">                        </span><span class="n">portTy</span><span class="p">[</span><span class="n">ba</span><span class="p">.</span><span class="n">getArgNumber</span><span class="p">()]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">fn</span><span class="p">.</span><span class="n">getResultTypes</span><span class="p">()[</span><span class="n">i</span><span class="p">];</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">unsigned</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">nPorts</span><span class="p">;</span><span class="w"> </span><span class="o">++</span><span class="n">i</span><span class="p">)</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">portTy</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="n">region</span><span class="p">.</span><span class="n">emitError</span><span class="p">(</span><span class="s">"dfg-operator-to-cgra: port "</span><span class="p">)</span>
+<span class="w">                       </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">" of @"</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">region</span><span class="p">.</span><span class="n">getSymName</span><span class="p">()</span>
+<span class="w">                       </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">" is not connected to any actor"</span><span class="p">;</span>
+
+<span class="w">        </span><span class="n">OpBuilder</span><span class="w"> </span><span class="n">b</span><span class="p">(</span><span class="n">region</span><span class="p">);</span>
+<span class="w">        </span><span class="k">auto</span><span class="w"> </span><span class="n">fnTy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">b</span><span class="p">.</span><span class="n">getFunctionType</span><span class="p">(</span>
+<span class="w">            </span><span class="n">ArrayRef</span><span class="o">&lt;</span><span class="n">Type</span><span class="o">&gt;</span><span class="p">(</span><span class="n">portTy</span><span class="p">).</span><span class="n">take_front</span><span class="p">(</span><span class="n">nIn</span><span class="p">),</span>
+<span class="w">            </span><span class="n">ArrayRef</span><span class="o">&lt;</span><span class="n">Type</span><span class="o">&gt;</span><span class="p">(</span><span class="n">portTy</span><span class="p">).</span><span class="n">drop_front</span><span class="p">(</span><span class="n">nIn</span><span class="p">));</span>
+<span class="w">        </span><span class="k">auto</span><span class="w"> </span><span class="n">fn</span><span class="w"> </span><span class="o">=</span>
+<span class="w">            </span><span class="n">func</span><span class="o">::</span><span class="n">FuncOp</span><span class="o">::</span><span class="n">create</span><span class="p">(</span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="n">region</span><span class="p">.</span><span class="n">getLoc</span><span class="p">(),</span><span class="w"> </span><span class="n">region</span><span class="p">.</span><span class="n">getSymName</span><span class="p">(),</span><span class="w"> </span><span class="n">fnTy</span><span class="p">);</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">NamedAttribute</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">region</span><span class="o">-&gt;</span><span class="n">getDiscardableAttrs</span><span class="p">())</span>
+<span class="w">            </span><span class="n">fn</span><span class="o">-&gt;</span><span class="n">setAttr</span><span class="p">(</span><span class="n">a</span><span class="p">.</span><span class="n">getName</span><span class="p">(),</span><span class="w"> </span><span class="n">a</span><span class="p">.</span><span class="n">getValue</span><span class="p">());</span>
+<span class="w">        </span><span class="n">Block</span><span class="o">*</span><span class="w"> </span><span class="n">entry</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">fn</span><span class="p">.</span><span class="n">addEntryBlock</span><span class="p">();</span>
+<span class="w">        </span><span class="n">OpBuilder</span><span class="w"> </span><span class="n">fb</span><span class="p">(</span><span class="n">entry</span><span class="p">,</span><span class="w"> </span><span class="n">entry</span><span class="o">-&gt;</span><span class="n">begin</span><span class="p">());</span>
+
+<span class="w">        </span><span class="c1">// Channel-end / port value -&gt; the SSA value flowing along that edge.</span>
+<span class="w">        </span><span class="n">DenseMap</span><span class="o">&lt;</span><span class="n">Value</span><span class="p">,</span><span class="w"> </span><span class="n">Value</span><span class="o">&gt;</span><span class="w"> </span><span class="n">wire</span><span class="p">;</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">unsigned</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">nIn</span><span class="p">;</span><span class="w"> </span><span class="o">++</span><span class="n">i</span><span class="p">)</span>
+<span class="w">            </span><span class="n">wire</span><span class="p">[</span><span class="n">rb</span><span class="p">.</span><span class="n">getArgument</span><span class="p">(</span><span class="n">i</span><span class="p">)]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">entry</span><span class="o">-&gt;</span><span class="n">getArgument</span><span class="p">(</span><span class="n">i</span><span class="p">);</span>
+
+<span class="w">        </span><span class="c1">// Emit in DATAFLOW order, which the textual order need not be.</span>
+<span class="w">        </span><span class="n">SmallVector</span><span class="o">&lt;</span><span class="n">InstantiateOp</span><span class="o">&gt;</span><span class="w"> </span><span class="n">pending</span><span class="p">(</span><span class="n">nodes</span><span class="p">);</span>
+<span class="w">        </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">pending</span><span class="p">.</span><span class="n">empty</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">SmallVector</span><span class="o">&lt;</span><span class="n">InstantiateOp</span><span class="o">&gt;</span><span class="w"> </span><span class="n">stuck</span><span class="p">;</span>
+<span class="w">            </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">InstantiateOp</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">pending</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">llvm</span><span class="o">::</span><span class="n">all_of</span><span class="p">(</span><span class="n">n</span><span class="p">.</span><span class="n">getInputs</span><span class="p">(),</span><span class="w"> </span><span class="p">[</span><span class="o">&amp;</span><span class="p">](</span><span class="n">Value</span><span class="w"> </span><span class="n">v</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                        </span><span class="k">return</span><span class="w"> </span><span class="n">wire</span><span class="p">.</span><span class="n">count</span><span class="p">(</span><span class="n">v</span><span class="p">);</span>
+<span class="w">                    </span><span class="p">}))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                    </span><span class="n">stuck</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">n</span><span class="p">);</span>
+<span class="w">                    </span><span class="k">continue</span><span class="p">;</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">                </span><span class="n">SmallVector</span><span class="o">&lt;</span><span class="n">Value</span><span class="o">&gt;</span><span class="w"> </span><span class="n">args</span><span class="p">;</span>
+<span class="w">                </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">Value</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">n</span><span class="p">.</span><span class="n">getInputs</span><span class="p">())</span><span class="w"> </span><span class="n">args</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">wire</span><span class="p">[</span><span class="n">v</span><span class="p">]);</span>
+<span class="w">                </span><span class="k">auto</span><span class="w"> </span><span class="n">call</span><span class="w"> </span><span class="o">=</span>
+<span class="w">                    </span><span class="n">func</span><span class="o">::</span><span class="n">CallOp</span><span class="o">::</span><span class="n">create</span><span class="p">(</span><span class="n">fb</span><span class="p">,</span><span class="w"> </span><span class="n">n</span><span class="p">.</span><span class="n">getLoc</span><span class="p">(),</span><span class="w"> </span><span class="n">callee</span><span class="p">[</span><span class="n">n</span><span class="p">],</span><span class="w"> </span><span class="n">args</span><span class="p">);</span>
+<span class="w">                </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="n">v</span><span class="p">]</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">llvm</span><span class="o">::</span><span class="n">enumerate</span><span class="p">(</span><span class="n">n</span><span class="p">.</span><span class="n">getOutputs</span><span class="p">()))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                    </span><span class="n">wire</span><span class="p">[</span><span class="n">v</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">call</span><span class="p">.</span><span class="n">getResult</span><span class="p">(</span><span class="n">i</span><span class="p">);</span>
+<span class="w">                    </span><span class="c1">// Bind the far end of the same edge too: a consumer reads</span>
+<span class="w">                    </span><span class="c1">// the channel's OTHER result.</span>
+<span class="w">                    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="k">auto</span><span class="w"> </span><span class="n">ch</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">v</span><span class="p">.</span><span class="n">getDefiningOp</span><span class="o">&lt;</span><span class="n">ChannelOp</span><span class="o">&gt;</span><span class="p">())</span>
+<span class="w">                        </span><span class="n">wire</span><span class="p">[</span><span class="n">ch</span><span class="p">.</span><span class="n">getOutputPort</span><span class="p">()]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">call</span><span class="p">.</span><span class="n">getResult</span><span class="p">(</span><span class="n">i</span><span class="p">);</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">            </span><span class="c1">// No node became ready: the graph has a cycle (feedback), which a</span>
+<span class="w">            </span><span class="c1">// straight-line function cannot express.</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">stuck</span><span class="p">.</span><span class="n">size</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">pending</span><span class="p">.</span><span class="n">size</span><span class="p">())</span>
+<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="n">stuck</span><span class="p">.</span><span class="n">front</span><span class="p">().</span><span class="n">emitError</span><span class="p">(</span>
+<span class="w">                    </span><span class="s">"dfg-operator-to-cgra: cyclic dataflow region; a feedback "</span>
+<span class="w">                    </span><span class="s">"edge has no straight-line ordering"</span><span class="p">);</span>
+<span class="w">            </span><span class="n">pending</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">stuck</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="n">SmallVector</span><span class="o">&lt;</span><span class="n">Value</span><span class="o">&gt;</span><span class="w"> </span><span class="n">rets</span><span class="p">;</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">unsigned</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">nIn</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">nPorts</span><span class="p">;</span><span class="w"> </span><span class="o">++</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">Value</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">rb</span><span class="p">.</span><span class="n">getArgument</span><span class="p">(</span><span class="n">i</span><span class="p">);</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">wire</span><span class="p">.</span><span class="n">count</span><span class="p">(</span><span class="n">v</span><span class="p">))</span>
+<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="n">region</span><span class="p">.</span><span class="n">emitError</span><span class="p">(</span><span class="s">"dfg-operator-to-cgra: output port "</span><span class="p">)</span>
+<span class="w">                       </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="p">(</span><span class="n">i</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">nIn</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">" of @"</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">region</span><span class="p">.</span><span class="n">getSymName</span><span class="p">()</span>
+<span class="w">                       </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="s">" is never written"</span><span class="p">;</span>
+<span class="w">            </span><span class="n">rets</span><span class="p">.</span><span class="n">push_back</span><span class="p">(</span><span class="n">wire</span><span class="p">[</span><span class="n">v</span><span class="p">]);</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="n">func</span><span class="o">::</span><span class="n">ReturnOp</span><span class="o">::</span><span class="n">create</span><span class="p">(</span><span class="n">fb</span><span class="p">,</span><span class="w"> </span><span class="n">region</span><span class="p">.</span><span class="n">getLoc</span><span class="p">(),</span><span class="w"> </span><span class="n">rets</span><span class="p">);</span>
+
+<span class="w">        </span><span class="n">region</span><span class="p">.</span><span class="n">erase</span><span class="p">();</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">success</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">};</span>
+<span class="p">}</span><span class="w"> </span><span class="c1">// namespace</span>
+
+<span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">mlir</span><span class="o">::</span><span class="n">Pass</span><span class="o">&gt;</span><span class="w"> </span><span class="n">mlir</span><span class="o">::</span><span class="n">cgra</span><span class="o">::</span><span class="n">createCGRADFGOperatorToCGRAPass</span><span class="p">()</span>
+<span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">make_unique</span><span class="o">&lt;</span><span class="n">CGRADFGOperatorToCGRAPass</span><span class="o">&gt;</span><span class="p">();</span><span class="w"> </span><span class="p">}</span>
+</pre></div>
+</div>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

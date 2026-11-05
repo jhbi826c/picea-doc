@@ -1,0 +1,95 @@
+
+.. _program_listing_file_include_picea-mlir-c_Dialect_DFG.h:
+
+Program Listing for File DFG.h
+==============================
+
+|exhale_lsh| :ref:`Return to documentation for file <file_include_picea-mlir-c_Dialect_DFG.h>` (``include/picea-mlir-c/Dialect/DFG.h``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. code-block:: cpp
+
+   //===-- picea-mlir-c/Dialect/DFG.h - C API for DFG dialect -------*- C-*-===//
+   //
+   // @author  Jiahong Bi (jiahong.bi@tu-dresden.de)
+   //===----------------------------------------------------------------------===//
+   
+   #ifndef PICEA_MLIR_C_DIALECT_DFG_H
+   #define PICEA_MLIR_C_DIALECT_DFG_H
+   
+   #include "mlir-c/IR.h"
+   #include "mlir-c/Support.h"
+   
+   #ifdef __cplusplus
+   extern "C" {
+   #endif
+   
+   MLIR_DECLARE_CAPI_DIALECT_REGISTRATION(DFG, dfg);
+   
+   //===---------------------------------------------------------------------===//
+   // InputType
+   //===---------------------------------------------------------------------===//
+   
+   MLIR_CAPI_EXPORTED bool mlirTypeIsAInputType(MlirType type);
+   
+   MLIR_CAPI_EXPORTED MlirType mlirInputTypeGet(MlirType elementType);
+   
+   MLIR_CAPI_EXPORTED MlirType mlirInputTypeGetWithShape(
+       intptr_t rank,
+       const int64_t* shape,
+       MlirType elementType);
+   
+   MLIR_CAPI_EXPORTED intptr_t mlirInputTypeGetRank(MlirType type);
+   
+   MLIR_CAPI_EXPORTED int64_t mlirInputTypeGetDimSize(MlirType type, intptr_t dim);
+   
+   MLIR_CAPI_EXPORTED MlirType mlirInputTypeGetElementType(MlirType type);
+   
+   //===---------------------------------------------------------------------===//
+   // OutputType
+   //===---------------------------------------------------------------------===//
+   
+   MLIR_CAPI_EXPORTED bool mlirTypeIsAOutputType(MlirType type);
+   
+   MLIR_CAPI_EXPORTED MlirType mlirOutputTypeGet(MlirType elementType);
+   
+   MLIR_CAPI_EXPORTED MlirType mlirOutputTypeGetWithShape(
+       intptr_t rank,
+       const int64_t* shape,
+       MlirType elementType);
+   
+   MLIR_CAPI_EXPORTED intptr_t mlirOutputTypeGetRank(MlirType type);
+   
+   MLIR_CAPI_EXPORTED int64_t
+   mlirOutputTypeGetDimSize(MlirType type, intptr_t dim);
+   
+   MLIR_CAPI_EXPORTED MlirType mlirOutputTypeGetElementType(MlirType type);
+   
+   //===---------------------------------------------------------------------===//
+   // BufferizableOpInterface registration
+   //===---------------------------------------------------------------------===//
+   
+   MLIR_CAPI_EXPORTED void
+   mlirDFGRegisterBufferizableOpInterfaceExternalModels(MlirContext context);
+   
+   //===---------------------------------------------------------------------===//
+   // Translation
+   //===---------------------------------------------------------------------===//
+   
+   MLIR_CAPI_EXPORTED MlirLogicalResult mlirTranslateDFGToDot(
+       MlirOperation op,
+       MlirStringCallback callback,
+       void* userData);
+   
+   #ifdef __cplusplus
+   }
+   #endif
+   
+   //===---------------------------------------------------------------------===//
+   // Pass Registration
+   //===---------------------------------------------------------------------===//
+   
+   #include "picea-mlir/Dialect/DFG/Transforms/Passes.capi.h.inc"
+   
+   #endif

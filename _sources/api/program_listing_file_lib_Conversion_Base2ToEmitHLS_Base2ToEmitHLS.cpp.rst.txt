@@ -1,0 +1,498 @@
+
+.. _program_listing_file_lib_Conversion_Base2ToEmitHLS_Base2ToEmitHLS.cpp:
+
+Program Listing for File Base2ToEmitHLS.cpp
+===========================================
+
+|exhale_lsh| :ref:`Return to documentation for file <file_lib_Conversion_Base2ToEmitHLS_Base2ToEmitHLS.cpp>` (``lib/Conversion/Base2ToEmitHLS/Base2ToEmitHLS.cpp``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. code-block:: cpp
+
+   
+   
+   #include "picea-mlir/Conversion/Base2ToEmitHLS/Base2ToEmitHLS.h"
+   
+   #include "picea-mlir/Dialect/Base2/IR/Base2.h"
+   #include "picea-mlir/Dialect/DFG/IR/DFG.h"
+   #include "picea-mlir/Dialect/EmitHLS/IR/EmitHLS.h"
+   
+   #include "llvm/ADT/DenseMap.h"
+   
+   #include <llvm/Support/Debug.h>
+   #include <optional>
+   
+   #define DEBUG_TYPE "base2-to-emithls"
+   #define PICEA_DEBUG(X)                                                         \
+       LLVM_DEBUG(llvm::dbgs() << "[base2-to-emithls] "; X; llvm::dbgs() << "\n")
+   
+   namespace mlir {
+   #define GEN_PASS_DEF_CONVERTBASE2TOEMITHLS
+   #include "picea-mlir/Conversion/Passes.h.inc"
+   } // namespace mlir
+   
+   using namespace mlir;
+   using namespace mlir::emithls;
+   
+   namespace {
+   
+   using BP = base2::OrderingPredicate;
+   // Converts a base2::FixedType to the equivalent emithls::FixedType
+   static Type convertFixedType(base2::FixedType type)
+   {
+       int64_t integerBits = type.getIntegerBits();
+       int64_t fractionalBits = type.getFractionalBits();
+       return emithls::FixedType::get(
+           type.getContext(),
+           /*totalBits=*/1 + integerBits + fractionalBits,
+           /*intBits=*/1 + integerBits);
+   }
+   
+   // Maps a base2::OrderingPredicate to the equivalent emithls::CmpPredicate
+   static std::optional<CmpPredicate>
+   convertPredicate(base2::OrderingPredicate predicate)
+   {
+       static const DenseMap<BP, CmpPredicate> predicateMap = {
+           {          BP::OrderedAndEqual, CmpPredicate::eq},
+           {         BP::UnorderedOrEqual, CmpPredicate::eq},
+           {        BP::OrderedAndUnequal, CmpPredicate::ne},
+           {       BP::UnorderedOrUnequal, CmpPredicate::ne},
+           {        BP::OrderedAndGreater, CmpPredicate::gt},
+           {       BP::UnorderedOrGreater, CmpPredicate::gt},
+           { BP::OrderedAndGreaterOrEqual, CmpPredicate::ge},
+           {BP::UnorderedOrGreaterOrEqual, CmpPredicate::ge},
+           {           BP::OrderedAndLess, CmpPredicate::lt},
+           {          BP::UnorderedOrLess, CmpPredicate::lt},
+           {    BP::OrderedAndLessOrEqual, CmpPredicate::le},
+           {   BP::UnorderedOrLessOrEqual, CmpPredicate::le},
+       };
+   
+       auto it = predicateMap.find(predicate);
+       if (it == predicateMap.end()) return std::nullopt;
+       return it->second;
+   }
+   
+   // Converts the type wrapped by a TypeAttr-valued attribute. Such as ops
+   // (dfg.process, dfg.region, emithls.func) redundantly encode their
+   // port/argument/result types in a function_type attribute
+   static Attribute
+   convertNamedAttrType(NamedAttribute attr, const TypeConverter &converter)
+   {
+       auto typeAttr = dyn_cast<TypeAttr>(attr.getValue());
+       if (!typeAttr) return attr.getValue();
+   
+       Type type = typeAttr.getValue();
+       if (auto funcTy = dyn_cast<FunctionType>(type)) {
+           SmallVector<Type> inputs, results;
+           if (failed(converter.convertTypes(funcTy.getInputs(), inputs)))
+               return nullptr;
+           if (failed(converter.convertTypes(funcTy.getResults(), results)))
+               return nullptr;
+           return TypeAttr::get(
+               FunctionType::get(funcTy.getContext(), inputs, results));
+       }
+   
+       Type newType = converter.convertType(type);
+       if (!newType) return nullptr;
+       return TypeAttr::get(newType);
+   }
+   
+   struct ConvertConstant : OpConversionPattern<base2::ConstantOp> {
+       using OpConversionPattern::OpConversionPattern;
+   
+       LogicalResult matchAndRewrite(
+           base2::ConstantOp op,
+           base2::ConstantOpAdaptor,
+           ConversionPatternRewriter &rewriter) const override
+       {
+           PICEA_DEBUG(llvm::dbgs() << "Rewriting constsant at " << op.getLoc());
+           // A compile-time constant with a shaped (memref/tensor) type is
+           // represented as an emithls.array, not a memref: emithls.variable
+           // does not support memref-typed initial values, and HLS constant
+           // arrays are plain C arrays anyway.
+           Type newType;
+           if (auto shapedTy = dyn_cast<ShapedType>(op.getType())) {
+               Type newElem =
+                   getTypeConverter()->convertType(shapedTy.getElementType());
+               if (!newElem)
+                   return rewriter.notifyMatchFailure(
+                       op,
+                       "element type could not be converted");
+               newType = ArrayType::get(shapedTy.getShape(), newElem);
+           } else {
+               newType = getTypeConverter()->convertType(op.getType());
+               if (!newType)
+                   return rewriter.notifyMatchFailure(
+                       op,
+                       "result type could not be converted");
+           }
+   
+           // Reinterpret the bit pattern(s) of the constant under the converted
+           // type; only the FixedType parameterization changes, the underlying
+           // bits are untouched.
+           Attribute newValue;
+           if (auto bitsAttr = dyn_cast<base2::BitSequenceAttr>(op.getValue())) {
+               if (auto fixedTy = dyn_cast<FixedType>(newType))
+                   newValue = FixedAttr::get(fixedTy, bitsAttr.getValue());
+               else
+                   newValue = op.getValueAttr();
+           } else if (
+               auto denseAttr = dyn_cast<base2::DenseBitsAttr>(op.getValue())) {
+               auto newShapedTy = cast<ShapedType>(newType);
+               if (isa<FixedType>(newShapedTy.getElementType()))
+                   newValue =
+                       DenseFixedAttr::get(newShapedTy, denseAttr.getData());
+               else
+                   newValue = op.getValueAttr();
+           } else {
+               newValue = op.getValueAttr();
+           }
+   
+           auto varOp = rewriter.replaceOpWithNewOp<VariableOp>(
+               op,
+               newType,
+               newValue,
+               /*is_const=*/true);
+           PICEA_DEBUG(
+               llvm::dbgs() << "  Replaced with a constant variable " << varOp);
+           return success();
+       }
+   };
+   
+   template<typename OpFrom, typename OpTo>
+   struct ConvertBinaryOp : OpConversionPattern<OpFrom> {
+       using OpConversionPattern<OpFrom>::OpConversionPattern;
+   
+       LogicalResult matchAndRewrite(
+           OpFrom op,
+           typename OpFrom::Adaptor,
+           ConversionPatternRewriter &rewriter) const override
+       {
+           PICEA_DEBUG(
+               llvm::dbgs()
+               << "Rewriting " << op->getName() << " at " << op.getLoc());
+           rewriter.replaceOpWithNewOp<OpTo>(op, op.getLhs(), op.getRhs());
+           PICEA_DEBUG(
+               llvm::dbgs() << "  Replaced with equivalent emithls operation.");
+           return success();
+       }
+   };
+   
+   struct ConvertCast : OpConversionPattern<base2::ArithCastOp> {
+       using OpConversionPattern::OpConversionPattern;
+   
+       LogicalResult matchAndRewrite(
+           base2::ArithCastOp op,
+           base2::ArithCastOpAdaptor,
+           ConversionPatternRewriter &rewriter) const override
+       {
+           PICEA_DEBUG(
+               llvm::dbgs() << "Rewriting cast operation at " << op.getLoc());
+           Type newType = getTypeConverter()->convertType(op.getTo().getType());
+           if (!newType)
+               return rewriter.notifyMatchFailure(
+                   op,
+                   "result type could not be converted");
+   
+           rewriter.replaceOpWithNewOp<ArithCastOp>(op, newType, op.getFrom());
+           PICEA_DEBUG(llvm::dbgs() << "  Replaced with equivalent emithls cast.");
+           return success();
+       }
+   };
+   
+   struct ConvertCompare : OpConversionPattern<base2::ArithCmpOp> {
+       using OpConversionPattern::OpConversionPattern;
+   
+       LogicalResult matchAndRewrite(
+           base2::ArithCmpOp op,
+           base2::ArithCmpOpAdaptor,
+           ConversionPatternRewriter &rewriter) const override
+       {
+           PICEA_DEBUG(llvm::dbgs() << "Rewriting compare at " << op.getLoc());
+           // These predicates only distinguish ordered/unordered (NaN) operands,
+           // which base2 values never are, so they fold to a plain boolean
+           // constant rather than a relational comparison.
+           switch (op.getPredicate()) {
+           case BP::Falsum:
+           case BP::Unordered:
+               rewriter.replaceOpWithNewOp<VariableOp>(
+                   op,
+                   rewriter.getI1Type(),
+                   rewriter.getBoolAttr(false),
+                   /*is_const=*/true);
+               PICEA_DEBUG(
+                   llvm::dbgs()
+                   << "  Folded always-false compare into a constant variable.");
+               return success();
+           case BP::Verum:
+           case BP::Ordered:
+               rewriter.replaceOpWithNewOp<VariableOp>(
+                   op,
+                   rewriter.getI1Type(),
+                   rewriter.getBoolAttr(true),
+                   /*is_const=*/true);
+               PICEA_DEBUG(
+                   llvm::dbgs()
+                   << "  Folded always-true compare at into a constant variable.");
+               return success();
+           default: break;
+           }
+   
+           auto predicate = convertPredicate(op.getPredicate());
+           if (!predicate)
+               return rewriter.notifyMatchFailure(op, "unsupported predicate");
+   
+           rewriter.replaceOpWithNewOp<ArithCmpOp>(
+               op,
+               *predicate,
+               op.getLhs(),
+               op.getRhs());
+           PICEA_DEBUG(
+               llvm::dbgs() << "  Replaced with equivalent emithls comparison.");
+           return success();
+       }
+   };
+   
+   struct ConvertSelect : OpConversionPattern<base2::ArithSelectOp> {
+       using OpConversionPattern::OpConversionPattern;
+   
+       LogicalResult matchAndRewrite(
+           base2::ArithSelectOp op,
+           base2::ArithSelectOpAdaptor,
+           ConversionPatternRewriter &rewriter) const override
+       {
+           PICEA_DEBUG(
+               llvm::dbgs() << "Rewriting select operation at " << op.getLoc());
+           rewriter.replaceOpWithNewOp<ArithSelectOp>(
+               op,
+               op.getCondition(),
+               op.getTrueValue(),
+               op.getFalseValue());
+           PICEA_DEBUG(
+               llvm::dbgs()
+               << "  Replaced with equivalent emithls arithmetic select.");
+           return success();
+       }
+   };
+   
+   // Rewrites any non-base2 operation whose operand/result/block-argument or
+   // TypeAttr-encoded types still mention a base2 type.
+   struct LegalizeCarrierOp : ConversionPattern {
+       LegalizeCarrierOp(TypeConverter &converter, MLIRContext* context)
+               : ConversionPattern(
+                     converter,
+                     Pattern::MatchAnyOpTypeTag(),
+                     /*benefit=*/0,
+                     context) {};
+   
+       LogicalResult matchAndRewrite(
+           Operation* op,
+           ArrayRef<Value> operands,
+           ConversionPatternRewriter &rewriter) const override
+       {
+           // base2 ops are semantically rewritten by the dedicated patterns
+           // above, not just type-legalized in place.
+           if (isa<base2::Base2Dialect>(op->getDialect())) return failure();
+   
+           const TypeConverter* converter = getTypeConverter();
+   
+           SmallVector<Type> newResultTypes;
+           if (failed(
+                   converter->convertTypes(op->getResultTypes(), newResultTypes)))
+               return rewriter.notifyMatchFailure(
+                   op,
+                   "result types could not be converted");
+   
+           SmallVector<NamedAttribute> newAttrs;
+           for (NamedAttribute attr : op->getAttrs()) {
+               Attribute newValue = convertNamedAttrType(attr, *converter);
+               if (!newValue)
+                   return rewriter.notifyMatchFailure(
+                       op,
+                       "attribute type could not be converted");
+               newAttrs.emplace_back(attr.getName(), newValue);
+           }
+   
+           OperationState state(
+               op->getLoc(),
+               op->getName(),
+               operands,
+               newResultTypes,
+               newAttrs,
+               op->getSuccessors());
+           for (unsigned i = 0, e = op->getNumRegions(); i != e; ++i)
+               state.addRegion();
+   
+           Operation* newOp = rewriter.create(state);
+           for (unsigned i = 0, e = op->getNumRegions(); i != e; ++i) {
+               Region &oldRegion = op->getRegion(i);
+               Region &newRegion = newOp->getRegion(i);
+               rewriter.inlineRegionBefore(oldRegion, newRegion, newRegion.end());
+               if (failed(rewriter.convertRegionTypes(&newRegion, *converter)))
+                   return failure();
+           }
+   
+           PICEA_DEBUG(
+               llvm::dbgs() << "Legalized types of " << op->getName() << " at "
+                            << op->getLoc());
+           rewriter.replaceOp(op, newOp->getResults());
+           return success();
+       }
+   };
+   
+   } // namespace
+   
+   void mlir::populateBase2ToEmitHLSConversionPatterns(
+       TypeConverter &typeConverter,
+       RewritePatternSet &patterns)
+   {
+       patterns.add<ConvertConstant>(typeConverter, patterns.getContext());
+       patterns.add<ConvertBinaryOp<base2::ArithAddOp, ArithAddOp>>(
+           typeConverter,
+           patterns.getContext());
+       patterns.add<ConvertBinaryOp<base2::ArithSubOp, ArithSubOp>>(
+           typeConverter,
+           patterns.getContext());
+       patterns.add<ConvertBinaryOp<base2::ArithMulOp, ArithMulOp>>(
+           typeConverter,
+           patterns.getContext());
+       patterns.add<ConvertBinaryOp<base2::ArithDivOp, ArithDivOp>>(
+           typeConverter,
+           patterns.getContext());
+       patterns.add<ConvertBinaryOp<base2::ArithRemOp, ArithRemOp>>(
+           typeConverter,
+           patterns.getContext());
+       patterns.add<ConvertBinaryOp<base2::ArithAndOp, ArithAndOp>>(
+           typeConverter,
+           patterns.getContext());
+       patterns.add<ConvertBinaryOp<base2::ArithOrOp, ArithOrOp>>(
+           typeConverter,
+           patterns.getContext());
+       patterns.add<ConvertBinaryOp<base2::ArithShlOp, ArithShlOp>>(
+           typeConverter,
+           patterns.getContext());
+       patterns.add<ConvertBinaryOp<base2::ArithShrOp, ArithShrOp>>(
+           typeConverter,
+           patterns.getContext());
+       patterns.add<ConvertBinaryOp<base2::ArithMinOp, ArithMinOp>>(
+           typeConverter,
+           patterns.getContext());
+       patterns.add<ConvertBinaryOp<base2::ArithMaxOp, ArithMaxOp>>(
+           typeConverter,
+           patterns.getContext());
+       patterns.add<ConvertCast>(typeConverter, patterns.getContext());
+       patterns.add<ConvertCompare>(typeConverter, patterns.getContext());
+       patterns.add<ConvertSelect>(typeConverter, patterns.getContext());
+       patterns.add<LegalizeCarrierOp>(typeConverter, patterns.getContext());
+   }
+   
+   namespace {
+   struct ConvertBase2ToEmitHLSPass
+           : public impl::ConvertBase2ToEmitHLSBase<ConvertBase2ToEmitHLSPass> {
+       void runOnOperation() final;
+   };
+   } // namespace
+   
+   Base2ToEmitHLSTypeConverter::Base2ToEmitHLSTypeConverter()
+   {
+       addConversion([](Type type) { return type; });
+       addConversion([](base2::FixedType type) { return convertFixedType(type); });
+   
+       // Carrier types: containers that may wrap a (nested) base2 type and need
+       // their element/base type re-derived through this same converter.
+       addConversion([this](MemRefType type) -> Type {
+           Type newElem = convertType(type.getElementType());
+           if (!newElem) return nullptr;
+           if (newElem == type.getElementType()) return type;
+           return MemRefType::get(
+               type.getShape(),
+               newElem,
+               type.getLayout(),
+               type.getMemorySpace());
+       });
+       addConversion([this](ArrayType type) -> Type {
+           Type newElem = convertType(type.getElementType());
+           if (!newElem) return nullptr;
+           if (newElem == type.getElementType()) return type;
+           return ArrayType::get(type.getShape(), newElem);
+       });
+       addConversion([this](StreamType type) -> Type {
+           Type newElem = convertType(type.getElementType());
+           if (!newElem) return nullptr;
+           if (newElem == type.getElementType()) return type;
+           return StreamType::get(type.getContext(), newElem);
+       });
+       addConversion([this](PointerType type) -> Type {
+           Type newElem = convertType(type.getElementType());
+           if (!newElem) return nullptr;
+           if (newElem == type.getElementType()) return type;
+           return PointerType::get(type.getContext(), newElem);
+       });
+       addConversion([this](dfg::InputType type) -> Type {
+           Type newElem = convertType(type.getElementType());
+           if (!newElem) return nullptr;
+           if (newElem == type.getElementType()) return type;
+           return dfg::InputType::get(type.getShape(), newElem);
+       });
+       addConversion([this](dfg::OutputType type) -> Type {
+           Type newElem = convertType(type.getElementType());
+           if (!newElem) return nullptr;
+           if (newElem == type.getElementType()) return type;
+           return dfg::OutputType::get(type.getShape(), newElem);
+       });
+   
+       // Bridges values that were converted (base2 -> emithls) but must still
+       // feed, or be fed by, an operation that has not been legalized yet at the
+       // point the driver needs the value.
+       auto materializeCast = [](OpBuilder &builder,
+                                 Type resultType,
+                                 ValueRange inputs,
+                                 Location loc) -> Value {
+           if (inputs.size() != 1) return Value();
+           return UnrealizedConversionCastOp::create(
+                      builder,
+                      loc,
+                      resultType,
+                      inputs)
+               .getResult(0);
+       };
+       addSourceMaterialization(materializeCast);
+       addTargetMaterialization(materializeCast);
+   }
+   
+   void ConvertBase2ToEmitHLSPass::runOnOperation()
+   {
+       ConversionTarget target(getContext());
+       RewritePatternSet patterns(&getContext());
+   
+       Base2ToEmitHLSTypeConverter converter;
+   
+       populateBase2ToEmitHLSConversionPatterns(converter, patterns);
+   
+       target.addIllegalDialect<base2::Base2Dialect>();
+       target.markUnknownOpDynamicallyLegal([&converter](Operation* op) {
+           // An operation is legal once none of its operand/result types, block
+           // argument types, or TypeAttr-encoded attributes still mention a base2
+           // type.
+           if (!converter.isLegal(op)) return false;
+           for (Region &region : op->getRegions())
+               if (!converter.isLegal(&region)) return false;
+           for (NamedAttribute attr : op->getAttrs()) {
+               auto typeAttr = dyn_cast<TypeAttr>(attr.getValue());
+               if (typeAttr && !converter.isLegal(typeAttr.getValue()))
+                   return false;
+           }
+           return true;
+       });
+   
+       if (failed(applyPartialConversion(
+               getOperation(),
+               target,
+               std::move(patterns)))) {
+           signalPassFailure();
+       }
+   }
+   
+   std::unique_ptr<Pass> mlir::createConvertBase2ToEmitHLSPass()
+   { return std::make_unique<ConvertBase2ToEmitHLSPass>(); }

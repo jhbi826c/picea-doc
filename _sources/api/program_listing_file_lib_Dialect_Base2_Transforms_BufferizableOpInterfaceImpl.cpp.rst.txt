@@ -1,0 +1,73 @@
+
+.. _program_listing_file_lib_Dialect_Base2_Transforms_BufferizableOpInterfaceImpl.cpp:
+
+Program Listing for File BufferizableOpInterfaceImpl.cpp
+========================================================
+
+|exhale_lsh| :ref:`Return to documentation for file <file_lib_Dialect_Base2_Transforms_BufferizableOpInterfaceImpl.cpp>` (``lib/Dialect/Base2/Transforms/BufferizableOpInterfaceImpl.cpp``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. code-block:: cpp
+
+   
+   
+   #include "picea-mlir/Dialect/Base2/Transforms/BufferizableOpInterfaceImpl.h"
+   
+   #include "mlir/Dialect/Bufferization/IR/BufferizableOpInterface.h"
+   #include "mlir/IR/BuiltinTypeInterfaces.h"
+   #include "mlir/IR/BuiltinTypes.h"
+   #include "picea-mlir/Dialect/Base2/IR/Base2.h"
+   #include "picea-mlir/Dialect/Base2/IR/Base2Base.h"
+   #include "picea-mlir/Dialect/Base2/IR/Base2Ops.h"
+   
+   #include <llvm/Support/Debug.h>
+   #include <mlir/Support/LLVM.h>
+   
+   using namespace mlir;
+   using namespace mlir::bufferization;
+   using namespace mlir::base2;
+   
+   namespace mlir::base2 {
+   namespace {
+   
+   struct ConstantOpInterface
+           : public BufferizableOpInterface::
+                 ExternalModel<ConstantOpInterface, ConstantOp> {
+       LogicalResult bufferize(
+           Operation* op,
+           RewriterBase &rewriter,
+           const BufferizationOptions &,
+           BufferizationState &) const
+       {
+           auto constantOp = cast<ConstantOp>(op);
+           auto type = dyn_cast<RankedTensorType>(constantOp.getType());
+           if (!type) return failure();
+   
+           auto denseBits = dyn_cast<DenseBitsAttr>(constantOp.getValue());
+           if (!denseBits)
+               return constantOp->emitError(
+                   "only dense_bits constants can be bufferized");
+   
+           auto memrefType = cast<MemRefType>(
+               bufferization::getMemRefTypeWithStaticIdentityLayout(type));
+           auto newValue = DenseBitsAttr::get(memrefType, denseBits.getData());
+           replaceOpWithNewBufferizedOp<ConstantOp>(rewriter, op, newValue);
+   
+           return success();
+       }
+   
+       bool isWritable(Operation*, Value, const AnalysisState &) const
+       { return false; }
+   };
+   
+   } // namespace
+   } // namespace mlir::base2
+   
+   void mlir::base2::registerBufferizableOpInterfaceExternalModels(
+       DialectRegistry &registry)
+   {
+       registry.addExtension(+[](MLIRContext* ctx, base2::Base2Dialect*) {
+           ConstantOp::attachInterface<ConstantOpInterface>(*ctx);
+       });
+   }

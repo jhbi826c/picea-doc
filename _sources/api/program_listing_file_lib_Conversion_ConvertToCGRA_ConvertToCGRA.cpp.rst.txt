@@ -1,0 +1,180 @@
+
+.. _program_listing_file_lib_Conversion_ConvertToCGRA_ConvertToCGRA.cpp:
+
+Program Listing for File ConvertToCGRA.cpp
+==========================================
+
+|exhale_lsh| :ref:`Return to documentation for file <file_lib_Conversion_ConvertToCGRA_ConvertToCGRA.cpp>` (``lib/Conversion/ConvertToCGRA/ConvertToCGRA.cpp``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. code-block:: cpp
+
+   
+   
+   #include "picea-mlir/Conversion/ConvertToCGRA/ConvertToCGRA.h"
+   
+   #include "mlir/Dialect/Func/IR/FuncOps.h"
+   #include "mlir/Pass/PassManager.h"
+   #include "mlir/Pass/PassRegistry.h"
+   #include "mlir/Transforms/Passes.h"
+   #include "picea-mlir/Dialect/CGRA/Transforms/Passes.h"
+   
+   using namespace mlir;
+   
+   void mlir::picea::addCGRADeployToLLVMPasses(OpPassManager &pm)
+   {
+       pm.addPass(cgra::createCGRADeployToStrelaPass());
+       pm.addPass(cgra::createCGRAStrelaToLLVMPass());
+   }
+   
+   // This grouping is a CORRECTNESS device, not tidiness. The same three passes
+   // must run before --annotate-to-cgra (which decides fabric-vs-CPU) and before
+   // --export-loop-dfg (which emits the .dot for the ones annotate chose). If the
+   // two sites ever differ, the driver's config indices and the mapper's bitstream
+   // indices silently stop matching. One flag makes them identical by
+   // construction.
+   void mlir::picea::addLegalizeFabricBodyPasses(OpPassManager &pm)
+   {
+       pm.addPass(cgra::createCGRAPredicatedStoreToSelectPass());
+       pm.addPass(cgra::createCGRANormalizeComparePass());
+       pm.addPass(cgra::createCGRAExpandFabricOpsPass());
+   }
+   
+   // The fabric accumulator is an FU that starts from ZERO and is fed by a
+   // load-accumulate-store nest. Three passes converge on that single invariant,
+   // and they have a real ORDER dependency: promote-accumulator may leave a
+   // `C = 1*C + reduce` seed that only split-reduction-bias can make zero-seeded
+   // (isFabricStreamable then keeps any survivor on the CPU), while
+   // promote-scalar-reduction handles the opposite shape — a top-level scalar
+   // iter_args nest that stores nothing. Spelling that order out once beats
+   // repeating it per pipeline.
+   void mlir::picea::addShapeCGRAReductionsPasses(OpPassManager &pm)
+   {
+       pm.addNestedPass<func::FuncOp>(cgra::createCGRAPromoteAccumulatorPass());
+       pm.addPass(cgra::createCGRASplitReductionBiasPass());
+       pm.addNestedPass<func::FuncOp>(
+           cgra::createCGRAPromoteScalarReductionPass());
+   }
+   
+   // Only the two post-annotation ones: --promote-alloca-to-global belongs to the
+   // pre-annotate phase (it must run before the nests are wrapped) and cannot join
+   // this group.
+   void mlir::picea::addPlaceCGRABuffersPasses(OpPassManager &pm)
+   {
+       pm.addPass(cgra::createCGRAPromoteSharedBuffersPass());
+       pm.addPass(cgra::createCGRAPackBuffersPass());
+   }
+   
+   namespace {
+   struct ConvertToCGRAPipelineOptions
+           : public PassPipelineOptions<ConvertToCGRAPipelineOptions> {
+       Option<unsigned> maxFUs{
+           *this,
+           "max-fus",
+           llvm::cl::desc("Functional units one configuration may use"),
+           llvm::cl::init(14)};
+       Option<unsigned> maxOuts{
+           *this,
+           "max-outs",
+           llvm::cl::desc("Output streams one configuration may drive"),
+           llvm::cl::init(3)};
+       Option<std::string> entry{
+           *this,
+           "entry",
+           llvm::cl::desc(
+               "Host function the program is built around. When given, everything "
+               "outside its outlined family is privatised and symbol-DCE'd"),
+           llvm::cl::init("")};
+       Option<bool> hoistUnpack{
+           *this,
+           "hoist-reduction-unpack",
+           llvm::cl::desc("Take per-element unpacking out of a fabric reduction"),
+           llvm::cl::init(true)};
+   };
+   } // namespace
+   
+   // The uniform front end: what every kernel shape runs, in the one order that
+   // works. Assembled from the phase groupings above rather than respelling them,
+   // so the "same passes at both sites" guarantee they exist to provide survives
+   // here too.
+   //
+   // `promote-shared-buffers` appears ONCE, inside addPlaceCGRABuffersPasses. The
+   // Makefile used to run it a second time immediately before that grouping; the
+   // duplicate was accidental and is provably inert (identical IR on all six
+   // reference kernels), so it is not reproduced.
+   void mlir::picea::addConvertToCGRAPasses(
+       OpPassManager &pm,
+       unsigned maxFUs,
+       unsigned maxOuts,
+       bool hoistUnpack,
+       StringRef entry)
+   {
+       pm.addPass(createInlinerPass());
+       pm.addPass(cgra::createCGRAConvToIm2colPass());
+       if (hoistUnpack)
+           pm.addNestedPass<func::FuncOp>(
+               cgra::createCGRAHoistReductionUnpackPass());
+       pm.addPass(cgra::createCGRAPromoteAllocaToGlobalPass());
+       addShapeCGRAReductionsPasses(pm);
+       pm.addNestedPass<func::FuncOp>(cgra::createCGRAFuseNestsPass());
+       addLegalizeFabricBodyPasses(pm);
+       pm.addNestedPass<func::FuncOp>(
+           cgra::createCGRAPartitionDFGPass(maxFUs, maxOuts));
+       pm.addNestedPass<func::FuncOp>(cgra::createCGRAAnnotateToCGRAPass());
+       addPlaceCGRABuffersPasses(pm);
+       pm.addPass(cgra::createCGRAOutlineDeployPass(/*dropHost=*/true));
+       pm.addNestedPass<func::FuncOp>(cgra::createCGRAAnnotateDispatchIOPass());
+   
+       // A translation unit often carries a second, complete outlined family (a
+       // hand-written CPU reference). Dropping it is not tidiness: the DFG export
+       // would otherwise emit a .dot for its loops too, and the mapper would
+       // number bitstreams over a larger set than the driver numbers
+       // configurations. Opt-in, because only the caller knows which function is
+       // the program.
+       if (!entry.empty()) {
+           pm.addPass(cgra::createCGRAPruneToEntryPass(entry));
+           pm.addPass(createSymbolDCEPass());
+       }
+   }
+   
+   void mlir::picea::registerConvertToCGRAPipelines()
+   {
+       PassPipelineRegistration<ConvertToCGRAPipelineOptions>(
+           "convert-to-cgra",
+           "Take a kernel from affine MLIR to outlined, dispatch-annotated "
+           "cgra.deploy regions (the uniform CGRA front end)",
+           [](OpPassManager &pm, const ConvertToCGRAPipelineOptions &options) {
+               addConvertToCGRAPasses(
+                   pm,
+                   options.maxFUs,
+                   options.maxOuts,
+                   options.hoistUnpack,
+                   options.entry);
+           });
+   
+       PassPipelineRegistration<>(
+           "cgra-deploy-to-llvm",
+           "Lower cgra.deploy to STRELA MMIO volatile llvm stores "
+           "(deploy->strela->llvm)",
+           addCGRADeployToLLVMPasses);
+   
+       PassPipelineRegistration<>(
+           "legalize-fabric-body",
+           "Rewrite a compute-loop body into fabric-legal ops: scf.if -> select, "
+           "compare normalization, div/rem-by-2^k and math intrinsics expanded",
+           addLegalizeFabricBodyPasses);
+   
+       PassPipelineRegistration<>(
+           "shape-cgra-reductions",
+           "Put reductions in the fabric's zero-seeded load-accumulate-store form "
+           "(promote-accumulator -> split-reduction-bias -> "
+           "promote-scalar-reduction)",
+           addShapeCGRAReductionsPasses);
+   
+       PassPipelineRegistration<>(
+           "place-cgra-buffers",
+           "Give every cross-deploy buffer a symbol, then share storage between "
+           "intermediates whose live ranges do not overlap",
+           addPlaceCGRABuffersPasses);
+   }

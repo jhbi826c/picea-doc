@@ -1,0 +1,236 @@
+
+.. _program_listing_file_lib_Dialect_CGRA_Transforms_DFGOperatorToCGRA.cpp:
+
+Program Listing for File DFGOperatorToCGRA.cpp
+==============================================
+
+|exhale_lsh| :ref:`Return to documentation for file <file_lib_Dialect_CGRA_Transforms_DFGOperatorToCGRA.cpp>` (``lib/Dialect/CGRA/Transforms/DFGOperatorToCGRA.cpp``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. code-block:: cpp
+
+   
+   
+   #include "mlir/Dialect/Func/IR/FuncOps.h"
+   #include "mlir/IR/BuiltinOps.h"
+   #include "mlir/IR/IRMapping.h"
+   #include "mlir/Pass/Pass.h"
+   #include "picea-mlir/Dialect/CGRA/Transforms/Passes.h"
+   #include "picea-mlir/Dialect/DFG/IR/DFG.h"
+   #include "picea-mlir/Dialect/DFG/IR/DFGOps.h"
+   
+   using namespace mlir;
+   using namespace mlir::dfg;
+   
+   namespace {
+   
+   // An SDF actor whose body is ordinary compute is exactly a function: input
+   // ports are the arguments, the values handed to `dfg.output` are the results.
+   // Converting it back to `func.func` hands the kernel to the pipeline that
+   // already works, instead of duplicating that pipeline on the DFG side. Inverse
+   // of --convert-func-to-dfg, so a kernel round-trips func -> dfg.operator ->
+   // func; inserting the round trip in the production chain leaves the lowered and
+   // annotated IR byte-identical.
+   //
+   // A WIRED SDF GRAPH — `dfg.region` holding `dfg.channel` edges and
+   // `dfg.instantiate` nodes, which is what the MYRTUS DPE emits for a quantized
+   // network (models/myrtus_dfg) — is flattened the same way. Every channel in an
+   // SDF region carries exactly one token per firing between exactly one producer
+   // and one consumer, so the graph is a dataflow expression: the region becomes a
+   // `func.func` that calls its actors in topological order and threads each
+   // channel as an SSA value. The CGRA back end has no notion of concurrent
+   // actors, and does not need one — `--inline` then folds the calls into a single
+   // function and the ordinary loop-nest offload takes over from there.
+   //
+   // SCOPE: `dfg.push`/`dfg.pull` (a KPN process firing repeatedly on a stream)
+   // stay out — that needs the driver to understand channel liveness, not just
+   // dataflow order. Such a module is left completely untouched.
+   struct CGRADFGOperatorToCGRAPass : public PassWrapper<
+                                          CGRADFGOperatorToCGRAPass,
+                                          OperationPass<ModuleOp>> {
+   
+       MLIR_DEFINE_EXPLICIT_INTERNAL_INLINE_TYPE_ID(CGRADFGOperatorToCGRAPass)
+   
+       StringRef getArgument() const final { return "dfg-operator-to-cgra"; }
+       StringRef getDescription() const final
+       {
+           return "Lower a dfg.operator, and a dfg.region wiring operators into "
+                  "an SDF graph, to the func.func form the CGRA pipeline "
+                  "compiles (inverse of --convert-func-to-dfg)";
+       }
+   
+       void getDependentDialects(mlir::DialectRegistry &registry) const override
+       { registry.insert<func::FuncDialect>(); }
+   
+       void runOnOperation() override
+       {
+           ModuleOp module = getOperation();
+   
+           // A KPN process streaming through push/pull is out of scope (see the
+           // note above); leave the whole module untouched rather than convert
+           // half of it.
+           bool streaming = false;
+           module.walk([&](Operation* op) {
+               if (isa<PushOp, PullOp>(op)) streaming = true;
+           });
+           if (streaming) return;
+   
+           SmallVector<OperatorOp> actors(module.getOps<OperatorOp>());
+           for (OperatorOp actor : actors) {
+               auto ft = actor.getFunctionType();
+               OpBuilder b(actor);
+               auto fn =
+                   func::FuncOp::create(b, actor.getLoc(), actor.getSymName(), ft);
+               // Keep whatever the actor carried (notably llvm.linkage): the CGRA
+               // pipeline runs --symbol-privatize/--symbol-dce, which would drop a
+               // kernel that is no longer externally visible.
+               for (NamedAttribute a : actor->getDiscardableAttrs())
+                   fn->setAttr(a.getName(), a.getValue());
+               Block* entry = fn.addEntryBlock();
+               OpBuilder fb(entry, entry->begin());
+   
+               // The actor's block arguments are its INPUT ports followed by its
+               // OUTPUT ports; only the inputs carry values into the body (the
+               // outputs are delivered by dfg.output), so map just those onto the
+               // function arguments.
+               Block &ab = actor.getBody().front();
+               IRMapping map;
+               unsigned nIn = ft.getNumInputs();
+               for (unsigned i = 0; i < nIn && i < ab.getNumArguments(); ++i)
+                   map.map(ab.getArgument(i), entry->getArgument(i));
+   
+               for (Operation &op : ab) {
+                   if (auto out = dyn_cast<OutputOp>(&op)) {
+                       SmallVector<Value> rets;
+                       for (Value v : out.getOperands())
+                           rets.push_back(map.lookupOrDefault(v));
+                       func::ReturnOp::create(fb, out.getLoc(), rets);
+                       continue;
+                   }
+                   fb.clone(op, map);
+               }
+               // An actor with no dfg.output still needs a terminator.
+               if (entry->empty()
+                   || !entry->back().hasTrait<OpTrait::IsTerminator>())
+                   func::ReturnOp::create(fb, actor.getLoc());
+   
+               actor.erase();
+           }
+   
+           // Every actor is now a func.func, so a region can be flattened into
+           // calls to them.
+           for (RegionOp region : SmallVector<RegionOp>(module.getOps<RegionOp>()))
+               if (failed(flattenRegion(module, region)))
+                   return signalPassFailure();
+       }
+   
+       static LogicalResult flattenRegion(ModuleOp module, RegionOp region)
+       {
+           Block &rb = region.getBody().front();
+           unsigned nIn = region.getFunctionType().getNumInputs();
+           unsigned nPorts = rb.getNumArguments();
+   
+           SmallVector<InstantiateOp> nodes(rb.getOps<InstantiateOp>());
+   
+           // Resolve each node's callee once; its signature types every value.
+           DenseMap<Operation*, func::FuncOp> callee;
+           for (InstantiateOp n : nodes) {
+               auto fn = module.lookupSymbol<func::FuncOp>(n.getActor());
+               if (!fn)
+                   return n.emitError("dfg-operator-to-cgra: instantiated actor '")
+                          << n.getActor() << "' is not a converted dfg.operator";
+               if (fn.getNumArguments() != n.getInputs().size()
+                   || fn.getNumResults() != n.getOutputs().size())
+                   return n.emitError(
+                       "dfg-operator-to-cgra: instantiate arity does not match "
+                       "the actor signature");
+               callee[n] = fn;
+           }
+   
+           // A port's type is the type the actor on the other end of it uses.
+           SmallVector<Type> portTy(nPorts, Type());
+           for (InstantiateOp n : nodes) {
+               func::FuncOp fn = callee[n];
+               for (auto [i, v] : llvm::enumerate(n.getInputs()))
+                   if (auto ba = dyn_cast<BlockArgument>(v))
+                       if (ba.getOwner() == &rb)
+                           portTy[ba.getArgNumber()] = fn.getArgumentTypes()[i];
+               for (auto [i, v] : llvm::enumerate(n.getOutputs()))
+                   if (auto ba = dyn_cast<BlockArgument>(v))
+                       if (ba.getOwner() == &rb)
+                           portTy[ba.getArgNumber()] = fn.getResultTypes()[i];
+           }
+           for (unsigned i = 0; i < nPorts; ++i)
+               if (!portTy[i])
+                   return region.emitError("dfg-operator-to-cgra: port ")
+                          << i << " of @" << region.getSymName()
+                          << " is not connected to any actor";
+   
+           OpBuilder b(region);
+           auto fnTy = b.getFunctionType(
+               ArrayRef<Type>(portTy).take_front(nIn),
+               ArrayRef<Type>(portTy).drop_front(nIn));
+           auto fn =
+               func::FuncOp::create(b, region.getLoc(), region.getSymName(), fnTy);
+           for (NamedAttribute a : region->getDiscardableAttrs())
+               fn->setAttr(a.getName(), a.getValue());
+           Block* entry = fn.addEntryBlock();
+           OpBuilder fb(entry, entry->begin());
+   
+           // Channel-end / port value -> the SSA value flowing along that edge.
+           DenseMap<Value, Value> wire;
+           for (unsigned i = 0; i < nIn; ++i)
+               wire[rb.getArgument(i)] = entry->getArgument(i);
+   
+           // Emit in DATAFLOW order, which the textual order need not be.
+           SmallVector<InstantiateOp> pending(nodes);
+           while (!pending.empty()) {
+               SmallVector<InstantiateOp> stuck;
+               for (InstantiateOp n : pending) {
+                   if (!llvm::all_of(n.getInputs(), [&](Value v) {
+                           return wire.count(v);
+                       })) {
+                       stuck.push_back(n);
+                       continue;
+                   }
+                   SmallVector<Value> args;
+                   for (Value v : n.getInputs()) args.push_back(wire[v]);
+                   auto call =
+                       func::CallOp::create(fb, n.getLoc(), callee[n], args);
+                   for (auto [i, v] : llvm::enumerate(n.getOutputs())) {
+                       wire[v] = call.getResult(i);
+                       // Bind the far end of the same edge too: a consumer reads
+                       // the channel's OTHER result.
+                       if (auto ch = v.getDefiningOp<ChannelOp>())
+                           wire[ch.getOutputPort()] = call.getResult(i);
+                   }
+               }
+               // No node became ready: the graph has a cycle (feedback), which a
+               // straight-line function cannot express.
+               if (stuck.size() == pending.size())
+                   return stuck.front().emitError(
+                       "dfg-operator-to-cgra: cyclic dataflow region; a feedback "
+                       "edge has no straight-line ordering");
+               pending = std::move(stuck);
+           }
+   
+           SmallVector<Value> rets;
+           for (unsigned i = nIn; i < nPorts; ++i) {
+               Value v = rb.getArgument(i);
+               if (!wire.count(v))
+                   return region.emitError("dfg-operator-to-cgra: output port ")
+                          << (i - nIn) << " of @" << region.getSymName()
+                          << " is never written";
+               rets.push_back(wire[v]);
+           }
+           func::ReturnOp::create(fb, region.getLoc(), rets);
+   
+           region.erase();
+           return success();
+       }
+   };
+   } // namespace
+   
+   std::unique_ptr<mlir::Pass> mlir::cgra::createCGRADFGOperatorToCGRAPass()
+   { return std::make_unique<CGRADFGOperatorToCGRAPass>(); }

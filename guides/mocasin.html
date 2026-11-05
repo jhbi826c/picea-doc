@@ -1,0 +1,212 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Exporting a Profiled Application to Mocasin &mdash; picea 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/collapsible-lists/css/tree_view.css?v=a885cde7" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js?v=73120307"></script>
+      <script src="../_static/collapsible-lists/js/apply-collapsible-lists.js?v=660e4f45"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="‘base2’ Dialect" href="../Dialects/Base2Ops.html" />
+    <link rel="prev" title="The CGRA Variant" href="cgra.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            picea
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Installation</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../README.html">About the project</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#guides">Guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#related-projects">Related projects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#development-environment-nix">Development Environment (Nix)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#build-on-ubuntu-24-04-no-nix">Build on Ubuntu 24.04 (no Nix)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#gurobi-license">Gurobi license</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#installing">Installing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#run-the-tests">Run the tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#build-the-documentation">Build the documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../README.html#compiling-a-design">Compiling a design</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Guides</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="laksa.html">The FPGA Variant using LAKSA backend</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cgra.html">The CGRA Variant</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Exporting a Profiled Application to Mocasin</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#prepare-the-application-and-profiling-artifacts">1. Prepare the application and profiling artifacts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#obtain-fpga-profiles">2. Obtain FPGA profiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#obtain-cpu-profiles">3. Obtain CPU profiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#merge-the-application-profiles">4. Merge the application profiles</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">MLIR Dialects</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/Base2Ops.html">‘base2’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/CGRAOps.html">‘cgra’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/DFGOps.html">‘dfg’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/EmitHLSOps.html">‘emithls’ Dialect</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Dialects/FilterOps.html">‘filter’ Dialect</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Passes</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/PICEAConversionPasses.html">PICEA Conversion Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/CGRAPasses.html">CGRA Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/DFGPasses.html">DFG Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/EmitHLSPasses.html">Emit HLS Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/FuncExtPasses.html">Func Ext Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Passes/LinalgExtPasses.html">Linalg Ext Passes</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">C++ API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../api/library_root.html">C++ API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">picea</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Exporting a Profiled Application to Mocasin</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/guides/mocasin.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="exporting-a-profiled-application-to-mocasin">
+<h1>Exporting a Profiled Application to Mocasin<a class="headerlink" href="#exporting-a-profiled-application-to-mocasin" title="Link to this heading"></a></h1>
+<p><a class="reference external" href="https://github.com/tud-ccc/mocasin">Mocasin</a> needs the application graph and an execution profile for every processor type on which each process may run.
+<code class="docutils literal notranslate"><span class="pre">resin</span></code> generates these as separate YAML files, so that measurements performed on another machine can be added later.</p>
+<section id="prepare-the-application-and-profiling-artifacts">
+<h2>1. Prepare the application and profiling artifacts<a class="headerlink" href="#prepare-the-application-and-profiling-artifacts" title="Link to this heading"></a></h2>
+<p>Generate the Mocasin application template, the FPGA artifacts, and the CPU benchmark in one output directory:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mkdir<span class="w"> </span>-p<span class="w"> </span>out_dir
+resin<span class="w"> </span>input.mlir<span class="w"> </span>--mocasin<span class="w"> </span>-o<span class="w"> </span>out_dir
+resin<span class="w"> </span>input.mlir<span class="w"> </span>--hls<span class="w"> </span>-o<span class="w"> </span>out_dir
+resin<span class="w"> </span>input.mlir<span class="w"> </span>--cpu-profile<span class="w"> </span>-o<span class="w"> </span>out_dir
+</pre></div>
+</div>
+<p>The three commands can also be run independently when only some of the artifacts are needed.
+The <code class="docutils literal notranslate"><span class="pre">--hls</span></code> output is described in the <a class="reference internal" href="laksa.html"><span class="std std-doc">LAKSA guide</span></a>.</p>
+</section>
+<section id="obtain-fpga-profiles">
+<h2>2. Obtain FPGA profiles<a class="headerlink" href="#obtain-fpga-profiles" title="Link to this heading"></a></h2>
+<p>The HLS flow immediately writes <code class="docutils literal notranslate"><span class="pre">out_dir/profiles/profiles_K26_PL_model.yaml</span></code>.
+It contains the per-process cycle counts selected by LAKSA’s internal FPGA model during the pragma DSE, in Mocasin’s <code class="docutils literal notranslate"><span class="pre">execution.processes.profiles</span></code> format, and is available without running Vitis HLS.
+They provide a useful initial profile when the Xilinx toolchain or a synthesis host is unavailable.</p>
+<p>For more accurate, synthesis-derived estimates, transfer <code class="docutils literal notranslate"><span class="pre">out_dir/hw/</span></code> to a machine with Vitis installed and build the design there:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>hw
+./build.sh
+</pre></div>
+</div>
+<p>After transferring the resulting <code class="docutils literal notranslate"><span class="pre">hw/</span></code> directory back into <code class="docutils literal notranslate"><span class="pre">out_dir/</span></code>, extract the worst-case latency reported for each process:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>out_dir/hw/extract_hls_profile.sh
+</pre></div>
+</div>
+<p>This creates <code class="docutils literal notranslate"><span class="pre">out_dir/profiles/profiles_K26_PL_hls.yaml</span></code>.
+Both FPGA profile files may remain in the directory; the merger automatically prefers the Vitis HLS result over LAKSA’s internal model estimate.</p>
+</section>
+<section id="obtain-cpu-profiles">
+<h2>3. Obtain CPU profiles<a class="headerlink" href="#obtain-cpu-profiles" title="Link to this heading"></a></h2>
+<p>The CPU flow prepares <code class="docutils literal notranslate"><span class="pre">out_dir/cpu/</span></code>, which contains one native benchmark for all outlined <code class="docutils literal notranslate"><span class="pre">main_node_N</span></code> processes.
+Transfer this directory to the target platform, run the benchmark there, and transfer it back without changing its structure:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>cpu
+./run.sh
+</pre></div>
+</div>
+<p>The current default is <code class="docutils literal notranslate"><span class="pre">CortexA53</span></code>, matching the application processors on the Kria KV260.
+If access to the hardware cycle counter is restricted, run the script with <code class="docutils literal notranslate"><span class="pre">sudo</span></code>.
+Use <code class="docutils literal notranslate"><span class="pre">./run.sh</span> <span class="pre">--help</span></code> to select a process or adjust the measurement parameters.</p>
+<p>Back on the development machine, collect the measured profile alongside the FPGA profiles:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>cp<span class="w"> </span>out_dir/cpu/profiles_*.yaml<span class="w"> </span>out_dir/profiles/
+</pre></div>
+</div>
+</section>
+<section id="merge-the-application-profiles">
+<h2>4. Merge the application profiles<a class="headerlink" href="#merge-the-application-profiles" title="Link to this heading"></a></h2>
+<p>Run the merger generated with the Mocasin template:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>out_dir/mocasin/merge_profiles.sh
+</pre></div>
+</div>
+<p>When several fragments provide the same process and processor type, the merger uses their provenance rather than their filenames or discovery order.
+The default priority is <code class="docutils literal notranslate"><span class="pre">laksa-model</span> <span class="pre">&lt;</span> <span class="pre">hls</span> <span class="pre">&lt;</span> <span class="pre">benchmark</span></code>; duplicate values from the same source remain an error.</p>
+<p>The merger assigns the synthetic graph inputs and outputs to <code class="docutils literal notranslate"><span class="pre">CortexA53</span></code> with a latency of one cycle.
+The resulting <code class="docutils literal notranslate"><span class="pre">out_dir/mocasin/application.yaml</span></code> is ready to use as a Mocasin application.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="cgra.html" class="btn btn-neutral float-left" title="The CGRA Variant" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../Dialects/Base2Ops.html" class="btn btn-neutral float-right" title="‘base2’ Dialect" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright .</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

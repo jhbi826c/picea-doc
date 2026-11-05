@@ -1,0 +1,140 @@
+
+.. _program_listing_file_lib_Dialect_CGRA_Transforms_PromoteAllocaToGlobal.cpp:
+
+Program Listing for File PromoteAllocaToGlobal.cpp
+==================================================
+
+|exhale_lsh| :ref:`Return to documentation for file <file_lib_Dialect_CGRA_Transforms_PromoteAllocaToGlobal.cpp>` (``lib/Dialect/CGRA/Transforms/PromoteAllocaToGlobal.cpp``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. code-block:: cpp
+
+   
+   
+   #include "mlir/Dialect/Affine/IR/AffineOps.h"
+   #include "mlir/Dialect/Func/IR/FuncOps.h"
+   #include "mlir/Dialect/MemRef/IR/MemRef.h"
+   #include "mlir/IR/BuiltinAttributes.h"
+   #include "mlir/Pass/Pass.h"
+   #include "picea-mlir/Dialect/CGRA/IR/CGRA.h"
+   #include "picea-mlir/Dialect/CGRA/Transforms/Passes.h"
+   
+   using namespace mlir;
+   
+   namespace {
+   struct CGRAPromoteAllocaToGlobalPass : public PassWrapper<
+                                              CGRAPromoteAllocaToGlobalPass,
+                                              OperationPass<ModuleOp>> {
+   
+       MLIR_DEFINE_EXPLICIT_INTERNAL_INLINE_TYPE_ID(CGRAPromoteAllocaToGlobalPass)
+   
+       StringRef getArgument() const final { return "promote-alloca-to-global"; }
+       StringRef getDescription() const final
+       {
+           return "Give stack-allocated buffers of an orchestrated-reduction nest "
+                  "static storage (memref.global), selecting the multi-config "
+                  "route";
+       }
+   
+       void getDependentDialects(mlir::DialectRegistry &registry) const override
+       { registry.insert<memref::MemRefDialect>(); }
+   
+       // A matmul written with C local arrays (`int C[N][M]; ... C[i][j] += ...`)
+       // lowers to memref.alloca, so the module has no memref.global and the
+       // driver takes the SINGLE-CONFIG (deploy) route: it dispatches the whole
+       // nest as one flat linear stream. That cannot express a reduction --
+       // `B[k][j]` is a transposed access and `C[i][j]` repeats across the k loop
+       // -- so the fabric computes the wrong result. The MULTI-CONFIG route
+       // orchestrates the nest per output element (that is how the globals-based
+       // `mm` matmul works), and it is selected by the presence of memref.global.
+       // Promoting the buffers therefore routes such a kernel to the emitter that
+       // can actually express it.
+       //
+       // Only nests that NEED orchestration are promoted, so this pass is inert on
+       // the flat elementwise alloca kernels (vadd, linalg) that the single-config
+       // route already runs correctly.
+       //
+       // The signature: an accumulator store nested at least two loops deep whose
+       // index does NOT vary with the innermost loop, with the same buffer loaded
+       // in that body -- i.e. `C[i][j] += f(...)` reduced over the inner loop.
+       static bool hasOrchestratedReduction(func::FuncOp func)
+       {
+           bool found = false;
+           func.walk([&](affine::AffineStoreOp store) {
+               auto inner = store->getParentOfType<affine::AffineForOp>();
+               if (!inner || !inner->getParentOfType<affine::AffineForOp>())
+                   return;
+               if (llvm::is_contained(
+                       store.getMapOperands(),
+                       inner.getInductionVar()))
+                   return; // varies with the inner loop: elementwise, not a
+                           // reduction
+               for (auto load : inner.getBody()->getOps<affine::AffineLoadOp>())
+                   if (load.getMemRef() == store.getMemRef()) found = true;
+           });
+           return found;
+       }
+   
+       void runOnOperation() override
+       {
+           ModuleOp module = getOperation();
+   
+           // Both memref.alloca (a C local, what Polygeist emits) AND memref.alloc
+           // (what one-shot-bufferize emits for a tensor that is not written into
+           // an existing buffer — e.g. a network's final result). Either way the
+           // buffer has NO SYMBOL, so --outline-cgra-deploy records an empty entry
+           // in cgra.arg_globals and --generate-cgra-driver passes a NULL pointer
+           // for it. On bare metal that does not fault: the stage silently reads
+           // address 0.
+           SmallVector<Operation*> targets;
+           for (auto func : module.getOps<func::FuncOp>()) {
+               if (!hasOrchestratedReduction(func)) continue;
+               func.walk([&](Operation* op) {
+                   if (auto a = dyn_cast<memref::AllocaOp>(op)) {
+                       if (a.getType().hasStaticShape()
+                           && a.getDynamicSizes().empty())
+                           targets.push_back(op);
+                   } else if (auto a = dyn_cast<memref::AllocOp>(op)) {
+                       if (a.getType().hasStaticShape()
+                           && a.getDynamicSizes().empty())
+                           targets.push_back(op);
+                   }
+               });
+           }
+           if (targets.empty()) return;
+   
+           OpBuilder gb(module.getBodyRegion());
+           gb.setInsertionPointToStart(module.getBody());
+           unsigned n = 0;
+           for (Operation* alloca : targets) {
+               MemRefType ty = cast<MemRefType>(alloca->getResult(0).getType());
+               std::string name = "__cgra_buf" + std::to_string(n++);
+               // Zero-initialised static storage, matching how a globals-based
+               // kernel declares its streams (the host init loops fill them at run
+               // time).
+               auto zero = DenseElementsAttr::get(
+                   RankedTensorType::get(ty.getShape(), ty.getElementType()),
+                   gb.getZeroAttr(ty.getElementType()));
+               memref::GlobalOp::create(
+                   gb,
+                   alloca->getLoc(),
+                   StringRef(name),
+                   gb.getStringAttr("private"),
+                   ty,
+                   /*initial_value=*/cast<Attribute>(zero),
+                   /*constant=*/false,
+                   /*alignment=*/IntegerAttr());
+   
+               OpBuilder b(alloca);
+               auto get =
+                   memref::GetGlobalOp::create(b, alloca->getLoc(), ty, name);
+               alloca->getResult(0).replaceAllUsesWith(get.getResult());
+               alloca->erase();
+           }
+       }
+   };
+   } // namespace
+   
+   std::unique_ptr<mlir::Pass> mlir::cgra::createCGRAPromoteAllocaToGlobalPass()
+   { return std::make_unique<CGRAPromoteAllocaToGlobalPass>(); }

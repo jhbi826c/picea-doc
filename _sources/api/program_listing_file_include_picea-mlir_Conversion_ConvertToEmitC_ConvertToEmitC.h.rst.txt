@@ -1,0 +1,31 @@
+
+.. _program_listing_file_include_picea-mlir_Conversion_ConvertToEmitC_ConvertToEmitC.h:
+
+Program Listing for File ConvertToEmitC.h
+=========================================
+
+|exhale_lsh| :ref:`Return to documentation for file <file_include_picea-mlir_Conversion_ConvertToEmitC_ConvertToEmitC.h>` (``include/picea-mlir/Conversion/ConvertToEmitC/ConvertToEmitC.h``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. code-block:: cpp
+
+   
+   
+   #pragma once
+   
+   #include "mlir/Pass/PassManager.h"
+   
+   #include <cstdint>
+   
+   namespace mlir {
+   
+   namespace picea {
+   void registerConvertToEmitCPipelines();
+   void addConvertToEmitCPasses(OpPassManager &pm, uint32_t maxAllocSizeInBytes);
+   void addConvertToCPUProfilePasses(
+       OpPassManager &pm,
+       uint32_t maxAllocSizeInBytes);
+   } // namespace picea
+   
+   } // namespace mlir

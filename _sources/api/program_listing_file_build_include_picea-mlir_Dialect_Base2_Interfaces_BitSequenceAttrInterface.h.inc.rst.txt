@@ -1,0 +1,158 @@
+
+.. _program_listing_file_build_include_picea-mlir_Dialect_Base2_Interfaces_BitSequenceAttrInterface.h.inc:
+
+Program Listing for File BitSequenceAttrInterface.h.inc
+=======================================================
+
+|exhale_lsh| :ref:`Return to documentation for file <file_build_include_picea-mlir_Dialect_Base2_Interfaces_BitSequenceAttrInterface.h.inc>` (``build/include/picea-mlir/Dialect/Base2/Interfaces/BitSequenceAttrInterface.h.inc``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. code-block:: cpp
+
+   /*===- TableGen'erated file -------------------------------------*- C++ -*-===*\
+   |*                                                                            *|
+   |* Interface Declarations                                                     *|
+   |*                                                                            *|
+   |* Automatically generated file, do not edit!                                 *|
+   |*                                                                            *|
+   \*===----------------------------------------------------------------------===*/
+   
+   namespace mlir::base2 {
+   
+   class BitSequenceAttr;
+   
+   } // namespace mlir::base2
+   namespace mlir::base2 {
+   
+   namespace detail {
+   struct BitSequenceAttrInterfaceTraits {
+     struct Concept {
+       BitSequenceType (*getType)(const Concept *impl, ::mlir::Attribute );
+       BitSequence (*getValue)(const Concept *impl, ::mlir::Attribute );
+     };
+     template<typename ConcreteAttr>
+     class Model : public Concept {
+     public:
+       using Interface = ::mlir::base2::BitSequenceAttr;
+       Model() : Concept{getType, getValue} {}
+   
+       static inline BitSequenceType getType(const Concept *impl, ::mlir::Attribute tablegen_opaque_val);
+       static inline BitSequence getValue(const Concept *impl, ::mlir::Attribute tablegen_opaque_val);
+     };
+     template<typename ConcreteAttr>
+     class FallbackModel : public Concept {
+     public:
+       using Interface = ::mlir::base2::BitSequenceAttr;
+       FallbackModel() : Concept{getType, getValue} {}
+   
+       static inline BitSequenceType getType(const Concept *impl, ::mlir::Attribute tablegen_opaque_val);
+       static inline BitSequence getValue(const Concept *impl, ::mlir::Attribute tablegen_opaque_val);
+     };
+     template<typename ConcreteModel, typename ConcreteAttr>
+     class ExternalModel : public FallbackModel<ConcreteModel> {
+     public:
+       using ConcreteEntity = ConcreteAttr;
+     };
+   };
+   template <typename ConcreteAttr>
+   struct BitSequenceAttrTrait;
+   
+   } // namespace detail
+   class BitSequenceAttr : public ::mlir::AttributeInterface<BitSequenceAttr, detail::BitSequenceAttrInterfaceTraits> {
+   public:
+     using ::mlir::AttributeInterface<BitSequenceAttr, detail::BitSequenceAttrInterfaceTraits>::AttributeInterface;
+     template <typename ConcreteAttr>
+     struct Trait : public detail::BitSequenceAttrTrait<ConcreteAttr> {};
+   
+     BitSequenceType getType() const;
+   
+     BitSequence getValue() const;
+   
+       public:
+           using ValueType = BitSequence;
+   
+           [[nodiscard]] static BitSequenceAttr get(
+               BitSequenceType type,
+               const BitSequence &bits);
+           [[nodiscard]] static BitSequenceAttr get(BitSequenceAttr attr)
+           {
+               assert(attr);
+   
+               return get(attr.getType(), attr.getValue());
+           }
+   
+           [[nodiscard]] BitSequenceAttr bitCast(BitSequenceType type) const
+           {
+               assert(type);
+               assert(type.getBitWidth() == getType().getBitWidth());
+   
+               return get(type, getValue());
+           }
+   
+           [[nodiscard]] BitSequenceAttr map(
+               UnaryBitSequenceFn fn,
+               BitSequenceType elementTy = {}) const
+           {
+               if (!elementTy) elementTy = getType();
+   
+               return BitSequenceAttr::get(elementTy, fn(getValue()));
+           }
+           [[nodiscard]] BitSequenceAttr zip(
+               BinaryBitSequenceFn fn,
+               BitSequenceAttr rhs,
+               BitSequenceType elementTy = {}) const
+           {
+               assert(rhs);
+   
+               if (!elementTy) elementTy = getType();
+   
+               return BitSequenceAttr::get(
+                   elementTy,
+                   fn(getValue(), rhs.getValue()));
+           }
+           [[nodiscard]] BitSequenceAttr zip(
+               TernaryBitSequenceFn fn,
+               BitSequenceAttr arg1,
+               BitSequenceAttr arg2,
+               BitSequenceType elementTy = {}) const
+           {
+               assert(arg1 && arg2);
+   
+               if (!elementTy) elementTy = getType();
+   
+               return BitSequenceAttr::get(
+                   elementTy,
+                   fn(getValue(), arg1.getValue(), arg2.getValue()));
+           }
+   };
+   
+   } // namespace mlir::base2
+   namespace mlir::base2::detail {
+   
+     template <typename ConcreteAttr>
+     struct BitSequenceAttrTrait : public ::mlir::AttributeInterface<BitSequenceAttr, detail::BitSequenceAttrInterfaceTraits>::Trait<ConcreteAttr> {
+     };
+   
+   } // namespace mlir::base2::detail
+   namespace mlir::base2 {
+   
+   template<typename ConcreteAttr>
+   BitSequenceType detail::BitSequenceAttrInterfaceTraits::Model<ConcreteAttr>::getType(const Concept *impl, ::mlir::Attribute tablegen_opaque_val) {
+     return cast<BitSequenceType>(
+                       cast<::mlir::TypedAttr>((::llvm::cast<ConcreteAttr>(tablegen_opaque_val))).getType());
+   }
+   template<typename ConcreteAttr>
+   BitSequence detail::BitSequenceAttrInterfaceTraits::Model<ConcreteAttr>::getValue(const Concept *impl, ::mlir::Attribute tablegen_opaque_val) {
+     return (::llvm::cast<ConcreteAttr>(tablegen_opaque_val)).getValue();
+   }
+   template<typename ConcreteAttr>
+   BitSequenceType detail::BitSequenceAttrInterfaceTraits::FallbackModel<ConcreteAttr>::getType(const Concept *impl, ::mlir::Attribute tablegen_opaque_val) {
+     return static_cast<const ConcreteAttr *>(impl)->getType(tablegen_opaque_val);
+   }
+   template<typename ConcreteAttr>
+   BitSequence detail::BitSequenceAttrInterfaceTraits::FallbackModel<ConcreteAttr>::getValue(const Concept *impl, ::mlir::Attribute tablegen_opaque_val) {
+     return static_cast<const ConcreteAttr *>(impl)->getValue(tablegen_opaque_val);
+   }
+   
+   } // namespace mlir::base2

@@ -1,0 +1,292 @@
+
+.. _program_listing_file_lib_Dialect_CGRA_Transforms_NormalizeCGRACompare.cpp:
+
+Program Listing for File NormalizeCGRACompare.cpp
+=================================================
+
+|exhale_lsh| :ref:`Return to documentation for file <file_lib_Dialect_CGRA_Transforms_NormalizeCGRACompare.cpp>` (``lib/Dialect/CGRA/Transforms/NormalizeCGRACompare.cpp``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. code-block:: cpp
+
+   
+   
+   //===- NormalizeCGRACompare.cpp - cmpi -> {>0, ==0} against zero ----------===//
+   //
+   // The CGRA compare FU tests against zero and realises only `>0` and `==0`, so
+   // every other predicate is folded into an expression on the operand:
+   //
+   //   x <  y -> (y - x) > 0          x >  y -> (x - y) > 0
+   //   x <= y -> (y - x + 1) > 0      x >= y -> (x - y + 1) > 0
+   //   x == y -> (x - y) == 0
+   //   x != y -> (x - y) == 0 with the consuming select's arms swapped; when
+   //   consumed
+   //             as DATA instead, ((t | -t) >>u 31), truncated back to i1
+   //   ult/ule/ugt/uge -> a <u b == MSB((~a & b) | (~(a^b) & (a-b))), shifted to
+   //   0/1
+   //
+   // A compare already `>0`/`==0` against a literal zero is left untouched.
+   // The sign-bit-flip identity for unsigned compares is UNSOUND here; the <=/>=
+   // +1 assumes no wraparound at the integer extremes. See docs/guides/cgra.md.
+   //
+   //===----------------------------------------------------------------------===//
+   
+   #include "mlir/Dialect/Arith/IR/Arith.h"
+   #include "mlir/IR/Builders.h"
+   #include "mlir/IR/Matchers.h"
+   #include "mlir/Pass/Pass.h"
+   #include "picea-mlir/Dialect/CGRA/Transforms/Passes.h"
+   
+   #include "llvm/ADT/STLExtras.h"
+   #include "llvm/ADT/SmallVector.h"
+   
+   using namespace mlir;
+   
+   namespace {
+   
+   // Whether @p v is a literal integer zero.
+   static bool isZeroConst(Value v)
+   {
+       APInt c;
+       return matchPattern(v, m_ConstantInt(&c)) && c.isZero();
+   }
+   
+   // Whether every use of @p v is the CONDITION of an arith.select. Those uses can
+   // be fed by a cmp FU; anything else consumes the predicate as data and needs it
+   // materialized as a 0/1 integer (see materializeAsValue).
+   static bool onlySelectConditions(Value v)
+   {
+       for (OpOperand &use : v.getUses()) {
+           auto sel = dyn_cast<arith::SelectOp>(use.getOwner());
+           if (!sel || use.getOperandNumber() != 0) return false;
+       }
+       return true;
+   }
+   
+   // Materialize `x != y` (or `x == y`) as a 0/1 INTEGER using ALU ops only — no
+   // compare unit at all:
+   //
+   //     t = x - y;   x != y  ==  MSB(t | -t)  ==  (t | (0 - t)) >>u (N-1)
+   //
+   // `t | -t` is 0 exactly when t is 0 and has its top bit set for every other t
+   // (one of t, -t is negative), so the logical shift lands a literal 0 or 1 at
+   // bit 0; equality is that XOR 1. Costs 4 FUs (or, sub, shr and the exporter's
+   // mask) against the 1 FU of a `=0` cmp node, which is why this is only used
+   // where the cmp node cannot be: the fabric comparator has no `!=0` mode
+   // (CGRA.py `_HW_CMP_OPS` is `{=0, >0}`), so a `!=` is otherwise realised as
+   // `==0` with its consumers inverted — and that inversion is only possible when
+   // every consumer is a select.
+   //
+   // @param b,loc  Where to emit.
+   // @param ity    Type of @p t; the result has this type (0 or 1).
+   // @param t      The difference `x - y` (just `x` when comparing against zero,
+   //               which saves the subtract).
+   static Value
+   materializeNonZero(OpBuilder &b, Location loc, IntegerType ity, Value t)
+   {
+       unsigned w = ity.getWidth();
+       auto k = [&](int64_t v) -> Value {
+           return arith::ConstantOp::create(b, loc, b.getIntegerAttr(ity, v));
+       };
+       Value nz =
+           arith::OrIOp::create(b, loc, t, arith::SubIOp::create(b, loc, k(0), t));
+       return arith::ShRUIOp::create(b, loc, nz, k(w - 1));
+   }
+   
+   // Rewrite one arith.cmpi into a fabric-supported form, or leave it unchanged.
+   static void normalize(arith::CmpIOp cmp)
+   {
+       using P = arith::CmpIPredicate;
+       P pred = cmp.getPredicate();
+       Value d = cmp.getLhs(), e = cmp.getRhs();
+       bool rhsZero = isZeroConst(e);
+   
+       // Already canonical: `>0` or `==0` against a literal zero.
+       if (rhsZero && (pred == P::sgt || pred == P::eq)) return;
+   
+       // Unsigned ordered compare. NOTE the tempting sign-bit-flip identity
+       // `a <u b == (a ^ 2^(N-1)) <s (b ^ 2^(N-1))` is USELESS here: this fabric
+       // has no two-operand comparator, so every signed compare is reduced to a
+       // difference against zero — and `x ^ 2^(N-1) == x + 2^(N-1) (mod 2^N)`, so
+       // the flip cancels exactly in `(b^M) - (a^M) == b - a`. It would silently
+       // compile to the SIGNED comparison (verified: wrong for a=0, b=0xFFFFFFFF).
+       //
+       // Use the branch-free bitwise form instead (Hacker's Delight 2-12), whose
+       // result is carried in the MSB:
+       //     a <u b  ==  MSB( (~a & b) | (~(a ^ b) & (a - b)) )
+       // Shifting that MSB down with a LOGICAL shift yields exactly 0 or 1, so the
+       // final test is already canonical (`>0`, or `==0` for the negated
+       // predicates) — no overflow concern and no select inversion. All of
+       // and/or/xor/sub/shrui are fabric FUs (`--legalize-to-i32` emits the same
+       // family for the i64 carry).
+       if (pred == P::ult || pred == P::ule || pred == P::ugt || pred == P::uge) {
+           auto ity = dyn_cast<IntegerType>(d.getType());
+           if (!ity)
+               return; // non-integer (index/vector) operands: leave for the guard
+           unsigned w = ity.getWidth();
+           OpBuilder b(cmp);
+           Location loc = cmp.getLoc();
+           auto cst = [&](const APInt &v) -> Value {
+               return arith::ConstantOp::create(b, loc, b.getIntegerAttr(ity, v));
+           };
+           Value ones = cst(APInt::getAllOnes(w));
+           auto bnot = [&](Value v) {
+               return arith::XOrIOp::create(b, loc, v, ones).getResult();
+           };
+   
+           // a <u b for (x, y); the other three predicates are swaps and/or
+           // negations.
+           Value x = d, y = e;
+           bool negate = false;
+           switch (pred) {
+           case P::ult: break;                  //  x <u y
+           case P::uge: negate = true; break;   // !(x <u y)
+           case P::ugt: std::swap(x, y); break; //  y <u x
+           case P::ule:
+               std::swap(x, y);
+               negate = true;
+               break; // !(y <u x)
+           default: break;
+           }
+           Value t = arith::OrIOp::create(
+               b,
+               loc,
+               arith::AndIOp::create(b, loc, bnot(x), y),
+               arith::AndIOp::create(
+                   b,
+                   loc,
+                   bnot(arith::XOrIOp::create(b, loc, x, y)),
+                   arith::SubIOp::create(b, loc, x, y)));
+           Value msb = arith::ShRUIOp::create(b, loc, t, cst(APInt(w, w - 1)));
+           Value zero = cst(APInt(w, 0));
+           Value res =
+               arith::CmpIOp::create(b, loc, negate ? P::eq : P::sgt, msb, zero);
+           cmp.getResult().replaceAllUsesWith(res);
+           cmp.erase();
+           return;
+       }
+   
+       // Only signed ordered predicates and eq/ne are lowerable to {>0, ==0}.
+       bool invertSelect = false;
+       P newPred = P::sgt;
+       switch (pred) {
+       case P::slt:
+       case P::sle:
+       case P::sgt:
+       case P::sge: break;
+       case P::eq: newPred = P::eq; break;
+       case P::ne:
+           newPred = P::eq;
+           invertSelect = true;
+           break;
+       // Unsigned ordered predicates were fully handled (and returned) above.
+       default: return;
+       }
+   
+       // `!=` is realised as `==0` with the consumers inverted; that is only sound
+       // when every consumer is an arith.select using this compare as its
+       // condition. Otherwise the predicate is consumed as DATA (`sum += a[i] !=
+       // b[i]`, an `&&` of two compares, a stored flag) and there is nothing to
+       // invert — so build the 0/1 value arithmetically instead of leaving an
+       // `arith.cmpi ne` behind. Leaving it was not benign: --export-loop-dfg
+       // spells it `!=0` in the .dot and CGRA.py rejects that, so the kernel died
+       // at bitstream generation.
+       if (invertSelect && !onlySelectConditions(cmp.getResult())) {
+           auto ity = dyn_cast<IntegerType>(d.getType());
+           if (!ity || ity.getWidth() < 2)
+               return; // no MSB to shift down (or non-integer): leave for the
+                       // guard
+           OpBuilder vb(cmp);
+           Location loc = cmp.getLoc();
+           Value t =
+               rhsZero ? d : arith::SubIOp::create(vb, loc, d, e).getResult();
+           Value v = materializeNonZero(vb, loc, ity, t);
+           // The consumers want the i1 the compare produced; the low bit of `v` IS
+           // it, and --export-loop-dfg treats trunci as a pass-through, so this
+           // costs no FU.
+           Value asI1 =
+               arith::TruncIOp::create(vb, cmp.getLoc(), vb.getI1Type(), v);
+           cmp.getResult().replaceAllUsesWith(asI1);
+           cmp.erase();
+           return;
+       }
+   
+       OpBuilder b(cmp);
+       Location loc = cmp.getLoc();
+       Type ty = d.getType();
+       auto k = [&](int64_t v) -> Value {
+           return arith::ConstantOp::create(b, loc, b.getIntegerAttr(ty, v));
+       };
+       auto sub = [&](Value x, Value y) -> Value {
+           return arith::SubIOp::create(b, loc, x, y);
+       };
+       auto inc = [&](Value x) -> Value {
+           return arith::AddIOp::create(b, loc, x, k(1));
+       };
+   
+       // Build the operand whose sign/zero-ness carries the original comparison.
+       Value nv;
+       switch (pred) {
+       case P::slt: nv = rhsZero ? sub(k(0), d) : sub(e, d); break; // (y - x) > 0
+       case P::sle:
+           nv = rhsZero ? sub(k(1), d) : inc(sub(e, d));
+           break; // (y - x + 1) > 0
+       case P::sge:
+           nv = rhsZero ? inc(d) : inc(sub(d, e));
+           break;   // (x - y + 1) > 0
+       case P::sgt: // (x - y) > 0
+       case P::eq:  // (x - y) == 0
+       case P::ne: nv = rhsZero ? d : sub(d, e); break;
+       default: return;
+       }
+   
+       Value nc = arith::CmpIOp::create(b, loc, newPred, nv, k(0));
+   
+       if (!invertSelect) {
+           cmp.getResult().replaceAllUsesWith(nc);
+           cmp.erase();
+           return;
+       }
+       // `!=` -> `==0`: swap each consuming select's arms and repoint its
+       // condition.
+       for (Operation* u :
+            llvm::make_early_inc_range(cmp.getResult().getUsers())) {
+           auto sel = cast<arith::SelectOp>(u);
+           Value t = sel.getTrueValue(), f = sel.getFalseValue();
+           sel.getTrueValueMutable().assign(f);
+           sel.getFalseValueMutable().assign(t);
+           sel.getConditionMutable().assign(nc);
+       }
+       cmp.erase();
+   }
+   
+   class CGRANormalizeComparePass : public PassWrapper<
+                                        CGRANormalizeComparePass,
+                                        OperationPass<ModuleOp>> {
+   public:
+       MLIR_DEFINE_EXPLICIT_INTERNAL_INLINE_TYPE_ID(CGRANormalizeComparePass)
+   
+       StringRef getArgument() const final { return "normalize-cgra-compare"; }
+       StringRef getDescription() const final
+       {
+           return "Rewrite arith.cmpi into the fabric-supported >0 / ==0 vs zero "
+                  "forms";
+       }
+   
+       void getDependentDialects(DialectRegistry &registry) const override
+       { registry.insert<arith::ArithDialect>(); }
+   
+       void runOnOperation() override
+       {
+           // Collect first: normalize erases the op it visits.
+           SmallVector<arith::CmpIOp> work;
+           getOperation().walk([&](arith::CmpIOp c) { work.push_back(c); });
+           for (arith::CmpIOp c : work) normalize(c);
+       }
+   };
+   
+   } // namespace
+   
+   std::unique_ptr<mlir::Pass> cgra::createCGRANormalizeComparePass()
+   { return std::make_unique<CGRANormalizeComparePass>(); }

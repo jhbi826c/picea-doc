@@ -1,0 +1,46 @@
+
+.. _program_listing_file_lib_Target_CGRAToDot_TranslateRegistration.cpp:
+
+Program Listing for File TranslateRegistration.cpp
+==================================================
+
+|exhale_lsh| :ref:`Return to documentation for file <file_lib_Target_CGRAToDot_TranslateRegistration.cpp>` (``lib/Target/CGRAToDot/TranslateRegistration.cpp``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. code-block:: cpp
+
+   
+   
+   #include "mlir/InitAllDialects.h"
+   #include "mlir/Tools/mlir-translate/Translation.h"
+   #include "picea-mlir/Dialect/CGRA/IR/CGRA.h"
+   #include "picea-mlir/Target/CGRAToDot/DotEmitter.h"
+   
+   using namespace mlir;
+   
+   namespace mlir {
+   
+   //===----------------------------------------------------------------------===//
+   // Translation registration
+   //===----------------------------------------------------------------------===//
+   
+   void registerCGRAToDotTranslation()
+   {
+       TranslateFromMLIRRegistration reg(
+           "cgra-to-dot",
+           "export CGRA compute loops as GraphViz .dot data-flow graphs",
+           [](Operation* op, raw_ostream &output) {
+               return cgra::translateCGRAToDot(op, output);
+           },
+           [](DialectRegistry &registry) {
+               // The input is a whole lowered module straight out of the CGRA
+               // pipeline (func, scf, cf, math, ... alongside cgra), not a
+               // hand-written snippet, so registering only the dialects this
+               // emitter inspects makes the parse fail before it ever runs.
+               registerAllDialects(registry);
+               registry.insert<cgra::CGRADialect>();
+           });
+   }
+   
+   } // namespace mlir

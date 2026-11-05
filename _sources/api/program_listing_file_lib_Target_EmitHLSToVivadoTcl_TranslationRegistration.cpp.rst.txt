@@ -1,0 +1,40 @@
+
+.. _program_listing_file_lib_Target_EmitHLSToVivadoTcl_TranslationRegistration.cpp:
+
+Program Listing for File TranslationRegistration.cpp
+====================================================
+
+|exhale_lsh| :ref:`Return to documentation for file <file_lib_Target_EmitHLSToVivadoTcl_TranslationRegistration.cpp>` (``lib/Target/EmitHLSToVivadoTcl/TranslationRegistration.cpp``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. code-block:: cpp
+
+   
+   
+   #include "mlir/Tools/mlir-translate/Translation.h"
+   #include "picea-mlir/Dialect/EmitHLS/IR/EmitHLSBase.h"
+   #include "picea-mlir/Target/EmitHLSToVivadoTcl/VivadoTclEmitter.h"
+   
+   using namespace mlir;
+   
+   namespace mlir {
+   
+   //===----------------------------------------------------------------------===//
+   // Translation registration
+   //===----------------------------------------------------------------------===//
+   
+   void registerEmitHLSToVivadoTclTranslation()
+   {
+       TranslateFromMLIRRegistration reg(
+           "emithls-to-vivado-tcl",
+           "translate EmitHLS IR to a Vivado run_vivado.tcl script",
+           [](ModuleOp op, raw_ostream &output) {
+               return emithls::translateEmitHLSToVivadoTcl(op, output);
+           },
+           [](DialectRegistry &registry) {
+               registry.insert<emithls::EmitHLSDialect>();
+           });
+   }
+   
+   } // namespace mlir

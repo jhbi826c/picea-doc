@@ -1,0 +1,99 @@
+
+.. _program_listing_file_build_include_picea-mlir_Dialect_DFG_IR_DFGTypes.h.inc:
+
+Program Listing for File DFGTypes.h.inc
+=======================================
+
+|exhale_lsh| :ref:`Return to documentation for file <file_build_include_picea-mlir_Dialect_DFG_IR_DFGTypes.h.inc>` (``build/include/picea-mlir/Dialect/DFG/IR/DFGTypes.h.inc``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. code-block:: cpp
+
+   /*===- TableGen'erated file -------------------------------------*- C++ -*-===*\
+   |*                                                                            *|
+   |* TypeDef Declarations                                                       *|
+   |*                                                                            *|
+   |* Automatically generated file, do not edit!                                 *|
+   |*                                                                            *|
+   \*===----------------------------------------------------------------------===*/
+   
+   #ifdef GET_TYPEDEF_CLASSES
+   #undef GET_TYPEDEF_CLASSES
+   
+   
+   namespace mlir {
+   class AsmParser;
+   class AsmPrinter;
+   } // namespace mlir
+   namespace mlir::dfg {
+   
+   class InputType;
+   class OutputType;
+   namespace detail {
+   
+   struct InputTypeStorage;
+   
+   } // namespace detail
+   class InputType : public ::mlir::Type::TypeBase<InputType, ::mlir::Type, detail::InputTypeStorage, ::mlir::dfg::TypeInterface::Trait> {
+   public:
+     using Base::Base;
+     static constexpr ::llvm::StringLiteral name = "dfg.input";
+     static constexpr ::llvm::StringLiteral dialectName = "dfg";
+     using Base::getChecked;
+     static InputType get(::mlir::MLIRContext *context, ::llvm::ArrayRef<int64_t> shape, Type elementType);
+     static InputType getChecked(::llvm::function_ref<::mlir::InFlightDiagnostic()> emitError, ::mlir::MLIRContext *context, ::llvm::ArrayRef<int64_t> shape, Type elementType);
+     static InputType get(Type elementType);
+     static InputType getChecked(::llvm::function_ref<::mlir::InFlightDiagnostic()> emitError, Type elementType);
+     static InputType get(ArrayRef<int64_t> shape, Type elementType);
+     static InputType getChecked(::llvm::function_ref<::mlir::InFlightDiagnostic()> emitError, ArrayRef<int64_t> shape, Type elementType);
+     static InputType get(ShapedType shapedType);
+     static InputType getChecked(::llvm::function_ref<::mlir::InFlightDiagnostic()> emitError, ShapedType shapedType);
+     static ::llvm::LogicalResult verify(::llvm::function_ref<::mlir::InFlightDiagnostic()> emitError, ::llvm::ArrayRef<int64_t> shape, Type elementType);
+     static ::llvm::LogicalResult verifyInvariants(::llvm::function_ref<::mlir::InFlightDiagnostic()> emitError, ::llvm::ArrayRef<int64_t> shape, Type elementType);
+     static constexpr ::llvm::StringLiteral getMnemonic() {
+       return {"input"};
+     }
+   
+     static ::mlir::Type parse(::mlir::AsmParser &odsParser);
+     void print(::mlir::AsmPrinter &odsPrinter) const;
+     ::llvm::ArrayRef<int64_t> getShape() const;
+     Type getElementType() const;
+   };
+   namespace detail {
+   
+   struct OutputTypeStorage;
+   
+   } // namespace detail
+   class OutputType : public ::mlir::Type::TypeBase<OutputType, ::mlir::Type, detail::OutputTypeStorage, ::mlir::dfg::TypeInterface::Trait> {
+   public:
+     using Base::Base;
+     static constexpr ::llvm::StringLiteral name = "dfg.output";
+     static constexpr ::llvm::StringLiteral dialectName = "dfg";
+     using Base::getChecked;
+     static OutputType get(::mlir::MLIRContext *context, ::llvm::ArrayRef<int64_t> shape, Type elementType);
+     static OutputType getChecked(::llvm::function_ref<::mlir::InFlightDiagnostic()> emitError, ::mlir::MLIRContext *context, ::llvm::ArrayRef<int64_t> shape, Type elementType);
+     static OutputType get(Type elementType);
+     static OutputType getChecked(::llvm::function_ref<::mlir::InFlightDiagnostic()> emitError, Type elementType);
+     static OutputType get(ArrayRef<int64_t> shape, Type elementType);
+     static OutputType getChecked(::llvm::function_ref<::mlir::InFlightDiagnostic()> emitError, ArrayRef<int64_t> shape, Type elementType);
+     static OutputType get(ShapedType shapedType);
+     static OutputType getChecked(::llvm::function_ref<::mlir::InFlightDiagnostic()> emitError, ShapedType shapedType);
+     static ::llvm::LogicalResult verify(::llvm::function_ref<::mlir::InFlightDiagnostic()> emitError, ::llvm::ArrayRef<int64_t> shape, Type elementType);
+     static ::llvm::LogicalResult verifyInvariants(::llvm::function_ref<::mlir::InFlightDiagnostic()> emitError, ::llvm::ArrayRef<int64_t> shape, Type elementType);
+     static constexpr ::llvm::StringLiteral getMnemonic() {
+       return {"output"};
+     }
+   
+     static ::mlir::Type parse(::mlir::AsmParser &odsParser);
+     void print(::mlir::AsmPrinter &odsPrinter) const;
+     ::llvm::ArrayRef<int64_t> getShape() const;
+     Type getElementType() const;
+   };
+   
+   } // namespace mlir::dfg
+   MLIR_DECLARE_EXPLICIT_TYPE_ID(::mlir::dfg::InputType)
+   MLIR_DECLARE_EXPLICIT_TYPE_ID(::mlir::dfg::OutputType)
+   
+   #endif // GET_TYPEDEF_CLASSES
+   

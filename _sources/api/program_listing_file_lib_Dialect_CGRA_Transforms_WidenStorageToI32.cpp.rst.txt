@@ -1,0 +1,213 @@
+
+.. _program_listing_file_lib_Dialect_CGRA_Transforms_WidenStorageToI32.cpp:
+
+Program Listing for File WidenStorageToI32.cpp
+==============================================
+
+|exhale_lsh| :ref:`Return to documentation for file <file_lib_Dialect_CGRA_Transforms_WidenStorageToI32.cpp>` (``lib/Dialect/CGRA/Transforms/WidenStorageToI32.cpp``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. code-block:: cpp
+
+   
+   
+   //===- WidenStorageToI32.cpp - i8/i16 memref storage -> i32 --------------===//
+   //
+   // A quantized NN stores activations/weights as memref<...xi8> (or i16). The
+   // CGRA streams 32-bit integers, and --legalize-to-i32 widens i8/i64
+   // *arithmetic* but not *storage* (it assumes memrefs are already i32). This
+   // pass closes that gap: it retypes every i8/i16 memref (globals + their data,
+   // allocs, function args and results) to i32, and reconnects the load/store
+   // boundaries so the value flow is unchanged:
+   //
+   //   %v = affine.load %m8[...]            ->   %w = affine.load %m32[...]  (i32)
+   //                                             %v = arith.trunci %w : i32 to i8
+   //   affine.store %v, %m8[...]            ->   %w = arith.extsi %v : i8 to i32
+   //                                             affine.store %w, %m32[...]
+   //
+   // The narrow value the kernel body computed on (%v) is preserved, so the ext/
+   // trunc arithmetic already in the body still type-checks; --legalize-to-i32
+   // then lowers those i8/i64 ops to i32 sequences as usual. Global data is
+   // sign-extended (quantized values are signed). Run BEFORE --legalize-to-i32.
+   //
+   //===----------------------------------------------------------------------===//
+   
+   #include "mlir/Dialect/Affine/IR/AffineOps.h"
+   #include "mlir/Dialect/Arith/IR/Arith.h"
+   #include "mlir/Dialect/Func/IR/FuncOps.h"
+   #include "mlir/Dialect/MemRef/IR/MemRef.h"
+   #include "mlir/IR/Builders.h"
+   #include "mlir/IR/BuiltinOps.h"
+   #include "mlir/IR/BuiltinTypes.h"
+   #include "mlir/Pass/Pass.h"
+   #include "picea-mlir/Dialect/CGRA/Transforms/Passes.h"
+   
+   #include "llvm/ADT/SmallVector.h"
+   
+   using namespace mlir;
+   
+   namespace {
+   
+   // The i32 element type for a narrow integer (i4/i8/i16 — any width in 2..31);
+   // null for anything else (i1, i32+, non-integer).
+   static Type wideElem(Type e)
+   {
+       if (auto it = dyn_cast<IntegerType>(e))
+           if (it.getWidth() > 1 && it.getWidth() < 32)
+               return IntegerType::get(e.getContext(), 32);
+       return {};
+   }
+   
+   // The i32-element memref for a narrow-int memref (same shape/layout/space);
+   // null if @p t is not a narrow-int memref.
+   static MemRefType widenMemref(Type t)
+   {
+       auto mr = dyn_cast<MemRefType>(t);
+       if (!mr) return {};
+       Type we = wideElem(mr.getElementType());
+       if (!we) return {};
+       return MemRefType::get(
+           mr.getShape(),
+           we,
+           mr.getLayout(),
+           mr.getMemorySpace());
+   }
+   
+   struct CGRAWidenStorageToI32Pass : public PassWrapper<
+                                          CGRAWidenStorageToI32Pass,
+                                          OperationPass<ModuleOp>> {
+   
+       MLIR_DEFINE_EXPLICIT_INTERNAL_INLINE_TYPE_ID(CGRAWidenStorageToI32Pass)
+   
+       StringRef getArgument() const final { return "widen-storage-to-i32"; }
+       StringRef getDescription() const final
+       {
+           return "Retype i8/i16 memref storage to i32 with load/store boundary "
+                  "casts";
+       }
+   
+       void getDependentDialects(DialectRegistry &registry) const override
+       {
+           registry.insert<
+               arith::ArithDialect,
+               memref::MemRefDialect,
+               affine::AffineDialect,
+               func::FuncDialect>();
+       }
+   
+       void runOnOperation() override
+       {
+           ModuleOp module = getOperation();
+           OpBuilder b(module.getContext());
+           Type i32Ty = b.getIntegerType(32);
+   
+           // 1) memref.global: retype the symbol and sign-extend its initial data.
+           module.walk([&](memref::GlobalOp g) {
+               MemRefType nw = widenMemref(g.getType());
+               if (!nw) return;
+               unsigned w = cast<IntegerType>(
+                                cast<MemRefType>(g.getType()).getElementType())
+                                .getWidth();
+               if (auto init = g.getInitialValue()) {
+                   if (auto de = dyn_cast<DenseIntElementsAttr>(*init)) {
+                       SmallVector<APInt> vals;
+                       for (APInt v : de.getValues<APInt>())
+                           vals.push_back(v.sext(32)); // signed quantized values
+                       auto tt = RankedTensorType::get(nw.getShape(), i32Ty);
+                       g.setInitialValueAttr(DenseIntElementsAttr::get(tt, vals));
+                   }
+               }
+               (void)w;
+               g.setTypeAttr(TypeAttr::get(nw));
+           });
+   
+           // 2) Retype every narrow-int memref VALUE (get_global / alloc / alloca
+           //    results and any other memref results) in place. Loads/stores
+           //    become momentarily type-inconsistent; step 3 repairs them.
+           module.walk([&](Operation* op) {
+               for (Value r : op->getResults())
+                   if (MemRefType nw = widenMemref(r.getType())) r.setType(nw);
+           });
+   
+           // 3) Function arguments + result types (and the function signature).
+           module.walk([&](func::FuncOp fn) {
+               bool changed = false;
+               if (!fn.getBody().empty())
+                   for (BlockArgument arg : fn.getBody().front().getArguments())
+                       if (MemRefType nw = widenMemref(arg.getType())) {
+                           arg.setType(nw);
+                           changed = true;
+                       }
+               SmallVector<Type> ins(
+                   fn.getArgumentTypes().begin(),
+                   fn.getArgumentTypes().end());
+               SmallVector<Type> outs(
+                   fn.getResultTypes().begin(),
+                   fn.getResultTypes().end());
+               for (Type &t : ins)
+                   if (MemRefType nw = widenMemref(t)) {
+                       t = nw;
+                       changed = true;
+                   }
+               for (Type &t : outs)
+                   if (MemRefType nw = widenMemref(t)) {
+                       t = nw;
+                       changed = true;
+                   }
+               if (changed) fn.setType(b.getFunctionType(ins, outs));
+           });
+   
+           // 4) Repair the load/store boundaries: an affine/memref load whose
+           // result is
+           //    still narrow (its memref was widened) gets its result widened to
+           //    i32 and a trunci back to the narrow width for the body; a store of
+           //    a narrow value gets an extsi to i32 before it.
+           module.walk([&](affine::AffineLoadOp ld) {
+               Type et =
+                   cast<MemRefType>(ld.getMemRef().getType()).getElementType();
+               if (ld.getResult().getType() == et)
+                   return; // memref not widened, or already i32
+               Type narrow = ld.getResult().getType();
+               ld.getResult().setType(et); // et is i32 now
+               b.setInsertionPointAfter(ld);
+               Value tr =
+                   arith::TruncIOp::create(b, ld.getLoc(), narrow, ld.getResult());
+               ld.getResult().replaceAllUsesExcept(tr, tr.getDefiningOp());
+           });
+           module.walk([&](affine::AffineStoreOp st) {
+               Type et =
+                   cast<MemRefType>(st.getMemRef().getType()).getElementType();
+               Value v = st.getValueToStore();
+               if (v.getType() == et) return;
+               b.setInsertionPoint(st);
+               Value ext = arith::ExtSIOp::create(b, st.getLoc(), et, v);
+               st.getValueMutable().assign(ext);
+           });
+           module.walk([&](memref::LoadOp ld) {
+               Type et =
+                   cast<MemRefType>(ld.getMemRef().getType()).getElementType();
+               if (ld.getResult().getType() == et) return;
+               Type narrow = ld.getResult().getType();
+               ld.getResult().setType(et);
+               b.setInsertionPointAfter(ld);
+               Value tr =
+                   arith::TruncIOp::create(b, ld.getLoc(), narrow, ld.getResult());
+               ld.getResult().replaceAllUsesExcept(tr, tr.getDefiningOp());
+           });
+           module.walk([&](memref::StoreOp st) {
+               Type et =
+                   cast<MemRefType>(st.getMemRef().getType()).getElementType();
+               Value v = st.getValueToStore();
+               if (v.getType() == et) return;
+               b.setInsertionPoint(st);
+               Value ext = arith::ExtSIOp::create(b, st.getLoc(), et, v);
+               st.getValueMutable().assign(ext);
+           });
+       }
+   };
+   
+   } // namespace
+   
+   std::unique_ptr<mlir::Pass> cgra::createCGRAWidenStorageToI32Pass()
+   { return std::make_unique<CGRAWidenStorageToI32Pass>(); }

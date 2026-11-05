@@ -1,0 +1,362 @@
+
+.. _program_listing_file_lib_Dialect_Base2_Interfaces_BitSequenceAttrInterface.cpp:
+
+Program Listing for File BitSequenceAttrInterface.cpp
+=====================================================
+
+|exhale_lsh| :ref:`Return to documentation for file <file_lib_Dialect_Base2_Interfaces_BitSequenceAttrInterface.cpp>` (``lib/Dialect/Base2/Interfaces/BitSequenceAttrInterface.cpp``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. code-block:: cpp
+
+   
+   
+   #include "picea-mlir/Dialect/Base2/Interfaces/BitSequenceAttrInterface.h"
+   
+   #include "picea-mlir/Dialect/Base2/IR/Base2.h"
+   
+   #include "llvm/ADT/TypeSwitch.h"
+   
+   #include <algorithm>
+   #include <numeric>
+   
+   using namespace mlir;
+   using namespace mlir::base2;
+   
+   //===- Generated implementation -------------------------------------------===//
+   
+   #include "picea-mlir/Dialect/Base2/Interfaces/BitSequenceAttrInterface.cpp.inc"
+   
+   //===----------------------------------------------------------------------===//
+   
+   //===----------------------------------------------------------------------===//
+   // BitSequenceAttr
+   //===----------------------------------------------------------------------===//
+   
+   BitSequenceAttr
+   BitSequenceAttr::get(BitSequenceType type, const BitSequence &bits)
+   {
+       assert(type);
+       assert(type.getBitWidth() <= bits.size());
+   
+       const auto bitWidth = type.getBitWidth();
+       const auto raw = bits.asUInt().trunc(bitWidth);
+   
+       return cast<BitSequenceAttr>(
+           TypeSwitch<Type, Attribute>(type)
+               .template Case<IntegerType>([&](IntegerType intTy) -> Attribute {
+                   // NOTE: MLIR APInt literals cannot parse more than 96 bits in
+                   //       hexadecimal. Types exceeding that length _must_ be
+                   //       encoded as a BitsAttr!
+                   if (bits.size() > 96) return BitsAttr::get(type, bits);
+                   return IntegerAttr::get(intTy, raw);
+               })
+               .template Case<FloatType>([&](FloatType fltTy) -> Attribute {
+                   return FloatAttr::get(
+                       fltTy,
+                       APFloat(fltTy.getFloatSemantics(), raw));
+               })
+               .Default([&](Type ty) -> Attribute {
+                   return BitsAttr::get(cast<BitSequenceType>(ty), raw);
+               }));
+   }
+   
+   //===----------------------------------------------------------------------===//
+   // DenseBitSequencesAttr
+   //===----------------------------------------------------------------------===//
+   
+   bool DenseBitSequencesAttr::classof(ElementsAttr attr)
+   {
+       // Must have a BitSequenceType element type.
+       const auto elementTy = dyn_cast<BitSequenceType>(attr.getElementType());
+       if (!elementTy) return false;
+   
+       // BitSequence iteration always takes precedence.
+       if (attr.try_value_begin<BitSequence>()) return true;
+   
+       // For a FloatType, it must be APFloat iterable.
+       if (isa<FloatType>(elementTy))
+           return attr.try_value_begin<llvm::APFloat>().has_value();
+   
+       // Otherwise, it must be APInt iterable.
+       return attr.try_value_begin<llvm::APInt>().has_value();
+   }
+   
+   DenseTypedElementsAttr
+   DenseBitSequencesAttr::getData(ShapedType type, ArrayRef<BitSequence> values)
+   {
+       assert(type);
+       assert(type.hasStaticShape());
+       assert(
+           values.size() == 1
+           || values.size() == static_cast<std::size_t>(type.getNumElements()));
+       const auto elementTy = dyn_cast<BitSequenceType>(type.getElementType());
+       assert(elementTy);
+   
+       // Infer the data attribute type.
+       const mlir::Type dataElementTy =
+           isa<IntegerType, FloatType>(elementTy)
+               ? static_cast<mlir::Type>(elementTy)
+               : mlir::Type(
+                     IntegerType::get(type.getContext(), elementTy.getBitWidth()));
+       const auto dataTy = type.cloneWith(std::nullopt, dataElementTy);
+   
+       // Serialize the values into a raw data buffer in MLIR layout.
+       SmallVector<std::uint8_t> rawData;
+       if (isa<FloatType>(dataElementTy)) {
+           // Float elements must always be serialized as big-endian.
+           getBytes(rawData, values, std::endian::big);
+       } else {
+           // Integer elements are serialized as platform-specific integers, i.e.,
+           // in the native endianness.
+           if (values.size() == 1 && values.front().size() == 1) {
+               // This special case ensures that boolean splats are correctly
+               // serialized.
+               rawData.push_back(values.front().isZeros() ? 0x00 : 0xFF);
+           } else
+               getBytes(rawData, values);
+       }
+   
+       // Build the data attribute.
+       const auto view = ArrayRef<char>(
+           reinterpret_cast<const char*>(rawData.data()),
+           rawData.size());
+       return cast<DenseTypedElementsAttr>(
+           DenseElementsAttr::getFromRawBuffer(dataTy, view));
+   }
+   
+   DenseBitSequencesAttr
+   DenseBitSequencesAttr::get(ShapedType type, DenseTypedElementsAttr data)
+   {
+       assert(type);
+       assert(data);
+       assert(type.getShape().equals(data.getType().getShape()));
+       const auto elementTy = dyn_cast<BitSequenceType>(type.getElementType());
+       assert(elementTy);
+       const auto bitWidth = elementTy.getBitWidth();
+       assert(data.getType().getElementTypeBitWidth() == bitWidth);
+   
+       // If possible, attempt a bit cast.
+       if (isa<IntegerType, FloatType>(elementTy))
+           return cast<DenseBitSequencesAttr>(data.bitcast(elementTy));
+   
+       // Otherwise, wrap signless integer values in a DenseBitsAttr.
+       return DenseBitsAttr::get(
+           type,
+           cast<DenseIntElementsAttr>(
+               data.bitcast(IntegerType::get(type.getContext(), bitWidth))));
+   }
+   
+   DenseBitSequencesAttr
+   DenseBitSequencesAttr::bitCastElements(BitSequenceType elementTy) const
+   {
+       assert(elementTy);
+       assert(elementTy.getBitWidth() == getElementType().getBitWidth());
+   
+       // Infer the type of the result.
+       const auto outTy =
+           cast<ShapedType>(getType()).cloneWith(std::nullopt, elementTy);
+   
+       // Try to get the underlying data attribute.
+       auto dataAttr = dyn_cast<DenseTypedElementsAttr>(*this);
+       if (!dataAttr) {
+           if (const auto denseBits = dyn_cast<DenseBitsAttr>(*this))
+               dataAttr = denseBits.getData();
+       }
+   
+       // Perform bitcasting on the data attribute if we have it.
+       if (dataAttr) return get(outTy, dataAttr);
+   
+       // If no data attribute was found, we need to take the long route.
+       return get(outTy, llvm::to_vector(getValues()));
+   }
+   
+   DenseBitSequencesAttr DenseBitSequencesAttr::map(
+       UnaryBitSequenceFn fn,
+       BitSequenceType elementTy,
+       bool allowSplat) const
+   {
+       // Infer the type of the result.
+       if (!elementTy) elementTy = getElementType();
+       const auto outTy =
+           cast<ShapedType>(getType()).cloneWith(std::nullopt, elementTy);
+   
+       // If this is a splat value, we can produce a new splat.
+       if (isSplat() && allowSplat)
+           return DenseBitSequencesAttr::get(outTy, fn(getSplatValue()));
+   
+       // Allocate storage for the result elements.
+       SmallVector<BitSequence> result;
+       result.reserve(size());
+   
+       // Map all the elements.
+       const auto end = value_end();
+       for (auto it = value_begin(); it != end; ++it) result.push_back(fn(*it));
+   
+       // Construct the canonical attribute.
+       return DenseBitSequencesAttr::get(outTy, result);
+   }
+   
+   DenseBitSequencesAttr DenseBitSequencesAttr::zip(
+       BinaryBitSequenceFn fn,
+       DenseBitSequencesAttr rhs,
+       BitSequenceType elementTy,
+       bool allowSplat) const
+   {
+       assert(rhs);
+       assert(
+           cast<ShapedType>(getType()).getShape().equals(
+               cast<ShapedType>(rhs.getType()).getShape()));
+   
+       // Infer the type of the result.
+       if (!elementTy) elementTy = getElementType();
+       const auto outTy =
+           cast<ShapedType>(getType()).cloneWith(std::nullopt, elementTy);
+   
+       // If both are splats, we can create a new splat.
+       if (isSplat() && rhs.isSplat() && allowSplat) {
+           return DenseBitSequencesAttr::get(
+               outTy,
+               fn(getSplatValue(), rhs.getSplatValue()));
+       }
+   
+       // Allocate storage for the result elements.
+       SmallVector<BitSequence> result;
+       result.reserve(size());
+   
+       // Zip together the elements.
+       const auto lhsEnd = value_end();
+       for (auto [lhsIt, rhsIt] = std::make_pair(value_begin(), rhs.value_begin());
+            lhsIt != lhsEnd;
+            ++lhsIt, ++rhsIt)
+           result.push_back(fn(*lhsIt, *rhsIt));
+   
+       // Construct the canonical attribute.
+       return DenseBitSequencesAttr::get(outTy, result);
+   }
+   
+   DenseBitSequencesAttr DenseBitSequencesAttr::zip(
+       TernaryBitSequenceFn fn,
+       DenseBitSequencesAttr arg1,
+       DenseBitSequencesAttr arg2,
+       BitSequenceType elementTy,
+       bool allowSplat) const
+   {
+       assert(arg1 && arg2);
+       assert(
+           cast<ShapedType>(getType()).getShape().equals(
+               cast<ShapedType>(arg1.getType()).getShape()));
+       assert(
+           cast<ShapedType>(getType()).getShape().equals(
+               cast<ShapedType>(arg2.getType()).getShape()));
+   
+       // Infer the type of the result.
+       if (!elementTy) elementTy = getElementType();
+       const auto outTy =
+           cast<ShapedType>(getType()).cloneWith(std::nullopt, elementTy);
+   
+       // If all are splats, we can create a new splat.
+       if (isSplat() && arg1.isSplat() && arg2.isSplat() && allowSplat) {
+           return DenseBitSequencesAttr::get(
+               outTy,
+               fn(getSplatValue(), arg1.getSplatValue(), arg2.getSplatValue()));
+       }
+   
+       // Allocate storage for the result elements.
+       SmallVector<BitSequence> result;
+       result.reserve(size());
+   
+       // Zip together the elements.
+       const auto end0 = value_end();
+       for (auto [it0, it1, it2] =
+                std::tuple(value_begin(), arg1.value_begin(), arg2.value_begin());
+            it0 != end0;
+            ++it0, ++it1, ++it2)
+           result.push_back(fn(*it0, *it1, *it2));
+   
+       // Construct the canonical attribute.
+       return DenseBitSequencesAttr::get(outTy, result);
+   }
+   
+   DenseBitSequencesAttr::iterator DenseBitSequencesAttr::value_begin() const
+   {
+       // BitSequence iteration always takes precedence.
+       if (const auto values = ElementsAttr::try_value_begin<BitSequence>())
+           return *values;
+   
+       const auto elementTy = getElementType();
+   
+       // For a FloatType, we must use the APFloat iteration.
+       if (isa<FloatType>(elementTy)) {
+           auto rawIt = try_value_begin<llvm::APFloat>();
+           assert(rawIt.has_value());
+   
+           auto indexer = mlir::detail::ElementsAttrIndexer::nonContiguous(
+               isSplat(),
+               llvm::map_iterator(
+                   std::move(*rawIt),
+                   [](llvm::APFloat raw) -> BitSequence {
+                       return raw.bitcastToAPInt();
+                   }));
+   
+           return DenseBitSequencesAttr::iterator(std::move(indexer), 0);
+       }
+   
+       // Otherwise, we must use the APInt iteration.
+       auto rawIt = try_value_begin<llvm::APInt>();
+       assert(rawIt.has_value());
+   
+       const auto bitWidth = cast<BitSequenceType>(getElementType()).getBitWidth();
+       auto indexer = mlir::detail::ElementsAttrIndexer::nonContiguous(
+           isSplat(),
+           llvm::map_iterator(
+               std::move(*rawIt),
+               [bitWidth](llvm::APInt raw) -> BitSequence {
+                   return raw.trunc(bitWidth);
+               }));
+   
+       return DenseBitSequencesAttr::iterator(std::move(indexer), 0);
+   }
+   
+   //===----------------------------------------------------------------------===//
+   // External models
+   //===----------------------------------------------------------------------===//
+   
+   namespace {
+   
+   struct FloatModel : BitSequenceAttr::ExternalModel<FloatModel, FloatAttr> {
+       static BitSequenceType getType(Attribute attr)
+       { return cast<BitSequenceType>(cast<FloatAttr>(attr).getType()); }
+       static BitSequence getValue(Attribute attr)
+       {
+           const auto fltAttr = cast<FloatAttr>(attr);
+           const auto bitWidth = fltAttr.getType().getIntOrFloatBitWidth();
+           return fltAttr.getValue().bitcastToAPInt().trunc(bitWidth);
+       }
+   };
+   
+   struct IntModel : BitSequenceAttr::ExternalModel<IntModel, IntegerAttr> {
+       static BitSequenceType getType(Attribute attr)
+       {
+           // NOTE: IntegerAttr also stores IndexType. This break the whole
+           //       interface-based opt-in mechanism, because we can't decline at
+           //       this point.
+           // BUG:  Disallow IndexType without crashing.
+           return cast<BitSequenceType>(cast<IntegerAttr>(attr).getType());
+       }
+       static BitSequence getValue(Attribute attr)
+       {
+           const auto intAttr = cast<IntegerAttr>(attr);
+           const auto bitWidth = intAttr.getType().getIntOrFloatBitWidth();
+           return intAttr.getValue().trunc(bitWidth);
+       }
+   };
+   
+   } // namespace
+   
+   void mlir::base2::registerBitSequenceAttrModels(MLIRContext &ctx)
+   {
+       FloatAttr::attachInterface<FloatModel>(ctx);
+       IntegerAttr::attachInterface<IntModel>(ctx);
+   }
